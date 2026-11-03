@@ -76,16 +76,14 @@ const fetchSurveySummaries = async () => {
 // foreign keys are not enforced: dependent rows are deleted explicitly
 const deleteSurveys = async (surveyIds: any) => {
   const ids = DbUtils.quoteValues(surveyIds);
-  await dbClient.transaction(async () => {
-    await dbClient.runSql(
+  await dbClient.transaction(async (tx) => {
+    await tx.runSql(
       `DELETE FROM position_track_point WHERE track_id IN
         (SELECT id FROM position_track WHERE survey_id IN (${ids}))`,
     );
-    await dbClient.runSql(
-      `DELETE FROM position_track WHERE survey_id IN (${ids})`,
-    );
-    await dbClient.runSql(`DELETE FROM record WHERE survey_id IN (${ids})`);
-    await dbClient.runSql(`DELETE FROM survey WHERE id IN (${ids})`);
+    await tx.runSql(`DELETE FROM position_track WHERE survey_id IN (${ids})`);
+    await tx.runSql(`DELETE FROM record WHERE survey_id IN (${ids})`);
+    await tx.runSql(`DELETE FROM survey WHERE id IN (${ids})`);
   });
 };
 

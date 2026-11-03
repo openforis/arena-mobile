@@ -290,8 +290,8 @@ const insertRecord = async ({
       uuid,
       surveyId,
       JSON.stringify(record),
-      dateCreated || Date.now(),
-      dateModified || Date.now(),
+      dateCreated || Dates.nowFormattedForStorage(),
+      dateModified || Dates.nowFormattedForStorage(),
       null,
       cycle,
       ownerUuid,
@@ -316,7 +316,7 @@ const insertRecordSummaries = async ({
   const loadStatus = RecordLoadStatus.summary;
   const origin = RecordOrigin.remote;
   const insertedIds: any = [];
-  await dbClient.transaction(async () => {
+  await dbClient.transaction(async (tx) => {
     await Promises.each(recordSummaries, async (recordSummary: any) => {
       const { dateCreated, dateModified, ownerUuid, ownerName, uuid } =
         recordSummary;
@@ -329,7 +329,7 @@ const insertRecordSummaries = async ({
           survey,
           recordSummary,
         });
-      const { insertId } = await dbClient.runSql(
+      const { insertId } = await tx.runSql(
         `INSERT INTO record (${insertColumnsJoint})
         VALUES (${getPlaceholders(insertColumns.length)})`,
         [
@@ -398,6 +398,7 @@ const updateRecordKeysAndContent = async ({
   updateOrigin = false,
   origin = RecordOrigin.local,
   updateDateSynced = false,
+  client = dbClient,
 }: any) => {
   const keyColumnsValues = extractKeyColumnsValues({ survey, record });
   const summaryAttributesValues = extractSummaryAttributesValues({
@@ -407,7 +408,7 @@ const updateRecordKeysAndContent = async ({
   const dateModifiedColumn =
     origin === RecordOrigin.remote ? "date_modified_remote" : "date_modified";
 
-  return dbClient.runSql(
+  return client.runSql(
     `UPDATE record SET 
       content = ?, 
       ${dateModifiedColumn} = ?, 
@@ -419,7 +420,7 @@ const updateRecordKeysAndContent = async ({
     WHERE survey_id = ? AND uuid = ?`,
     [
       JSON.stringify(record),
-      record.dateModified || Date.now(),
+      record.dateModified || Dates.nowFormattedForStorage(),
       RecordLoadStatus.complete,
       ...(updateOrigin ? [origin] : []),
       ...(updateDateSynced ? [Dates.nowFormattedForStorage()] : []),
@@ -463,19 +464,22 @@ const updateRecordValidation = async ({
 const updateRecordWithContentFetchedRemotely = async ({
   survey,
   record,
-}: any) => {
-  await updateRecordKeysAndContent({
-    survey,
-    record,
-    updateOrigin: true,
-    origin: RecordOrigin.remote,
-    updateDateSynced: true,
+}: any) =>
+  dbClient.transaction(async (tx) => {
+    await updateRecordKeysAndContent({
+      survey,
+      record,
+      updateOrigin: true,
+      origin: RecordOrigin.remote,
+      updateDateSynced: true,
+      client: tx,
+    });
+    await updateRecordsDateModifiedSynced({
+      surveyId: survey.id,
+      dateModifiedByUuid: { [record.uuid]: record.dateModified },
+      client: tx,
+    });
   });
-  await updateRecordsDateModifiedSynced({
-    surveyId: survey.id,
-    dateModifiedByUuid: { [record.uuid]: record.dateModified },
-  });
-};
 
 // used after a merge combined this device's edits with newer edits under the same record uuid
 // on the server: the fetched content now mirrors the server, but it still carries this device's
@@ -484,23 +488,27 @@ const updateRecordWithContentFetchedRemotely = async ({
 const updateRecordWithContentMergedFromRemote = async ({
   survey,
   record,
-}: any) => {
-  await updateRecordKeysAndContent({
-    survey,
-    record,
-    updateOrigin: true,
-    origin: RecordOrigin.local,
-    updateDateSynced: true,
+}: any) =>
+  dbClient.transaction(async (tx) => {
+    await updateRecordKeysAndContent({
+      survey,
+      record,
+      updateOrigin: true,
+      origin: RecordOrigin.local,
+      updateDateSynced: true,
+      client: tx,
+    });
+    await updateRecordsDateModifiedRemote({
+      surveyId: survey.id,
+      dateModifiedRemoteByUuid: { [record.uuid]: record.dateModified },
+      client: tx,
+    });
+    await updateRecordsDateModifiedSynced({
+      surveyId: survey.id,
+      dateModifiedByUuid: { [record.uuid]: record.dateModified },
+      client: tx,
+    });
   });
-  await updateRecordsDateModifiedRemote({
-    surveyId: survey.id,
-    dateModifiedRemoteByUuid: { [record.uuid]: record.dateModified },
-  });
-  await updateRecordsDateModifiedSynced({
-    surveyId: survey.id,
-    dateModifiedByUuid: { [record.uuid]: record.dateModified },
-  });
-};
 
 const updateRecordsReadOnly = async ({
   surveyId,
@@ -536,12 +544,13 @@ const updateRecordsDateSync = async ({ surveyId, recordUuids }: any) => {
 const updateRecordsDateModifiedRemote = async ({
   surveyId,
   dateModifiedRemoteByUuid,
+  client = dbClient,
 }: any) => {
-  await dbClient.transaction(async () => {
+  await client.transaction(async (tx: any) => {
     await Promises.each(
       Object.entries(dateModifiedRemoteByUuid),
       async ([uuid, dateModifiedRemote]) => {
-        await dbClient.runSql(
+        await tx.runSql(
           `UPDATE record SET date_modified_remote = ? WHERE survey_id = ? AND uuid = ?`,
           [fixDatetime(dateModifiedRemote), surveyId, uuid],
         );
@@ -565,12 +574,13 @@ const fetchRecordsDateModifiedByUuid = async ({
 const updateRecordsDateModifiedSynced = async ({
   surveyId,
   dateModifiedByUuid,
+  client = dbClient,
 }: any) => {
-  await dbClient.transaction(async () => {
+  await client.transaction(async (tx: any) => {
     await Promises.each(
       Object.entries(dateModifiedByUuid),
       async ([uuid, dateModified]) => {
-        await dbClient.runSql(
+        await tx.runSql(
           `UPDATE record SET date_modified_synced = ? WHERE survey_id = ? AND uuid = ?`,
           [dateModified, surveyId, uuid],
         );
@@ -632,11 +642,11 @@ const fetchNodeValuesByDefUuids = async ({
 };
 
 const updateRecordsMergedInto = async ({ surveyId, mergedRecordsMap }: any) => {
-  await dbClient.transaction(async () => {
+  await dbClient.transaction(async (tx) => {
     await Promises.each(
       Object.entries(mergedRecordsMap),
       async ([uuid, mergedIntoRecordUuid]) => {
-        await dbClient.runSql(
+        await tx.runSql(
           `UPDATE record 
          SET merged_into_record_uuid = ? 
          WHERE survey_id =? 
