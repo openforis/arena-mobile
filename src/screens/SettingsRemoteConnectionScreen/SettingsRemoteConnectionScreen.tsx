@@ -3,8 +3,12 @@ import { useNavigator } from "navigation/navigator";
 
 import { Objects } from "@openforis/arena-core";
 
+import { TextInput as RNPTextInput } from "react-native-paper";
+
+import { AppLogo } from "appComponents/AppLogo";
 import {
   Button,
+  Card,
   CollapsiblePanel,
   HView,
   Icon,
@@ -14,7 +18,6 @@ import {
   RadioButton,
   RadioButtonGroup,
   ScreenView,
-  Spacer,
   Text,
   TextInput,
   TextInputPassword,
@@ -28,9 +31,10 @@ import {
   RemoteConnectionSelectors,
   useAppDispatch,
 } from "state";
-import { useIsNetworkConnected } from "hooks";
+import { useEffectiveTheme, useIsNetworkConnected } from "hooks";
 import { AMConstants } from "utils";
 
+import { LoggedInUserSummary } from "./LoggedInUserSummary";
 import styles from "./styles";
 
 const serverUrlTypes = {
@@ -61,6 +65,7 @@ export const SettingsRemoteConnectionScreen = () => {
   const navigator = useNavigator();
   const { t } = useTranslation();
   const networkAvailable = useIsNetworkConnected();
+  const theme = useEffectiveTheme();
   const user = RemoteConnectionSelectors.useLoggedInUser();
 
   const [state, setState] = useState({
@@ -229,6 +234,23 @@ export const SettingsRemoteConnectionScreen = () => {
     return <Loader />;
   }
 
+  if (user && networkAvailable) {
+    // logout is required before logging in again
+    return (
+      <ScreenView>
+        <VView style={styles.container}>
+          <LoggedInUserSummary
+            email={email}
+            onGoBack={navigator.goBack}
+            onLogout={onLogout}
+            serverUrl={serverUrl}
+            user={user}
+          />
+        </VView>
+      </ScreenView>
+    );
+  }
+
   const loginDisabled =
     !networkAvailable ||
     Objects.isEmpty(email?.trim()) ||
@@ -237,8 +259,71 @@ export const SettingsRemoteConnectionScreen = () => {
   return (
     <ScreenView>
       <VView style={styles.container}>
-        {!networkAvailable && <Text textKey="common:networkNotAvailable" />}
-
+        {!networkAvailable && (
+          <HView
+            style={[
+              styles.offlineBanner,
+              { backgroundColor: theme.colors.errorContainer },
+            ]}
+          >
+            <Icon color={theme.colors.onErrorContainer} source="wifi-off" />
+            <Text
+              style={{ color: theme.colors.onErrorContainer }}
+              textKey="common:networkNotAvailable"
+            />
+          </HView>
+        )}
+        <Card contentStyle={styles.cardContent}>
+          <AppLogo style={styles.logo} />
+          <TextInput
+            autoCapitalize="none"
+            disabled={!networkAvailable}
+            keyboardType="email-address"
+            label="settingsRemoteConnection:email"
+            left={<RNPTextInput.Icon icon="email-outline" />}
+            onChange={onEmailChange}
+            style={styles.textInput}
+            value={email}
+          />
+          <TextInputPassword
+            disabled={!networkAvailable}
+            label="settingsRemoteConnection:password"
+            left={<RNPTextInput.Icon icon="lock-outline" />}
+            onChange={onPasswordChange}
+            style={styles.textInput}
+            value={password}
+          />
+          <Link
+            labelKey="settingsRemoteConnection:forgotPassword"
+            style={styles.forgotPasswordLink}
+            url={AMConstants.forgotPasswordUrl}
+          />
+        </Card>
+        <HView fullWidth style={styles.buttonBar}>
+          <Button
+            color="secondary"
+            compact
+            labelVariant="bodySmall"
+            onPress={navigator.goBack}
+            style={styles.goBackButton}
+            textKey="common:goBack"
+          />
+          <Button
+            disabled={loginDisabled}
+            icon="login"
+            labelStyle={styles.loginButtonLabel}
+            onPress={onLogin}
+            textKey="settingsRemoteConnection:login"
+          />
+        </HView>
+        <Button
+          disabled={!networkAvailable}
+          icon="qrcode-scan"
+          mode="text"
+          onPress={onScanQrCode}
+          style={styles.centeredButton}
+          textKey="settingsRemoteConnection:loginUsingQrCode"
+        />
         <CollapsiblePanel
           headerKey="settingsRemoteConnection:serverUrl"
           initiallyCollapsed={serverUrlType === serverUrlTypes.default}
@@ -258,7 +343,7 @@ export const SettingsRemoteConnectionScreen = () => {
               ))}
             </HView>
           </RadioButtonGroup>
-          <HView>
+          <HView style={styles.serverUrlRow}>
             <TextInput
               disabled={
                 serverUrlType === serverUrlTypes.default || !networkAvailable
@@ -267,77 +352,36 @@ export const SettingsRemoteConnectionScreen = () => {
               style={styles.serverUrlTextInput}
               value={serverUrl}
             />
-            {serverUrlVerified && <Icon source="check" size={30} />}
+            {serverUrlVerified && (
+              <Icon
+                color={theme.colors.primary}
+                size={30}
+                source="check-circle"
+              />
+            )}
           </HView>
           {!serverUrlVerified && (
             <Button
               disabled={!networkAvailable}
-              style={styles.testUrlButton}
+              mode="text"
+              style={styles.centeredButton}
               textKey="settingsRemoteConnection:testUrl"
               onPress={onTestUrlPress}
             />
           )}
         </CollapsiblePanel>
-        <TextInput
-          autoCapitalize="none"
-          disabled={!networkAvailable}
-          keyboardType="email-address"
-          label="settingsRemoteConnection:email"
-          onChange={onEmailChange}
-          value={email}
-        />
-        <TextInputPassword
-          disabled={!networkAvailable}
-          label="settingsRemoteConnection:password"
-          onChange={onPasswordChange}
-          value={password}
-        />
-
-        <HView fullWidth style={styles.loginButtonBar}>
-          <HView fullFlex>
-            <Button
-              color="secondary"
-              compact
-              onPress={navigator.goBack}
-              style={styles.goBackButton}
-              textKey="common:goBack"
-              labelVariant="bodySmall"
-            />
-          </HView>
-          <Button
-            disabled={loginDisabled}
-            labelStyle={styles.loginButtonLabel}
-            onPress={onLogin}
-            style={styles.loginButton}
-            textKey="settingsRemoteConnection:login"
-          />
-          <Spacer />
-        </HView>
-        <HView>
-          <Button
-            disabled={!networkAvailable}
-            onPress={onScanQrCode}
-            textKey="settingsRemoteConnection:loginUsingQrCode"
-          />
-        </HView>
         {user && (
           <Button
+            icon="account-remove-outline"
             mode="text"
             onPress={onLogout}
-            style={styles.logoutButton}
-            textKey={
-              networkAvailable
-                ? "settingsRemoteConnection:logout"
-                : "settingsRemoteConnection:clearCredentials"
-            }
+            style={styles.centeredButton}
+            textKey="settingsRemoteConnection:clearCredentials"
           />
         )}
         <Link
-          labelKey="settingsRemoteConnection:forgotPassword"
-          url={AMConstants.forgotPasswordUrl}
-        />
-        <Link
           labelKey="settingsRemoteConnection:requestAccess"
+          style={styles.requestAccessLink}
           url={AMConstants.requestAccessUrl}
         />
       </VView>
