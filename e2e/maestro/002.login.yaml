@@ -2,25 +2,48 @@ appId: ${APP_ID}
 ---
 - tapOn:
     id: "home-connect-button"
-- tapOn: "Server URL"
+# the server URL panel is below the login form
+- scrollUntilVisible:
+    element: "Server URL"
+# the panel opens by itself when a custom server URL was used before:
+# select Default to reset the field to the default URL (this collapses the panel)
+- waitForAnimationToEnd
+- runFlow:
+    when:
+      visible: "Default"
+    commands:
+      - tapOn: "Default"
+      - waitForAnimationToEnd
+- runFlow:
+    when:
+      notVisible: "Custom"
+    commands:
+      - tapOn: "Server URL"
 - tapOn: "Custom"
-# workaround: clear the text field by double tapping and selecting the whole text
 - tapOn:
-    text: "https://www.openforis-arena.org"
+    id: "remote-connection-server-url-input"
     waitToSettleTimeoutMs: 1000
-- doubleTapOn: "https://www.openforis-arena.org"
+# eraseText deletes before the cursor: move it to the end of the text first
+- pressKey: Remote Dpad Down
 - eraseText
 - inputText: ${ARENA_SERVER_URL}
 
+# the keyboard scrolls the screen to the server URL field, hiding the email field
+- scrollUntilVisible:
+    element: "Email"
+    direction: UP
 - tapOn: "Email"
 - inputText: ${ARENA_SERVER_USERNAME}
 
 - tapOn: "Password"
 - inputText: ${ARENA_SERVER_PASSWORD}
 
-## workaround: press the login button to hide the keyboard
-- tapOn: "Login"
-- tapOn: "Login"
+# workaround: the first tap may only hide the keyboard
+- tapOn:
+    id: "remote-connection-login-button"
+- tapOn:
+    id: "remote-connection-login-button"
+    optional: true
 
 - extendedWaitUntil:
     visible: "Login successful!"

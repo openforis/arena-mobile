@@ -313,6 +313,7 @@ export const SettingsRemoteConnectionScreen = () => {
             icon="login"
             labelStyle={styles.loginButtonLabel}
             onPress={onLogin}
+            testID="remote-connection-login-button"
             textKey="settingsRemoteConnection:login"
           />
         </HView>
@@ -350,6 +351,7 @@ export const SettingsRemoteConnectionScreen = () => {
               }
               onChange={onServerUrlChange}
               style={styles.serverUrlTextInput}
+              testID="remote-connection-server-url-input"
               value={serverUrl}
             />
             {serverUrlVerified && (
