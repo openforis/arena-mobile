@@ -122,7 +122,7 @@ export const initializeLogger = async () => {
 
     // 2. Create the logger using the standard, fast fileAsyncTransport
     _log = logger.createLogger({
-      severity: "debug",
+      severity: __DEV__ ? LogLevel.Debug : LogLevel.Info,
       // We can use the standard transport since rotation is done at startup
       transport: __DEV__ ? consoleTransport : fileAsyncTransport,
       transportOptions: {
