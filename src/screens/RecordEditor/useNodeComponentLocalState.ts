@@ -10,8 +10,6 @@ import {
 } from "state";
 import { Functions } from "utils";
 
-const getNodeUpdateActionKey = ({ nodeUuid }: any) => `node_update_${nodeUuid}`;
-
 const isNodeValueEqualDefault = (nodeValueA: any, nodeValueB: any) =>
   Objects.isEqual(nodeValueA, nodeValueB) ||
   JSON.stringify(nodeValueA) === JSON.stringify(nodeValueB) ||
@@ -117,7 +115,11 @@ export const useNodeComponentLocalState = ({
         value: nodeValueUpdated,
         fileUri,
       });
-      if (!ignoreDelay && updateDelay) {
+      if (updateDelay) {
+        // a pending debounced update would overwrite this one
+        debouncedUpdateRef.current?.cancel();
+        debouncedUpdateRef.current = null;
+        // keep the UI value until the store is in sync with it
         dirtyRef.current = true;
 
         setState((statePrev) => ({
@@ -127,23 +129,22 @@ export const useNodeComponentLocalState = ({
           uiValue: uiValueUpdated,
           validation: null,
         }));
-
-        debouncedUpdateRef.current?.cancel();
-
+      }
+      if (!ignoreDelay && updateDelay) {
         debouncedUpdateRef.current = StoreUtils.debounceAction(
           action,
-          getNodeUpdateActionKey({ nodeUuid }),
           updateDelay,
         );
-
         dispatch(debouncedUpdateRef.current);
         return Promise.resolve();
-      } else {
-        return dispatch(action);
       }
+      return dispatch(action);
     },
     [uiValueToNodeValue, updateDelay, nodeUuid, dispatch],
   );
+
+  // don't lose the last changes when leaving the node within the update delay
+  useEffect(() => () => debouncedUpdateRef.current?.flush(), []);
 
   const onClearPress = useCallback(async () => {
     if (

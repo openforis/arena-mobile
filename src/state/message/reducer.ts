@@ -17,9 +17,7 @@ const messageSlice = createSlice({
   name: "message",
   initialState,
   reducers: {
-    setMessage: (state, action) => {
-      Object.assign(state, action.payload);
-    },
+    setMessage: (_state, action) => action.payload,
     dismissMessage: () => initialState,
   },
 });
@@ -59,9 +57,13 @@ export const MessageActions = {
       );
     },
   setInfo: (contentKey: any, contentParams?: any) =>
-    setMessage({ content: contentKey, contentParams }),
+    MessageActions.setMessage({ content: contentKey, contentParams }),
   setWarning: (contentKey: any, contentParams?: any) =>
-    setMessage({ content: contentKey, contentParams, title: "common:warning" }),
+    MessageActions.setMessage({
+      content: contentKey,
+      contentParams,
+      title: "common:warning",
+    }),
   dismissMessage: () => (dispatch: Dispatch, getState: () => unknown) => {
     const onDismissId = getOnDismissId(getState);
     const onDismiss = MessageCallbacksRegistry.get(onDismissId)?.onDismiss;
