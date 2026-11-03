@@ -111,4 +111,35 @@ describe("RemoteJobWatcherJob", () => {
     await jest.advanceTimersByTimeAsync(30_000);
     await expectation;
   });
+
+  it("fails after too many consecutive failed polls", async () => {
+    fetchJobMock.mockRejectedValue(new Error("network"));
+    const { execution } = await startJob();
+    const expectation = expect(execution).rejects.toThrow("not reachable");
+
+    await jest.advanceTimersByTimeAsync(10 * 30_000);
+    await expectation;
+  });
+
+  it("fails when the job is not found anymore", async () => {
+    fetchJobMock.mockResolvedValue({ data: null });
+    const { execution } = await startJob();
+    const expectation = expect(execution).rejects.toThrow("job not found");
+
+    await jest.advanceTimersByTimeAsync(10 * 30_000);
+    await expectation;
+  });
+
+  it("counts only consecutive failed polls", async () => {
+    fetchJobMock.mockRejectedValue(new Error("network"));
+    const { isEnded, emitJobUpdate, execution } = await startJob();
+
+    await jest.advanceTimersByTimeAsync(9 * 30_000);
+    emitJobUpdate({ uuid: remoteJobUuid, status: JobStatus.running });
+    await jest.advanceTimersByTimeAsync(9 * 30_000);
+    expect(isEnded()).toBe(false);
+
+    emitJobUpdate({ uuid: remoteJobUuid, status: JobStatus.succeeded });
+    await execution;
+  });
 });

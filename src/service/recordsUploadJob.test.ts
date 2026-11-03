@@ -1,3 +1,5 @@
+import { JobStatus } from "@openforis/arena-core";
+
 import { RecordService } from "./recordService";
 import { RecordsUploadJob } from "./recordsUploadJob";
 
@@ -42,5 +44,24 @@ describe("RecordsUploadJob", () => {
         chunkSize: 2048,
       }),
     );
+  });
+
+  it("ends as canceled when the upload is canceled", async () => {
+    const { CanceledError } = jest.requireActual("axios");
+    let rejectUpload: (error: any) => void = () => {};
+    uploadMock.mockReturnValueOnce({
+      promise: new Promise((_resolve, reject) => {
+        rejectUpload = reject;
+      }),
+      cancel: () => rejectUpload(new CanceledError()),
+    });
+    const job = createJob({ fileId: "file-1", chunkSize: 2048, nextChunk: 1 });
+
+    const execution = job.start();
+    await new Promise(process.nextTick);
+    await job.cancel();
+    await execution;
+
+    expect(job.status).toBe(JobStatus.canceled);
   });
 });

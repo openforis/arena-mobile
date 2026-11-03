@@ -45,9 +45,8 @@ const withRetry = async (
     return await callback();
   } catch (error: any) {
     const status = Number(error?.response?.status);
-    const isAuthRefreshRequest =
-      error?.config?.url === AuthService.authTokenRefreshUrl;
-    if (status === 401 && !isAuthRefreshRequest && maxRetries > 0) {
+    // the token refresh request doesn't go through here (see AuthService)
+    if (status === 401 && maxRetries > 0) {
       try {
         await AuthService.refreshAuthTokens();
       } catch {
@@ -57,7 +56,7 @@ const withRetry = async (
       // Retry the callback after successful token refresh
       return withRetry(callback, maxRetries - 1);
     }
-    // Non-401 errors, refresh URL errors, or exhausted retries: propagate error
+    // Non-401 errors or exhausted retries: propagate error
     throw error;
   }
 };
@@ -70,18 +69,6 @@ const get = async (uri: string, data?: Dictionary<any>, config = {}) => {
       uri,
       data,
       config: attachHeaders(config),
-    });
-  return withRetry(sendRequest);
-};
-
-const getFile = async (uri: string, data?: Dictionary<any>) => {
-  const serverUrl = await getServerUrl();
-  const sendRequest = async () =>
-    API.getFile({
-      serverUrl,
-      uri,
-      data,
-      config: attachHeaders(),
     });
   return withRetry(sendRequest);
 };
@@ -127,7 +114,8 @@ const postCancelableMultipartData = async (
   onUploadProgress: any,
 ) => {
   const serverUrl = await getServerUrl();
-  const config = { onUploadProgress };
+  // no timeout: a chunk can take long on weak connections, cancel() stops it
+  const config = { onUploadProgress, timeout: 0 };
   let cancelCurrentRequest: () => void;
   let canceled = false;
   const sendRequest = async () => {
@@ -151,32 +139,13 @@ const postCancelableMultipartData = async (
   };
 };
 
-const postMultipartData = async (
-  uri: string,
-  data: Dictionary<any>,
-  onUploadProgress: any,
-) => {
-  const serverUrl = await getServerUrl();
-  const config = { onUploadProgress };
-  const sendRequest = async () =>
-    API.postMultipartData({
-      serverUrl,
-      uri,
-      data,
-      config: attachHeaders(config),
-    });
-  return withRetry(sendRequest);
-};
-
 export const RemoteService = {
   getServerUrl,
 
   del,
   get,
-  getFile,
   getFileOrThrow,
   post,
   postCancelableMultipartData,
-  postMultipartData,
   handleError,
 };

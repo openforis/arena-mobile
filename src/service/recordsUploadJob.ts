@@ -1,3 +1,5 @@
+import { isCancel } from "axios";
+
 import { JobMobile, SurveyMobile } from "model";
 
 import { RecordsUploadAndProcessJobContext } from "./RecordsUploadAndProcessJobContext";
@@ -80,7 +82,9 @@ export class RecordsUploadJob extends JobMobile<RecordsUploadAndProcessJobContex
         `RecordsUploadJob: upload complete, server-side job=${job?.uuid}`,
       );
     } catch (error) {
-      this.logger.error(`RecordsUploadJob: upload failed: ${error}`);
+      if (!isCancel(error)) {
+        this.logger.error(`RecordsUploadJob: upload failed: ${error}`);
+      }
       throw error;
     }
   }
