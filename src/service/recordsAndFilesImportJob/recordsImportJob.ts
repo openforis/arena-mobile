@@ -38,17 +38,21 @@ export class RecordsImportJob extends JobMobile<RecordsAndFilesImportJobContext>
     });
     const recordsSummaryByUuid = ArrayUtils.indexByUuid(recordsSummary);
 
-    await Promises.each(fileRecordsSummary, async (recordUuidAndCycle) => {
-      const { uuid: recordUuid } = recordUuidAndCycle;
-      const record = await this.readRecord(recordUuid);
-      const existingRecordSummary = recordsSummaryByUuid[recordUuid];
-      if (!existingRecordSummary) {
-        await this.insertRecord(record);
-      } else if (overwriteExistingRecords) {
-        await this.updateRecord(record);
-      }
-      this.incrementProcessedItems();
-    });
+    await Promises.each(
+      fileRecordsSummary,
+      async (recordUuidAndCycle) => {
+        const { uuid: recordUuid } = recordUuidAndCycle;
+        const record = await this.readRecord(recordUuid);
+        const existingRecordSummary = recordsSummaryByUuid[recordUuid];
+        if (!existingRecordSummary) {
+          await this.insertRecord(record);
+        } else if (overwriteExistingRecords) {
+          await this.updateRecord(record);
+        }
+        this.incrementProcessedItems();
+      },
+      () => this.isCancelRequestedOrNotRunning(),
+    );
   }
 
   private async readRecord(recordUuid: string): Promise<ArenaRecord> {

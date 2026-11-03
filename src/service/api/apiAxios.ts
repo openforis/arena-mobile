@@ -144,17 +144,11 @@ const postCancelableMultipartData = (
 ): { promise: Promise<AxiosResponse>; cancel: () => void } =>
   postCancelable(_prepareMultipartDataOptions(options));
 
-const postMultipartData = async (
-  options: RequestOptions,
-): Promise<{ data: any; response: AxiosResponse }> =>
-  post(_prepareMultipartDataOptions(options));
-
 export const APIAxios = {
   del,
   get,
   getFileAsText,
   post,
   postCancelableMultipartData,
-  postMultipartData,
   test,
 };

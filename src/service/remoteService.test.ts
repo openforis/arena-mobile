@@ -3,12 +3,11 @@ import { AuthService } from "./authService";
 import { RemoteService } from "./remoteService";
 
 jest.mock("./api", () => ({
-  API: { postCancelableMultipartData: jest.fn() },
+  API: { getFileOrThrow: jest.fn(), postCancelableMultipartData: jest.fn() },
 }));
 
 jest.mock("./authService", () => ({
   AuthService: {
-    authTokenRefreshUrl: "/auth/token/refresh",
     generateAuthorizationHeaders: () => ({}),
     refreshAuthTokens: jest.fn(),
   },
@@ -78,5 +77,29 @@ describe("RemoteService.postCancelableMultipartData", () => {
 
     await expect(promise).rejects.toThrow();
     expect(postMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("sends the chunk without timeout", async () => {
+    postMock.mockReturnValueOnce({ promise: Promise.resolve(), cancel() {} });
+
+    await RemoteService.postCancelableMultipartData("api/test", {}, jest.fn());
+
+    expect(postMock.mock.calls[0][0].config.timeout).toBe(0);
+  });
+});
+
+describe("RemoteService.getFileOrThrow", () => {
+  beforeEach(() => jest.clearAllMocks());
+
+  it("refreshes the token and downloads the file again after a 401", async () => {
+    const getFileMock = API.getFileOrThrow as jest.Mock;
+    getFileMock
+      .mockRejectedValueOnce({ response: { status: 401 } })
+      .mockResolvedValueOnce("file://export.zip");
+
+    await expect(RemoteService.getFileOrThrow("api/file")).resolves.toBe(
+      "file://export.zip",
+    );
+    expect(refreshMock).toHaveBeenCalledTimes(1);
   });
 });
