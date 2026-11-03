@@ -5,6 +5,7 @@ import * as DocumentPicker from "expo-document-picker";
 import { Objects, Surveys } from "@openforis/arena-core";
 
 import { useIsNetworkConnected, useNavigationFocus, useToast } from "hooks";
+import { useNavigationEvent } from "hooks/useNavigationEvent";
 import { useTranslation } from "localization";
 import {
   RecordUtils,
@@ -84,6 +85,8 @@ export const useRecordsList = () => {
   // loadRecordsWithSyncStatus below for why that matters
   const recordsRef = useRef(records);
   recordsRef.current = records;
+  // incremented by every records load: only the latest one's response is applied
+  const loadRequestIdRef = useRef(0);
 
   const setLoading = useCallback(
     (loadingUpdated: boolean) =>
@@ -92,10 +95,10 @@ export const useRecordsList = () => {
   );
 
   const loadRecords = useCallback(async () => {
+    const requestId = ++loadRequestIdRef.current;
     setState((statePrev) => ({
       ...statePrev,
       loading: true,
-      searchValue: "",
       syncStatusFetched: false,
       syncStatusLoading: false,
     }));
@@ -106,6 +109,7 @@ export const useRecordsList = () => {
         cycle,
         onlyLocal,
       });
+      if (requestId !== loadRequestIdRef.current) return;
 
       setState((statePrev) => ({
         ...statePrev,
@@ -113,21 +117,18 @@ export const useRecordsList = () => {
         loading: false,
       }));
     } catch (error) {
+      if (requestId !== loadRequestIdRef.current) return;
       setState((statePrev) => ({ ...statePrev, records: [], loading: false }));
       toaster("dataEntry:errorLoadingRecords", { details: String(error) });
     }
   }, [survey, cycle, onlyLocal, toaster]);
-
-  // refresh records list on cycle and "only local" change
-  useEffect(() => {
-    loadRecords();
-  }, [cycle, loadRecords, onlyLocal]);
 
   const loadRecordsWithSyncStatus =
     useCallback(async (): Promise<RecordsListState> => {
       log.debug(
         `loadRecordsWithSyncStatus: starting (survey=${survey?.uuid}, cycle=${cycle}, onlyLocal=${onlyLocal})`,
       );
+      const requestId = ++loadRequestIdRef.current;
       setState((statePrev) => ({
         ...statePrev,
         syncStatusLoading: true,
@@ -151,6 +152,13 @@ export const useRecordsList = () => {
           onlyLocal,
           survey,
         });
+      if (requestId !== loadRequestIdRef.current) {
+        // superseded by a newer load (e.g. after a cycle change): its result must not be used
+        return {
+          ...stateNext,
+          records: recordsRef.current,
+        } as RecordsListState;
+      }
       if (_syncStatusFetched) {
         Object.assign(stateNext, {
           records: _records,
@@ -221,9 +229,29 @@ export const useRecordsList = () => {
     }
   }, [canCheckAutoSyncStatus, loadRecordsWithSyncStatus, dispatch]);
 
+  const checkAutoSyncStatusIfNeededRef = useRef(checkAutoSyncStatusIfNeeded);
+  checkAutoSyncStatusIfNeededRef.current = checkAutoSyncStatusIfNeeded;
+
+  // sequenced so the network-based sync status refresh always applies after the local-only reload
+  const refreshRecords = useCallback(async () => {
+    await loadRecords();
+    checkAutoSyncStatusIfNeededRef.current();
+  }, [loadRecords]);
+
+  // initial load and reload on survey, cycle or "only local" change
   useEffect(() => {
-    checkAutoSyncStatusIfNeeded();
-  }, [checkAutoSyncStatusIfNeeded, cycle, onlyLocal]);
+    setState((statePrev) => ({ ...statePrev, searchValue: "" }));
+    refreshRecords();
+  }, [refreshRecords]);
+
+  // check the sync status as soon as it becomes possible (e.g. network back, user logged in)
+  const canCheckAutoSyncStatusPrevRef = useRef(canCheckAutoSyncStatus);
+  useEffect(() => {
+    if (canCheckAutoSyncStatus && !canCheckAutoSyncStatusPrevRef.current) {
+      checkAutoSyncStatusIfNeeded();
+    }
+    canCheckAutoSyncStatusPrevRef.current = canCheckAutoSyncStatus;
+  }, [canCheckAutoSyncStatus, checkAutoSyncStatusIfNeeded]);
 
   // refresh the sync status right after a background auto-sync tick finishes, while this
   // screen is mounted (it stays mounted, just unfocused, while the user is on another screen,
@@ -238,15 +266,15 @@ export const useRecordsList = () => {
   }, [autoSyncUploadRunning, checkAutoSyncStatusIfNeeded]);
 
   // refresh records list (and, if eligible, sync status) whenever this screen regains focus,
-  // e.g. coming back from editing a record: `loadRecords` alone would otherwise reset
-  // syncStatusFetched to false and leave the auto-sync status icon showing a stale/unchecked
-  // state until the next background tick happens to start and end while focused again.
-  // Sequenced (not two independent focus listeners) so the network-based sync status refresh
-  // always applies after, and is not overwritten by, the local-only reload.
-  const onFocus = useCallback(async () => {
-    await loadRecords();
-    checkAutoSyncStatusIfNeeded();
-  }, [loadRecords, checkAutoSyncStatusIfNeeded]);
+  // e.g. coming back from editing a record; the first focus is covered by the initial load above
+  const blurredRef = useRef(false);
+  const onBlur = useCallback(() => {
+    blurredRef.current = true;
+  }, []);
+  useNavigationEvent("blur", onBlur);
+  const onFocus = useCallback(() => {
+    if (blurredRef.current) refreshRecords();
+  }, [refreshRecords]);
   useNavigationFocus(onFocus);
 
   const onOnlyLocalChange = useCallback(
@@ -315,8 +343,11 @@ export const useRecordsList = () => {
 
   const onNewRecordPress = useCallback(async () => {
     setLoading(true);
-    await dispatch(DataEntryActions.createNewRecord({ navigator }));
-    setLoading(false);
+    try {
+      await dispatch(DataEntryActions.createNewRecord({ navigator }));
+    } finally {
+      setLoading(false);
+    }
   }, [dispatch, navigator, setLoading]);
 
   const onDeleteSelectedRecordUuids = useCallback(

@@ -298,14 +298,8 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
   const canCloneRecords = isPrevCycle || cycle === defaultCycleKey;
 
   const screenViewMode = ScreenOptionsSelectors.useCurrentScreenViewMode();
-  const [selectedRecordUuids, setSelectedRecordUuids] = useState([]);
+  const [selectedRecordUuids, setSelectedRecordUuids] = useState<string[]>([]);
   const [sort, setSort] = useState({ dateModified: Sort.desc });
-
-  // reset selected record uuids on records change
-  useEffect(() => {
-    setSelectedRecordUuids([]);
-    onSelectedRecordUuidsChange?.([]);
-  }, [records, onSelectedRecordUuidsChange]);
 
   const recordsHaveReadOnly = useMemo(
     () => records.some((r: any) => r.readOnly),
@@ -430,6 +424,16 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
     },
     [onSelectedRecordUuidsChange],
   );
+
+  // records are refreshed often (focus, sync status checks): keep the selection, dropping only uuids no longer listed
+  useEffect(() => {
+    const selectionPruned = selectedRecordUuids.filter((uuid) =>
+      records.some((record) => record.uuid === uuid),
+    );
+    if (selectionPruned.length !== selectedRecordUuids.length) {
+      onSelectionChange(selectionPruned);
+    }
+  }, [onSelectionChange, records, selectedRecordUuids]);
 
   const onFetchSelectedItems = useCallback(() => {
     onFetchSelectedRecordUuids(selectedRecordUuids);
