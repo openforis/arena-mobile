@@ -32,23 +32,41 @@ export default class SQLiteClient {
     return this.privateDb;
   }
 
-  async runSql(sql: any, params?: any) {
-    const result = await this.privateDb!.runAsync(sql, params);
-    const { lastInsertRowId: insertId, changes: rowsAffected } = result;
-    return { insertId, rowsAffected };
-  }
+  // the tx client passed to transaction callbacks: it skips the queue and joins nested transactions
+  private inTransaction = false;
 
-  async executeSql(sql: any) {
-    await this.privateDb!.execAsync(sql);
-  }
-
-  // a BEGIN inside an open transaction fails and its ROLLBACK cancels the open one: run them one at a time
-  transaction(callback: any): Promise<void> {
-    const result = this.transactionsQueue.then(() =>
-      this.privateDb!.withTransactionAsync(callback),
-    );
+  // writes share the connection: one issued while a transaction is open would be rolled back with it
+  private enqueue<T>(task: () => Promise<T>): Promise<T> {
+    if (this.inTransaction) return task();
+    const result = this.transactionsQueue.then(task);
     this.transactionsQueue = result.catch(() => {});
     return result;
+  }
+
+  runSql(sql: any, params?: any) {
+    return this.enqueue(async () => {
+      const result = await this.privateDb!.runAsync(sql, params);
+      const { lastInsertRowId: insertId, changes: rowsAffected } = result;
+      return { insertId, rowsAffected };
+    });
+  }
+
+  executeSql(sql: any) {
+    return this.enqueue(() => this.privateDb!.execAsync(sql));
+  }
+
+  // inside the callback use only the given tx client: calls on this client wait for the transaction to end
+  transaction(callback: (tx: SQLiteClient) => Promise<void>): Promise<void> {
+    if (this.inTransaction) return callback(this);
+    return this.enqueue(() =>
+      this.privateDb!.withTransactionAsync(() => {
+        const tx = new SQLiteClient(this.name, []);
+        tx.privateDb = this.privateDb;
+        tx.privateConnected = true;
+        tx.inTransaction = true;
+        return callback(tx);
+      }),
+    );
   }
 
   one(sql: any, params?: any) {
@@ -104,9 +122,13 @@ export default class SQLiteClient {
       let currentDbVersion = prevDbVersion;
       log.debug("==== DB migrations start ====");
       await Promises.each(migrationsToRun, async (migration) => {
-        await migration(this);
-        currentDbVersion += 1;
-        await this.runSql(`PRAGMA user_version = ${currentDbVersion}`);
+        const version = currentDbVersion + 1;
+        // the version bump is committed together with the migration
+        await this.transaction(async (tx) => {
+          await migration(tx);
+          await tx.runSql(`PRAGMA user_version = ${version}`);
+        });
+        currentDbVersion = version;
       });
       log.debug("==== DB migrations complete ====");
     }
