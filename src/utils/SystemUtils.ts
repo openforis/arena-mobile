@@ -130,8 +130,10 @@ const cleanupTempFiles = async () => {
   // delete temp files in document and cache directories
   const directories = [Files.documentDirectory, Files.cacheDirectory];
   await Promises.each(directories, async (directory) => {
-    const documentFileNames = await Files.listDirectory(directory);
-    await Promises.each(documentFileNames, async (fileName) => {
+    if (!directory) return;
+    const fileUris = await Files.listDir(directory);
+    await Promises.each(fileUris, async (fileUri) => {
+      const fileName = Files.getNameFromUri(fileUri);
       // file name could be an export or backup file (see tempFileNamePrefixes)
       // or a temporary file (named using UUID)
       if (
@@ -139,7 +141,7 @@ const cleanupTempFiles = async () => {
         (["zip", "tmp"].includes(FileNames.getExtension(fileName)) &&
           UUIDs.isUuid(FileNames.getName(fileName)))
       ) {
-        await Files.del(Files.path(directory, fileName), true);
+        await Files.del(fileUri, true);
       }
     });
   });
