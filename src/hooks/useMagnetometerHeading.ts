@@ -182,6 +182,7 @@ export const useMagnetometerHeading = ({
       cancelled = true;
       magSub?.remove();
       accSub?.remove();
+      throttledUpdateHeading.cancel();
     };
   }, [enabled, throttledUpdateHeading]);
 
