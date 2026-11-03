@@ -5,12 +5,14 @@ import { Objects, Survey, Surveys } from "@openforis/arena-core";
 import { DbUtils, dbClient } from "db";
 import { SurveyMobile } from "model";
 
+const getSurveyLabel = (survey: Survey) =>
+  Surveys.getLabel(Surveys.getDefaultLanguage(survey))(survey);
+
 const insertSurvey = async (survey: Survey): Promise<SurveyMobile> => {
   const { id, uuid, dateCreated, datePublished, dateModified } = survey;
   const surveyMobile = survey as SurveyMobile;
   const name = Surveys.getName(survey);
-  const defaultLang = Surveys.getDefaultLanguage(survey);
-  const label = Surveys.getLabel(defaultLang)(survey);
+  const label = getSurveyLabel(survey);
   const { insertId } = await dbClient.runSql(
     `INSERT INTO survey (server_url, remote_id, uuid, name, label, content, date_created, date_modified)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -36,7 +38,7 @@ const updateSurvey = async ({ id, survey }: any) => {
      WHERE id = ?`,
     [
       survey.props.name,
-      survey.props.labels?.["en"],
+      getSurveyLabel(survey),
       "", // always set content to empty (stored in FS)
       survey.dateCreated,
       survey.datePublished ?? survey.dateModified,

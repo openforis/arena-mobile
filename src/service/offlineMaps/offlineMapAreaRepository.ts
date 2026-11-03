@@ -13,21 +13,32 @@ const saveAreas = async (areas: OfflineMapArea[]): Promise<void> => {
 const fetchAreaById = async (id: string): Promise<OfflineMapArea | undefined> =>
   (await fetchAreas()).find((area) => area.id === id);
 
-const saveArea = async (area: OfflineMapArea): Promise<void> => {
-  const areas = await fetchAreas();
-  const index = areas.findIndex((item) => item.id === area.id);
-  if (index >= 0) {
-    areas[index] = area;
-  } else {
-    areas.push(area);
-  }
-  await saveAreas(areas);
+// read-modify-write updates run one at a time, otherwise the last write would drop the others
+let updatesQueue: Promise<unknown> = Promise.resolve();
+
+const enqueueUpdate = (update: () => Promise<void>): Promise<void> => {
+  const result = updatesQueue.then(update);
+  updatesQueue = result.catch(() => {});
+  return result;
 };
 
-const deleteArea = async (id: string): Promise<void> => {
-  const areas = await fetchAreas();
-  await saveAreas(areas.filter((area) => area.id !== id));
-};
+const saveArea = (area: OfflineMapArea): Promise<void> =>
+  enqueueUpdate(async () => {
+    const areas = await fetchAreas();
+    const index = areas.findIndex((item) => item.id === area.id);
+    if (index >= 0) {
+      areas[index] = area;
+    } else {
+      areas.push(area);
+    }
+    await saveAreas(areas);
+  });
+
+const deleteArea = (id: string): Promise<void> =>
+  enqueueUpdate(async () => {
+    const areas = await fetchAreas();
+    await saveAreas(areas.filter((area) => area.id !== id));
+  });
 
 const deleteAllAreas = async (): Promise<void> => {
   await AsyncStorageUtils.removeItem(asyncStorageKeys.offlineMapAreas);
