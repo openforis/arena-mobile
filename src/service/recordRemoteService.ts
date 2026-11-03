@@ -1,3 +1,5 @@
+import { CanceledError } from "axios";
+
 import { Files, Functions, log, RNFileProcessor } from "utils";
 import { RemoteService } from "./remoteService";
 import { SurveyMobile } from "model/SurveyMobile";
@@ -86,7 +88,7 @@ const startExportRecords = async ({
 
 const downloadExportedRecordsFile = async ({ survey, fileName }: any) => {
   const { remoteId: surveyRemoteId } = survey;
-  const fileUri = await RemoteService.getFile(
+  const fileUri = await RemoteService.getFileOrThrow(
     `api/survey/${surveyRemoteId}/records/export/download`,
     { fileName },
   );
@@ -117,7 +119,7 @@ const uploadRecords = ({
   onUploadProgress: (progressEvent: any) => void;
 }): { promise: Promise<any>; cancel: () => void } => {
   const surveyRemoteId = survey.remoteId;
-  let fileProcessor: RNFileProcessor;
+  let fileProcessor: RNFileProcessor | undefined;
 
   const debouncedUploadProgress = Functions.throttle(
     ({ total, loaded }: any) => {
@@ -131,7 +133,17 @@ const uploadRecords = ({
   const deleteChunkFile = async () => {
     if (chunkFileUri) await Files.del(chunkFileUri, true);
   };
+  let end: (error: any, result?: any) => void = () => {};
   const promise = new Promise((resolve, reject) => {
+    let ended = false;
+    end = (error, result) => {
+      if (ended) return;
+      ended = true;
+      fileProcessor?.close();
+      void deleteChunkFile();
+      if (error) reject(error);
+      else resolve(result);
+    };
     fileProcessor = new RNFileProcessor({
       fileId,
       filePath: fileUri,
@@ -142,6 +154,10 @@ const uploadRecords = ({
         totalFileSize,
       }) => {
         chunkFileUri = (content as any).uri;
+        if (chunk > totalChunks) {
+          // e.g. retry after the last chunk was already uploaded
+          throw new Error(`chunk ${chunk} out of range (${totalChunks})`);
+        }
         log.debug(
           `Uploading chunk ${chunk} / ${totalChunks} for fileId ${fileId}`,
         );
@@ -178,22 +194,16 @@ const uploadRecords = ({
         lastRequestCancel = cancel;
         const result = await promise;
         onChunkUploaded?.(chunk);
-
-        if (chunk === totalChunks) {
-          log.debug(`All chunks uploaded for fileId ${fileId}`);
-          resolve(result);
-        }
         // only now: a failed chunk is sent again from this file
         await deleteChunkFile();
+        return result;
       },
-      onError: (error) => {
-        fileProcessor?.close();
-        reject(error);
-        void deleteChunkFile();
-      },
-      onComplete: () => {
-        fileProcessor?.close();
-      },
+      onError: (error) => end(error),
+      // without a result (empty file) nothing has been uploaded
+      onComplete: (result) =>
+        result
+          ? end(null, result)
+          : end(new Error(`nothing to upload in ${fileUri}`)),
       chunkSize,
       maxTryings: 2,
     });
@@ -203,8 +213,8 @@ const uploadRecords = ({
     promise,
     cancel: () => {
       lastRequestCancel?.();
-      fileProcessor.stop();
-      void deleteChunkFile();
+      fileProcessor?.stop();
+      end(new CanceledError());
     },
   };
 };
