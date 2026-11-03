@@ -138,10 +138,7 @@ export const initializeLogger = async () => {
 };
 
 export const clear = async () => {
-  const logFiles = await Files.listDirectory(logsPath);
-  await Promises.each(logFiles, async (file) => {
-    const filePath = Files.path(logsPath, file);
-    await Files.del(filePath, true);
-  });
+  const logFileUris = await Files.listDir(logsPath);
+  await Promises.each(logFileUris, (fileUri) => Files.del(fileUri, true));
   await initializeLogger();
 };

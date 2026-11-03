@@ -37,7 +37,10 @@ const saveSurveyFile = async (survey: any) => {
 
   const fileUri = getSurveyFileUri({ surveyId });
 
-  await Files.writeJsonToFile({ content: survey, fileUri });
+  // temp file + move: a failure mid-write must not corrupt the existing survey file
+  const tempFileUri = `${fileUri}.tmp`;
+  await Files.writeJsonToFile({ content: survey, fileUri: tempFileUri });
+  await Files.moveFile({ from: tempFileUri, to: fileUri });
 
   return survey;
 };
