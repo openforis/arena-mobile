@@ -23,7 +23,7 @@ export const useCurrentLocationWatch = (): CurrentLocation | null => {
     [],
   );
 
-  const { startLocationWatch, stopLocationWatch } = useLocationWatch({
+  const { startLocationWatch } = useLocationWatch({
     locationCallback: onLocation,
     stopOnAccuracyThreshold: false,
     stopOnTimeout: false,
@@ -31,7 +31,6 @@ export const useCurrentLocationWatch = (): CurrentLocation | null => {
 
   useEffect(() => {
     void startLocationWatch();
-    return () => stopLocationWatch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

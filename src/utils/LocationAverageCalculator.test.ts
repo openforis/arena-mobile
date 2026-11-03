@@ -462,5 +462,30 @@ describe("LocationAverager", () => {
       expect(result?.latitude).toBeCloseTo(-33.8688, 3);
       expect(result?.longitude).toBeCloseTo(151.2093, 3);
     });
+
+    it("should average heading circularly across 0/360", () => {
+      const averager = new LocationAverager();
+      averager.addReading({
+        latitude: 0,
+        longitude: 0,
+        accuracy: 5,
+        heading: 359,
+      });
+      averager.addReading({
+        latitude: 0,
+        longitude: 0,
+        accuracy: 5,
+        heading: 1,
+      });
+      averager.addReading({
+        latitude: 0,
+        longitude: 0,
+        accuracy: 5,
+        heading: -1,
+      });
+
+      const heading = averager.calculateAveragedLocation()?.heading ?? NaN;
+      expect(Math.min(heading, 360 - heading)).toBeCloseTo(0);
+    });
   });
 });

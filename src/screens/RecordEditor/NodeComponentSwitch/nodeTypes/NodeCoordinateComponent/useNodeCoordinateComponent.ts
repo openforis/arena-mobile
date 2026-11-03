@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import {
   NodeDefs,
@@ -276,10 +276,6 @@ export const useNodeCoordinateComponent = (props: any) => {
   );
 
   const distanceTarget = useCoordinateDistanceTarget({ nodeDef, nodeUuid });
-
-  useEffect(() => {
-    return stopLocationWatch;
-  }, [stopLocationWatch]);
 
   const onChangeSrs = useCallback(
     (srsTo: any) => {
