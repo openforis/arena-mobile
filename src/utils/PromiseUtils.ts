@@ -25,6 +25,17 @@ const runWithConcurrency = async <T>({
   await Promise.all(Array.from({ length: workersCount }, () => runNext()));
 };
 
+// Returns a function running the given tasks one at a time, in call order; a failed task does not stop the next ones.
+const createSerialQueue = () => {
+  let queue: Promise<unknown> = Promise.resolve();
+  return <T>(task: () => Promise<T>): Promise<T> => {
+    const result = queue.then(task);
+    queue = result.catch(() => {});
+    return result;
+  };
+};
+
 export const PromiseUtils = {
   runWithConcurrency,
+  createSerialQueue,
 };

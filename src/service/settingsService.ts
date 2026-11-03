@@ -9,6 +9,7 @@ import { LanguageConstants } from "model/LanguageSettings";
 import { MapLayers, MapProvider } from "model/MapLayers";
 import { SettingKey, SettingsObject } from "model/SettingsModel";
 import { AMConstants } from "utils/AMConstants";
+import { PromiseUtils } from "utils/PromiseUtils";
 import { SystemUtils } from "utils/SystemUtils";
 
 const defaultSettings: Partial<SettingsObject> = {
@@ -61,6 +62,9 @@ const fetchSettings = async (): Promise<SettingsObject> =>
     ...(await AsyncStorageUtils.getItem(asyncStorageKeys.settings)),
   });
 
+// read-modify-write updates run one at a time, otherwise the last write would drop the others
+const enqueueUpdate = PromiseUtils.createSerialQueue();
+
 const updateSetting = async ({
   key,
   value,
@@ -68,9 +72,12 @@ const updateSetting = async ({
   key: SettingKey;
   value: any;
 }): Promise<SettingsObject> => {
-  const settingsPrev = await fetchSettings();
-  const settingsNext = { ...settingsPrev, [key]: value };
-  await saveSettings(settingsNext);
+  const settingsNext = await enqueueUpdate(async () => {
+    const settingsPrev = await fetchSettings();
+    const next = { ...settingsPrev, [key]: value };
+    await saveSettings(next);
+    return next;
+  });
   await systemSettingApplierByKey[key]?.({ key, value });
   return settingsNext;
 };
