@@ -17,10 +17,9 @@ const extractCookieValue = (
   headers: Dictionary<string>,
   cookieName: string,
 ): string | undefined => {
-  const cookies = headers?.["set-cookie"];
-  const cookie = cookies?.[0];
+  const cookies: string[] = [headers?.["set-cookie"] ?? []].flat();
+  const cookie = cookies.find((c) => c.startsWith(`${cookieName}=`));
   if (!cookie) return undefined;
-  // cookie string is in the format cookieName=cookieValue
   const endIndex = cookie.indexOf(";", cookieName.length + 1);
   return cookie.substring(
     cookieName.length + 1,
@@ -57,7 +56,7 @@ const extractErrorMessageFromLoginError = (err: any): { error: string } => {
   if (response.status === 401) {
     return { error: invalidCredentialsError };
   }
-  return { error: err };
+  return { error: err.message };
 };
 
 export type LoginResponse = {
@@ -177,7 +176,9 @@ const logout = async () => {
     if (!err.response) {
       return { error: invalidServerUrlError };
     }
-    return { error: err };
+    return { error: err.message };
+  } finally {
+    setAuthToken(null);
   }
 };
 
@@ -217,7 +218,10 @@ const performAuthTokensRefresh = async () => {
     });
     const { authToken, refreshToken } = extractAuthTokens(response);
     setAuthToken(authToken);
-    await SecureStoreService.setAuthRefreshToken(refreshToken);
+    // keep the previous refresh token if the server didn't send a new one
+    if (refreshToken) {
+      await SecureStoreService.setAuthRefreshToken(refreshToken);
+    }
   } catch (error) {
     setAuthToken(null);
     // keep the refresh token on network or server errors (e.g. poor connection in the field):
