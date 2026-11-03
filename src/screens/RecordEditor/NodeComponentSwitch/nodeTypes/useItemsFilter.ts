@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import {
@@ -7,6 +7,7 @@ import {
   Objects,
   RecordExpressionEvaluator,
   Records,
+  User,
 } from "@openforis/arena-core";
 
 import {
@@ -29,23 +30,29 @@ export const useItemsFilter = ({
 }) => {
   const [filteredItems, setFilteredItems] = useState([] as any[]);
 
-  return useSelector((state) => {
-    const itemsFilter = NodeDefs.getItemsFilter(nodeDef);
-    if (items.length === 0 || Objects.isEmpty(itemsFilter) || !parentNodeUuid)
-      return items;
+  // selectLoggedUserSafe returns a new object on every call when not logged in
+  const loggedUser = useSelector(RemoteConnectionSelectors.selectLoggedUser);
+  const survey = useSelector(SurveySelectors.selectCurrentSurvey)!;
+  const record = useSelector(DataEntrySelectors.selectRecord);
+  const prevCycleRecord = useSelector(
+    DataEntrySelectors.selectPreviousCycleRecord,
+  );
 
-    const user = RemoteConnectionSelectors.selectLoggedUserSafe(state);
-    const survey = SurveySelectors.selectCurrentSurvey(state)!;
-    const record = DataEntrySelectors.selectRecord(state);
-    const prevCycleRecord = DataEntrySelectors.selectPreviousCycleRecord(state);
-    const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
+  const itemsFilter = NodeDefs.getItemsFilter(nodeDef);
+  const filterEnabled =
+    items.length > 0 && !Objects.isEmpty(itemsFilter) && !!parentNodeUuid;
+
+  useEffect(() => {
+    if (!filterEnabled) return;
+    let cancelled = false;
+    const user = loggedUser ?? ({ props: {} } as User);
+    const parentNode = Records.getNodeByUuid(parentNodeUuid!)(record);
     const expressionEvaluator = new RecordExpressionEvaluator();
     void Promise.all(
-      items.map((item: any) => {
+      items.map(async (item: any) => {
         if (alwaysIncludeItemFunction?.(item)) return true;
-
         try {
-          return expressionEvaluator.evalExpression({
+          return await expressionEvaluator.evalExpression({
             user,
             survey,
             areaOfInterestProvider: AreaOfInterestProviderDefault,
@@ -55,18 +62,31 @@ export const useItemsFilter = ({
             query: itemsFilter!,
             item,
           });
-        } catch (error) {
+        } catch {
           return false;
         }
       }),
-    ).then((_itemsFilterResults) => {
-      const _filteredItems = items.filter(
-        (_: any, index: any) => !!_itemsFilterResults[index],
+    ).then((results) => {
+      if (cancelled) return;
+      const _filteredItems = items.filter((_, index) => !!results[index]);
+      setFilteredItems((prev) =>
+        Objects.isEqual(prev, _filteredItems) ? prev : _filteredItems,
       );
-      if (!Objects.isEqual(_filteredItems, filteredItems)) {
-        setFilteredItems(_filteredItems);
-      }
     });
-    return filteredItems;
-  }, Objects.isEqual);
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    alwaysIncludeItemFunction,
+    filterEnabled,
+    items,
+    itemsFilter,
+    loggedUser,
+    parentNodeUuid,
+    prevCycleRecord,
+    record,
+    survey,
+  ]);
+
+  return filterEnabled ? filteredItems : items;
 };
