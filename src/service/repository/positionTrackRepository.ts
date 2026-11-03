@@ -128,13 +128,11 @@ const fetchSegments = async (trackId: number): Promise<TrackSegment[]> => {
 const deleteTracksByIds = async (ids: number[]) => {
   if (ids.length === 0) return;
   const idsJoint = ids.join(", ");
-  await dbClient.transaction(async () => {
-    await dbClient.runSql(
+  await dbClient.transaction(async (tx) => {
+    await tx.runSql(
       `DELETE FROM position_track_point WHERE track_id IN (${idsJoint})`,
     );
-    await dbClient.runSql(
-      `DELETE FROM position_track WHERE id IN (${idsJoint})`,
-    );
+    await tx.runSql(`DELETE FROM position_track WHERE id IN (${idsJoint})`);
   });
 };
 
