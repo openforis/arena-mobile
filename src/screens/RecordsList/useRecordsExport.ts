@@ -272,6 +272,7 @@ export const useRecordsExport = ({
       toaster(noRecordsToExportTextKey);
       return;
     }
+    setLoading(true);
     dispatch(
       DataEntryActions.exportRecords({
         cycle,
@@ -296,33 +297,40 @@ export const useRecordsExport = ({
     [exportSelectedRecords, records],
   );
 
-  const checkCanSendData = useCallback(() => {
-    if (!survey) {
-      return {
-        errorKey: "recordsList:sendData.error.surveyNotSelected",
-      };
-    }
-    if (!Surveys.isVisibleInMobile(survey)) {
-      return {
-        errorKey: "recordsList:sendData.error.surveyNotVisibleInMobile",
-      };
-    } else if (!Surveys.isRecordsUploadFromMobileAllowed(survey)) {
-      return { errorKey: "recordsList:sendData.error.recordsUploadNotAllowed" };
-    } else if (
-      (records.filter((r) => r.errors).length ?? 0) > 0 &&
-      !Surveys.isRecordsWithErrorsUploadFromMobileAllowed(survey)
-    ) {
-      return {
-        errorKey:
-          "recordsList:sendData.error.recordsWithErrorsUploadNotAllowed",
-      };
-    }
-    return {};
-  }, [records, survey]);
+  const checkCanSendData = useCallback(
+    (selectedRecordUuids?: string[]) => {
+      if (!survey) {
+        return {
+          errorKey: "recordsList:sendData.error.surveyNotSelected",
+        };
+      }
+      if (!Surveys.isVisibleInMobile(survey)) {
+        return {
+          errorKey: "recordsList:sendData.error.surveyNotVisibleInMobile",
+        };
+      } else if (!Surveys.isRecordsUploadFromMobileAllowed(survey)) {
+        return {
+          errorKey: "recordsList:sendData.error.recordsUploadNotAllowed",
+        };
+      } else if (
+        filterRecordsByUuids(records, selectedRecordUuids).some(
+          (r) => r.errors,
+        ) &&
+        !Surveys.isRecordsWithErrorsUploadFromMobileAllowed(survey)
+      ) {
+        return {
+          errorKey:
+            "recordsList:sendData.error.recordsWithErrorsUploadNotAllowed",
+        };
+      }
+      return {};
+    },
+    [records, survey],
+  );
 
   const onSendDataPress = useCallback(
     async (selectedRecordUuids?: string[]) => {
-      const { errorKey } = checkCanSendData();
+      const { errorKey } = checkCanSendData(selectedRecordUuids);
       if (errorKey) {
         toaster("recordsList:sendData.error.generic", {
           details: t(errorKey),
