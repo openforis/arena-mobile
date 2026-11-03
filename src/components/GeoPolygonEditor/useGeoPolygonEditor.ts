@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 import {
   MapPolygonExtendedProps,
@@ -582,14 +582,6 @@ export const useGeoPolygonEditor = ({
     setLocalState((prev) => ({ ...prev, undoStack: [] }));
     onCancelDrawing();
   }, [onCancelDrawing, stopFollowingCurrentLocation]);
-
-  useEffect(
-    () => () => {
-      isFollowingCurrentLocationRef.current = false;
-      stopLocationWatch();
-    },
-    [stopLocationWatch],
-  );
 
   const hasValue = polygons.length > 0;
   const canSave = Boolean(polygonToSave) || hadValueWhenOpened;

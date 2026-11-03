@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import * as Location from "expo-location";
 import { Point, PointFactory } from "@openforis/arena-core";
 
@@ -81,6 +81,14 @@ export const useLocationWatch = ({
   const startAttemptIdRef = useRef(0);
   const cancelledAttemptIdRef = useRef(0);
   const shouldFallbackToInternalRef = useRef(false);
+  const locationCallbackRef = useRef(
+    null as
+      | ((
+          locationPoint: LocationPoint | null,
+          options?: { alreadyAveraged?: boolean },
+        ) => void)
+      | null,
+  );
   const toaster = useToast();
 
   const settings = SettingsSelectors.useSettings();
@@ -136,8 +144,19 @@ export const useLocationWatch = ({
     return wasActive;
   }, [clearLocationWatchTimeout]);
 
+  const beginStartAttempt = useCallback(() => {
+    const attemptId = startAttemptIdRef.current + 1;
+    startAttemptIdRef.current = attemptId;
+    return () =>
+      attemptId === startAttemptIdRef.current &&
+      attemptId > cancelledAttemptIdRef.current;
+  }, []);
+
   const locationCallback = useCallback(
-    (locationPointParam: LocationPoint | null) => {
+    (
+      locationPointParam: LocationPoint | null,
+      { alreadyAveraged = false } = {},
+    ) => {
       if (!locationPointParam) {
         lastLocationRef.current = locationPointParam; // location could be null when watch timeout is reached
         return;
@@ -158,7 +177,7 @@ export const useLocationWatch = ({
       let locationPoint: LocationPoint | AveragedLocation | null =
         locationPointParam;
 
-      if (locationAveragingEnabled) {
+      if (locationAveragingEnabled && !alreadyAveraged) {
         const locationAverager = locationAveragerRef.current;
         if (!locationAverager) return;
         locationAverager.addReading(locationPointParam);
@@ -216,26 +235,41 @@ export const useLocationWatch = ({
     ],
   );
 
+  useEffect(() => {
+    locationCallbackRef.current = locationCallback;
+  }, [locationCallback]);
+
+  const onLocationReading = useCallback(
+    (locationPoint: LocationPoint | null) =>
+      locationCallbackRef.current?.(locationPoint),
+    [],
+  );
+
   const stopLocationWatch = useCallback(() => {
     log.debug("Stopping location watch (stopLocationWatch)");
+    // invalidate start attempts still awaiting permissions or the connection
+    cancelledAttemptIdRef.current = startAttemptIdRef.current;
+    setState((statePrev) =>
+      statePrev.status === "connecting"
+        ? { ...statePrev, status: "idle", connectingSourceId: null }
+        : statePrev,
+    );
     if (_stopLocationWatch() && isMountedRef.current) {
       const lastLocation = lastLocationRef.current;
       const readingsCount = locationReadingsCountRef.current;
       log.info(
         lastLocation
-          ? `Location watch stopped: using last location (readings: ${readingsCount}, accuracy threshold: ${locationAccuracyThreshold}): ${JSON.stringify(lastLocation)}`
+          ? `Location watch stopped: using last location (readings: ${readingsCount}): ${JSON.stringify(lastLocation)}`
           : `Location watch stopped: no location available (readings: ${readingsCount}), value not set`,
       );
-      locationCallback(lastLocationRef.current);
+      // last location is already averaged
+      locationCallbackRef.current?.(lastLocation, { alreadyAveraged: true });
     }
     lastLocationRef.current = null;
     locationAveragerRef.current = null;
-  }, [
-    _stopLocationWatch,
-    isMountedRef,
-    locationAccuracyThreshold,
-    locationCallback,
-  ]);
+  }, [_stopLocationWatch, isMountedRef]);
+
+  useEffect(() => stopLocationWatch, [stopLocationWatch]);
 
   const cancelConnecting = useCallback(() => {
     if (status !== "connecting") return;
@@ -276,16 +310,21 @@ export const useLocationWatch = ({
 
     return Location.watchPositionAsync(
       { accuracy, distanceInterval },
-      (location) => locationCallback(locationToLocationPoint(location)),
+      (location) => onLocationReading(locationToLocationPoint(location)),
     );
-  }, [accuracy, distanceInterval, locationCallback, toaster]);
+  }, [accuracy, distanceInterval, onLocationReading, toaster]);
 
   const startInternalGpsWatch = useCallback(async (): Promise<boolean> => {
+    const isAttemptCurrent = beginStartAttempt();
     const subscription = await createInternalGpsSubscription();
     if (!subscription) return false;
+    if (!isAttemptCurrent()) {
+      subscription.remove();
+      return false;
+    }
     locationSubscriptionRef.current = subscription;
     return true;
-  }, [createInternalGpsSubscription]);
+  }, [beginStartAttempt, createInternalGpsSubscription]);
 
   const activateWatchingState = useCallback(
     ({
@@ -354,13 +393,8 @@ export const useLocationWatch = ({
       resolvedSourceId: string;
       isAttemptCurrent: () => boolean;
     }) => {
-      if (!useExternalSource) {
-        const granted = await Permissions.requestLocationForegroundPermission();
-        if (!granted && !(await Permissions.isLocationServiceEnabled())) {
-          toaster("device:locationServiceDisabled.warning");
-        }
-        return isAttemptCurrent() ? granted : false;
-      }
+      // internal GPS permission is checked when creating the subscription
+      if (!useExternalSource) return true;
 
       // Surface "connecting" feedback immediately - before the permission prompt -
       // since that prompt (or the Bluetooth handshake after it) is what's slow.
@@ -377,7 +411,7 @@ export const useLocationWatch = ({
       setIdleLocationWatchStatus();
       return false;
     },
-    [setIdleLocationWatchStatus, toaster],
+    [setIdleLocationWatchStatus],
   );
 
   const handleExternalGpsSourceDisconnected = useCallback(() => {
@@ -444,7 +478,7 @@ export const useLocationWatch = ({
         );
         const subscription = await ExternalGpsService.watchPosition(
           { sourceId: resolvedSourceId },
-          locationCallback,
+          onLocationReading,
           {
             onDisconnected: handleExternalGpsSourceDisconnected,
           },
@@ -484,18 +518,13 @@ export const useLocationWatch = ({
     [
       createInternalGpsSubscription,
       handleExternalGpsSourceDisconnected,
-      locationCallback,
+      onLocationReading,
     ],
   );
 
   const startLocationWatch = useCallback(async () => {
     log.debug("Starting location watch");
-    const attemptId = startAttemptIdRef.current + 1;
-    startAttemptIdRef.current = attemptId;
-
-    const isAttemptCurrent = () =>
-      attemptId === startAttemptIdRef.current &&
-      attemptId > cancelledAttemptIdRef.current;
+    const isAttemptCurrent = beginStartAttempt();
 
     // "auto" resolves to the first recognized connected external GPS device if one
     // is available, else internal GPS - so a paired Bad Elf (or similar) is used
@@ -504,6 +533,7 @@ export const useLocationWatch = ({
       preferredGpsSourceId === GpsSourceSetting.auto
         ? await ExternalGpsService.resolveAutoSourceId()
         : preferredGpsSourceId;
+    if (!isAttemptCurrent()) return;
 
     const useExternalSource = resolvedSourceId !== internalGpsSourceId;
     shouldFallbackToInternalRef.current =
@@ -547,16 +577,11 @@ export const useLocationWatch = ({
   }, [
     activateWatchingState,
     _stopLocationWatch,
-    accuracy,
-    distanceInterval,
-    locationAveragingEnabled,
+    beginStartAttempt,
     preferredGpsSourceId,
     requestGpsPermissions,
     setIdleLocationWatchStatus,
     startWatchForResolvedSource,
-    stopOnTimeout,
-    locationWatchTimeout,
-    stopLocationWatch,
   ]);
 
   return {

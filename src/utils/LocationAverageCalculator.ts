@@ -109,7 +109,6 @@ export class LocationAverager {
       accuracy: 0,
       altitude: null,
       altitudeAccuracy: null,
-      heading: null,
       speed: null,
     };
     for (const filteredReading of filteredReadings) {
@@ -118,7 +117,6 @@ export class LocationAverager {
       finalTotal.accuracy += filteredReading.accuracy!;
       addPropertyFromSource(finalTotal, filteredReading, "altitude");
       addPropertyFromSource(finalTotal, filteredReading, "altitudeAccuracy");
-      addPropertyFromSource(finalTotal, filteredReading, "heading");
       addPropertyFromSource(finalTotal, filteredReading, "speed");
     }
 
@@ -134,7 +132,9 @@ export class LocationAverager {
         finalTotal.altitudeAccuracy === null
           ? null
           : finalTotal.altitudeAccuracy / count,
-      heading: finalTotal.heading === null ? null : finalTotal.heading / count,
+      heading: calculateCircularMean(
+        filteredReadings.map((reading) => reading.heading),
+      ),
       speed: finalTotal.speed === null ? null : finalTotal.speed / count,
       count,
     };
@@ -152,6 +152,27 @@ const addPropertyFromSource = (target: any, source: any, property: string) => {
 };
 
 // --- Helper Methods ---
+/**
+ * Calculates the circular mean of angles in degrees (e.g. 359 and 1 -> 0), ignoring missing or negative (invalid) values.
+ */
+const calculateCircularMean = (
+  angles: (number | null | undefined)[],
+): number | null => {
+  let sinSum = 0;
+  let cosSum = 0;
+  let count = 0;
+  for (const angle of angles) {
+    if (angle === null || angle === undefined || angle < 0) continue;
+    const radians = (angle * Math.PI) / 180;
+    sinSum += Math.sin(radians);
+    cosSum += Math.cos(radians);
+    count += 1;
+  }
+  if (count === 0) return null;
+  const degrees = (Math.atan2(sinSum, cosSum) * 180) / Math.PI;
+  return (degrees + 360) % 360;
+};
+
 /**
  * Calculates the median of a sorted array of numbers.
  * @param sortedValues - An array of numbers sorted in ascending order.
