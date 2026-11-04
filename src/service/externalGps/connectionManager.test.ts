@@ -123,4 +123,27 @@ describe("ExternalGpsConnectionManager", () => {
     expect(transport.connect).toHaveBeenCalledTimes(2);
     expect(fresh.disconnect).not.toHaveBeenCalled();
   });
+
+  it("fails when connecting takes too long and closes the late connection", async () => {
+    const late = createConnection();
+    let resolveConnect: (connection: ExternalGpsConnection) => void = () => {};
+    const transport = {
+      connect: jest.fn(
+        () => new Promise((resolve) => (resolveConnect = resolve)),
+      ),
+      isConnected: jest.fn().mockResolvedValue(true),
+    } as unknown as ExternalGpsTransport;
+
+    const acquirePromise = ExternalGpsConnectionManager.acquire(
+      sourceId,
+      transport,
+    );
+    const assertion = expect(acquirePromise).rejects.toThrow("timed out");
+    await jest.advanceTimersByTimeAsync(20000);
+    await assertion;
+
+    resolveConnect(late);
+    await jest.advanceTimersByTimeAsync(0);
+    expect(late.disconnect).toHaveBeenCalledTimes(1);
+  });
 });

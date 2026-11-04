@@ -8,6 +8,7 @@ import * as Location from "expo-location";
 
 import { i18n } from "localization/i18n";
 import { Environment } from "./Environment";
+import { PromiseUtils } from "./PromiseUtils";
 
 const isLocationServiceEnabled = async () => {
   const providerStatus = await Location.getProviderStatusAsync();
@@ -142,12 +143,24 @@ const requestBluetoothScanPermissions = async (): Promise<boolean> => {
   return true;
 };
 
+// Android answers one permission request at a time: a request made while another one is
+// pending can stay unanswered forever
+const enqueueRequest = PromiseUtils.createSerialQueue();
+const oneAtATime =
+  <T>(request: () => Promise<T>) =>
+  () =>
+    enqueueRequest(request);
+
 export const Permissions = {
   isLocationServiceEnabled,
-  requestLocationForegroundPermission,
-  requestAccessMediaLocation,
-  requestImagePickerMediaLibraryPermissions,
-  requestMicrophonePermissions,
-  requestBluetoothPermissions,
-  requestBluetoothScanPermissions,
+  requestLocationForegroundPermission: oneAtATime(
+    requestLocationForegroundPermission,
+  ),
+  requestAccessMediaLocation: oneAtATime(requestAccessMediaLocation),
+  requestImagePickerMediaLibraryPermissions: oneAtATime(
+    requestImagePickerMediaLibraryPermissions,
+  ),
+  requestMicrophonePermissions: oneAtATime(requestMicrophonePermissions),
+  requestBluetoothPermissions: oneAtATime(requestBluetoothPermissions),
+  requestBluetoothScanPermissions: oneAtATime(requestBluetoothScanPermissions),
 };
