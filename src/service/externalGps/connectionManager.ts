@@ -39,6 +39,26 @@ const closeEntry = async (sourceId: string, entry: PoolEntry) => {
   }
 };
 
+// nothing uses a connection established after the timeout
+const closeLateConnection = (
+  sourceId: string,
+  connection: ExternalGpsConnection,
+) => {
+  log.info(
+    "ExternalGps: closing connection established after timeout to",
+    sourceId,
+  );
+  connection
+    .disconnect()
+    .catch((error) =>
+      log.warn(
+        "ExternalGps: error closing late connection to",
+        sourceId,
+        error,
+      ),
+    );
+};
+
 const connectWithTimeout = (
   sourceId: string,
   transport: ExternalGpsTransport,
@@ -56,23 +76,11 @@ const connectWithTimeout = (
     transport.connect(sourceId).then(
       (connection) => {
         clearTimeout(timeout);
-        if (!timedOut) {
+        if (timedOut) {
+          closeLateConnection(sourceId, connection);
+        } else {
           resolve(connection);
-          return;
         }
-        log.info(
-          "ExternalGps: closing connection established after timeout to",
-          sourceId,
-        );
-        connection
-          .disconnect()
-          .catch((error) =>
-            log.warn(
-              "ExternalGps: error closing late connection to",
-              sourceId,
-              error,
-            ),
-          );
       },
       (error) => {
         clearTimeout(timeout);
