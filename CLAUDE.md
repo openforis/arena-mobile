@@ -295,3 +295,4 @@ const message = t("app:welcomeMessage")
 
 - **Code comments**: keep them short; add one only when necessary (one line stating the non-obvious reason). Put longer rationale in the PR description or in `docs/`.
 - **Git branches**: when creating new branches, use meaningful and short names.
+- **No Claude attribution**: never add a `Co-Authored-By: Claude` trailer, a "Generated with Claude Code" line or a session link to commits and pull requests.
