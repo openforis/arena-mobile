@@ -49,6 +49,7 @@ const basePlugins: ExpoConfig["plugins"] = [
   "./plugins/mapAppsQueries",
   "./plugins/httpUserAgent",
   "./plugins/androidNativeDebugSymbols",
+  "./plugins/androidAutofillHighlight",
   "expo-audio",
   "expo-localization",
   "expo-secure-store",
