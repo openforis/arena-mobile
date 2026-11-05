@@ -2,8 +2,8 @@ name: User manual
 
 # Generates the user manual (.docx and .pdf) from docs/user-manual:
 # - pull requests changing it: uploaded as workflow artifact, to check the result
-# - published releases: attached to the release; the latest one is always available at
-#   https://github.com/openforis/arena-mobile/releases/latest/download/arena-mobile-user-manual.pdf
+# - published releases: attached to the release and published on GitHub Pages
+#   (opens in the browser): https://openforis.github.io/arena-mobile/arena-mobile-user-manual.pdf
 
 on:
   pull_request:
@@ -60,3 +60,30 @@ jobs:
             docs/user-manual/arena-mobile-user-manual.docx \
             docs/user-manual/arena-mobile-user-manual.pdf \
             --clobber --repo "$GITHUB_REPOSITORY"
+
+      - name: Prepare GitHub Pages content
+        if: env.TAG != ''
+        run: |
+          mkdir -p pages
+          cp docs/user-manual/arena-mobile-user-manual.docx docs/user-manual/arena-mobile-user-manual.pdf pages/
+
+      - name: Upload GitHub Pages artifact
+        if: env.TAG != ''
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: pages
+
+  pages:
+    needs: user-manual
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}arena-mobile-user-manual.pdf
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
