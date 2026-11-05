@@ -1,6 +1,7 @@
 import {
   ArenaRecord,
   ArenaRecordNode,
+  Dates,
   Dictionary,
   Objects,
   RecordNodesUpdater,
@@ -66,6 +67,7 @@ const updateCurrentRecordWithPrevCycleValues = async ({
       nodes: nodesToUpdateByUuid,
       user,
       prevCycleRecord,
+      timezoneOffset: Dates.getTimezoneOffset(),
       sideEffect: false,
     });
   await dispatch({

@@ -81,6 +81,7 @@ const assignQualifierValues = async ({
   record,
   nodes = {},
   areaOfInterestProvider,
+  timezoneOffset,
 }: {
   user: User;
   survey: Survey;
@@ -88,6 +89,7 @@ const assignQualifierValues = async ({
   record: ArenaRecord;
   nodes?: NodesMap;
   areaOfInterestProvider?: AreaOfInterestProvider;
+  timezoneOffset?: number;
 }): Promise<{ record: ArenaRecord; nodes: NodesMap }> => {
   const qualifierDefs = Surveys.getQualifierDefs({ survey });
   if (qualifierDefs.length === 0) {
@@ -117,6 +119,7 @@ const assignQualifierValues = async ({
         user,
         survey,
         areaOfInterestProvider,
+        timezoneOffset,
         record,
         attributeUuid: qualifierNode.uuid,
         value,
