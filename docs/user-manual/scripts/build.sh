@@ -1,15 +1,10 @@
 #!/usr/bin/env bash
-# Generates arena-mobile-user-manual.docx (pandoc) and arena-mobile-user-manual.pdf (LibreOffice)
-# from arena-mobile-user-manual.md. Requires pandoc, LibreOffice and node.
+# Generates arena-mobile-user-manual.pdf from arena-mobile-user-manual.docx with LibreOffice,
+# filling in the version and the date. Requires LibreOffice and node.
 set -euo pipefail
 
 MANUAL_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 NAME=arena-mobile-user-manual
-
-if ! command -v pandoc >/dev/null; then
-  echo "pandoc not found: install it (https://pandoc.org/installing.html)" >&2
-  exit 1
-fi
 
 SOFFICE="${SOFFICE:-$(command -v soffice || command -v libreoffice || true)}"
 if [[ -z "$SOFFICE" ]]; then
@@ -51,27 +46,15 @@ trap cleanup EXIT
 
 cd "$MANUAL_DIR"
 
-echo "Generating $NAME.docx (version $VERSION, $DATE)..."
-pandoc "$NAME.md" \
-  --from markdown \
-  --to docx \
-  --reference-doc reference.docx \
-  --number-sections \
-  --lua-filter scripts/filter.lua \
-  --metadata version="$VERSION" \
-  --metadata releaseDate="$DATE" \
-  --metadata lang=en-GB \
-  --output "$TMP_DIR/$NAME.docx"
-
-echo "Updating the table of contents and exporting $NAME.pdf..."
+echo "Exporting $NAME.pdf (version $VERSION, $DATE)..."
 # separate profile: works also when another LibreOffice instance is running
 PIPE_NAME="arena_mobile_manual_$$"
 "$SOFFICE" --headless --invisible --norestore \
   "-env:UserInstallation=file://$TMP_DIR/profile" \
   "--accept=pipe,name=$PIPE_NAME;urp;" &
 SOFFICE_PID=$!
-"$PYTHON" scripts/export.py "$PIPE_NAME" "$TMP_DIR/$NAME.docx" "$NAME.docx" "$NAME.pdf"
+"$PYTHON" scripts/export.py "$PIPE_NAME" "$NAME.docx" "$NAME.pdf" "$VERSION" "$DATE"
 wait "$SOFFICE_PID" || true
 SOFFICE_PID=""
 
-echo "Done: $MANUAL_DIR/$NAME.docx, $MANUAL_DIR/$NAME.pdf"
+echo "Done: $MANUAL_DIR/$NAME.pdf"
