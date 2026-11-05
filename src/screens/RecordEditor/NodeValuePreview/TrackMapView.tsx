@@ -56,12 +56,20 @@ export const TrackMapView = (props: Props) => {
     () =>
       segments
         .filter((segment) => segment.length > 0)
-        .map((segment) =>
-          segment.map(({ latitude, longitude }) => ({ latitude, longitude })),
-        ),
+        .map((segment) => ({
+          // the first point time identifies the segment
+          key: String(segment[0]?.time),
+          coordinates: segment.map(({ latitude, longitude }) => ({
+            latitude,
+            longitude,
+          })),
+        })),
     [segments],
   );
-  const coordinates = useMemo(() => lines.flat(), [lines]);
+  const coordinates = useMemo(
+    () => lines.flatMap((line) => line.coordinates),
+    [lines],
+  );
 
   const region = useMemo(
     () => GeoUtils.computeRegionFromCoordinates(coordinates),
@@ -110,10 +118,10 @@ export const TrackMapView = (props: Props) => {
         style={styles.map}
         toolbarEnabled={false}
       >
-        {lines.map((line, index) => (
+        {lines.map((line) => (
           <Polyline
-            key={index}
-            coordinates={line}
+            key={line.key}
+            coordinates={line.coordinates}
             strokeColor={trackStrokeColor}
             strokeWidth={4}
           />
