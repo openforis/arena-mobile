@@ -26,7 +26,7 @@ It requires [pandoc](https://pandoc.org/installing.html), [LibreOffice](https://
 
 - Headings are numbered automatically: don't write numbers in them.
 - Link to another section with its heading text, e.g. `[Auto-sync]`.
-- Images: `![](images/name.jpg){width=40%}`; the width is relative to the page. Images alone in a paragraph are centered. Small icons inside a sentence: `{height=0.25in}`.
+- Images: `![](images/name.jpg){width=30%}`; the width is relative to the page. Keep them at most ~4 inches tall (about 30% for full phone screenshots). Images alone in a paragraph are centered. Small icons inside a sentence: `{height=0.25in}`.
 - Name images after their section (e.g. `send-data-2.jpg`). Crop the status bar out of phone screenshots.
 - Notes: `> **Note:** ...`.
 - UI labels in bold, as they appear in the English version of the app (see `src/localization/en`).

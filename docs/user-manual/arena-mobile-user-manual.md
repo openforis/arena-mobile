@@ -164,11 +164,11 @@ When you are logged in, the **Connection to server** screen shows the user you a
 
 Once you are logged in, go back to the home page and press **Surveys** (or **Select a survey**, if you don't have any survey selected). A screen with the **Surveys in the device** will appear:
 
-![](images/download-survey-1.jpg){width=45%}
+![](images/download-survey-1.jpg){width=32%}
 
 Press the button **Import from cloud** in the bottom right corner to download a survey from the remote server; a new screen will appear, showing all the surveys in the remote server that are available to your user:
 
-![](images/download-survey-2.jpg){width=46%}
+![](images/download-survey-2.jpg){width=32%}
 
 If you want to see more details about every survey, press the view mode button in the top bar; this button switches the view from a table to cards, where you can see more details like description, date of publish and load status (if the survey is already in the device or not, or if it is not up to date).
 
@@ -190,11 +190,11 @@ Once a survey has been downloaded into the device, it is possible to work with i
 
 From the home page, press **Surveys**; in the **Surveys in the device** page, press the row related to the survey you want to use:
 
-![](images/select-survey-1.jpg){width=46%}
+![](images/select-survey-1.jpg){width=32%}
 
 You will be redirected to the page with the list of records collected with that survey.
 
-![](images/select-survey-2.jpg){width=47%}
+![](images/select-survey-2.jpg){width=32%}
 
 ## Updating a survey
 
@@ -210,7 +210,7 @@ Once confirmed, the local copy of the survey will be replaced with the most upda
 
 You can also update a survey from the **Surveys in the device** screen; press the **Check updates** button in the bottom left corner. For every row, you will see a small icon indicating the status of the survey. To update a survey that is not up to date, select the row of the survey you want to update and confirm the update:
 
-![](images/update-survey-3.jpg){width=40%}
+![](images/update-survey-3.jpg){width=32%}
 
 > ***Note:*** *Updating a survey will keep your data on the device. It will not be deleted. However, it is recommended to transfer all data to the server before running an update, and to keep a full local backup copy of the data!*
 
@@ -218,7 +218,7 @@ You can also update a survey from the **Surveys in the device** screen; press th
 
 If you want to delete one of the surveys you have downloaded on your device, **long-press on it**. It will show the delete option, then press the **Delete** button on top, and confirm the deletion.
 
-![](images/delete-survey-2.jpg){width=45%} ![](images/delete-survey-3.jpg){width=36%}
+![](images/delete-survey-2.jpg){width=32%} ![](images/delete-survey-3.jpg){width=36%}
 
 > **WARNING**: This operation will delete all the records and files/pictures collected using the selected survey (only locally; records stored on the server won't be touched). Do it only if you need to free up space in the device and you are really sure you won't need that survey anymore. Double-check that you have uploaded all the records to the server before deleting the survey.
 
@@ -274,7 +274,7 @@ You will be redirected to the Records page, where you can see the list of record
 
 In the record list, a column for every "key" attribute (attributes marked as key defined inside the root entity of your survey in Arena) and a column with Errors (if any) are shown.
 
-![](images/records-list-2.png){width=32%}
+![](images/records-list-2.png){width=31%}
 
 If you want to see more details about each record, press the view mode button on top to switch between the table view and the **cards** view. Records can be sorted using the sort field and direction shown above the list.
 
@@ -308,7 +308,7 @@ If you want to **delete** a record, **long-press** the corresponding row and pre
 
 *For the examples in this guide, we are using a demo survey; however, the basic data recording methods are the same for different surveys.*
 
-![](images/record-editor-1.jpg){width=47%}
+![](images/record-editor-1.jpg){width=30%}
 
 On the data entry page, there are 2 panels:
 
@@ -528,7 +528,7 @@ The "single node" view mode can be useful especially when working with small dev
 
 If you want to switch to the "single node view mode", press the icon ![](images/single-node-view-1.jpg){height=0.25in} in the top bar while you are editing a record (the icon will turn into this ![](images/single-node-view-2.jpg){height=0.23in}: press it again to go back to the form view mode).
 
-![](images/single-node-view-3.jpg){width=43%}
+![](images/single-node-view-3.jpg){width=32%}
 
 A dotted bar will appear below, showing the position of the current attribute inside the current entity.
 
@@ -539,13 +539,13 @@ You can navigate from one attribute to another inside the same entity:
 
 Also, the left side navigation panel will change in this view mode, showing the list of attributes inside the current entity:
 
-![](images/single-node-view-4.jpg){width=38%}
+![](images/single-node-view-4.jpg){width=32%}
 
 ## Data entry with multiple entities (forms or tables)
 
 When filling data for a multiple entity (that can have a table or form layout), Arena Mobile shows a landing page with a preview of the collected entities:
 
-![](images/multiple-entities-1.jpg){width=44%} ![](images/multiple-entities-2.jpg){width=44%}
+![](images/multiple-entities-1.jpg){width=32%} ![](images/multiple-entities-2.jpg){width=32%}
 
 On this page, it is possible to edit an entity by pressing the corresponding row or delete one or more entities by long pressing the corresponding rows and pressing the **Delete** button that appears.
 
@@ -575,7 +575,7 @@ Otherwise, you will see a confirmation message saying that the record has been f
 
 The icon in the top bar will change, and for every attribute in the record, you will see a box containing the value in the linked previous cycle record:
 
-![](images/previous-cycle-5.jpg){width=44%}
+![](images/previous-cycle-5.jpg){width=32%}
 
 ## Key attributes locking
 
@@ -662,7 +662,7 @@ Mistakes can happen due to unintentional swipes or touches on the device screen.
 
 Once the enumerator goes back to the **Records** list and selects any of the records there, the record will be in the locked state and will not be modifiable. To make changes, the enumerator must unlock the data for editing by pressing the ![](images/record-lock-1.jpg){height=0.27in} icon in the top bar:
 
-![](images/record-lock-2.jpg){width=44%}
+![](images/record-lock-2.jpg){width=32%}
 
 # Data submission to Arena Server
 
@@ -670,7 +670,7 @@ To transfer data to the Arena server from your device, follow the next steps (or
 
 1. Once you are okay with your data, go to the list of records:
 
-    ![](images/send-data-1.jpg){width=39%}
+    ![](images/send-data-1.jpg){width=32%}
 
 1. On the records screen, you will see all the records collected using the current survey. Press the **Send data** button at the bottom of the screen ![](images/send-data-2.jpg){height=0.3in}.
 
@@ -831,7 +831,7 @@ A geospatial attribute marked as **Position tracking** in Arena records the path
 - Tracking can be paused and resumed (**Resume**); press **Stop** to stop it. The track is saved in the attribute and can be continued later.
 - **Show track** shows the track on a map:
 
-    ![](images/position-tracking-2.jpg){width=40%}
+    ![](images/position-tracking-2.jpg){width=33%}
 
 - **Restart** deletes the points recorded so far and starts tracking from scratch; **Delete track** deletes the track and leaves the attribute empty.
 - Only one attribute at a time can be tracked: starting tracking another attribute stops the current one.
@@ -851,7 +851,7 @@ The tracks are also shown in the records map (see [Records map]).
 
 Maps are configured in **Settings** > **Maps**, and managed from **Offline maps** (in the main menu or in the Maps section of the settings).
 
-![](images/maps-1.png){width=44%}
+![](images/maps-1.png){width=37%}
 
 ## Map provider and map layers
 
