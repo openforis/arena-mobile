@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { ComponentProps, useCallback, useState } from "react";
 import { FlatList } from "react-native";
 import { List as RNPList } from "react-native-paper";
 
@@ -31,6 +31,16 @@ const deviceLabel = (device: DiscoveredGpsDevice) =>
 // devices found by a discovery scan.
 const addressFromSourceId = (sourceId: string): string =>
   sourceId.replace(/^external:/, "");
+
+type ListItemProps = ComponentProps<typeof RNPList.Item>;
+
+const renderBluetoothIcon: NonNullable<ListItemProps["left"]> = (iconProps) => (
+  <RNPList.Icon {...iconProps} icon="bluetooth-connect" />
+);
+
+const renderLoadingIcon: NonNullable<ListItemProps["right"]> = (iconProps) => (
+  <LoadingIcon size={20} style={iconProps.style} />
+);
 
 type MessageActionProps = {
   textKey: string;
@@ -137,15 +147,9 @@ export const GpsDevicePairingModal = (props: GpsDevicePairingModalProps) => {
           key={device.address}
           description={device.vendor}
           disabled={pairing}
-          left={(iconProps) => (
-            <RNPList.Icon {...iconProps} icon="bluetooth-connect" />
-          )}
+          left={renderBluetoothIcon}
           onPress={() => onPairPress(device)}
-          right={
-            pairing
-              ? (iconProps) => <LoadingIcon size={20} style={iconProps.style} />
-              : undefined
-          }
+          right={pairing ? renderLoadingIcon : undefined}
           title={deviceLabel(device)}
         />
       );
@@ -165,9 +169,7 @@ export const GpsDevicePairingModal = (props: GpsDevicePairingModalProps) => {
             {pairedSources.map((source) => (
               <RNPList.Item
                 key={source.id}
-                left={(iconProps) => (
-                  <RNPList.Icon {...iconProps} icon="bluetooth-connect" />
-                )}
+                left={renderBluetoothIcon}
                 title={source.label}
               />
             ))}

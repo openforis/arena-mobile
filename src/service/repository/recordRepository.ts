@@ -408,7 +408,7 @@ const updateRecordKeysAndContent = async ({
   const dateModifiedColumn =
     origin === RecordOrigin.remote ? "date_modified_remote" : "date_modified";
 
-  return client.runSql(
+  await client.runSql(
     `UPDATE record SET 
       content = ?, 
       ${dateModifiedColumn} = ?, 
