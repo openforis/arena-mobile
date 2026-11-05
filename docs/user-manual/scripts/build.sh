@@ -23,11 +23,13 @@ if [ ! -x "$SOFFICE" ]; then
 fi
 
 # official LibreOffice builds bundle a Python with the uno module; distro builds need python3-uno
-LO_PROGRAM_DIR="$(dirname "$(readlink -f "$SOFFICE")")"
-PYTHON=python3
-for candidate in "$LO_PROGRAM_DIR/python" "$LO_PROGRAM_DIR/../Resources/python"; do
-  [ -x "$candidate" ] && PYTHON="$candidate" && break
-done
+if [ -z "${PYTHON:-}" ]; then
+  LO_PROGRAM_DIR="$(dirname "$(readlink -f "$SOFFICE")")"
+  PYTHON=python3
+  for candidate in "$LO_PROGRAM_DIR/python" "$LO_PROGRAM_DIR/../Resources/python"; do
+    [ -x "$candidate" ] && PYTHON="$candidate" && break
+  done
+fi
 
 VERSION="$(node -p "require('$MANUAL_DIR/../../package.json').version")"
 DATE="$(node -p "new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })")"
