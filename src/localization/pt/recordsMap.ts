@@ -13,8 +13,12 @@ export default {
   dataSourceInfo:
     "O mapa mostra os dados deste dispositivo. Para incluir os registros dos seus colegas, toque em 'Verificar sincronização' na lista de registros quando estiver online.",
   pointsCount: "{{count}} pontos",
+  tracksCount: "{{count}} trajetos",
+  areaOfInterestLayer: "Área de interesse: {{name}}",
+  areaOfInterestNotAvailable:
+    "Área de interesse não disponível neste dispositivo: {{names}}. Tente atualizar o inquérito.",
   openRecord: "Abrir",
   noLayers:
-    "Este inquérito não tem pontos de amostragem com localização nem atributos de coordenadas para mostrar no mapa",
+    "Este inquérito não tem pontos de amostragem com localização, atributos de coordenadas, trajetos nem áreas de interesse para mostrar no mapa",
   errorLoadingData: "Erro ao carregar os dados do mapa: {{details}}",
 };
