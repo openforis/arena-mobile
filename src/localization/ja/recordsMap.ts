@@ -13,8 +13,12 @@ export default {
   dataSourceInfo:
     "地図にはこのデバイスのデータが表示されます。同僚のレコードを含めるには、オンライン時にレコード一覧で「状態を確認」をタップしてください。",
   pointsCount: "{{count}} ポイント",
+  tracksCount: "{{count}} トラック",
+  areaOfInterestLayer: "対象エリア：{{name}}",
+  areaOfInterestNotAvailable:
+    "このデバイスでは対象エリアを利用できません：{{names}}。調査を更新してみてください。",
   openRecord: "開く",
   noLayers:
-    "この調査には、地図に表示できる位置情報付きのサンプリングポイントや座標属性がありません",
+    "この調査には、地図に表示できる位置情報付きのサンプリングポイント、座標属性、位置トラック、対象エリアがありません",
   errorLoadingData: "地図データの読み込み中にエラーが発生しました: {{details}}",
 };

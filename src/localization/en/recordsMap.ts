@@ -14,8 +14,11 @@ export default {
     "The map shows the data in this device. To include the records of your colleagues, tap 'Check status' in the list of records when online.",
   pointsCount: "{{count}} points",
   tracksCount: "{{count}} tracks",
+  areaOfInterestLayer: "Area of interest: {{name}}",
+  areaOfInterestNotAvailable:
+    "Area of interest not available on this device: {{names}}. Try updating the survey.",
   openRecord: "Open",
   noLayers:
-    "This survey has no sampling points with location, coordinate attributes or position tracks to show on the map",
+    "This survey has no sampling points with location, coordinate attributes, position tracks or areas of interest to show on the map",
   errorLoadingData: "Error loading map data: {{details}}",
 };

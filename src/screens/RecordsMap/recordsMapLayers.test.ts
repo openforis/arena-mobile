@@ -1,5 +1,6 @@
 import {
   ExtraPropDataType,
+  LanguageCode,
   NodeDefType,
   Survey,
   SurveyBuilder,
@@ -9,11 +10,13 @@ import {
 } from "@openforis/arena-core";
 
 import {
+  buildAreaOfInterestPolygons,
   buildCoordinateAttributeFeatures,
   buildSamplingPointFeatures,
   buildTrackFeatures,
   getAvailableLayers,
   getDefaultVisibleLayerKeys,
+  getLayerLabel,
   getRecordUuidsBySamplingPointItemUuid,
   hasMapLayers,
   RecordsMapLayerType,
@@ -302,6 +305,117 @@ describe("recordsMapLayers", () => {
         ],
       ]);
       expect(features[0]!.point).toMatchObject({ x: 10, y: 20 });
+    });
+  });
+
+  describe("areas of interest", () => {
+    const withAreasOfInterest = (survey: Survey): Survey => ({
+      ...survey,
+      props: {
+        ...survey.props,
+        areasOfInterest: [
+          {
+            name: "area_1",
+            labels: { en: "Area 1" },
+            fileUuid: "file-1",
+            fileName: "area_1.geojson",
+            size: 0,
+            polygons: 1,
+            vertices: 4,
+          },
+        ],
+      },
+    });
+
+    const getAreaLayer = (survey: Survey) =>
+      getAvailableLayers({ survey, cycle }).find(
+        (layer) => layer.type === RecordsMapLayerType.areaOfInterest,
+      )!;
+
+    test("a layer for each area of interest, labelled in the survey language, hidden by default", async () => {
+      const surveyWithAreas = withAreasOfInterest(survey);
+      const areaLayer = getAreaLayer(surveyWithAreas);
+      expect(areaLayer.areaName).toBe("area_1");
+      const layers = getAvailableLayers({ survey: surveyWithAreas, cycle });
+      expect(
+        getDefaultVisibleLayerKeys({ survey: surveyWithAreas, cycle, layers }),
+      ).not.toContain(areaLayer.key);
+      const t = (key: string, params?: any) => `${key} ${params?.name}`;
+      expect(
+        getLayerLabel({
+          survey: surveyWithAreas,
+          layer: areaLayer,
+          lang: LanguageCode.en,
+          t,
+        }),
+      ).toBe("recordsMap:areaOfInterestLayer Area 1");
+      expect(
+        getLayerLabel({
+          survey: surveyWithAreas,
+          layer: areaLayer,
+          lang: LanguageCode.fr,
+          t,
+        }),
+      ).toBe("recordsMap:areaOfInterestLayer area_1");
+
+      const surveyWithAreasOnly = withAreasOfInterest(
+        await new SurveyBuilder(
+          UserFactory.createInstance({
+            email: "test@openforis.org",
+            name: "test",
+          }),
+          entityDef("cluster", codeDef("cluster_id", "cluster_ids").key()),
+        )
+          .categories(category("cluster_ids").items(categoryItem("1")))
+          .build(),
+      );
+      expect(hasMapLayers({ survey: surveyWithAreasOnly, cycle })).toBe(true);
+    });
+
+    test("polygons and multi polygons become map polygons with holes", () => {
+      const areaLayer = getAreaLayer(withAreasOfInterest(survey));
+      const ring = (x: number, y: number) => [
+        [x, y],
+        [x + 1, y],
+        [x + 1, y + 1],
+        [x, y],
+      ];
+      const toLatLngs = (positions: number[][]) =>
+        positions.map(([longitude, latitude]) => ({ latitude, longitude }));
+
+      expect(
+        buildAreaOfInterestPolygons({
+          layer: areaLayer,
+          areaOfInterest: {
+            type: "Polygon",
+            coordinates: [ring(0, 0), ring(0.2, 0.2)],
+          },
+        }),
+      ).toEqual([
+        {
+          key: `${areaLayer.key}_0`,
+          coordinates: toLatLngs(ring(0, 0)),
+          holes: [toLatLngs(ring(0.2, 0.2))],
+        },
+      ]);
+
+      const polygons = buildAreaOfInterestPolygons({
+        layer: areaLayer,
+        areaOfInterest: {
+          type: "MultiPolygon",
+          coordinates: [
+            [ring(0, 0)],
+            // invalid positions are skipped: too few left for a polygon
+            [[[10, 10], [Number.NaN, 10], [11, 11] as any]],
+            [ring(20, 20)],
+          ],
+        },
+      });
+      expect(polygons.map((polygon) => polygon.key)).toEqual([
+        `${areaLayer.key}_0`,
+        `${areaLayer.key}_2`,
+      ]);
+      expect(polygons[1]!.coordinates).toEqual(toLatLngs(ring(20, 20)));
     });
   });
 });

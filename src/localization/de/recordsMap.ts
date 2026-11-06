@@ -13,8 +13,12 @@ export default {
   dataSourceInfo:
     "Die Karte zeigt die Daten auf diesem Gerät. Um die Datensätze deiner Kollegen einzubeziehen, tippe online in der Datensatzliste auf 'Status prüfen'.",
   pointsCount: "{{count}} Punkte",
+  tracksCount: "{{count}} Tracks",
+  areaOfInterestLayer: "Interessengebiet: {{name}}",
+  areaOfInterestNotAvailable:
+    "Interessengebiet auf diesem Gerät nicht verfügbar: {{names}}. Versuche, die Umfrage zu aktualisieren.",
   openRecord: "Öffnen",
   noLayers:
-    "Diese Umfrage hat keine Stichprobenpunkte mit Standort oder Koordinatenattribute, die auf der Karte angezeigt werden können",
+    "Diese Umfrage hat keine Stichprobenpunkte mit Standort, Koordinatenattribute, Positionstracks oder Interessengebiete, die auf der Karte angezeigt werden können",
   errorLoadingData: "Fehler beim Laden der Kartendaten: {{details}}",
 };

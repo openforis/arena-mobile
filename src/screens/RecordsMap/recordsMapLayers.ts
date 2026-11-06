@@ -1,4 +1,5 @@
 import {
+  AreaOfInterest,
   CategoryItem,
   CategoryItems,
   LanguageCode,
@@ -23,6 +24,7 @@ export enum RecordsMapLayerType {
   samplingPoints = "samplingPoints",
   coordinateAttribute = "coordinateAttribute",
   positionTrack = "positionTrack",
+  areaOfInterest = "areaOfInterest",
 }
 
 export type RecordsMapLayer = {
@@ -33,6 +35,8 @@ export type RecordsMapLayer = {
   levelIndex?: number;
   // attribute def (coordinateAttribute and positionTrack layers only)
   nodeDefUuid?: string;
+  // survey area of interest (areaOfInterest layers only)
+  areaName?: string;
 };
 
 export type RecordsMapPointProperties = {
@@ -61,6 +65,12 @@ export type RecordsMapTrackFeature = {
   lines: { latitude: number; longitude: number }[][];
   // track start, used to open the track in other map apps
   point: Point;
+};
+
+export type RecordsMapAreaPolygon = {
+  key: string;
+  coordinates: { latitude: number; longitude: number }[];
+  holes: { latitude: number; longitude: number }[][];
 };
 
 export type RecordSummaryForMap = {
@@ -195,10 +205,24 @@ export const getAvailableLayers = ({
       nodeDefUuid: nodeDef.uuid,
     }),
   );
-  return [...samplingPointLayers, ...coordinateLayers, ...trackLayers];
+  const colorIndexOffset = coordinateLayers.length + trackLayers.length;
+  const areaOfInterestLayers = Surveys.getAreasOfInterest(survey).map(
+    ({ name }, index) => ({
+      key: `${RecordsMapLayerType.areaOfInterest}_${name}`,
+      type: RecordsMapLayerType.areaOfInterest,
+      color: layerColors[(colorIndexOffset + index) % layerColors.length]!,
+      areaName: name,
+    }),
+  );
+  return [
+    ...samplingPointLayers,
+    ...coordinateLayers,
+    ...trackLayers,
+    ...areaOfInterestLayers,
+  ];
 };
 
-// true if the survey has sampling points with location or coordinate attributes to show on the map
+// true if the survey has sampling points with location, coordinate attributes, tracks or areas of interest to show on the map
 export const hasMapLayers = ({
   survey,
   cycle,
@@ -208,7 +232,8 @@ export const hasMapLayers = ({
 }): boolean =>
   !!getSamplingPointDataCategory(survey) ||
   getCoordinateAttributeDefs({ survey, cycle }).length > 0 ||
-  getPositionTrackAttributeDefs({ survey, cycle }).length > 0;
+  getPositionTrackAttributeDefs({ survey, cycle }).length > 0 ||
+  Surveys.getAreasOfInterest(survey).length > 0;
 
 // entities containing a code attribute referencing the first level of the sampling point data
 const getSamplingPointFirstLevelEntityDefUuids = ({
@@ -289,6 +314,15 @@ export const getLayerLabel = ({
   if (layer.type === RecordsMapLayerType.samplingPoints) {
     return t("recordsMap:samplingPointsLayer", {
       level: (layer.levelIndex ?? 0) + 1,
+    });
+  }
+  if (layer.type === RecordsMapLayerType.areaOfInterest) {
+    const descriptor = Surveys.getAreaOfInterestByName({
+      survey,
+      name: layer.areaName!,
+    });
+    return t("recordsMap:areaOfInterestLayer", {
+      name: descriptor?.labels?.[lang] || layer.areaName,
     });
   }
   const nodeDef = Surveys.getNodeDefByUuid({
@@ -534,4 +568,45 @@ export const buildTrackFeatures = ({
     });
   }
   return features;
+};
+
+// GeoJSON positions are [longitude, latitude]
+const toLatLngRing = (ring: number[][]) =>
+  (Array.isArray(ring) ? ring : [])
+    .filter(
+      (position) =>
+        Array.isArray(position) &&
+        Number.isFinite(position[0]) &&
+        Number.isFinite(position[1]),
+    )
+    .map(([longitude, latitude]) => ({
+      latitude: latitude!,
+      longitude: longitude!,
+    }));
+
+// one map polygon (outer ring and holes) for each polygon of the area
+export const buildAreaOfInterestPolygons = ({
+  layer,
+  areaOfInterest,
+}: {
+  layer: RecordsMapLayer;
+  areaOfInterest: AreaOfInterest;
+}): RecordsMapAreaPolygon[] => {
+  const polygons =
+    areaOfInterest.type === "Polygon"
+      ? [areaOfInterest.coordinates]
+      : areaOfInterest.coordinates;
+  const result: RecordsMapAreaPolygon[] = [];
+  polygons.forEach((rings, index) => {
+    const [outerRing, ...innerRings] = (Array.isArray(rings) ? rings : []).map(
+      toLatLngRing,
+    );
+    if (!outerRing || outerRing.length < 3) return;
+    result.push({
+      key: `${layer.key}_${index}`,
+      coordinates: outerRing,
+      holes: innerRings.filter((ring) => ring.length >= 3),
+    });
+  });
+  return result;
 };

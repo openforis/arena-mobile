@@ -13,8 +13,12 @@ export default {
   dataSourceInfo:
     "Kartta näyttää tämän laitteen tiedot. Jos haluat mukaan kollegoidesi tietueet, napauta tietueluettelossa 'Tarkista tila', kun olet verkossa.",
   pointsCount: "{{count}} pistettä",
+  tracksCount: "{{count}} reittiä",
+  areaOfInterestLayer: "Kohdealue: {{name}}",
+  areaOfInterestNotAvailable:
+    "Kohdealue ei ole saatavilla tällä laitteella: {{names}}. Yritä päivittää kysely.",
   openRecord: "Avaa",
   noLayers:
-    "Tässä kyselyssä ei ole sijainnillisia otantapisteitä tai koordinaattiattribuutteja näytettäväksi kartalla",
+    "Tässä kyselyssä ei ole sijainnillisia otantapisteitä, koordinaattiattribuutteja, sijaintireittejä tai kohdealueita näytettäväksi kartalla",
   errorLoadingData: "Virhe karttatietojen latauksessa: {{details}}",
 };
