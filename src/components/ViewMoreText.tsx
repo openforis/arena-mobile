@@ -1,16 +1,21 @@
 import RNViewMoreText from "react-native-view-more-text";
-import type { StyleProp, TextStyle } from "react-native";
+import type { StyleProp, ViewStyle, TextStyle } from "react-native";
 
 type Props = {
   children?: React.ReactNode;
   numberOfLines?: number;
+  style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
 };
 
 export const ViewMoreText = (props: Props) => {
-  const { children, numberOfLines = 2, textStyle } = props;
+  const { children, numberOfLines = 2, style, textStyle } = props;
   return (
-    <RNViewMoreText numberOfLines={numberOfLines} textStyle={textStyle}>
+    <RNViewMoreText
+      numberOfLines={numberOfLines}
+      style={style}
+      textStyle={textStyle}
+    >
       {children}
     </RNViewMoreText>
   );
