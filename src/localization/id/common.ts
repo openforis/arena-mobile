@@ -81,6 +81,8 @@ export default {
     timePartLeft: "{{count}} {{timePart}} tersisa",
   },
   tryAgain: "Coba lagi",
+  viewLess: "Lihat lebih sedikit",
+  viewMore: "Lihat selengkapnya",
   warning: "Peringatan",
   warning_other: "Peringatan",
 };

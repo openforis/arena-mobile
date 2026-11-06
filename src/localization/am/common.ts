@@ -79,6 +79,8 @@ export default {
     timePartLeft: "{{count}} {{timePart}} ቀርቷል",
   },
   tryAgain: "እንደገና ይሞክሩ",
+  viewLess: "ያነሰ ይመልከቱ",
+  viewMore: "ተጨማሪ ይመልከቱ",
   warning: "Warning",
   warning_other: "ማስጠንቀቂያዎች",
 };

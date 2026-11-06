@@ -79,6 +79,8 @@ export default {
     timePartLeft: "{{count}} {{timePart}} restantes",
   },
   tryAgain: "Tentar novamente",
+  viewLess: "Ver menos",
+  viewMore: "Ver mais",
   warning: "Aviso",
   warning_other: "Avisos",
 };

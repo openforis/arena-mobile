@@ -93,6 +93,8 @@ export default {
     timePartLeft: "осталось {{count}} {{timePart}}",
   },
   tryAgain: "Попробовать снова",
+  viewLess: "Свернуть",
+  viewMore: "Показать больше",
   warning: "Предупреждение",
   warning_other: "Предупреждения",
 };
