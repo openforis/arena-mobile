@@ -14,8 +14,11 @@ export default {
     "Mapa prikazuje podatke sa ovog uređaja. Da biste uključili zapise svojih kolega, dodirnite 'Provjeri status' u listi zapisa kada ste na mreži.",
   pointsCount: "Tačaka: {{count}}",
   tracksCount: "Putanja: {{count}}",
+  areaOfInterestLayer: "Oblast od interesa: {{name}}",
+  areaOfInterestNotAvailable:
+    "Oblast od interesa nije dostupna na ovom uređaju: {{names}}. Pokušajte da ažurirate istraživanje.",
   openRecord: "Otvori",
   noLayers:
-    "Ovo istraživanje nema tačke uzorka sa lokacijom, atribute koordinata ni putanje kretanja za prikaz na mapi",
+    "Ovo istraživanje nema tačke uzorka sa lokacijom, atribute koordinata, putanje kretanja ni oblasti od interesa za prikaz na mapi",
   errorLoadingData: "Greška pri učitavanju podataka mape: {{details}}",
 };

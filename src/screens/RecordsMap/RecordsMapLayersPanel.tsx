@@ -14,7 +14,7 @@ import styles from "./styles";
 type LayerItem = {
   layer: RecordsMapLayer;
   label: string;
-  // null when not loaded yet (tracks are loaded only when their layer is visible)
+  // null when not counted: areas, and tracks not loaded yet (loaded only when their layer is visible)
   pointsCount: number | null;
 };
 

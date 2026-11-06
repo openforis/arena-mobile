@@ -14,9 +14,13 @@ export default {
   dataSourceInfo:
     "La carte affiche les données de cet appareil. Pour inclure les enregistrements de vos collègues, appuyez sur 'Vérifier synchronisation' dans la liste des enregistrements lorsque vous êtes en ligne.",
   pointsCount: "{{count}} points",
+  tracksCount: "{{count}} traces",
+  areaOfInterestLayer: "Zone d'intérêt : {{name}}",
+  areaOfInterestNotAvailable:
+    "Zone d'intérêt non disponible sur cet appareil : {{names}}. Essayez de mettre à jour l'enquête.",
   openRecord: "Ouvrir",
   noLayers:
-    "Cette enquête n'a pas de points d'échantillonnage avec localisation ni d'attributs de coordonnées à afficher sur la carte",
+    "Cette enquête n'a pas de points d'échantillonnage avec localisation, d'attributs de coordonnées, de traces de position ni de zones d'intérêt à afficher sur la carte",
   errorLoadingData:
     "Erreur lors du chargement des données de la carte : {{details}}",
 };

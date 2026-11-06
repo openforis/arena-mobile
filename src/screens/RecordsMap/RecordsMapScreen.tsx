@@ -5,7 +5,13 @@ import React, {
   useRef,
   useState,
 } from "react";
-import RNMapView, { MapPressEvent, Polyline, Region } from "react-native-maps";
+import RNMapView, {
+  MapPressEvent,
+  Polygon,
+  Polyline,
+  Region,
+} from "react-native-maps";
+import { AreaOfInterest } from "@openforis/arena-core";
 import { useFocusEffect } from "@react-navigation/native";
 
 import { useNavigator, useScreenParams } from "navigation/navigator";
@@ -16,10 +22,12 @@ import { useCurrentLocationWatch, useToast } from "hooks";
 import { useTranslation } from "localization";
 import { LatLng, MapProvider, RecordUtils } from "model";
 import { RecordService } from "service";
+import { AreaOfInterestProviderDefault } from "service/areaOfInterestProvider";
 import { DataEntryActions, SurveySelectors, useAppDispatch } from "state";
 import { log } from "utils";
 
 import {
+  buildAreaOfInterestPolygons,
   buildCoordinateAttributeFeatures,
   buildSamplingPointFeatures,
   buildTrackFeatures,
@@ -27,6 +35,7 @@ import {
   getDefaultVisibleLayerKeys,
   getLayerLabel,
   getRecordUuidsBySamplingPointItemUuid,
+  RecordsMapAreaPolygon,
   RecordsMapLayer,
   RecordsMapLayerType,
   RecordsMapPointFeature,
@@ -66,9 +75,9 @@ const fitEdgePadding = { top: 80, right: 80, bottom: 80, left: 80 };
 // on iOS the map press event is fired also right after a track (polyline) press
 const TRACK_PRESS_MAP_PRESS_IGNORE_MS = 500;
 
-// bounding box corners of the track (to fit the map without passing all its points)
-const getTrackBoundsCorners = (track: RecordsMapTrackFeature): LatLng[] => {
-  const coordinates = track.lines.flat();
+// bounding box corners (to fit the map without passing all the points of tracks and areas)
+const getBoundsCorners = (coordinates: LatLng[]): LatLng[] => {
+  if (coordinates.length === 0) return [];
   let minLat = Infinity;
   let maxLat = -Infinity;
   let minLng = Infinity;
@@ -218,6 +227,56 @@ export const RecordsMapScreen = () => {
     };
   }, [cycle, focusCount, survey.id, toaster, visibleTrackDefUuidsJoint]);
 
+  const visibleAreaNames = useMemo(
+    () =>
+      layers
+        .filter(
+          (layer) =>
+            layer.type === RecordsMapLayerType.areaOfInterest &&
+            visibleLayerKeys.includes(layer.key),
+        )
+        .map((layer) => layer.areaName!),
+    [layers, visibleLayerKeys],
+  );
+
+  // null when the area file cannot be read
+  const [areaOfInterestByName, setAreaOfInterestByName] = useState<
+    Record<string, AreaOfInterest | null>
+  >({});
+  const requestedAreaNamesRef = useRef(new Set<string>());
+
+  // areas are loaded only when their layer is visible, once (survey files never change)
+  useEffect(() => {
+    const names = visibleAreaNames.filter(
+      (name) => !requestedAreaNamesRef.current.has(name),
+    );
+    if (names.length === 0) return;
+    names.forEach((name) => requestedAreaNamesRef.current.add(name));
+    Promise.all(
+      names.map((name) =>
+        AreaOfInterestProviderDefault.getAreaOfInterest({ survey, name }),
+      ),
+    )
+      .then((areas) => {
+        setAreaOfInterestByName((areasPrev) => {
+          const areasNext = { ...areasPrev };
+          names.forEach((name, index) => {
+            areasNext[name] = areas[index] ?? null;
+          });
+          return areasNext;
+        });
+        const missingNames = names.filter((_name, index) => !areas[index]);
+        if (missingNames.length > 0) {
+          toaster("recordsMap:areaOfInterestNotAvailable", {
+            names: missingNames.join(", "),
+          });
+        }
+      })
+      .catch((error) => {
+        toaster("recordsMap:errorLoadingData", { details: String(error) });
+      });
+  }, [survey, toaster, visibleAreaNames]);
+
   const recordSummaryByUuid = useMemo(
     () =>
       recordSummaries.reduce(
@@ -269,8 +328,6 @@ export const RecordsMapScreen = () => {
             nodeValues,
             recordLabelByUuid,
           });
-        } else {
-          acc[layer.key] = [];
         }
         return acc;
       },
@@ -300,6 +357,27 @@ export const RecordsMapScreen = () => {
     [layers, recordLabelByUuid, trackValues, visibleLayerKeys],
   );
 
+  const areaPolygonsByLayerKey = useMemo(
+    () =>
+      layers.reduce(
+        (acc, layer) => {
+          const areaOfInterest =
+            layer.type === RecordsMapLayerType.areaOfInterest
+              ? areaOfInterestByName[layer.areaName!]
+              : null;
+          if (areaOfInterest) {
+            acc[layer.key] = buildAreaOfInterestPolygons({
+              layer,
+              areaOfInterest,
+            });
+          }
+          return acc;
+        },
+        {} as Record<string, RecordsMapAreaPolygon[]>,
+      ),
+    [areaOfInterestByName, layers],
+  );
+
   const layerLabelByKey = useMemo(
     () =>
       layers.reduce(
@@ -321,9 +399,16 @@ export const RecordsMapScreen = () => {
     () =>
       visibleLayers.flatMap((layer) => [
         ...(pointsByLayerKey[layer.key] ?? []).map(toLatLng),
-        ...(tracksByLayerKey[layer.key] ?? []).flatMap(getTrackBoundsCorners),
+        ...(tracksByLayerKey[layer.key] ?? []).flatMap((track) =>
+          getBoundsCorners(track.lines.flat()),
+        ),
+        ...getBoundsCorners(
+          (areaPolygonsByLayerKey[layer.key] ?? []).flatMap(
+            (polygon) => polygon.coordinates,
+          ),
+        ),
       ]),
-    [pointsByLayerKey, tracksByLayerKey, visibleLayers],
+    [areaPolygonsByLayerKey, pointsByLayerKey, tracksByLayerKey, visibleLayers],
   );
 
   // computed only once, when data is loaded the first time
@@ -456,6 +541,20 @@ export const RecordsMapScreen = () => {
         style={styles.map}
         toolbarEnabled={false}
       >
+        {/* areas first: below tracks and markers */}
+        {visibleLayers.flatMap((layer) =>
+          (areaPolygonsByLayerKey[layer.key] ?? []).map((polygon) => (
+            <Polygon
+              key={polygon.key}
+              coordinates={polygon.coordinates}
+              fillColor={`${layer.color}33`}
+              holes={polygon.holes}
+              strokeColor={layer.color}
+              strokeWidth={2}
+              tappable={false}
+            />
+          )),
+        )}
         {visibleLayers.flatMap((layer) =>
           (tracksByLayerKey[layer.key] ?? []).flatMap((track) =>
             track.lines.map((line, lineIndex) => (
@@ -528,7 +627,7 @@ export const RecordsMapScreen = () => {
             pointsCount:
               layer.type === RecordsMapLayerType.positionTrack
                 ? (tracksByLayerKey[layer.key]?.length ?? null)
-                : (pointsByLayerKey[layer.key]?.length ?? 0),
+                : (pointsByLayerKey[layer.key]?.length ?? null),
           }))}
           onDismiss={() => setLayersPanelVisible(false)}
           onLayerToggle={onLayerToggle}
