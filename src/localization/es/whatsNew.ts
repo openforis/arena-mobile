@@ -3,6 +3,11 @@ export default {
   since: "Desde la versión {{version}}",
   dontShowAgain: "No volver a mostrar",
   items: {
+    mapLayers: {
+      title: "Mapa: áreas de interés y capas de mapa",
+      description:
+        "El mapa de los registros ahora puede mostrar las **áreas de interés** y las **capas de mapa** (archivos KML o GeoJSON) definidas en la encuesta en Arena, p. ej. límites administrativos, áreas protegidas o ríos.\n\nToca **Capas** para mostrarlas u ocultarlas: las capas están agrupadas por tipo (puntos de muestreo, atributos de coordenadas, recorridos, áreas de interés, capas de mapa).",
+    },
     geoAttribute: {
       title: "Atributo geoespacial: dibujar polígonos",
       description:

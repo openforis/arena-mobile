@@ -3,6 +3,11 @@ export default {
   since: "Od verzije {{version}}",
   dontShowAgain: "Ne prikazuj ponovo",
   items: {
+    mapLayers: {
+      title: "Mapa: oblasti od interesa i slojevi mape",
+      description:
+        "Mapa zapisa sada može da prikaže **oblasti od interesa** i **slojeve mape** (KML ili GeoJSON datoteke) definisane u anketi u Areni, npr. administrativne granice, zaštićena područja ili reke.\n\nDodirnite **Slojevi** da ih prikažete ili sakrijete: slojevi su grupisani po tipu (tačke uzorka, atributi koordinata, tragovi položaja, oblasti od interesa, slojevi mape).",
+    },
     geoAttribute: {
       title: "Geoprostorni atribut: crtanje poligona",
       description:

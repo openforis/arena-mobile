@@ -3,6 +3,11 @@ export default {
   since: "Sedan version {{version}}",
   dontShowAgain: "Visa inte dessa igen",
   items: {
+    mapLayers: {
+      title: "Karta: intresseområden och kartlager",
+      description:
+        "Kartan över posterna kan nu visa de **intresseområden** och **kartlager** (KML- eller GeoJSON-filer) som definierats i undersökningen i Arena, t.ex. administrativa gränser, skyddade områden eller floder.\n\nTryck på **Lager** för att visa eller dölja dem: lagren är grupperade efter typ (provpunkter, koordinatattribut, positionsspår, intresseområden, kartlager).",
+    },
     geoAttribute: {
       title: "Geospatialt attribut: rita polygoner",
       description:

@@ -3,6 +3,11 @@ export default {
   since: "Seit Version {{version}}",
   dontShowAgain: "Nicht mehr anzeigen",
   items: {
+    mapLayers: {
+      title: "Karte: Interessengebiete und Kartenebenen",
+      description:
+        "Die Karte der Datensätze kann jetzt die in der Erhebung in Arena definierten **Interessengebiete** und **Kartenebenen** (KML- oder GeoJSON-Dateien) anzeigen, z. B. Verwaltungsgrenzen, Schutzgebiete oder Flüsse.\n\nTippe auf **Ebenen**, um sie ein- oder auszublenden: Die Ebenen sind nach Typ gruppiert (Stichprobenpunkte, Koordinatenattribute, Positionsspuren, Interessengebiete, Kartenebenen).",
+    },
     geoAttribute: {
       title: "Geodaten-Attribut: Polygone zeichnen",
       description:
