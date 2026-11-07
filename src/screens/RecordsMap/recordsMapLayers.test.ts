@@ -12,6 +12,7 @@ import {
 import {
   buildAreaOfInterestPolygons,
   buildCoordinateAttributeFeatures,
+  buildPreloadedMapLayerShapes,
   buildSamplingPointFeatures,
   buildTrackFeatures,
   getAvailableLayers,
@@ -416,6 +417,99 @@ describe("recordsMapLayers", () => {
         `${areaLayer.key}_2`,
       ]);
       expect(polygons[1]!.coordinates).toEqual(toLatLngs(ring(20, 20)));
+    });
+  });
+
+  describe("preloaded map layers", () => {
+    const preloadedFile = (uuid: string, deleted = false) => ({
+      uuid,
+      dateCreated: "2026-01-01",
+      props: { name: `${uuid}.kml`, labels: { en: `Layer ${uuid}` }, deleted },
+    });
+
+    const withPreloadedMapLayers = (
+      survey: Survey,
+      enabled = true,
+    ): Survey => ({
+      ...survey,
+      props: {
+        ...survey.props,
+        preloadedMapLayersEnabled: enabled,
+        preloadedMapLayers: [preloadedFile("f1"), preloadedFile("f2", true)],
+      },
+    });
+
+    const getPreloadedLayers = (survey: Survey) =>
+      getAvailableLayers({ survey, cycle }).filter(
+        (layer) => layer.type === RecordsMapLayerType.preloadedMapLayer,
+      );
+
+    test("a layer for each file not deleted, only when enabled, hidden by default", () => {
+      expect(
+        getPreloadedLayers(withPreloadedMapLayers(survey, false)),
+      ).toHaveLength(0);
+      const surveyWithLayers = withPreloadedMapLayers(survey);
+      const layers = getPreloadedLayers(surveyWithLayers);
+      expect(layers.map((layer) => layer.fileUuid)).toEqual(["f1"]);
+      expect(
+        getDefaultVisibleLayerKeys({
+          survey: surveyWithLayers,
+          cycle,
+          layers: getAvailableLayers({ survey: surveyWithLayers, cycle }),
+        }),
+      ).not.toContain(layers[0]!.key);
+      const t = (key: string, params?: any) => `${key} ${params?.name}`;
+      expect(
+        getLayerLabel({
+          survey: surveyWithLayers,
+          layer: layers[0]!,
+          lang: LanguageCode.en,
+          t,
+        }),
+      ).toBe("recordsMap:preloadedMapLayer Layer f1");
+      expect(
+        getLayerLabel({
+          survey: surveyWithLayers,
+          layer: layers[0]!,
+          lang: LanguageCode.fr,
+          t,
+        }),
+      ).toBe("recordsMap:preloadedMapLayer f1.kml");
+    });
+
+    test("file geometries become map points, lines and polygons", () => {
+      const layer = getPreloadedLayers(withPreloadedMapLayers(survey))[0]!;
+      const square = [
+        { latitude: 0, longitude: 0 },
+        { latitude: 0, longitude: 1 },
+        { latitude: 1, longitude: 1 },
+      ];
+      const shapes = buildPreloadedMapLayerShapes({
+        layer,
+        geometries: {
+          points: [
+            { name: "P1", coordinate: { latitude: 20, longitude: 10 } },
+            { coordinate: { latitude: 21, longitude: 11 } },
+          ],
+          lines: [{ coordinates: square }],
+          polygons: [{ coordinates: square, holes: [] }],
+        },
+      });
+      expect(shapes.points.map((point) => point.properties)).toEqual([
+        expect.objectContaining({
+          label: "P1",
+          layerKey: layer.key,
+          recordUuids: [],
+          point: { x: 10, y: 20, srs: "4326" },
+        }),
+        expect.objectContaining({ label: "" }),
+      ]);
+      expect(shapes.lines).toEqual([
+        { key: `${layer.key}_line_0`, coordinates: square },
+      ]);
+      expect(shapes.polygons).toEqual([
+        { key: `${layer.key}_polygon_0`, coordinates: square, holes: [] },
+      ]);
     });
   });
 });

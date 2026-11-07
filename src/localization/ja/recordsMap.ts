@@ -17,8 +17,11 @@ export default {
   areaOfInterestLayer: "対象エリア：{{name}}",
   areaOfInterestNotAvailable:
     "このデバイスでは対象エリアを利用できません：{{names}}。調査を更新してみてください。",
+  preloadedMapLayer: "地図レイヤー：{{name}}",
+  preloadedMapLayerNotAvailable:
+    "このデバイスでは地図レイヤーを利用できません：{{names}}。調査を更新してみてください。",
   openRecord: "開く",
   noLayers:
-    "この調査には、地図に表示できる位置情報付きのサンプリングポイント、座標属性、位置トラック、対象エリアがありません",
+    "この調査には、地図に表示できる位置情報付きのサンプリングポイント、座標属性、位置トラック、対象エリア、事前ロード済み地図レイヤーがありません",
   errorLoadingData: "地図データの読み込み中にエラーが発生しました: {{details}}",
 };

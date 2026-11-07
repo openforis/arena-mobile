@@ -20,15 +20,18 @@ import { IconButton, Loader, MapView, Text, VView } from "components";
 import { CurrentLocationDot } from "components/MapView/CurrentLocationDot";
 import { useCurrentLocationWatch, useToast } from "hooks";
 import { useTranslation } from "localization";
-import { LatLng, MapProvider, RecordUtils } from "model";
+import { LatLng, MapProvider, RecordUtils, SurveyDefs } from "model";
 import { RecordService } from "service";
 import { AreaOfInterestProviderDefault } from "service/areaOfInterestProvider";
+import { PreloadedMapLayerService } from "service/preloadedMapLayerService";
 import { DataEntryActions, SurveySelectors, useAppDispatch } from "state";
 import { log } from "utils";
+import { MapLayerFileGeometries } from "utils/MapLayerFileParser";
 
 import {
   buildAreaOfInterestPolygons,
   buildCoordinateAttributeFeatures,
+  buildPreloadedMapLayerShapes,
   buildSamplingPointFeatures,
   buildTrackFeatures,
   getAvailableLayers,
@@ -40,6 +43,7 @@ import {
   RecordsMapLayerType,
   RecordsMapPointFeature,
   RecordsMapPointProperties,
+  RecordsMapPreloadedLayerShapes,
   RecordsMapTrackFeature,
 } from "./recordsMapLayers";
 import { RecordsMapLayerMarkers } from "./RecordsMapLayerMarkers";
@@ -277,6 +281,82 @@ export const RecordsMapScreen = () => {
       });
   }, [survey, toaster, visibleAreaNames]);
 
+  const visiblePreloadedFileUuids = useMemo(
+    () =>
+      layers
+        .filter(
+          (layer) =>
+            layer.type === RecordsMapLayerType.preloadedMapLayer &&
+            visibleLayerKeys.includes(layer.key),
+        )
+        .map((layer) => layer.fileUuid!),
+    [layers, visibleLayerKeys],
+  );
+
+  // null when the file cannot be read
+  const [preloadedGeometriesByFileUuid, setPreloadedGeometriesByFileUuid] =
+    useState<Record<string, MapLayerFileGeometries | null>>({});
+  const requestedPreloadedFileUuidsRef = useRef(new Set<string>());
+
+  // preloaded layers are loaded only when visible, once (survey files never change)
+  useEffect(() => {
+    const files = SurveyDefs.getPreloadedMapLayers(survey).filter(
+      ({ uuid }) =>
+        visiblePreloadedFileUuids.includes(uuid) &&
+        !requestedPreloadedFileUuidsRef.current.has(uuid),
+    );
+    if (files.length === 0) return;
+    files.forEach(({ uuid }) =>
+      requestedPreloadedFileUuidsRef.current.add(uuid),
+    );
+    Promise.all(
+      files.map((file) =>
+        PreloadedMapLayerService.readPreloadedMapLayer({ survey, file }),
+      ),
+    )
+      .then((results) => {
+        setPreloadedGeometriesByFileUuid((prev) => {
+          const next = { ...prev };
+          files.forEach(({ uuid }, index) => {
+            next[uuid] = results[index] ?? null;
+          });
+          return next;
+        });
+        const missingNames = files
+          .filter((_file, index) => !results[index])
+          .map(({ props }) => props.labels?.[lang] || props.name);
+        if (missingNames.length > 0) {
+          toaster("recordsMap:preloadedMapLayerNotAvailable", {
+            names: missingNames.join(", "),
+          });
+        }
+      })
+      .catch((error) => {
+        toaster("recordsMap:errorLoadingData", { details: String(error) });
+      });
+  }, [lang, survey, toaster, visiblePreloadedFileUuids]);
+
+  const preloadedShapesByLayerKey = useMemo(
+    () =>
+      layers.reduce(
+        (acc, layer) => {
+          const geometries =
+            layer.type === RecordsMapLayerType.preloadedMapLayer
+              ? preloadedGeometriesByFileUuid[layer.fileUuid!]
+              : null;
+          if (geometries) {
+            acc[layer.key] = buildPreloadedMapLayerShapes({
+              layer,
+              geometries,
+            });
+          }
+          return acc;
+        },
+        {} as Record<string, RecordsMapPreloadedLayerShapes>,
+      ),
+    [layers, preloadedGeometriesByFileUuid],
+  );
+
   const recordSummaryByUuid = useMemo(
     () =>
       recordSummaries.reduce(
@@ -328,12 +408,22 @@ export const RecordsMapScreen = () => {
             nodeValues,
             recordLabelByUuid,
           });
+        } else if (preloadedShapesByLayerKey[layer.key]) {
+          acc[layer.key] = preloadedShapesByLayerKey[layer.key]!.points;
         }
         return acc;
       },
       {} as Record<string, RecordsMapPointFeature[]>,
     );
-  }, [cycle, layers, nodeValues, recordLabelByUuid, recordSummaries, survey]);
+  }, [
+    cycle,
+    layers,
+    nodeValues,
+    preloadedShapesByLayerKey,
+    recordLabelByUuid,
+    recordSummaries,
+    survey,
+  ]);
 
   const tracksByLayerKey = useMemo(
     () =>
@@ -370,12 +460,14 @@ export const RecordsMapScreen = () => {
               layer,
               areaOfInterest,
             });
+          } else if (preloadedShapesByLayerKey[layer.key]) {
+            acc[layer.key] = preloadedShapesByLayerKey[layer.key]!.polygons;
           }
           return acc;
         },
         {} as Record<string, RecordsMapAreaPolygon[]>,
       ),
-    [areaOfInterestByName, layers],
+    [areaOfInterestByName, layers, preloadedShapesByLayerKey],
   );
 
   const layerLabelByKey = useMemo(
@@ -407,8 +499,19 @@ export const RecordsMapScreen = () => {
             (polygon) => polygon.coordinates,
           ),
         ),
+        ...getBoundsCorners(
+          (preloadedShapesByLayerKey[layer.key]?.lines ?? []).flatMap(
+            (line) => line.coordinates,
+          ),
+        ),
       ]),
-    [areaPolygonsByLayerKey, pointsByLayerKey, tracksByLayerKey, visibleLayers],
+    [
+      areaPolygonsByLayerKey,
+      pointsByLayerKey,
+      preloadedShapesByLayerKey,
+      tracksByLayerKey,
+      visibleLayers,
+    ],
   );
 
   // computed only once, when data is loaded the first time
@@ -525,6 +628,18 @@ export const RecordsMapScreen = () => {
     [dispatch, navigator, recordSummaryByUuid],
   );
 
+  const getLayerItemsCount = (layer: RecordsMapLayer): number | null => {
+    switch (layer.type) {
+      case RecordsMapLayerType.positionTrack:
+        return tracksByLayerKey[layer.key]?.length ?? null;
+      // points, lines and polygons: not counted
+      case RecordsMapLayerType.preloadedMapLayer:
+        return null;
+      default:
+        return pointsByLayerKey[layer.key]?.length ?? null;
+    }
+  };
+
   if (loading || !initialRegionRef.current) {
     return <Loader />;
   }
@@ -549,6 +664,17 @@ export const RecordsMapScreen = () => {
               coordinates={polygon.coordinates}
               fillColor={`${layer.color}33`}
               holes={polygon.holes}
+              strokeColor={layer.color}
+              strokeWidth={2}
+              tappable={false}
+            />
+          )),
+        )}
+        {visibleLayers.flatMap((layer) =>
+          (preloadedShapesByLayerKey[layer.key]?.lines ?? []).map((line) => (
+            <Polyline
+              key={line.key}
+              coordinates={line.coordinates}
               strokeColor={layer.color}
               strokeWidth={2}
               tappable={false}
@@ -624,10 +750,7 @@ export const RecordsMapScreen = () => {
           layerItems={layers.map((layer) => ({
             layer,
             label: layerLabelByKey[layer.key]!,
-            pointsCount:
-              layer.type === RecordsMapLayerType.positionTrack
-                ? (tracksByLayerKey[layer.key]?.length ?? null)
-                : (pointsByLayerKey[layer.key]?.length ?? null),
+            pointsCount: getLayerItemsCount(layer),
           }))}
           onDismiss={() => setLayersPanelVisible(false)}
           onLayerToggle={onLayerToggle}

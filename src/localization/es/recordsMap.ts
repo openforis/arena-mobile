@@ -17,8 +17,11 @@ export default {
   areaOfInterestLayer: "Área de interés: {{name}}",
   areaOfInterestNotAvailable:
     "Área de interés no disponible en este dispositivo: {{names}}. Intenta actualizar la encuesta.",
+  preloadedMapLayer: "Capa de mapa: {{name}}",
+  preloadedMapLayerNotAvailable:
+    "Capas de mapa no disponibles en este dispositivo: {{names}}. Intenta actualizar la encuesta.",
   openRecord: "Abrir",
   noLayers:
-    "Esta encuesta no tiene puntos de muestreo con ubicación, atributos de coordenadas, recorridos ni áreas de interés para mostrar en el mapa",
+    "Esta encuesta no tiene puntos de muestreo con ubicación, atributos de coordenadas, recorridos, áreas de interés ni capas de mapa precargadas para mostrar en el mapa",
   errorLoadingData: "Error al cargar los datos del mapa: {{details}}",
 };

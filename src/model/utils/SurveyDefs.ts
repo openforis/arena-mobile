@@ -11,6 +11,7 @@ import {
   Objects,
   NodeDefFile,
   NodeDefExpression,
+  SurveyFile,
 } from "@openforis/arena-core";
 
 const samplingPointDataCategoryName = "sampling_point_data";
@@ -216,6 +217,14 @@ const findNodeDefUuidsUsingPrevCycleValueFunctions = (
   return nodeeDefsWithPrevCycleValueFunctions;
 };
 
+// files included in the survey package by Arena only when the preloaded map layers are enabled
+const getPreloadedMapLayers = (survey: Survey): SurveyFile[] =>
+  survey.props.preloadedMapLayersEnabled
+    ? (survey.props.preloadedMapLayers ?? []).filter(
+        (file) => !file.props.deleted,
+      )
+    : [];
+
 export const SurveyDefs = {
   samplingPointDataLocationPropName,
   getSamplingPointDataCategoryWithLocation,
@@ -228,4 +237,5 @@ export const SurveyDefs = {
   isCodeAttributeFromSamplingPointData,
   getNodeDefsLabelsOrNames,
   findNodeDefUuidsUsingPrevCycleValueFunctions,
+  getPreloadedMapLayers,
 };

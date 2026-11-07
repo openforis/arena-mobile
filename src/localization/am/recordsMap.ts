@@ -17,8 +17,11 @@ export default {
   areaOfInterestLayer: "የፍላጎት አካባቢ: {{name}}",
   areaOfInterestNotAvailable:
     "የፍላጎት አካባቢ በዚህ መሣሪያ ላይ አይገኝም: {{names}}። የዳሰሳ ጥናቱን ለማዘመን ይሞክሩ።",
+  preloadedMapLayer: "የካርታ ንብርብር: {{name}}",
+  preloadedMapLayerNotAvailable:
+    "የካርታ ንብርብሮች በዚህ መሣሪያ ላይ አይገኙም: {{names}}። የዳሰሳ ጥናቱን ለማዘመን ይሞክሩ።",
   openRecord: "ክፈት",
   noLayers:
-    "ይህ የዳሰሳ ጥናት በካርታው ላይ የሚታዩ አካባቢ ያላቸው የናሙና ነጥቦች፣ የመጋጠሚያ ባህሪያት፣ የቦታ ዱካዎች ወይም የፍላጎት አካባቢዎች የሉትም",
+    "ይህ የዳሰሳ ጥናት በካርታው ላይ የሚታዩ አካባቢ ያላቸው የናሙና ነጥቦች፣ የመጋጠሚያ ባህሪያት፣ የቦታ ዱካዎች፣ የፍላጎት አካባቢዎች ወይም አስቀድመው የተጫኑ የካርታ ንብርብሮች የሉትም",
   errorLoadingData: "የካርታ መረጃን በመጫን ላይ ስህተት: {{details}}",
 };

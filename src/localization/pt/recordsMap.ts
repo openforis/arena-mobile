@@ -17,8 +17,11 @@ export default {
   areaOfInterestLayer: "Área de interesse: {{name}}",
   areaOfInterestNotAvailable:
     "Área de interesse não disponível neste dispositivo: {{names}}. Tente atualizar o inquérito.",
+  preloadedMapLayer: "Camada de mapa: {{name}}",
+  preloadedMapLayerNotAvailable:
+    "Camadas de mapa não disponíveis neste dispositivo: {{names}}. Tente atualizar o inquérito.",
   openRecord: "Abrir",
   noLayers:
-    "Este inquérito não tem pontos de amostragem com localização, atributos de coordenadas, trajetos nem áreas de interesse para mostrar no mapa",
+    "Este inquérito não tem pontos de amostragem com localização, atributos de coordenadas, trajetos, áreas de interesse nem camadas de mapa pré-carregadas para mostrar no mapa",
   errorLoadingData: "Erro ao carregar os dados do mapa: {{details}}",
 };

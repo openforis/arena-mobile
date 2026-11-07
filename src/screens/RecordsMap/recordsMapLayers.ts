@@ -17,6 +17,7 @@ import {
 
 import { PositionTracks } from "model/utils/PositionTracks";
 import { SurveyDefs } from "model/utils/SurveyDefs";
+import type { MapLayerFileGeometries } from "utils/MapLayerFileParser";
 
 const latLongSrsCode = "4326";
 
@@ -25,6 +26,7 @@ export enum RecordsMapLayerType {
   coordinateAttribute = "coordinateAttribute",
   positionTrack = "positionTrack",
   areaOfInterest = "areaOfInterest",
+  preloadedMapLayer = "preloadedMapLayer",
 }
 
 export type RecordsMapLayer = {
@@ -37,6 +39,8 @@ export type RecordsMapLayer = {
   nodeDefUuid?: string;
   // survey area of interest (areaOfInterest layers only)
   areaName?: string;
+  // survey file (preloadedMapLayer layers only)
+  fileUuid?: string;
 };
 
 export type RecordsMapPointProperties = {
@@ -71,6 +75,17 @@ export type RecordsMapAreaPolygon = {
   key: string;
   coordinates: { latitude: number; longitude: number }[];
   holes: { latitude: number; longitude: number }[][];
+};
+
+export type RecordsMapLine = {
+  key: string;
+  coordinates: { latitude: number; longitude: number }[];
+};
+
+export type RecordsMapPreloadedLayerShapes = {
+  points: RecordsMapPointFeature[];
+  lines: RecordsMapLine[];
+  polygons: RecordsMapAreaPolygon[];
 };
 
 export type RecordSummaryForMap = {
@@ -214,15 +229,27 @@ export const getAvailableLayers = ({
       areaName: name,
     }),
   );
+  const preloadedColorIndexOffset =
+    colorIndexOffset + areaOfInterestLayers.length;
+  const preloadedMapLayers = SurveyDefs.getPreloadedMapLayers(survey).map(
+    ({ uuid }, index) => ({
+      key: `${RecordsMapLayerType.preloadedMapLayer}_${uuid}`,
+      type: RecordsMapLayerType.preloadedMapLayer,
+      color:
+        layerColors[(preloadedColorIndexOffset + index) % layerColors.length]!,
+      fileUuid: uuid,
+    }),
+  );
   return [
     ...samplingPointLayers,
     ...coordinateLayers,
     ...trackLayers,
     ...areaOfInterestLayers,
+    ...preloadedMapLayers,
   ];
 };
 
-// true if the survey has sampling points with location, coordinate attributes, tracks or areas of interest to show on the map
+// true if the survey has sampling points with location, coordinate attributes, tracks, areas of interest or preloaded map layers to show on the map
 export const hasMapLayers = ({
   survey,
   cycle,
@@ -233,7 +260,8 @@ export const hasMapLayers = ({
   !!getSamplingPointDataCategory(survey) ||
   getCoordinateAttributeDefs({ survey, cycle }).length > 0 ||
   getPositionTrackAttributeDefs({ survey, cycle }).length > 0 ||
-  Surveys.getAreasOfInterest(survey).length > 0;
+  Surveys.getAreasOfInterest(survey).length > 0 ||
+  SurveyDefs.getPreloadedMapLayers(survey).length > 0;
 
 // entities containing a code attribute referencing the first level of the sampling point data
 const getSamplingPointFirstLevelEntityDefUuids = ({
@@ -323,6 +351,14 @@ export const getLayerLabel = ({
     });
     return t("recordsMap:areaOfInterestLayer", {
       name: descriptor?.labels?.[lang] || layer.areaName,
+    });
+  }
+  if (layer.type === RecordsMapLayerType.preloadedMapLayer) {
+    const file = SurveyDefs.getPreloadedMapLayers(survey).find(
+      ({ uuid }) => uuid === layer.fileUuid,
+    );
+    return t("recordsMap:preloadedMapLayer", {
+      name: file?.props.labels?.[lang] || file?.props.name,
     });
   }
   const nodeDef = Surveys.getNodeDefByUuid({
@@ -610,3 +646,37 @@ export const buildAreaOfInterestPolygons = ({
   });
   return result;
 };
+
+export const buildPreloadedMapLayerShapes = ({
+  layer,
+  geometries,
+}: {
+  layer: RecordsMapLayer;
+  geometries: MapLayerFileGeometries;
+}): RecordsMapPreloadedLayerShapes => ({
+  points: geometries.points.flatMap(({ name, coordinate }, index) => {
+    const feature = createPointFeature({
+      point: {
+        x: coordinate.longitude,
+        y: coordinate.latitude,
+        srs: latLongSrsCode,
+      },
+      properties: {
+        key: `${layer.key}_${index}`,
+        layerKey: layer.key,
+        label: name ?? "",
+        recordUuids: [],
+      },
+    });
+    return feature ? [feature] : [];
+  }),
+  lines: geometries.lines.map(({ coordinates }, index) => ({
+    key: `${layer.key}_line_${index}`,
+    coordinates,
+  })),
+  polygons: geometries.polygons.map(({ coordinates, holes }, index) => ({
+    key: `${layer.key}_polygon_${index}`,
+    coordinates,
+    holes,
+  })),
+});

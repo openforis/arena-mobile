@@ -18,9 +18,12 @@ export default {
   areaOfInterestLayer: "Zone d'intérêt : {{name}}",
   areaOfInterestNotAvailable:
     "Zone d'intérêt non disponible sur cet appareil : {{names}}. Essayez de mettre à jour l'enquête.",
+  preloadedMapLayer: "Couche de carte : {{name}}",
+  preloadedMapLayerNotAvailable:
+    "Couches de carte non disponibles sur cet appareil : {{names}}. Essayez de mettre à jour l'enquête.",
   openRecord: "Ouvrir",
   noLayers:
-    "Cette enquête n'a pas de points d'échantillonnage avec localisation, d'attributs de coordonnées, de traces de position ni de zones d'intérêt à afficher sur la carte",
+    "Cette enquête n'a pas de points d'échantillonnage avec localisation, d'attributs de coordonnées, de traces de position, de zones d'intérêt ni de couches de carte préchargées à afficher sur la carte",
   errorLoadingData:
     "Erreur lors du chargement des données de la carte : {{details}}",
 };
