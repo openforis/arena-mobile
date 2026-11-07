@@ -103,7 +103,7 @@ describe("MapLayerFileParser", () => {
       <Placemark>
         <name>Track</name>
         <LineString><coordinates>
-          0,0,0 1, 1,0
+          0 ,0,0 1, 1,0
         </coordinates></LineString>
       </Placemark>
       <Placemark>

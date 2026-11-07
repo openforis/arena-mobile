@@ -131,7 +131,20 @@ const getChild = (element: Element, localName: string): Element | undefined =>
       (node as Element).localName === localName,
   );
 
-// "lon,lat[,alt] lon,lat[,alt] ..."
+// "lon,lat[,alt] lon,lat[,alt] ..."; tuples split by spaces around commas (not allowed by KML, but found) are joined back
+const splitKmlTuples = (text: string): string[] => {
+  const tuples: string[] = [];
+  for (const token of text.split(/\s+/)) {
+    const last = tuples.at(-1);
+    if (last !== undefined && (last.endsWith(",") || token.startsWith(","))) {
+      tuples[tuples.length - 1] = last + token;
+    } else {
+      tuples.push(token);
+    }
+  }
+  return tuples;
+};
+
 const parseKmlCoordinates = (element: Element | undefined): LatLng[] => {
   const coordinatesEl = element
     ? getDescendants(element, "coordinates")[0]
@@ -139,10 +152,7 @@ const parseKmlCoordinates = (element: Element | undefined): LatLng[] => {
   const text = coordinatesEl?.textContent?.trim() ?? "";
   if (!text) return [];
   return toLatLngs(
-    text
-      .replaceAll(/\s*,\s*/g, ",")
-      .split(/\s+/)
-      .map((tuple) => tuple.split(",").map(Number)),
+    splitKmlTuples(text).map((tuple) => tuple.split(",").map(Number)),
   );
 };
 
