@@ -4077,7 +4077,6 @@ __metadata:
     react-native-system-navigation-bar: "npm:^3.0.1"
     react-native-tree-multi-select: "npm:^3.0.7"
     react-native-vector-icons: "npm:^10.3.0"
-    react-native-view-more-text: "npm:^2.2.0"
     react-native-web: "npm:~0.21.4"
     react-native-worklets: "npm:0.13.0"
     react-native-zip-archive: "npm:^9.5.3"
@@ -9864,7 +9863,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:15.8.1, prop-types@npm:^15.5.10, prop-types@npm:^15.5.7, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:15.8.1, prop-types@npm:^15.5.10, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -10289,19 +10288,6 @@ __metadata:
     fa6-upgrade: bin/fa6-upgrade.sh
     generate-icon: bin/generate-icon.js
   checksum: 10c0/247804affcf74906062ed088d755c3d4632e3f2b62c38226ccb05e2a8dc42414c2378040a4acb474704bed09cd06cb285770c765ffff67fb2d3b896cd46e76ca
-  languageName: node
-  linkType: hard
-
-"react-native-view-more-text@npm:^2.2.0":
-  version: 2.2.0
-  resolution: "react-native-view-more-text@npm:2.2.0"
-  dependencies:
-    prop-types: "npm:^15.5.7"
-  peerDependencies:
-    prop-types: ^15.5.7
-    react: "*"
-    react-native: "*"
-  checksum: 10c0/25807724fb8df659b1663edfb750d80245d241a792cc9592cbf3856a7c8f0358ae47b4f2d6e41035deae6bc391f6c430f7395552ee23c43a164f5cc1567ee112
   languageName: node
   linkType: hard
 
