@@ -58,6 +58,12 @@ export default StyleSheet.create({
   recordItemLabel: {
     flex: 1,
   },
+  layerGroup: {
+    marginBottom: 12,
+  },
+  layerGroupTitle: {
+    marginBottom: 6,
+  },
   layerItems: {
     gap: 6,
   },

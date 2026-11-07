@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.11.0] - 2026-11-07
+
+### Added
+
+- Records map: areas of interest and map layers (KML or GeoJSON) defined in the survey;
+
+### Changed
+
+- Records map: layers grouped by type in the layers panel;
+
+### Fixed
+
+- Android: misplaced autofill highlight in text inputs;
+- General improvements and bug fixing;
+
 ## [2.10.9] - 2026-11-05
 
 ### Fixed

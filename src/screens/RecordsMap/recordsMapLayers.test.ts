@@ -19,6 +19,7 @@ import {
   getDefaultVisibleLayerKeys,
   getLayerLabel,
   getRecordUuidsBySamplingPointItemUuid,
+  groupLayerItemsByType,
   hasMapLayers,
   RecordsMapLayerType,
 } from "./recordsMapLayers";
@@ -358,6 +359,15 @@ describe("recordsMapLayers", () => {
           t,
         }),
       ).toBe("recordsMap:areaOfInterestLayer area_1");
+      expect(
+        getLayerLabel({
+          survey: surveyWithAreas,
+          layer: areaLayer,
+          lang: LanguageCode.en,
+          t,
+          inGroup: true,
+        }),
+      ).toBe("Area 1");
 
       const surveyWithAreasOnly = withAreasOfInterest(
         await new SurveyBuilder(
@@ -475,6 +485,15 @@ describe("recordsMapLayers", () => {
           t,
         }),
       ).toBe("recordsMap:preloadedMapLayer f1.kml");
+      expect(
+        getLayerLabel({
+          survey: surveyWithLayers,
+          layer: layers[0]!,
+          lang: LanguageCode.en,
+          t,
+          inGroup: true,
+        }),
+      ).toBe("Layer f1");
     });
 
     test("file geometries become map points, lines and polygons", () => {
@@ -511,5 +530,17 @@ describe("recordsMapLayers", () => {
         { key: `${layer.key}_polygon_0`, coordinates: square, holes: [] },
       ]);
     });
+  });
+
+  test("layers are grouped by type, in the order of the layers", () => {
+    const layers = getAvailableLayers({ survey, cycle });
+    const groups = groupLayerItemsByType(layers.map((layer) => ({ layer })));
+    expect(groups.map(({ type }) => type)).toEqual([
+      ...new Set(layers.map(({ type }) => type)),
+    ]);
+    expect(
+      groups.flatMap(({ items }) => items.map(({ layer }) => layer)),
+    ).toEqual(layers);
+    expect(groups[0]!.titleKey).toBe("recordsMap:layerGroup.samplingPoints");
   });
 });

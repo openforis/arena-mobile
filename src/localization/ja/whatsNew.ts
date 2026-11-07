@@ -3,6 +3,11 @@ export default {
   since: "バージョン {{version}} から",
   dontShowAgain: "今後表示しない",
   items: {
+    mapLayers: {
+      title: "地図：関心領域と地図レイヤー",
+      description:
+        "レコードの地図に、Arena の調査で定義された**関心領域**と**地図レイヤー**（KML または GeoJSON ファイル）を表示できるようになりました（例：行政境界、保護区、河川）。\n\n**レイヤー**をタップして表示・非表示を切り替えます。レイヤーは種類ごとにグループ化されています（サンプリングポイント、座標属性、位置トラック、関心領域、地図レイヤー）。",
+    },
     geoAttribute: {
       title: "地理空間属性：ポリゴンの描画",
       description:

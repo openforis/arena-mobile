@@ -3,6 +3,11 @@ export default {
   since: "Versiosta {{version}} alkaen",
   dontShowAgain: "Älä näytä näitä uudelleen",
   items: {
+    mapLayers: {
+      title: "Kartta: kiinnostusalueet ja karttatasot",
+      description:
+        "Tietueiden kartta voi nyt näyttää Arenassa kyselyyn määritetyt **kiinnostusalueet** ja **karttatasot** (KML- tai GeoJSON-tiedostot), esim. hallinnolliset rajat, suojelualueet tai joet.\n\nNapauta **Tasot** näyttääksesi tai piilottaaksesi ne: tasot on ryhmitelty tyypin mukaan (otantapisteet, koordinaattiattribuutit, sijaintijäljet, kiinnostusalueet, karttatasot).",
+    },
     geoAttribute: {
       title: "Paikkatietoattribuutti: piirrä monikulmioita",
       description:
