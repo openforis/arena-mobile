@@ -3,6 +3,11 @@ export default {
   since: "Depuis la version {{version}}",
   dontShowAgain: "Ne plus afficher",
   items: {
+    mapLayers: {
+      title: "Carte : zones d'intérêt et couches de carte",
+      description:
+        "La carte des enregistrements peut maintenant afficher les **zones d'intérêt** et les **couches de carte** (fichiers KML ou GeoJSON) définies dans l'enquête dans Arena, p. ex. limites administratives, aires protégées ou rivières.\n\nTouchez **Couches** pour les afficher ou les masquer : les couches sont regroupées par type (points d'échantillonnage, attributs de coordonnées, traces de position, zones d'intérêt, couches de carte).",
+    },
     geoAttribute: {
       title: "Attribut géospatial : dessiner des polygones",
       description:

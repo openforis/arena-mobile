@@ -3,6 +3,11 @@ export default {
   since: "Sejak versi {{version}}",
   dontShowAgain: "Jangan tampilkan lagi",
   items: {
+    mapLayers: {
+      title: "Peta: area minat dan lapisan peta",
+      description:
+        "Peta catatan kini dapat menampilkan **area minat** dan **lapisan peta** (file KML atau GeoJSON) yang ditentukan dalam survei di Arena, mis. batas administratif, kawasan lindung, atau sungai.\n\nKetuk **Lapisan** untuk menampilkan atau menyembunyikannya: lapisan dikelompokkan menurut jenis (titik sampel, atribut koordinat, jejak posisi, area minat, lapisan peta).",
+    },
     geoAttribute: {
       title: "Atribut geospasial: gambar poligon",
       description:

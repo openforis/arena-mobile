@@ -3,6 +3,11 @@ export default {
   since: "Since version {{version}}",
   dontShowAgain: "Don't show these again",
   items: {
+    mapLayers: {
+      title: "Map: areas of interest and map layers",
+      description:
+        "The map of the records can now show the **areas of interest** and the **map layers** (KML or GeoJSON files) defined in the survey in Arena, e.g. administrative boundaries, protected areas or rivers.\n\nTap **Layers** to show or hide them: the layers are grouped by type (sampling points, coordinate attributes, position tracks, areas of interest, map layers).",
+    },
     geoAttribute: {
       title: "Geospatial attribute: draw polygons",
       description:

@@ -3,6 +3,11 @@ export default {
   since: "Desde a versão {{version}}",
   dontShowAgain: "Não mostrar novamente",
   items: {
+    mapLayers: {
+      title: "Mapa: áreas de interesse e camadas de mapa",
+      description:
+        "O mapa dos registros agora pode mostrar as **áreas de interesse** e as **camadas de mapa** (arquivos KML ou GeoJSON) definidas na pesquisa no Arena, p. ex. limites administrativos, áreas protegidas ou rios.\n\nToque em **Camadas** para mostrá-las ou ocultá-las: as camadas são agrupadas por tipo (pontos de amostragem, atributos de coordenadas, trilhas de posição, áreas de interesse, camadas de mapa).",
+    },
     geoAttribute: {
       title: "Atributo geoespacial: desenhar polígonos",
       description:

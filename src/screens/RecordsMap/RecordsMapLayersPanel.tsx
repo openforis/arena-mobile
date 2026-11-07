@@ -4,6 +4,7 @@ import { View } from "react-native";
 import { ChoiceItem, Modal, ScrollView, Text, VView } from "components";
 
 import {
+  groupLayerItemsByType,
   notVisitedSamplingPointColor,
   RecordsMapLayer,
   RecordsMapLayerType,
@@ -72,35 +73,42 @@ const LayerChoiceItem = (props: LayerChoiceItemProps) => {
 export const RecordsMapLayersPanel = (props: Props) => {
   const { layerItems, onDismiss, onLayerToggle, visibleLayerKeys } = props;
 
-  const hasSamplingPointLayers = layerItems.some(
-    ({ layer }) => layer.type === RecordsMapLayerType.samplingPoints,
-  );
+  const groups = groupLayerItemsByType(layerItems);
 
   return (
     <Modal onDismiss={onDismiss} titleKey="recordsMap:layers">
       <ScrollView>
-        <VView style={styles.layerItems}>
-          {layerItems.map((layerItem) => (
-            <LayerChoiceItem
-              key={layerItem.layer.key}
-              {...layerItem}
-              checked={visibleLayerKeys.includes(layerItem.layer.key)}
-              onPress={() => onLayerToggle(layerItem.layer.key)}
+        {groups.map(({ type, titleKey, items }) => (
+          <VView key={type} style={styles.layerGroup}>
+            <Text
+              style={styles.layerGroupTitle}
+              textKey={titleKey}
+              variant="titleSmall"
             />
-          ))}
-        </VView>
-        {hasSamplingPointLayers && (
-          <View style={styles.legend}>
-            <LegendItem
-              color={visitedSamplingPointColor}
-              textKey="recordsMap:samplingPointVisited"
-            />
-            <LegendItem
-              color={notVisitedSamplingPointColor}
-              textKey="recordsMap:samplingPointNotVisited"
-            />
-          </View>
-        )}
+            <VView style={styles.layerItems}>
+              {items.map((layerItem) => (
+                <LayerChoiceItem
+                  key={layerItem.layer.key}
+                  {...layerItem}
+                  checked={visibleLayerKeys.includes(layerItem.layer.key)}
+                  onPress={() => onLayerToggle(layerItem.layer.key)}
+                />
+              ))}
+            </VView>
+            {type === RecordsMapLayerType.samplingPoints && (
+              <View style={styles.legend}>
+                <LegendItem
+                  color={visitedSamplingPointColor}
+                  textKey="recordsMap:samplingPointVisited"
+                />
+                <LegendItem
+                  color={notVisitedSamplingPointColor}
+                  textKey="recordsMap:samplingPointNotVisited"
+                />
+              </View>
+            )}
+          </VView>
+        ))}
         <Text textKey="recordsMap:dataSourceInfo" variant="bodySmall" />
       </ScrollView>
     </Modal>
