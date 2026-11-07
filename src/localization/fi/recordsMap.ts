@@ -17,8 +17,11 @@ export default {
   areaOfInterestLayer: "Kohdealue: {{name}}",
   areaOfInterestNotAvailable:
     "Kohdealue ei ole saatavilla tällä laitteella: {{names}}. Yritä päivittää kysely.",
+  preloadedMapLayer: "Karttataso: {{name}}",
+  preloadedMapLayerNotAvailable:
+    "Karttatasot eivät ole saatavilla tällä laitteella: {{names}}. Yritä päivittää kysely.",
   openRecord: "Avaa",
   noLayers:
-    "Tässä kyselyssä ei ole sijainnillisia otantapisteitä, koordinaattiattribuutteja, sijaintireittejä tai kohdealueita näytettäväksi kartalla",
+    "Tässä kyselyssä ei ole sijainnillisia otantapisteitä, koordinaattiattribuutteja, sijaintireittejä, kohdealueita tai esiladattuja karttatasoja näytettäväksi kartalla",
   errorLoadingData: "Virhe karttatietojen latauksessa: {{details}}",
 };

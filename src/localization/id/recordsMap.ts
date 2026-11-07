@@ -17,8 +17,11 @@ export default {
   areaOfInterestLayer: "Area yang diminati: {{name}}",
   areaOfInterestNotAvailable:
     "Area yang diminati tidak tersedia di perangkat ini: {{names}}. Coba perbarui survei.",
+  preloadedMapLayer: "Lapisan peta: {{name}}",
+  preloadedMapLayerNotAvailable:
+    "Lapisan peta tidak tersedia di perangkat ini: {{names}}. Coba perbarui survei.",
   openRecord: "Buka",
   noLayers:
-    "Survei ini tidak memiliki titik sampel dengan lokasi, atribut koordinat, jejak posisi, atau area yang diminati untuk ditampilkan di peta",
+    "Survei ini tidak memiliki titik sampel dengan lokasi, atribut koordinat, jejak posisi, area yang diminati, atau lapisan peta yang dimuat sebelumnya untuk ditampilkan di peta",
   errorLoadingData: "Kesalahan memuat data peta: {{details}}",
 };

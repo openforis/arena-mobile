@@ -17,8 +17,11 @@ export default {
   areaOfInterestLayer: "Area of interest: {{name}}",
   areaOfInterestNotAvailable:
     "Area of interest not available on this device: {{names}}. Try updating the survey.",
+  preloadedMapLayer: "Map layer: {{name}}",
+  preloadedMapLayerNotAvailable:
+    "Map layers not available on this device: {{names}}. Try updating the survey.",
   openRecord: "Open",
   noLayers:
-    "This survey has no sampling points with location, coordinate attributes, position tracks or areas of interest to show on the map",
+    "This survey has no sampling points with location, coordinate attributes, position tracks, areas of interest or preloaded map layers to show on the map",
   errorLoadingData: "Error loading map data: {{details}}",
 };

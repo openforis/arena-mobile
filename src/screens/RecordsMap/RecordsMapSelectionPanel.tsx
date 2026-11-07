@@ -61,6 +61,12 @@ export const RecordsMapSelectionPanel = (props: Props) => {
                 <OpenMapButton point={point.point} size={20} />
               </HView>
             )}
+            {layerType === RecordsMapLayerType.preloadedMapLayer && (
+              <HView style={styles.recordItem}>
+                <Text style={styles.recordItemLabel}>{point.label}</Text>
+                <OpenMapButton point={point.point} size={20} />
+              </HView>
+            )}
             {point.recordUuids.map((recordUuid) => (
               <HView key={recordUuid} style={styles.recordItem}>
                 <Text style={styles.recordItemLabel}>
