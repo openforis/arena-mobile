@@ -6,10 +6,10 @@ import {
   TextLayoutEvent,
   TextStyle,
 } from "react-native";
+import { useTheme } from "react-native-paper";
 
 import { useIsTextDirectionRtl } from "localization";
 
-import { Button } from "./Button";
 import { Text } from "./Text";
 
 const styles = StyleSheet.create({
@@ -21,10 +21,12 @@ const styles = StyleSheet.create({
     opacity: 0,
     pointerEvents: "none",
   },
-  toggleButton: {
+  toggleLink: {
     alignSelf: "flex-start",
+    fontWeight: "bold",
+    paddingVertical: 4,
   },
-  toggleButtonRtl: {
+  toggleLinkRtl: {
     alignSelf: "flex-end",
   },
 });
@@ -39,6 +41,10 @@ export const ViewMoreText = (props: Props) => {
   const { children, numberOfLines = 2, textStyle } = props;
 
   const isRtl = useIsTextDirectionRtl();
+  const theme = useTheme();
+  // explicit text color (e.g. on colored backgrounds) wins over the primary color
+  const linkColor =
+    StyleSheet.flatten(textStyle)?.color ?? theme.colors.primary;
   const [linesCount, setLinesCount] = useState(0);
   const [expanded, setExpanded] = useState(false);
 
@@ -65,12 +71,14 @@ export const ViewMoreText = (props: Props) => {
         </Text>
       </RNView>
       {linesCount > numberOfLines && (
-        <Button
-          avoidMultiplePress={false}
-          compact
-          mode="text"
+        <Text
           onPress={toggleExpanded}
-          style={isRtl ? styles.toggleButtonRtl : styles.toggleButton}
+          style={[
+            textStyle,
+            styles.toggleLink,
+            isRtl && styles.toggleLinkRtl,
+            { color: linkColor },
+          ]}
           textKey={expanded ? "common:viewLess" : "common:viewMore"}
         />
       )}
