@@ -59,6 +59,8 @@ export default {
   textCopiedToClipboard: "Tekst je kopiran u međuspremnik",
   true: "Tačno",
   tryAgain: "Pokušaj ponovo",
+  viewLess: "Prikaži manje",
+  viewMore: "Prikaži više",
   yes: "Da",
 
   timePart: {

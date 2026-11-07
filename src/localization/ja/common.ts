@@ -57,6 +57,8 @@ export default {
   textCopiedToClipboard: "テキストをクリップボードにコピーしました",
   true: "正",
   tryAgain: "再試行",
+  viewLess: "閉じる",
+  viewMore: "もっと見る",
   yes: "はい",
 
   timePart: {

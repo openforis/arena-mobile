@@ -9,6 +9,10 @@ appId: ${APP_ID}
     visible: "Surveys|What's new"
     timeout: 60000
 - runFlow: dismiss-whats-new.yaml
+# the survey banner can push the Surveys item below the fold on small screens
+- scrollUntilVisible:
+    element:
+      id: "home-surveys-button"
 - tapOn:
     id: "home-surveys-button"
 - tapOn: "Demo Survey"

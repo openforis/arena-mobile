@@ -80,6 +80,8 @@ export default {
     timePartLeft: "{{count}} {{timePart}} jäljellä",
   },
   tryAgain: "Yritä uudelleen",
+  viewLess: "Näytä vähemmän",
+  viewMore: "Näytä lisää",
   warning: "Varoitus",
   warning_other: "Varoitukset",
 };

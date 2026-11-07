@@ -1,5 +1,9 @@
 appId: ${APP_ID}
 ---
+# the survey banner can push the Surveys item below the fold on small screens
+- scrollUntilVisible:
+    element:
+      id: "home-surveys-button"
 - tapOn:
     id: "home-surveys-button"
 - tapOn: "Import from cloud"

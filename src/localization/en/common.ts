@@ -57,6 +57,8 @@ export default {
   textCopiedToClipboard: "Text copied to clipboard",
   true: "True",
   tryAgain: "Try again",
+  viewLess: "View less",
+  viewMore: "View more",
   yes: "Yes",
 
   timePart: {

@@ -82,6 +82,8 @@ export default {
     timePartLeft: "{{count}} {{timePart}} باقی مانده",
   },
   tryAgain: "دوباره تلاش کنید",
+  viewLess: "مشاهده کمتر",
+  viewMore: "مشاهده بیشتر",
   warning: "هشدار",
   warning_other: "هشدارها",
 };
