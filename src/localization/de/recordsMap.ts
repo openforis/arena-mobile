@@ -17,8 +17,11 @@ export default {
   areaOfInterestLayer: "Interessengebiet: {{name}}",
   areaOfInterestNotAvailable:
     "Interessengebiet auf diesem Gerät nicht verfügbar: {{names}}. Versuche, die Umfrage zu aktualisieren.",
+  preloadedMapLayer: "Kartenebene: {{name}}",
+  preloadedMapLayerNotAvailable:
+    "Kartenebenen auf diesem Gerät nicht verfügbar: {{names}}. Versuche, die Umfrage zu aktualisieren.",
   openRecord: "Öffnen",
   noLayers:
-    "Diese Umfrage hat keine Stichprobenpunkte mit Standort, Koordinatenattribute, Positionstracks oder Interessengebiete, die auf der Karte angezeigt werden können",
+    "Diese Umfrage hat keine Stichprobenpunkte mit Standort, Koordinatenattribute, Positionstracks, Interessengebiete oder vorgeladenen Kartenebenen, die auf der Karte angezeigt werden können",
   errorLoadingData: "Fehler beim Laden der Kartendaten: {{details}}",
 };

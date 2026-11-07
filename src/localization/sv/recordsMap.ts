@@ -17,8 +17,11 @@ export default {
   areaOfInterestLayer: "Intresseområde: {{name}}",
   areaOfInterestNotAvailable:
     "Intresseområdet är inte tillgängligt på den här enheten: {{names}}. Försök att uppdatera undersökningen.",
+  preloadedMapLayer: "Kartlager: {{name}}",
+  preloadedMapLayerNotAvailable:
+    "Kartlagren är inte tillgängliga på den här enheten: {{names}}. Försök att uppdatera undersökningen.",
   openRecord: "Öppna",
   noLayers:
-    "Den här undersökningen har inga provpunkter med plats, koordinatattribut, positionsspår eller intresseområden att visa på kartan",
+    "Den här undersökningen har inga provpunkter med plats, koordinatattribut, positionsspår, intresseområden eller förinlästa kartlager att visa på kartan",
   errorLoadingData: "Fel vid inläsning av kartdata: {{details}}",
 };
