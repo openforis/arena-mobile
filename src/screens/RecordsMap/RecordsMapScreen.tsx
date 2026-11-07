@@ -749,7 +749,7 @@ export const RecordsMapScreen = () => {
         <RecordsMapLayersPanel
           layerItems={layers.map((layer) => ({
             layer,
-            label: layerLabelByKey[layer.key]!,
+            label: getLayerLabel({ survey, layer, lang, t, inGroup: true }),
             pointsCount: getLayerItemsCount(layer),
           }))}
           onDismiss={() => setLayersPanelVisible(false)}

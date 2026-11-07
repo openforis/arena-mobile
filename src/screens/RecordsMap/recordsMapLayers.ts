@@ -328,38 +328,73 @@ export const getDefaultVisibleLayerKeys = ({
   );
 };
 
+const layerGroupTitleKeyByType: Record<RecordsMapLayerType, string> = {
+  [RecordsMapLayerType.samplingPoints]: "recordsMap:layerGroup.samplingPoints",
+  [RecordsMapLayerType.coordinateAttribute]:
+    "recordsMap:layerGroup.coordinateAttributes",
+  [RecordsMapLayerType.positionTrack]: "recordsMap:layerGroup.positionTracks",
+  [RecordsMapLayerType.areaOfInterest]: "recordsMap:layerGroup.areasOfInterest",
+  [RecordsMapLayerType.preloadedMapLayer]:
+    "recordsMap:layerGroup.preloadedMapLayers",
+};
+
+export type RecordsMapLayerGroup<T> = {
+  type: RecordsMapLayerType;
+  titleKey: string;
+  items: T[];
+};
+
+// layers grouped by type, in the order of the layers
+export const groupLayerItemsByType = <T extends { layer: RecordsMapLayer }>(
+  items: T[],
+): RecordsMapLayerGroup<T>[] =>
+  items.reduce((groups: RecordsMapLayerGroup<T>[], item) => {
+    const { type } = item.layer;
+    let group = groups.find((g) => g.type === type);
+    if (!group) {
+      group = { type, titleKey: layerGroupTitleKeyByType[type], items: [] };
+      groups.push(group);
+    }
+    group.items.push(item);
+    return groups;
+  }, []);
+
+// inGroup: label shown under the group title, without the layer type prefix
 export const getLayerLabel = ({
   survey,
   layer,
   lang,
   t,
+  inGroup = false,
 }: {
   survey: Survey;
   layer: RecordsMapLayer;
   lang: LanguageCode;
   t: (key: string, params?: any) => string;
+  inGroup?: boolean;
 }): string => {
   if (layer.type === RecordsMapLayerType.samplingPoints) {
-    return t("recordsMap:samplingPointsLayer", {
-      level: (layer.levelIndex ?? 0) + 1,
-    });
+    return t(
+      inGroup
+        ? "recordsMap:samplingPointsLevel"
+        : "recordsMap:samplingPointsLayer",
+      { level: (layer.levelIndex ?? 0) + 1 },
+    );
   }
   if (layer.type === RecordsMapLayerType.areaOfInterest) {
     const descriptor = Surveys.getAreaOfInterestByName({
       survey,
       name: layer.areaName!,
     });
-    return t("recordsMap:areaOfInterestLayer", {
-      name: descriptor?.labels?.[lang] || layer.areaName,
-    });
+    const name = descriptor?.labels?.[lang] || layer.areaName!;
+    return inGroup ? name : t("recordsMap:areaOfInterestLayer", { name });
   }
   if (layer.type === RecordsMapLayerType.preloadedMapLayer) {
     const file = SurveyDefs.getPreloadedMapLayers(survey).find(
       ({ uuid }) => uuid === layer.fileUuid,
     );
-    return t("recordsMap:preloadedMapLayer", {
-      name: file?.props.labels?.[lang] || file?.props.name,
-    });
+    const name = file?.props.labels?.[lang] || file?.props.name || "";
+    return inGroup ? name : t("recordsMap:preloadedMapLayer", { name });
   }
   const nodeDef = Surveys.getNodeDefByUuid({
     survey,
