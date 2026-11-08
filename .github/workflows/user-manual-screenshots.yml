@@ -87,9 +87,11 @@ jobs:
           emulator-boot-timeout: 900
           script: bash e2e/scripts/take-manual-screenshots-android.sh android/app/build/outputs/apk/release/app-release.apk
 
-      # JPEG, to keep the repository small
+      # JPEG, to keep the repository small; if it fails, the screenshots are committed as PNG
       - name: Convert screenshots
+        continue-on-error: true
         run: |
+          sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends python3-pil > /dev/null
           python3 - <<'PYTHON'
           from pathlib import Path
