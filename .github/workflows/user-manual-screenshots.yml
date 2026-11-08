@@ -90,6 +90,7 @@ jobs:
 
       # JPEG, to keep the repository small; if it fails, the screenshots are committed as PNG
       - name: Convert screenshots
+        if: ${{ !cancelled() }}
         continue-on-error: true
         run: |
           sudo apt-get update -qq
@@ -102,13 +103,16 @@ jobs:
               png.unlink()
           PYTHON
 
+      # also when taking the screenshots failed: the screens at the failures are in screenshots/_debug
       - name: Upload artifact
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v7
         with:
           name: user-manual-screenshots
           path: docs/user-manual/screenshots
 
       - name: Commit screenshots
+        if: ${{ !cancelled() }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

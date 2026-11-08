@@ -39,7 +39,7 @@ python3 docs/user-manual/scripts/segments.py update docs/user-manual/arena-mobil
 
 ## Screenshots
 
-The [User manual screenshots workflow](../../.github/workflows/user-manual-screenshots.yml) runs the [Maestro flows](../../e2e/maestro/manual-screenshots) on an Android emulator with the demo survey, once for every language (English, French, Spanish), and commits the screenshots to `screenshots/<lang>`. It runs on pull requests changing the flows, or manually (**Run workflow**).
+The [User manual screenshots workflow](../../.github/workflows/user-manual-screenshots.yml) runs the [Maestro flows](../../e2e/maestro/manual-screenshots) on an Android emulator with the demo survey, once for every language (English, French, Spanish), and commits the screenshots to `screenshots/<lang>`. It runs on pull requests changing the flows, or manually (**Run workflow**). When a flow fails, the screen at the failure is saved in `screenshots/_debug`.
 
 To update the images of the English manual with the screenshots (all the images listed in `screenshots.json`):
 
