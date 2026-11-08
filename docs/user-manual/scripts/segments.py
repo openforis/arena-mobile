@@ -24,6 +24,7 @@ import json
 import os
 import re
 import sys
+import tempfile
 import zipfile
 from copy import deepcopy
 
@@ -274,7 +275,7 @@ def load_translations(translations_json):
 
 
 def extract_segments(input_docx):
-    tmp_json = input_docx + ".segments.json"
+    tmp_json = os.path.join(tempfile.mkdtemp(), "segments.json")
     extract(input_docx, tmp_json)
     with open(tmp_json, encoding="utf-8") as file:
         segments = json.load(file)
