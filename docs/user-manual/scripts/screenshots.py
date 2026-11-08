@@ -19,7 +19,9 @@ import io
 import json
 import os
 import sys
+import tempfile
 import zipfile
+from pathlib import Path
 
 from lxml import etree
 from PIL import Image
@@ -37,6 +39,22 @@ MAX_HEIGHT = int(4.2 * EMU_PER_INCH)
 # Android status bar height, as fraction of the screen height (Pixel 6: 2400 px)
 STATUS_BAR_HEIGHT = 0.04
 SCREENSHOT_EXTENSIONS = (".jpg", ".jpeg", ".png")
+MANUAL_DIR = Path(__file__).resolve().parent.parent
+
+
+def safe_path(value):
+    """Resolves a path given on the command line: it must be in the manual folder or in the temp folder."""
+    path = Path(value).resolve()
+    if not any(path.is_relative_to(root) for root in (MANUAL_DIR, Path(tempfile.gettempdir()).resolve())):
+        raise SystemExit(f"{value}: use a path in {MANUAL_DIR} or in {tempfile.gettempdir()}")
+    return path
+
+
+def safe_name(value):
+    """A file name (screenshot or image of the document), without folders."""
+    if not value or os.path.basename(value) != value or value in (".", ".."):
+        raise SystemExit(f"{value}: invalid file name")
+    return value
 
 
 def find_screenshot(folder, name):
@@ -93,6 +111,9 @@ def resize_drawings(document_root, rel_ids, size):
 
 
 def main(input_docx, mapping_json, screenshots_folder, output_docx):
+    input_docx, mapping_json, screenshots_folder, output_docx = (
+        safe_path(value) for value in (input_docx, mapping_json, screenshots_folder, output_docx)
+    )
     with open(mapping_json, encoding="utf-8") as file:
         mapping = json.load(file)
     with zipfile.ZipFile(input_docx) as source:
@@ -100,15 +121,16 @@ def main(input_docx, mapping_json, screenshots_folder, output_docx):
         document_root = etree.fromstring(source.read("word/document.xml"))
         replaced = {}
         for item in mapping:
-            path = find_screenshot(screenshots_folder, item["screenshot"])
+            media = safe_name(item["media"])
+            path = find_screenshot(screenshots_folder, safe_name(item["screenshot"]))
             if not path:
                 print(f"Warning: screenshot {item['screenshot']} not found in {screenshots_folder}", file=sys.stderr)
                 continue
-            data, size = prepare_image(path, item.get("crop"), item["media"])
-            replaced["word/media/" + item["media"]] = data
-            resize_drawings(document_root, set(rel_ids.get(item["media"], [])), size)
+            data, size = prepare_image(path, item.get("crop"), media)
+            replaced["word/media/" + media] = data
+            resize_drawings(document_root, set(rel_ids.get(media, [])), size)
         # the output can be the input file itself
-        tmp_output = output_docx + ".tmp"
+        tmp_output = output_docx.with_name(output_docx.name + ".tmp")
         with zipfile.ZipFile(tmp_output, "w", zipfile.ZIP_DEFLATED) as target:
             for info in source.infolist():
                 if info.filename == "word/document.xml":

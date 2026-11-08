@@ -27,6 +27,7 @@ import sys
 import tempfile
 import zipfile
 from copy import deepcopy
+from pathlib import Path
 
 from lxml import etree
 
@@ -41,6 +42,17 @@ TEXT_RUN_CHILDREN = {W + "rPr", W + "t", W + "tab", W + "br", W + "lastRenderedP
 SKIPPED_STYLES = re.compile(r"^(TOC|Contents)\d", re.IGNORECASE)
 # run properties that don't change the appearance
 IGNORED_RPR = {W + "lang", W + "noProof", W + "webHidden"}
+
+MANUAL_DIR = Path(__file__).resolve().parent.parent
+
+
+def safe_path(value):
+    """Resolves a path given on the command line: it must be in the manual folder or in the temp folder."""
+    path = Path(value).resolve()
+    if not any(path.is_relative_to(root) for root in (MANUAL_DIR, Path(tempfile.gettempdir()).resolve())):
+        raise SystemExit(f"{value}: use a path in {MANUAL_DIR} or in {tempfile.gettempdir()}")
+    return path
+
 
 TOKEN_PATTERN = re.compile(r"<(/?)([sx])(\d+)(/?)>")
 
@@ -288,7 +300,7 @@ def translate(input_docx, translations_json, output_docx, lang=None):
     segments = extract_segments(input_docx)
     missing = [segment for segment in segments if segment["text"] not in targets]
     translated = [{"id": s["id"], "text": targets[s["text"]]} for s in segments if s["text"] in targets]
-    tmp_json = output_docx + ".segments.json"
+    tmp_json = os.path.join(tempfile.mkdtemp(), "translated.json")
     with open(tmp_json, "w", encoding="utf-8") as file:
         json.dump(translated, file, ensure_ascii=False)
     apply(input_docx, tmp_json, output_docx, lang)
@@ -313,6 +325,9 @@ def update(input_docx, translations_json):
 
 if __name__ == "__main__":
     command, *args = sys.argv[1:]
+    # the last argument of apply and translate is the language
+    paths_count = {"apply": 3, "translate": 3}.get(command, len(args))
+    args = [safe_path(arg) if index < paths_count else arg for index, arg in enumerate(args)]
     if command == "extract":
         extract(*args)
     elif command == "apply":
