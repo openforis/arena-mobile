@@ -1,9 +1,12 @@
 name: User manual
 
-# Generates the user manual PDF from docs/user-manual/arena-mobile-user-manual.docx:
+# Generates the user manual PDFs (English, French, Spanish) from docs/user-manual/arena-mobile-user-manual.docx
+# (French and Spanish: translated with docs/user-manual/translations, see docs/user-manual/README.md):
 # - pull requests changing it: uploaded as workflow artifact, to check the result
-# - published releases: attached to the release and published on GitHub Pages
-#   (opens in the browser): https://openforis.github.io/arena-mobile/arena-mobile-user-manual.pdf
+# - published releases: attached to the release and published on GitHub Pages (open in the browser):
+#   https://openforis.github.io/arena-mobile/arena-mobile-user-manual.pdf
+#   https://openforis.github.io/arena-mobile/arena-mobile-user-manual-fr.pdf
+#   https://openforis.github.io/arena-mobile/arena-mobile-user-manual-es.pdf
 
 on:
   pull_request:
@@ -35,11 +38,12 @@ jobs:
       - name: Install LibreOffice
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends libreoffice-writer python3-uno fonts-crosextra-carlito
+          sudo apt-get install -y --no-install-recommends libreoffice-writer python3-uno python3-lxml python3-pil fonts-crosextra-carlito
 
       - name: Generate user manual
         env:
           PYTHON: /usr/bin/python3
+          SEGMENTS_PYTHON: /usr/bin/python3
         run: bash docs/user-manual/scripts/build.sh
 
       - name: Upload artifact
@@ -47,7 +51,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: user-manual
-          path: docs/user-manual/arena-mobile-user-manual.pdf
+          path: docs/user-manual/arena-mobile-user-manual*.pdf
 
       - name: Upload release assets
         if: env.TAG != ''
@@ -55,14 +59,14 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release upload "$TAG" \
-            docs/user-manual/arena-mobile-user-manual.pdf \
+            docs/user-manual/arena-mobile-user-manual*.pdf \
             --clobber --repo "$GITHUB_REPOSITORY"
 
       - name: Prepare GitHub Pages content
         if: env.TAG != ''
         run: |
           mkdir -p pages
-          cp docs/user-manual/arena-mobile-user-manual.pdf pages/
+          cp docs/user-manual/arena-mobile-user-manual*.pdf pages/
 
       - name: Upload GitHub Pages artifact
         if: env.TAG != ''

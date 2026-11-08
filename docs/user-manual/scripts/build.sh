@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
-# Generates arena-mobile-user-manual.pdf from arena-mobile-user-manual.docx with LibreOffice,
-# filling in the version and the date. Requires LibreOffice and node.
+# Generates the user manual PDFs from arena-mobile-user-manual.docx with LibreOffice,
+# filling in the version and the date:
+# - arena-mobile-user-manual.pdf (English)
+# - arena-mobile-user-manual-<lang>.pdf, from the .docx translated with translations/<lang>.json
+#   and with the screenshots in screenshots/<lang> (see screenshots.json)
+# Requires LibreOffice, node and python3 with lxml and Pillow.
+# Usage: build.sh [languages (default: en fr es)]
 set -euo pipefail
 
 MANUAL_DIR="$(cd "$(dirname "$0")/.." && pwd)"
@@ -31,8 +36,9 @@ if [[ -z "${PYTHON:-}" ]]; then
   done
 fi
 
+LANGS="${1:-en fr es}"
+SEGMENTS_PYTHON="${SEGMENTS_PYTHON:-python3}"
 VERSION="$(node -p "require('$MANUAL_DIR/../../package.json').version")"
-DATE="$(node -p "new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })")"
 
 TMP_DIR="$(mktemp -d)"
 SOFFICE_PID=""
@@ -46,15 +52,32 @@ trap cleanup EXIT
 
 cd "$MANUAL_DIR"
 
-echo "Exporting $NAME.pdf (version $VERSION, $DATE)..."
-# separate profile: works also when another LibreOffice instance is running
-PIPE_NAME="arena_mobile_manual_$$"
-"$SOFFICE" --headless --invisible --norestore \
-  "-env:UserInstallation=file://$TMP_DIR/profile" \
-  "--accept=pipe,name=$PIPE_NAME;urp;" &
-SOFFICE_PID=$!
-"$PYTHON" scripts/export.py "$PIPE_NAME" "$NAME.docx" "$NAME.pdf" "$VERSION" "$DATE"
-wait "$SOFFICE_PID" || true
-SOFFICE_PID=""
+for lang in $LANGS; do
+  if [[ "$lang" == "en" ]]; then
+    output="$NAME.pdf"
+    docx="$NAME.docx"
+  else
+    output="$NAME-$lang.pdf"
+    docx="$TMP_DIR/$NAME-$lang.docx"
+    "$SEGMENTS_PYTHON" scripts/segments.py translate "$NAME.docx" "translations/$lang.json" "$TMP_DIR/translated.docx" "$lang"
+    "$SEGMENTS_PYTHON" scripts/screenshots.py "$TMP_DIR/translated.docx" screenshots.json "screenshots/$lang" "$docx"
+  fi
+  locale="$lang"
+  if [[ "$lang" == "en" ]]; then
+    locale="en-GB"
+  fi
+  DATE="$(node -p "new Date().toLocaleDateString('$locale', { day: 'numeric', month: 'long', year: 'numeric' })")"
 
-echo "Done: $MANUAL_DIR/$NAME.pdf"
+  echo "Exporting $output (version $VERSION, $DATE)..."
+  # separate profile: works also when another LibreOffice instance is running
+  PIPE_NAME="arena_mobile_manual_$$_$lang"
+  "$SOFFICE" --headless --invisible --norestore \
+    "-env:UserInstallation=file://$TMP_DIR/profile" \
+    "--accept=pipe,name=$PIPE_NAME;urp;" &
+  SOFFICE_PID=$!
+  "$PYTHON" scripts/export.py "$PIPE_NAME" "$docx" "$output" "$VERSION" "$DATE"
+  wait "$SOFFICE_PID" || true
+  SOFFICE_PID=""
+
+  echo "Done: $MANUAL_DIR/$output"
+done
