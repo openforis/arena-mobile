@@ -9,25 +9,20 @@ const i18next = require("i18next");
 const lang = process.argv[2] ?? "en";
 const localizationDir = path.resolve(__dirname, "../../../src/localization");
 
-const loadModule = (file) => {
-  const source = fs.readFileSync(file, "utf8");
-  const { outputText } = ts.transpileModule(source, {
+// localization files are TypeScript: transpiled when required
+require.extensions[".ts"] = (module, filename) => {
+  const { outputText } = ts.transpileModule(fs.readFileSync(filename, "utf8"), {
     compilerOptions: {
       module: ts.ModuleKind.CommonJS,
       target: ts.ScriptTarget.ES2020,
     },
   });
-  const module = { exports: {} };
-  const localRequire = (spec) =>
-    spec.startsWith(".")
-      ? loadModule(path.resolve(path.dirname(file), `${spec}.ts`))
-      : require(spec);
-  new Function("module", "exports", "require", outputText)(
-    module,
-    module.exports,
-    localRequire,
-  );
-  return module.exports.default ?? module.exports;
+  module._compile(outputText, filename);
+};
+
+const loadModule = (file) => {
+  const exported = require(file);
+  return exported.default ?? exported;
 };
 
 const keys = {
