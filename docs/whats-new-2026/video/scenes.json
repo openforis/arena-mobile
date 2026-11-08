@@ -1,0 +1,653 @@
+{
+  "voice": "af_heart",
+  "speed": 1.0,
+  "images": {
+    "assets": "../../../assets/",
+    "deck": "../",
+    "local": ""
+  },
+  "scenes": [
+    {
+      "id": "intro",
+      "theme": "dark",
+      "say": [
+        "Welcome to Arena Mobile.",
+        "Here's what's new in twenty twenty-six for field teams: maps, sync, and precise positioning."
+      ],
+      "items": [
+        {
+          "type": "logo",
+          "src": "local:arena-mobile-icon.png",
+          "x": 870,
+          "y": 200,
+          "w": 180,
+          "h": 180
+        },
+        {
+          "type": "kicker",
+          "text": "What’s new · 2026",
+          "x": 0,
+          "y": 420,
+          "w": 1920,
+          "align": "center"
+        },
+        {
+          "type": "title",
+          "text": "Arena Mobile",
+          "x": 0,
+          "y": 470,
+          "w": 1920,
+          "align": "center",
+          "size": 132
+        },
+        {
+          "type": "subtitle",
+          "at": 1,
+          "text": "Maps, sync and precise positioning for field teams",
+          "x": 0,
+          "y": 660,
+          "w": 1920,
+          "align": "center"
+        }
+      ]
+    },
+    {
+      "id": "stats",
+      "say": [
+        "Twenty twenty-six was a busy year in the field.",
+        "Fifty-six releases,",
+        "six headline features,",
+        "on both Android and i-O-S."
+      ],
+      "items": [
+        {
+          "type": "kicker",
+          "text": "2026 at a glance"
+        },
+        {
+          "type": "title",
+          "text": "A year in the field"
+        },
+        {
+          "type": "stat",
+          "at": 1,
+          "value": 56,
+          "label": "releases",
+          "sub": "from v2.2.4 to v2.11.0",
+          "x": 120,
+          "y": 310,
+          "w": 520,
+          "h": 380
+        },
+        {
+          "type": "stat",
+          "at": 2,
+          "value": 6,
+          "label": "headline features",
+          "sub": "in the in-app “What’s new”",
+          "x": 700,
+          "y": 310,
+          "w": 520,
+          "h": 380
+        },
+        {
+          "type": "stat",
+          "at": 3,
+          "value": 2,
+          "label": "platforms",
+          "sub": "Android and iOS",
+          "x": 1280,
+          "y": 310,
+          "w": 520,
+          "h": 380
+        },
+        {
+          "type": "chips",
+          "at": 3,
+          "delay": 1.2,
+          "x": 1280,
+          "y": 730,
+          "w": 520,
+          "row": true,
+          "items": [
+            "Android",
+            "iOS"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "offlineMaps",
+      "say": [
+        "First, offline maps: the map now comes along.",
+        "Before you leave, draw the area you need and download it, with satellite imagery, or your own georeferenced P-D-F maps on top."
+      ],
+      "items": [
+        {
+          "type": "kicker",
+          "text": "Maps"
+        },
+        {
+          "type": "title",
+          "text": "Offline maps: the map comes along"
+        },
+        {
+          "type": "phone",
+          "src": "assets:whatsNew/offlineMaps-1.jpg",
+          "x": 1100,
+          "y": 240,
+          "w": 360,
+          "h": 720
+        },
+        {
+          "type": "phone",
+          "at": 1,
+          "src": "assets:whatsNew/offlineMaps-2.jpg",
+          "x": 1460,
+          "y": 280,
+          "w": 360,
+          "h": 720
+        },
+        {
+          "type": "chips",
+          "at": 1,
+          "x": 120,
+          "y": 380,
+          "w": 900,
+          "items": [
+            "Draw the area on the map",
+            "Satellite or other base layers",
+            "Georeferenced PDF maps on top",
+            "Works with no connection"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "recordsMap",
+      "say": [
+        "See your records on the map.",
+        "Sampling points, visited or not, coordinates and position tracks: tap a point, and its record opens."
+      ],
+      "items": [
+        {
+          "type": "kicker",
+          "text": "Maps"
+        },
+        {
+          "type": "title",
+          "text": "Records on the map"
+        },
+        {
+          "type": "phone",
+          "src": "assets:whatsNew/recordsMap-3.jpg",
+          "x": 1100,
+          "y": 240,
+          "w": 360,
+          "h": 720
+        },
+        {
+          "type": "phone",
+          "at": 1,
+          "src": "assets:whatsNew/recordsMap-2.jpg",
+          "x": 1460,
+          "y": 330,
+          "w": 360,
+          "h": 640
+        },
+        {
+          "type": "chips",
+          "at": 1,
+          "x": 120,
+          "y": 380,
+          "w": 900,
+          "items": [
+            "Sampling points, visited or not",
+            "Coordinates and position tracks",
+            "Tap a point to open its record"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "aoi",
+      "theme": "dark",
+      "say": [
+        "New in version two point eleven: areas of interest, in your pocket.",
+        "The areas of interest and map layers defined in Arena are downloaded with the survey, and shown on the records map, grouped by type."
+      ],
+      "items": [
+        {
+          "type": "badge",
+          "text": "New in 2.11",
+          "x": 120,
+          "y": 96
+        },
+        {
+          "type": "kicker",
+          "text": "Maps",
+          "y": 160
+        },
+        {
+          "type": "title",
+          "text": "Areas of interest, in your pocket",
+          "y": 196,
+          "size": 84
+        },
+        {
+          "type": "phone",
+          "at": 1,
+          "src": "assets:whatsNew/recordsMapLayerGroups-1.jpg",
+          "x": 1260,
+          "y": 330,
+          "w": 420,
+          "h": 720
+        },
+        {
+          "type": "chips",
+          "at": 1,
+          "delay": 0.8,
+          "x": 120,
+          "y": 420,
+          "w": 1000,
+          "items": [
+            "Areas of interest from the survey",
+            "KML and GeoJSON map layers, e.g. rivers",
+            "Grouped by type in the Layers panel"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "aoiExpressions",
+      "theme": "dark",
+      "say": [
+        "And the new area of interest checks run right on the device.",
+        "Geo distance to A-O-I boundary tells how far a location is from the edge of the area: negative inside, positive outside.",
+        "Compared with the G-P-S accuracy, field teams know at once if a plot is inside, outside, or uncertain.",
+        "Even with no connection."
+      ],
+      "items": [
+        {
+          "type": "kicker",
+          "text": "Areas of interest · Expressions"
+        },
+        {
+          "type": "title",
+          "text": "Inside the area? Ask offline"
+        },
+        {
+          "type": "aoiMap",
+          "x": 120,
+          "y": 290,
+          "w": 960,
+          "h": 690
+        },
+        {
+          "type": "code",
+          "at": 1,
+          "delay": 0.6,
+          "text": "geoDistanceToAOIBoundary(\n  location, 'pilot_area'\n)",
+          "x": 1150,
+          "y": 300,
+          "w": 650
+        },
+        {
+          "type": "legend",
+          "at": 2,
+          "delay": 0.4,
+          "x": 1150,
+          "y": 560,
+          "w": 650
+        },
+        {
+          "type": "chips",
+          "at": 3,
+          "x": 1150,
+          "y": 870,
+          "w": 650,
+          "items": [
+            "No connection needed"
+          ],
+          "icon": "local:arena-mobile-icon.png"
+        }
+      ]
+    },
+    {
+      "id": "polygons",
+      "say": [
+        "Draw polygons in the field, with the new geospatial attribute.",
+        "Tap the map, or walk the boundary, drag the points to fix the shape, and download it as Geo JSON."
+      ],
+      "items": [
+        {
+          "type": "kicker",
+          "text": "Data entry"
+        },
+        {
+          "type": "title",
+          "text": "Draw polygons in the field"
+        },
+        {
+          "type": "phone",
+          "src": "assets:whatsNew/geoAttribute-1.jpg",
+          "x": 1100,
+          "y": 240,
+          "w": 360,
+          "h": 720
+        },
+        {
+          "type": "phone",
+          "at": 1,
+          "src": "assets:whatsNew/geoAttribute-2.jpg",
+          "x": 1460,
+          "y": 280,
+          "w": 360,
+          "h": 720
+        },
+        {
+          "type": "chips",
+          "at": 1,
+          "x": 120,
+          "y": 380,
+          "w": 900,
+          "items": [
+            "Tap the map or walk the boundary",
+            "Drag points to fix the shape",
+            "Download it as GeoJSON"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tracking",
+      "say": [
+        "Position tracking records the path you walk, right in the record.",
+        "Start, pause, resume and stop, see the track on the map, and save battery as you go."
+      ],
+      "items": [
+        {
+          "type": "badge",
+          "text": "Experimental",
+          "x": 120,
+          "y": 96
+        },
+        {
+          "type": "kicker",
+          "text": "Data entry",
+          "y": 160
+        },
+        {
+          "type": "title",
+          "text": "Position tracking: record the path you walk",
+          "y": 196,
+          "size": 64
+        },
+        {
+          "type": "phone",
+          "src": "deck:position-tracking-2.jpg",
+          "x": 1060,
+          "y": 300,
+          "w": 340,
+          "h": 720
+        },
+        {
+          "type": "shot",
+          "at": 1,
+          "src": "deck:position-tracking-1.jpg",
+          "x": 1440,
+          "y": 300,
+          "w": 380,
+          "h": 320
+        },
+        {
+          "type": "shot",
+          "at": 1,
+          "delay": 1.2,
+          "src": "deck:position-tracking-3.jpg",
+          "x": 1440,
+          "y": 660,
+          "w": 380,
+          "h": 320
+        },
+        {
+          "type": "chips",
+          "at": 1,
+          "x": 120,
+          "y": 420,
+          "w": 880,
+          "items": [
+            "Start, pause, resume and stop",
+            "See the track on the map",
+            "Accuracy, distance and battery saver"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "audio",
+      "say": [
+        "Audio attributes let you record interviews and sounds inside the form.",
+        "Record, pause and resume, then play it back, share it, or delete it."
+      ],
+      "items": [
+        {
+          "type": "kicker",
+          "text": "Data entry"
+        },
+        {
+          "type": "title",
+          "text": "Audio attributes: record in the field"
+        },
+        {
+          "type": "shot",
+          "src": "assets:whatsNew/audioAttribute-1.jpg",
+          "x": 1080,
+          "y": 250,
+          "w": 720,
+          "h": 370
+        },
+        {
+          "type": "shot",
+          "at": 1,
+          "src": "assets:whatsNew/audioAttribute-2.jpg",
+          "x": 1080,
+          "y": 650,
+          "w": 720,
+          "h": 340
+        },
+        {
+          "type": "chips",
+          "at": 1,
+          "x": 120,
+          "y": 380,
+          "w": 900,
+          "items": [
+            "Record, pause, resume and stop",
+            "Play it back, share or delete it",
+            "Shown only when relevant, e.g. after consent"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "completion",
+      "say": [
+        "See what's left to do, at a glance.",
+        "A progress bar shows how complete the record is, and every page gets a status icon."
+      ],
+      "items": [
+        {
+          "type": "kicker",
+          "text": "Data entry"
+        },
+        {
+          "type": "title",
+          "text": "Record completion at a glance"
+        },
+        {
+          "type": "shot",
+          "src": "assets:whatsNew/recordCompletion-1.jpg",
+          "x": 120,
+          "y": 320,
+          "w": 900,
+          "h": 320
+        },
+        {
+          "type": "shot",
+          "at": 1,
+          "src": "assets:whatsNew/recordCompletion-2.jpg",
+          "x": 1180,
+          "y": 260,
+          "w": 620,
+          "h": 680
+        },
+        {
+          "type": "chips",
+          "at": 1,
+          "delay": 0.6,
+          "x": 120,
+          "y": 700,
+          "w": 900,
+          "items": [
+            "Percentage for the whole record",
+            "Status icon for each page",
+            "Can be turned off in Settings"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sync",
+      "say": [
+        "Data now syncs on its own, in the background, whenever the server is reachable.",
+        "And for better accuracy, pair an external Bluetooth G-P-S receiver."
+      ],
+      "items": [
+        {
+          "type": "kicker",
+          "text": "Connectivity"
+        },
+        {
+          "type": "title",
+          "text": "Sync on its own, locate more precisely"
+        },
+        {
+          "type": "shot",
+          "src": "assets:whatsNew/autoSync-1.jpg",
+          "x": 120,
+          "y": 300,
+          "w": 640,
+          "h": 480,
+          "caption": "Automatic data sync",
+          "sub": "Background upload, when the server is reachable"
+        },
+        {
+          "type": "phone",
+          "at": 1,
+          "src": "assets:whatsNew/externalGps-3.jpg",
+          "x": 900,
+          "y": 240,
+          "w": 360,
+          "h": 720
+        },
+        {
+          "type": "card",
+          "at": 1,
+          "delay": 1.0,
+          "icon": "bolt",
+          "title": "External GPS devices",
+          "text": "Pair a Bluetooth receiver (e.g. Bad Elf); Auto falls back to the internal GPS.",
+          "x": 1340,
+          "y": 400,
+          "w": 460,
+          "h": 420
+        }
+      ]
+    },
+    {
+      "id": "more",
+      "say": [
+        "Plus many smaller wins:",
+        "Q-R code login, two-factor authentication, user groups, conditional fields, a radar view to reach a point, and much more."
+      ],
+      "items": [
+        {
+          "type": "kicker",
+          "text": "And more"
+        },
+        {
+          "type": "title",
+          "text": "Many smaller wins for field teams"
+        },
+        {
+          "type": "chips",
+          "delay": 0.8,
+          "x": 120,
+          "y": 330,
+          "w": 1680,
+          "row": true,
+          "items": [
+            "Login with a QR code from Arena",
+            "Two-factor authentication",
+            "Read-only access to other groups",
+            "Key attributes locked while editing"
+          ]
+        },
+        {
+          "type": "chips",
+          "at": 1,
+          "x": 120,
+          "y": 520,
+          "w": 1680,
+          "row": true,
+          "items": [
+            "Required-if, editable-if, visible-if",
+            "Re-validate records from the list",
+            "CSV export with files",
+            "Navigate to a point with radar view",
+            "Rotate pictures",
+            "Cards view",
+            "Choose entity list columns",
+            "Japanese translation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "outro",
+      "theme": "dark",
+      "say": [
+        "Thank you for watching!",
+        "Arena Mobile is available for Android and i-O-S. Find the changelog and the source code on GitHub, at github dot com slash openforis slash arena dash mobile."
+      ],
+      "items": [
+        {
+          "type": "logo",
+          "src": "local:arena-mobile-icon.png",
+          "x": 870,
+          "y": 230,
+          "w": 180,
+          "h": 180
+        },
+        {
+          "type": "title",
+          "text": "Thank you",
+          "x": 0,
+          "y": 440,
+          "w": 1920,
+          "align": "center",
+          "size": 132
+        },
+        {
+          "type": "url",
+          "at": 1,
+          "text": "github.com/openforis/arena-mobile",
+          "x": 0,
+          "y": 660,
+          "w": 1920
+        }
+      ]
+    }
+  ]
+}

@@ -32,6 +32,8 @@ export default [
       "web-build/",
       "modules/*/android/",
       "coverage/",
+      // browser/Node tooling of the "What's new" video, not app code
+      "docs/whats-new-2026/video/",
     ],
   },
   js.configs.recommended,
