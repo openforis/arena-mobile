@@ -30,12 +30,25 @@ for lang in $LANGS; do
   node "$FLOWS_DIR/generateLabels.js" "$lang"
   for flow in "$FLOWS_DIR"/[0-9]*.yaml; do
     echo "=== $lang: $(basename "$flow")"
-    if ! (cd "$out" && maestro test "$flow" \
-      -e APP_ID="$APP_ID" -e OUT="$out" \
-      -e APP_LANG="$lang" -e APP_LANG_LABEL="${LANG_LABELS[$lang]}"); then
+    test_output="$(mktemp -d)"
+    if ! maestro test "$flow" --test-output-dir "$test_output" \
+      -e APP_ID="$APP_ID" \
+      -e APP_LANG="$lang" -e APP_LANG_LABEL="${LANG_LABELS[$lang]}"; then
       echo "::warning::Flow $(basename "$flow") failed ($lang)"
       failures=$((failures + 1))
     fi
+    # screenshots taken by _shot.yaml: shot-<name>.png in the test output folder
+    find "$test_output" -name "shot-*.png" -print0 | while IFS= read -r -d '' file; do
+      name="$(basename "$file")"
+      mv "$file" "$out/${name#shot-}"
+    done
+    rm -rf "$test_output"
   done
 done
 echo "Failed flows: $failures"
+count="$(find "$OUT_ROOT" -name "*.png" | wc -l)"
+echo "Screenshots: $count"
+if [[ "$count" -eq 0 ]]; then
+  echo "::error::No screenshots taken"
+  exit 1
+fi
