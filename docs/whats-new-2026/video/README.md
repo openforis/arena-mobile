@@ -12,7 +12,7 @@ phone frames.
 - `index.html`, `style.css`, `engine.js`: the animation; `render(t)` draws the frame at time `t`.
 - `tts.py`: narration (Kokoro), scene timeline and subtitles. `music.py`: background track. `render.mjs`: frame capture
   with Playwright. `build.py`: runs everything.
-- Images come from `assets/whatsNew/` and `docs/whats-new-2026/`; `arena-mobile-icon.png` is the icon used in the deck.
+- Images come from `assets/whatsNew/` and `docs/whats-new-2026/`; `arena-mobile-icon.png` is the current Arena Mobile icon, from the logo on openforis.org.
   Fonts (Rubik, Nunito Sans, OFL) are in `fonts/`.
 
 ## Building
