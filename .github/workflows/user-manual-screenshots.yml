@@ -90,9 +90,14 @@ jobs:
       # JPEG, to keep the repository small
       - name: Convert screenshots
         run: |
-          find docs/user-manual/screenshots -name "*.png" -print0 | while IFS= read -r -d '' file; do
-            convert "$file" -quality 85 "${file%.png}.jpg" && rm "$file"
-          done
+          sudo apt-get install -y --no-install-recommends python3-pil > /dev/null
+          python3 - <<'PYTHON'
+          from pathlib import Path
+          from PIL import Image
+          for png in Path("docs/user-manual/screenshots").rglob("*.png"):
+              Image.open(png).convert("RGB").save(png.with_suffix(".jpg"), "JPEG", quality=85, optimize=True)
+              png.unlink()
+          PYTHON
 
       - name: Upload artifact
         uses: actions/upload-artifact@v7

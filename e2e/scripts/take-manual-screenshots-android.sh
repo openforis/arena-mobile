@@ -23,6 +23,7 @@ adb install -r -t -g "$APK"
 sleep 5
 
 failures=0
+failed_flows=()
 for lang in $LANGS; do
   out="$OUT_ROOT/$lang"
   rm -rf "$out"
@@ -36,6 +37,7 @@ for lang in $LANGS; do
       -e APP_LANG="$lang" -e APP_LANG_LABEL="${LANG_LABELS[$lang]}"; then
       echo "::warning::Flow $(basename "$flow") failed ($lang)"
       failures=$((failures + 1))
+      failed_flows+=("$lang/$(basename "$flow")")
     fi
     # screenshots taken by _shot.yaml: shot-<name>.png in the test output folder
     find "$test_output" -name "shot-*.png" -print0 | while IFS= read -r -d '' file; do
@@ -45,7 +47,7 @@ for lang in $LANGS; do
     rm -rf "$test_output"
   done
 done
-echo "Failed flows: $failures"
+echo "Failed flows: $failures ${failed_flows[*]}"
 count="$(find "$OUT_ROOT" -name "*.png" | wc -l)"
 echo "Screenshots: $count"
 if [[ "$count" -eq 0 ]]; then
