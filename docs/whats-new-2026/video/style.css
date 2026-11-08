@@ -105,7 +105,7 @@ body { font-family: 'Nunito Sans', 'DejaVu Sans', 'IPAGothic', sans-serif; color
 /* code, legend */
 .code { background: #0B1D19; border-radius: 20px; padding: 30px 34px; font: 500 26px/1.55 'DejaVu Sans Mono', monospace; color: #E8F1EC;
   box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .6), 0 0 0 1px rgba(143, 224, 181, .18); white-space: pre; }
-.code .fn { color: #8FE0B5; } .code .str { color: #F2C26B; } .code .cm { color: #6F8A82; } .code .caret { display: inline-block; width: 13px; height: 30px; background: #8FE0B5; vertical-align: -6px; }
+.code .fn { color: #F2B36B; } .code .str { color: #F2C26B; } .code .cm { color: #6F8A82; } .code .caret { display: inline-block; width: 13px; height: 30px; background: #F2B36B; vertical-align: -6px; }
 .legend { display: flex; flex-direction: column; gap: 22px; }
 .legend .row { display: flex; align-items: center; gap: 20px; color: #fff; font: 700 32px 'Rubik', sans-serif; }
 .legend .row .dot { width: 26px; height: 26px; border-radius: 50%; box-shadow: 0 0 0 6px rgba(255, 255, 255, .08); }
@@ -145,4 +145,3 @@ body { font-family: 'Nunito Sans', 'DejaVu Sans', 'IPAGothic', sans-serif; color
 /* phone screenshots */
 .shot.phone .frame { border-radius: 40px; box-shadow: 0 0 0 12px #13302B, 0 0 0 13px rgba(255, 255, 255, .12), 0 50px 90px -30px rgba(10, 35, 30, .55); }
 .dark .shot.phone .frame { box-shadow: 0 0 0 12px #0A1A17, 0 0 0 13px rgba(255, 255, 255, .18), 0 50px 90px -20px rgba(0, 0, 0, .65); }
-.code .fn { color: #F2B36B; } .code .caret { background: #F2B36B; }
