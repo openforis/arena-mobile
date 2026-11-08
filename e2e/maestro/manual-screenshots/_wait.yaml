@@ -1,0 +1,7 @@
+appId: ${APP_ID}
+---
+# Waits about SECONDS seconds (e.g. for map tiles to be downloaded)
+- extendedWaitUntil:
+    visible: "zzz-text-never-shown"
+    timeout: ${SECONDS * 1000}
+    optional: true

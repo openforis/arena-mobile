@@ -1,0 +1,7 @@
+appId: ${APP_ID}
+---
+# Opens an item of the options menu (top right corner). Params: ITEM (item label)
+- tapOn:
+    id: "app-bar-options-menu-button"
+- tapOn: ${ITEM}
+- waitForAnimationToEnd

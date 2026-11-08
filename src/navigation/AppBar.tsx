@@ -194,7 +194,12 @@ export const AppBar = (props: Props) => {
           fullWidth
         >
           {editingRecord && (
-            <AppBarAction icon="menu" onPress={onToggleDrawerPress} size={36} />
+            <AppBarAction
+              icon="menu"
+              onPress={onToggleDrawerPress}
+              size={36}
+              testID="app-bar-drawer-button"
+            />
           )}
 
           {hasBack && back && (
@@ -229,6 +234,7 @@ export const AppBar = (props: Props) => {
                       : "lock-open-variant-outline"
                   }
                   onPress={toggleRecordLock}
+                  testID="app-bar-record-lock-button"
                 />
               )}
               {recordIsNotValid && (
@@ -236,6 +242,7 @@ export const AppBar = (props: Props) => {
                   icon="alert"
                   color={recordHasErrors ? "red" : "orange"}
                   onPress={onValidationIconPress}
+                  testID="app-bar-validation-button"
                 />
               )}
               {canRecordBeLinkedToPreviousCycle && (
@@ -243,6 +250,7 @@ export const AppBar = (props: Props) => {
                   icon={isLinkedToPreviousCycleRecord ? "link" : "link-off"}
                   loading={isLoadingPreviousCycleRecord}
                   onPress={onLinkToPreviousCyclePress}
+                  testID="app-bar-previous-cycle-link-button"
                 />
               )}
               <AppBarAction
@@ -252,13 +260,18 @@ export const AppBar = (props: Props) => {
                     : "format-list-bulleted"
                 }
                 onPress={toggleRecordEditViewMode}
+                testID="app-bar-record-view-mode-button"
               />
               {!PreviewMode.isActive && <AutoSyncStatusAppBarAction />}
             </>
           )}
 
           {!editingRecord && recordsMapAvailable && (
-            <AppBarAction icon="map-outline" onPress={onRecordsMapPress} />
+            <AppBarAction
+              icon="map-outline"
+              onPress={onRecordsMapPress}
+              testID="app-bar-records-map-button"
+            />
           )}
 
           {!editingRecord && hasToggleScreenView && (
@@ -273,6 +286,7 @@ export const AppBar = (props: Props) => {
                 ]
               }
               onPress={onToggleScreenViewModePress}
+              testID="app-bar-screen-view-mode-button"
             />
           )}
 

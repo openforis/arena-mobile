@@ -1,0 +1,10 @@
+appId: ${APP_ID}
+---
+# Starts the app on the home screen, with the labels of the current language (output.t)
+- runScript: labels.js
+- launchApp
+- extendedWaitUntil:
+    visible:
+      id: "home-surveys-button"
+    timeout: 60000
+- waitForAnimationToEnd

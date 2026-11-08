@@ -1,0 +1,148 @@
+appId: ${APP_ID}
+---
+# Multiple entities, taxon, files, position tracking, validation report, single node view
+- runFlow: _init.yaml
+- tapOn: ${output.t.goToDataEntry}
+- tapOn: "Test Point 1.*"
+- waitForAnimationToEnd
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: record-locked
+- tapOn:
+    id: "app-bar-record-lock-button"
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: record-unlocked
+
+# multiple entity (form) and taxon attribute
+- runFlow:
+    file: _open-page.yaml
+    env:
+      PAGE: "Regeneration"
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: regeneration-empty
+- tapOn: ${output.t.newEntity}
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: regeneration-new
+- scrollUntilVisible:
+    element: ${output.t.searchTaxon}
+    direction: DOWN
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: taxon-field
+- tapOn: ${output.t.searchTaxon}
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: taxon-search
+- tapOn:
+    id: "search-bar"
+- inputText: "zizi"
+- runFlow:
+    file: _wait.yaml
+    env:
+      SECONDS: 2
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: taxon-search-results
+- tapOn: ${output.t.selectAnItem}
+- tapOn: ".*Ziziphus mauritiana"
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: taxon-selected
+- scrollUntilVisible:
+    element:
+      id: "regeneration_count"
+    direction: DOWN
+- tapOn:
+    id: "regeneration_count"
+- inputText: "3"
+- tapOn: "Number of individuals"
+- runFlow:
+    file: _open-page.yaml
+    env:
+      PAGE: "Regeneration"
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: regeneration-list
+
+# files
+- runFlow:
+    file: _open-page.yaml
+    env:
+      PAGE: "Media and Documents"
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: media
+- scrollUntilVisible:
+    element: ${output.t.yes}
+    direction: DOWN
+- tapOn: ${output.t.yes}
+- scrollUntilVisible:
+    element: "Interview audio recording"
+    direction: DOWN
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: media-audio
+
+# position tracking
+- runFlow:
+    file: _open-page.yaml
+    env:
+      PAGE: "Second Level Unit"
+- tapOn:
+    text: ${output.t.newEntity}
+    optional: true
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: second-level-unit
+- scrollUntilVisible:
+    element: "Walked path"
+    direction: DOWN
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: position-tracking
+
+# validation report
+- tapOn:
+    id: "app-bar-validation-button"
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: validation-report
+- back
+
+# single node view mode
+- runFlow:
+    file: _open-page.yaml
+    env:
+      PAGE: "Site Details"
+- tapOn:
+    id: "app-bar-record-view-mode-button"
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: single-node
+- tapOn:
+    id: "app-bar-drawer-button"
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: single-node-drawer
+- back
+- tapOn:
+    id: "app-bar-record-view-mode-button"

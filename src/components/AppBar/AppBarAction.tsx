@@ -6,10 +6,11 @@ type Props = {
   loading?: boolean;
   onPress: () => void;
   size?: number;
+  testID?: string;
 };
 
 export const AppBarAction = (props: Props) => {
-  const { color, icon, loading, onPress, size } = props;
+  const { color, icon, loading, onPress, size, testID } = props;
   return (
     <RNPAppbar.Action
       color={color}
@@ -17,6 +18,7 @@ export const AppBarAction = (props: Props) => {
       loading={loading}
       onPress={onPress}
       size={size}
+      testID={testID}
     />
   );
 };

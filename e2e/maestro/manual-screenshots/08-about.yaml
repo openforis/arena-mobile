@@ -1,0 +1,11 @@
+appId: ${APP_ID}
+---
+- runFlow: _init.yaml
+- runFlow:
+    file: _open-menu-item.yaml
+    env:
+      ITEM: ${output.t.aboutTitle}
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: about

@@ -1,0 +1,6 @@
+appId: ${APP_ID}
+---
+# Params: NAME (file name, without extension)
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: ${OUT}/${NAME}

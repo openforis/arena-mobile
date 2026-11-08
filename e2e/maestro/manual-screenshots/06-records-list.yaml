@@ -1,0 +1,32 @@
+appId: ${APP_ID}
+---
+- runFlow: _init.yaml
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: home-with-records
+- tapOn: ${output.t.goToDataEntry}
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: records-list
+- tapOn:
+    id: "app-bar-screen-view-mode-button"
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: records-list-cards
+- tapOn:
+    id: "app-bar-screen-view-mode-button"
+- tapOn: ${output.t.options}
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: records-options
+- tapOn: ${output.t.options}
+- longPressOn: "Test Point 1.*"
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: records-selected
+- back
