@@ -70,7 +70,8 @@ const keys = {
   freeMapLayers: "settings:mapProvider.options.freeLayers",
 };
 
-const escapeRegExp = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const escapeRegExp = (text) =>
+  text.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
 
 const main = async () => {
   const resources = {};

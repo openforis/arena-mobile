@@ -78,9 +78,8 @@ def rpr_key(run):
     if rpr is None:
         return ""
     rpr = deepcopy(rpr)
-    for child in list(rpr):
-        if child.tag in IGNORED_RPR:
-            rpr.remove(child)
+    for child in [child for child in rpr if child.tag in IGNORED_RPR]:
+        rpr.remove(child)
     return etree.tostring(rpr, method="c14n").decode()
 
 
@@ -163,7 +162,7 @@ def parse_tagged(text):
     for match in TOKEN_PATTERN.finditer(text):
         add_text(text[position : match.start()])
         position = match.end()
-        closing, kind, index, self_closing = match.groups()
+        closing, kind, index, _self_closing = match.groups()
         index = int(index)
         if kind == "x":
             result.append(["x", index, ""])
@@ -182,9 +181,8 @@ def parse_tagged(text):
 
 
 def set_run_text(run, text):
-    for child in list(run):
-        if child.tag != W + "rPr":
-            run.remove(child)
+    for child in [child for child in run if child.tag != W + "rPr"]:
+        run.remove(child)
     for index, line in enumerate(text.split("\n")):
         if index > 0:
             etree.SubElement(run, W + "br")
@@ -197,46 +195,52 @@ def set_run_text(run, text):
                 t.set(XML_SPACE, "preserve")
 
 
-def apply_text(paragraph, items, translated):
+def rebuild_runs(items, elements, parsed):
+    """Rebuilds the runs in the order of the translation (tags can be moved or repeated)."""
+    parent = elements[0].getparent()
+    position = min(parent.index(element) for element in elements)
+    used = set()
+    sequence = []
+    for kind, index, text in parsed:
+        if kind == "x" and index in used:
+            continue
+        element = elements[index - 1]
+        if index in used:
+            element = deepcopy(element)
+        used.add(index)
+        if kind == "s":
+            set_run_text(element, text)
+        sequence.append(element)
+    # images and fields missing in the translation are kept
+    sequence += [e for i, e in enumerate(elements, start=1) if i not in used and items[i - 1][0] == "x"]
+    for element in elements:
+        parent.remove(element)
+    for offset, element in enumerate(sequence):
+        parent.insert(position + offset, element)
+
+
+def set_span_texts(items, parsed):
+    """Sets the text of the spans keeping the original order (runs with different parents, e.g. hyperlinks)."""
+    span_texts = {}
+    for kind, index, text in parsed:
+        if kind == "s":
+            span_texts[index] = span_texts.get(index, "") + text
+    for index, (kind, value) in enumerate(items, start=1):
+        if kind == "s":
+            set_run_text(value[0], span_texts.get(index, ""))
+
+
+def apply_text(items, translated):
     parsed = [item for item in parse_tagged(translated) if 1 <= item[1] <= len(items)]
     elements = [value[0] if kind == "s" else value for kind, value in items]
     for kind, value in items:
         if kind == "s":
             for run in value[1:]:
                 run.getparent().remove(run)
-    parents = {element.getparent() for element in elements}
-    if len(parents) == 1:
-        # rebuild the runs in the order of the translation (tags can be moved or repeated)
-        parent = parents.pop()
-        position = min(parent.index(element) for element in elements)
-        used = set()
-        sequence = []
-        for kind, index, text in parsed:
-            element = elements[index - 1]
-            if kind == "x":
-                if index in used:
-                    continue
-            elif index in used:
-                element = deepcopy(element)
-            used.add(index)
-            if kind == "s":
-                set_run_text(element, text)
-            sequence.append(element)
-        # images and fields missing in the translation are kept
-        sequence += [e for i, e in enumerate(elements, start=1) if i not in used and items[i - 1][0] == "x"]
-        for element in elements:
-            parent.remove(element)
-        for offset, element in enumerate(sequence):
-            parent.insert(position + offset, element)
+    if len({element.getparent() for element in elements}) == 1:
+        rebuild_runs(items, elements, parsed)
     else:
-        # runs inside hyperlinks: same order as the original
-        span_texts = {}
-        for kind, index, text in parsed:
-            if kind == "s":
-                span_texts[index] = span_texts.get(index, "") + text
-        for index, (kind, value) in enumerate(items, start=1):
-            if kind == "s":
-                set_run_text(value[0], span_texts.get(index, ""))
+        set_span_texts(items, parsed)
 
 
 def set_language(root, lang):
@@ -266,19 +270,28 @@ def apply(input_docx, input_json, output_docx, lang=None):
     with zipfile.ZipFile(input_docx) as source, zipfile.ZipFile(output_docx, "w", zipfile.ZIP_DEFLATED) as target:
         for info in source.infolist():
             data = source.read(info.filename)
-            if PARTS_PATTERN.match(info.filename) or (lang and info.filename == "word/styles.xml"):
+            is_text_part = bool(PARTS_PATTERN.match(info.filename))
+            if is_text_part or (lang and info.filename == "word/styles.xml"):
                 root = etree.fromstring(data)
-                if PARTS_PATTERN.match(info.filename):
-                    for number, (paragraph, items) in enumerate(list(translatable_paragraphs(root))):
-                        translated = translations.get(f"{info.filename}#{number}")
-                        if translated is not None:
-                            apply_text(paragraph, items, translated)
-                            applied += 1
+                if is_text_part:
+                    applied += apply_part(root, info.filename, translations)
                 if lang:
                     set_language(root, lang)
                 data = etree.tostring(root, xml_declaration=True, encoding="UTF-8", standalone=True)
             target.writestr(info, data)
     print(f"{applied} segments applied, written to {output_docx}")
+
+
+def apply_part(root, part_name, translations):
+    """Applies the translations to a part of the document (e.g. word/document.xml); returns their count."""
+    applied = 0
+    # the paragraphs are listed before changing them
+    for number, (_paragraph, items) in enumerate(list(translatable_paragraphs(root))):
+        translated = translations.get(f"{part_name}#{number}")
+        if translated is not None:
+            apply_text(items, translated)
+            applied += 1
+    return applied
 
 
 def load_translations(translations_json):
