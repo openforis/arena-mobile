@@ -22,6 +22,18 @@ sleep 10
 adb install -r -t -g "$APK"
 sleep 5
 
+# fail fast if the screenshots of the app are blank (e.g. emulator image or GPU mode not supported)
+adb shell monkey -p "$APP_ID" -c android.intent.category.LAUNCHER 1 > /dev/null
+sleep 20
+adb exec-out screencap -p > "$RUNNER_TEMP/screen-check.png"
+adb shell am force-stop "$APP_ID"
+check_size="$(stat -c %s "$RUNNER_TEMP/screen-check.png")"
+echo "Screen check: $check_size bytes"
+if [[ "$check_size" -lt 30000 ]]; then
+  echo "::error::Blank screenshot of the app: check the emulator image and GPU mode"
+  exit 1
+fi
+
 failures=0
 failed_flows=()
 for lang in $LANGS; do
