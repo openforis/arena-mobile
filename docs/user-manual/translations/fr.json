@@ -608,10 +608,6 @@
   "target": "<s1>Enregistrements des autres groupes d’utilisateurs</s1><s2> : dans les enquêtes utilisant des groupes d’utilisateurs, les enregistrements appartenant à un autre groupe d’utilisateurs sont marqués </s2><s3>Lecture seule</s3><s4> : ils peuvent être consultés ou clonés, mais pas modifiés.</s4>"
  },
  {
-  "source": "<s1>Survey guests</s1><s2>: if your role in the survey is </s2><s3>Survey guest</s3><s4>, you can download and view the records, but you cannot add, clone, edit or send them: the </s4><s5>New record</s5><s6> button is not shown and all the records are marked as </s6><s7>Read-only</s7><s8>.</s8>",
-  "target": "<s1>Invités de l’enquête</s1><s2> : si votre rôle dans l’enquête est </s2><s3>Invité de l'enquête</s3><s4>, vous pouvez télécharger et consulter les enregistrements, mais vous ne pouvez pas les ajouter, les cloner, les modifier ni les envoyer : le bouton </s4><s5>Nouvel enregistrement</s5><s6> n’est pas affiché et tous les enregistrements sont marqués </s6><s7>Lecture seule</s7><s8>.</s8>"
- },
- {
   "source": "<s1>6.2\tDelete a record</s1>",
   "target": "<s1>6.2\tSupprimer un enregistrement</s1>"
  },
@@ -2044,15 +2040,15 @@
   "target": "<s1>Arena Mobile sur GitHub</s1><s2> : </s2><s3>https://github.com/openforis/arena-mobile</s3>"
  },
  {
+  "source": "<x1/><s2> Mobile device’s compass typically points to the magnetic north, not true north. The magnetic north is based on the Earth’s magnetic field, while true north refers to the geographic North Pole. You might be able to calibrate your device’s compass with a known declination value. This means that, depending on your location, your device can adjust readings to provide more accurate direction relative to true north.</s2>",
+  "target": "<x1/><s2> La boussole d’un appareil mobile indique généralement le nord magnétique, et non le nord géographique. Le nord magnétique est déterminé par le champ magnétique terrestre, tandis que le nord géographique correspond au pôle Nord géographique. Vous pouvez éventuellement étalonner la boussole de votre appareil avec une valeur de déclinaison connue. Ainsi, selon votre position, votre appareil peut ajuster ses relevés pour fournir une direction plus précise par rapport au nord géographique.</s2>"
+ },
+ {
   "source": "<x1/><s2>   Open Foris Arena Mobile - User Manual</s2>",
   "target": "<x1/><s2>   Open Foris Arena Mobile - Manuel d’utilisation</s2>"
  },
  {
   "source": "<x1/><x2/><x3/><s4>56</s4><x5/>",
   "target": "<x1/><x2/><x3/><s4>56</s4><x5/>"
- },
- {
-  "source": "<x1/><s2> Mobile device’s compass typically points to the magnetic north, not true north. The magnetic north is based on the Earth’s magnetic field, while true north refers to the geographic North Pole. You might be able to calibrate your device’s compass with a known declination value. This means that, depending on your location, your device can adjust readings to provide more accurate direction relative to true north.</s2>",
-  "target": "<x1/><s2> La boussole d’un appareil mobile indique généralement le nord magnétique, et non le nord géographique. Le nord magnétique est déterminé par le champ magnétique terrestre, tandis que le nord géographique correspond au pôle Nord géographique. Vous pouvez éventuellement étalonner la boussole de votre appareil avec une valeur de déclinaison connue. Ainsi, selon votre position, votre appareil peut ajuster ses relevés pour fournir une direction plus précise par rapport au nord géographique.</s2>"
  }
 ]
