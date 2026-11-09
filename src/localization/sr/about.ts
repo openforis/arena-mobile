@@ -7,4 +7,6 @@ export default {
   support: "Podrška",
   version: "Verzija",
   whatsNewDescription: "Istaknute nove funkcije",
+  userManual: "Korisničko uputstvo",
+  userManualDescription: "Vodič kroz sve funkcije aplikacije (PDF)",
 };

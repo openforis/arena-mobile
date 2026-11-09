@@ -18,8 +18,8 @@ import {
   Text,
   VView,
 } from "components";
-import { useTranslation } from "localization";
-import { AMConstants } from "utils";
+import { i18n, useTranslation } from "localization";
+import { AMConstants, SystemUtils, UserManual } from "utils";
 
 import { AboutListItem } from "./AboutListItem";
 import styles from "./styles";
@@ -48,6 +48,14 @@ export const AboutScreen = () => {
     await WebBrowser.openBrowserAsync(AMConstants.supportForumUrl);
   }, []);
 
+  // manual of this version of the app, in its language (English if not available)
+  const onUserManualPress = useCallback(async () => {
+    const { version } = SystemUtils.getRecordAppInfo();
+    await WebBrowser.openBrowserAsync(
+      UserManual.getUrl({ lang: i18n.language, version }),
+    );
+  }, []);
+
   const toggleChangelogDialogOpen = useCallback(
     () => setChangelogDialogOpen((oldValue) => !oldValue),
     [],
@@ -70,6 +78,14 @@ export const AboutScreen = () => {
 
       <Surface style={styles.section} elevation={1}>
         <ListSubheader style={styles.sectionTitle} textKey="about:support" />
+        <AboutListItem
+          icon="book-open-variant"
+          titleKey="about:userManual"
+          description={t("about:userManualDescription")}
+          onPress={onUserManualPress}
+          external
+        />
+        <Divider />
         {Objects.isNotEmpty(supportEmailAddress) && (
           <>
             <AboutListItem

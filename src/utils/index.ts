@@ -1,4 +1,5 @@
 export { AMConstants } from "./AMConstants";
+export { UserManual } from "./UserManual";
 export { ArrayUtils } from "./ArrayUtils";
 export { BaseStyles } from "./BaseStyles";
 export { ColorUtils } from "./ColorUtils";

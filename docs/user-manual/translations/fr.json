@@ -272,8 +272,8 @@
   "target": "<s1>Paramètres</s1><s2> : paramètres généraux de l’application (par exemple langue, thème, taille de la police, etc.) ;</s2>"
  },
  {
-  "source": "<s1>About</s1><s2>: information about the app, what’s new, the change log and links to the support forum;</s2>",
-  "target": "<s1>À propos</s1><s2> : informations sur l’application, nouveautés, journal des modifications et liens vers le forum d’assistance ;</s2>"
+  "source": "<s1>About</s1><s2>: information about the app, the user manual, what’s new, the change log and links to the support forum;</s2>",
+  "target": "<s1>À propos</s1><s2> : informations sur l’application, le manuel d’utilisation, les nouveautés, le journal des modifications et les liens vers le forum d’assistance ;</s2>"
  },
  {
   "source": "<s1>Exit</s1><s2> (only on Android): closes the app.</s2>",
@@ -656,8 +656,8 @@
   "target": "<s1>menu des options.</s1>"
  },
  {
-  "source": "<s1>The </s1><s2>Lower panel</s2><s3> shows the “breadcrumbs” (where you can read in this example </s3><s4>Root entity[1,2]</s4><s5>); you can determine the position of the current page inside the record (i.e., the current entity name and the name of the ancestor entities, up to the root). It also contains “Records” and the next entity to check out.</s5>",
-  "target": "<s1>Le </s1><s2>panneau inférieur</s2><s3> affiche le « fil d’Ariane » (dans cet exemple, on peut lire </s3><s4>Root entity[1,2]</s4><s5>) ; il permet de déterminer la position de la page actuelle dans l’enregistrement (c’est-à-dire le nom de l’entité actuelle et le nom des entités ancêtres, jusqu’à la racine). Il contient également « Enregistrements » et l’entité suivante à consulter.</s5>"
+  "source": "<s1>The </s1><s2>Lower panel</s2><s3> shows the “breadcrumbs” (where you can read in this example </s3><s4>First Level Unit [Test Point 1, …]</s4><s5>); you can determine the position of the current page inside the record (i.e., the current entity name and the name of the ancestor entities, up to the root). It also contains “Records” and the next entity to check out.</s5>",
+  "target": "<s1>Le </s1><s2>panneau inférieur</s2><s3> affiche le « fil d’Ariane » (dans cet exemple, on peut lire </s3><s4>First Level Unit [Test Point 1, …]</s4><s5>) ; il permet de déterminer la position de la page actuelle dans l’enregistrement (c’est-à-dire le nom de l’entité actuelle et le nom des entités ancêtres, jusqu’à la racine). Il contient également « Enregistrements » et l’entité suivante à consulter.</s5>"
  },
  {
   "source": "<s1>Navigation</s1>",
@@ -2020,8 +2020,8 @@
   "target": "<s1>Sur Android, cette application nécessite Android 7.0 ou une version ultérieure. Sur iOS, l’appareil doit disposer d’iOS 16.4 ou d’une version ultérieure. La mémoire vive minimale requise pour un bon fonctionnement de l’application est de 1 Go, et il est particulièrement important de disposer de suffisamment d’espace libre en mémoire pour stocker les images, les vidéos et les cartes hors ligne.</s1>"
  },
  {
-  "source": "<s1>The </s1><s2>About</s2><s3> screen (in the options menu) shows the version of the app, what’s new in the latest versions, the full change log and the links to the support forum and the support email.</s3>",
-  "target": "<s1>L’écran </s1><s2>À propos</s2><s3> (dans le menu des options) affiche la version de l’application, les nouveautés des dernières versions, le journal complet des modifications ainsi que les liens vers le forum d’assistance et l’adresse e-mail d’assistance.</s3>"
+  "source": "<s1>The </s1><s2>About</s2><s3> screen (in the options menu) shows the version of the app, the link to this </s3><s4>User manual</s4><s5> (for the installed version of the app, in its language if available, otherwise in English), what’s new in the latest versions, the full change log and the links to the support forum and the support email.</s5>",
+  "target": "<s1>L’écran </s1><s2>À propos</s2><s3> (dans le menu des options) affiche la version de l’application, le lien vers ce </s3><s4>Manuel d'utilisation</s4><s5> (pour la version installée de l’application, dans sa langue si elle est disponible, sinon en anglais), les nouveautés des dernières versions, le journal complet des modifications et les liens vers le forum d’assistance et l’adresse e-mail d’assistance.</s5>"
  },
  {
   "source": "<s1>For any query, issue, or assistance regarding Arena Mobile, please contact us via:</s1>",

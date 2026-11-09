@@ -718,6 +718,7 @@ export const RecordsMapScreen = () => {
           mode="contained"
           onPress={() => setLayersPanelVisible(true)}
           size={18}
+          testID="records-map-layers-button"
         />
         <IconButton
           disabled={visibleCoordinates.length === 0}

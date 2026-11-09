@@ -1,10 +1,12 @@
 appId: ${APP_ID}
 ---
-# Multiple entities, taxon, files, position tracking, validation report, single node view
+# Multiple entities, taxon, files, validation report, single node view
 - runFlow: _init.yaml
-- tapOn: ${output.t.goToDataEntry}
-- tapOn: "Test Point 1.*"
-- waitForAnimationToEnd
+- runFlow: _go-to-data-entry.yaml
+- runFlow:
+    file: _open-record.yaml
+    env:
+      RECORD: "Test Point 1.*"
 - runFlow:
     file: _shot.yaml
     env:
@@ -97,26 +99,6 @@ appId: ${APP_ID}
     env:
       NAME: media-audio
 
-# position tracking
-- runFlow:
-    file: _open-page.yaml
-    env:
-      PAGE: "Second Level Unit"
-- tapOn:
-    text: ${output.t.newEntity}
-    optional: true
-- runFlow:
-    file: _shot.yaml
-    env:
-      NAME: second-level-unit
-- scrollUntilVisible:
-    element: "Walked path"
-    direction: DOWN
-- runFlow:
-    file: _shot.yaml
-    env:
-      NAME: position-tracking
-
 # validation report
 - tapOn:
     id: "app-bar-validation-button"
@@ -143,6 +125,3 @@ appId: ${APP_ID}
     file: _shot.yaml
     env:
       NAME: single-node-drawer
-- back
-- tapOn:
-    id: "app-bar-record-view-mode-button"

@@ -9,7 +9,7 @@ screenshots.json: list of
 - screenshot: name of the screenshot (without extension) in the screenshots folder
   (taken by the "User manual screenshots" workflow, see e2e/maestro/manual-screenshots);
 - crop (optional): part of the screenshot to keep, as fractions of its width and height
-  (the status bar is always removed).
+  (the status and navigation bars are always removed).
 
 The image keeps its width in the document, its height follows the new proportions,
 limited to MAX_HEIGHT (the width is reduced if needed). Missing screenshots are skipped.
@@ -36,8 +36,9 @@ NS = {
 }
 EMU_PER_INCH = 914400
 MAX_HEIGHT = int(4.2 * EMU_PER_INCH)
-# Android status bar height, as fraction of the screen height (Pixel 6: 2400 px)
-STATUS_BAR_HEIGHT = 0.04
+# Android status bar and navigation (gesture) bar heights, as fraction of the screen height (Pixel 6: 2400 px)
+STATUS_BAR_HEIGHT = 0.05
+NAVIGATION_BAR_HEIGHT = 0.025
 SCREENSHOT_EXTENSIONS = (".jpg", ".jpeg", ".png")
 MANUAL_DIR = Path(__file__).resolve().parent.parent
 
@@ -70,6 +71,7 @@ def prepare_image(path, crop, media_name):
     width, height = image.size
     left, top, right, bottom = crop or [0, 0, 1, 1]
     top = max(top, STATUS_BAR_HEIGHT)
+    bottom = min(bottom, 1 - NAVIGATION_BAR_HEIGHT)
     image = image.crop((round(left * width), round(top * height), round(right * width), round(bottom * height)))
     output = io.BytesIO()
     if media_name.lower().endswith(".png"):

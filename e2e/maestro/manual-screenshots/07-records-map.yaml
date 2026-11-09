@@ -1,7 +1,7 @@
 appId: ${APP_ID}
 ---
 - runFlow: _init.yaml
-- tapOn: ${output.t.goToDataEntry}
+- runFlow: _go-to-data-entry.yaml
 - tapOn:
     id: "app-bar-records-map-button"
 - runFlow:
@@ -20,7 +20,8 @@ appId: ${APP_ID}
     file: _shot.yaml
     env:
       NAME: records-map
-- tapOn: ${output.t.layers}
+- tapOn:
+    id: "records-map-layers-button"
 - runFlow:
     file: _shot.yaml
     env:

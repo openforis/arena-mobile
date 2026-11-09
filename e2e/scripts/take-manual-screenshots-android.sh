@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Takes the user manual screenshots (docs/user-manual/screenshots/<lang>) on a running Android emulator,
 # running the flows in e2e/maestro/manual-screenshots once for every app language.
-# A failing flow does not stop the others: the screenshots taken until the failure are kept,
+# A failing flow does not stop the others: the screenshots taken until the failure replace the previous ones
+# (the others are kept),
 # and the screen at the failure is saved in docs/user-manual/screenshots/_debug.
 # Usage: take-manual-screenshots-android.sh <apk> [languages (default: en fr es)]
 set -uo pipefail
@@ -49,7 +50,7 @@ failures=0
 failed_flows=()
 for lang in $LANGS; do
   out="$OUT_ROOT/$lang"
-  rm -rf "$out"
+  # screenshots not taken (failing flows) are kept from the previous runs
   mkdir -p "$out"
   node "$FLOWS_DIR/generateLabels.js" "$lang"
   for flow in "$FLOWS_DIR"/[0-9]*.yaml; do
@@ -62,7 +63,8 @@ for lang in $LANGS; do
       failures=$((failures + 1))
       failed_flows+=("$lang/$(basename "$flow")")
       # screen at the failure (screenshot taken by Maestro, not by _shot.yaml)
-      failure_screenshot="$(find "$test_output" -name "*.png" ! -name "shot-*" | head -n 1)"
+      # the latest one: taken at the failure
+      failure_screenshot="$(find "$test_output" -name "*.png" ! -name "shot-*" -printf '%T@ %p\n' | sort -n | tail -n 1 | cut -d' ' -f2-)"
       if [[ -n "$failure_screenshot" ]]; then
         cp "$failure_screenshot" "$DEBUG_DIR/$lang-$(basename "$flow" .yaml).png"
       fi

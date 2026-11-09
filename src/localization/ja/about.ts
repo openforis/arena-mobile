@@ -7,4 +7,6 @@ export default {
   support: "サポート",
   version: "バージョン",
   whatsNewDescription: "最新機能のハイライト",
+  userManual: "ユーザーマニュアル",
+  userManualDescription: "アプリのすべての機能のガイド（PDF）",
 };
