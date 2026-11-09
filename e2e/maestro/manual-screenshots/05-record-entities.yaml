@@ -2,7 +2,7 @@ appId: ${APP_ID}
 ---
 # Multiple entities, taxon, files, position tracking, validation report, single node view
 - runFlow: _init.yaml
-- tapOn: ${output.t.goToDataEntry}
+- runFlow: _go-to-data-entry.yaml
 - tapOn: "Test Point 1.*"
 - waitForAnimationToEnd
 - runFlow:

@@ -11,7 +11,9 @@ appId: ${APP_ID}
     file: _shot.yaml
     env:
       NAME: options-menu
-- back
+# close the menu tapping outside it (back would close the app)
+- tapOn:
+    point: "30%,80%"
 - tapOn:
     id: "home-connect-button"
 - runFlow:

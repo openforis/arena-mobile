@@ -5,7 +5,7 @@ appId: ${APP_ID}
     file: _shot.yaml
     env:
       NAME: home-with-records
-- tapOn: ${output.t.goToDataEntry}
+- runFlow: _go-to-data-entry.yaml
 - runFlow:
     file: _shot.yaml
     env:

@@ -2,7 +2,7 @@ appId: ${APP_ID}
 ---
 # New record in the demo survey: form, data types, navigation, validation
 - runFlow: _init.yaml
-- tapOn: ${output.t.goToDataEntry}
+- runFlow: _go-to-data-entry.yaml
 - tapOn: ${output.t.newRecord}
 - extendedWaitUntil:
     visible: "Level 1 Unit no"
@@ -25,7 +25,8 @@ appId: ${APP_ID}
     file: _shot.yaml
     env:
       NAME: closest-sampling-point
-- back
+- tapOn:
+    id: "dialog-close-button"
 
 # code attribute (dropdown)
 - tapOn:
