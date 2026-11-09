@@ -1,0 +1,9 @@
+appId: ${APP_ID}
+---
+# Closes the "Continue editing" dialog, if shown, without opening the record
+- runFlow:
+    when:
+      visible: ${output.t.continueEditingTitle}
+    commands:
+      - tapOn: ${output.t.no}
+      - waitForAnimationToEnd

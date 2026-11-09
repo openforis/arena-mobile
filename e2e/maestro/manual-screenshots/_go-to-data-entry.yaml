@@ -4,14 +4,9 @@ appId: ${APP_ID}
 # The "Continue editing" dialog is shown when a record was being edited when the app was closed: dismissed
 - tapOn: ${output.t.goToDataEntry}
 - waitForAnimationToEnd
-# the dialog is shown after the list of records
+# the dialog is shown some seconds after the list of records
 - extendedWaitUntil:
     visible: ${output.t.continueEditingTitle}
-    timeout: 5000
+    timeout: 15000
     optional: true
-- runFlow:
-    when:
-      visible: ${output.t.continueEditingTitle}
-    commands:
-      - tapOn: ${output.t.no}
-      - waitForAnimationToEnd
+- runFlow: _dismiss-continue-editing.yaml
