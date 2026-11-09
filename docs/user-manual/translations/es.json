@@ -656,8 +656,8 @@
   "target": "<s1>menú de opciones.</s1>"
  },
  {
-  "source": "<s1>The </s1><s2>Lower panel</s2><s3> shows the “breadcrumbs” (where you can read in this example </s3><s4>Root entity[1,2]</s4><s5>); you can determine the position of the current page inside the record (i.e., the current entity name and the name of the ancestor entities, up to the root). It also contains “Records” and the next entity to check out.</s5>",
-  "target": "<s1>El </s1><s2>panel inferior</s2><s3> muestra las “migas de pan” (donde, en este ejemplo, puede leer </s3><s4>Root entity[1,2]</s4><s5>); permiten determinar la posición de la página actual dentro del registro (es decir, el nombre de la entidad actual y el nombre de las entidades ancestras, hasta la raíz). También contiene “Registros” y la siguiente entidad que revisar.</s5>"
+  "source": "<s1>The </s1><s2>Lower panel</s2><s3> shows the “breadcrumbs” (where you can read in this example </s3><s4>First Level Unit [Test Point 1, …]</s4><s5>); you can determine the position of the current page inside the record (i.e., the current entity name and the name of the ancestor entities, up to the root). It also contains “Records” and the next entity to check out.</s5>",
+  "target": "<s1>El </s1><s2>panel inferior</s2><s3> muestra las “migas de pan” (donde, en este ejemplo, puede leer </s3><s4>First Level Unit [Test Point 1, …]</s4><s5>); permiten determinar la posición de la página actual dentro del registro (es decir, el nombre de la entidad actual y el nombre de las entidades ancestras, hasta la raíz). También contiene “Registros” y la siguiente entidad que revisar.</s5>"
  },
  {
   "source": "<s1>Navigation</s1>",

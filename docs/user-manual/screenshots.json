@@ -1,1 +1,17 @@
-[]
+[
+  { "media": "image12.jpeg", "screenshot": "surveys-local" },
+  { "media": "image15.jpeg", "screenshot": "records-empty", "crop": [0, 0, 1, 0.33] },
+  { "media": "image16.jpeg", "screenshot": "surveys-local" },
+  { "media": "image17.jpeg", "screenshot": "records-empty" },
+  { "media": "image23.png", "screenshot": "records-list" },
+  { "media": "image25.jpeg", "screenshot": "records-selected", "crop": [0, 0, 1, 0.4] },
+  { "media": "image27.jpeg", "screenshot": "record-form" },
+  { "media": "image29.jpeg", "screenshot": "drawer", "crop": [0, 0, 1, 0.6] },
+  { "media": "image30.png", "screenshot": "drawer", "crop": [0, 0.8, 0.74, 0.91] },
+  { "media": "image32.jpeg", "screenshot": "record-form", "crop": [0, 0.745, 1, 0.845] },
+  { "media": "image34.jpeg", "screenshot": "site-details", "crop": [0, 0.455, 1, 0.84] },
+  { "media": "image35.jpeg", "screenshot": "coordinate", "crop": [0, 0.455, 1, 0.94] },
+  { "media": "image37.jpeg", "screenshot": "site-details", "crop": [0, 0.215, 1, 0.31] },
+  { "media": "image38.jpeg", "screenshot": "code-dropdown-open", "crop": [0, 0, 1, 0.7] },
+  { "media": "image74.jpeg", "screenshot": "records-list" }
+]

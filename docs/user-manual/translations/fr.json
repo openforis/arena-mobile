@@ -656,8 +656,8 @@
   "target": "<s1>menu des options.</s1>"
  },
  {
-  "source": "<s1>The </s1><s2>Lower panel</s2><s3> shows the “breadcrumbs” (where you can read in this example </s3><s4>Root entity[1,2]</s4><s5>); you can determine the position of the current page inside the record (i.e., the current entity name and the name of the ancestor entities, up to the root). It also contains “Records” and the next entity to check out.</s5>",
-  "target": "<s1>Le </s1><s2>panneau inférieur</s2><s3> affiche le « fil d’Ariane » (dans cet exemple, on peut lire </s3><s4>Root entity[1,2]</s4><s5>) ; il permet de déterminer la position de la page actuelle dans l’enregistrement (c’est-à-dire le nom de l’entité actuelle et le nom des entités ancêtres, jusqu’à la racine). Il contient également « Enregistrements » et l’entité suivante à consulter.</s5>"
+  "source": "<s1>The </s1><s2>Lower panel</s2><s3> shows the “breadcrumbs” (where you can read in this example </s3><s4>First Level Unit [Test Point 1, …]</s4><s5>); you can determine the position of the current page inside the record (i.e., the current entity name and the name of the ancestor entities, up to the root). It also contains “Records” and the next entity to check out.</s5>",
+  "target": "<s1>Le </s1><s2>panneau inférieur</s2><s3> affiche le « fil d’Ariane » (dans cet exemple, on peut lire </s3><s4>First Level Unit [Test Point 1, …]</s4><s5>) ; il permet de déterminer la position de la page actuelle dans l’enregistrement (c’est-à-dire le nom de l’entité actuelle et le nom des entités ancêtres, jusqu’à la racine). Il contient également « Enregistrements » et l’entité suivante à consulter.</s5>"
  },
  {
   "source": "<s1>Navigation</s1>",
