@@ -151,3 +151,4 @@ appId: ${APP_ID}
     file: _shot.yaml
     env:
       NAME: ground-cover
+- runFlow: _leave-record.yaml

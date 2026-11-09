@@ -7,7 +7,7 @@ appId: ${APP_ID}
 - runFlow:
     file: _wait.yaml
     env:
-      SECONDS: 8
+      SECONDS: 12
 - tapOn:
     point: "57%,56%"
 - waitForAnimationToEnd

@@ -1,0 +1,11 @@
+appId: ${APP_ID}
+---
+# Goes back from the record editor to the list of records, so that the next flows
+# don't get the "Continue editing" dialog when the app is started again
+- tapOn:
+    text: ${output.t.listOfRecords}
+    optional: true
+- tapOn:
+    text: ${output.t.goToListOfRecords}
+    optional: true
+- waitForAnimationToEnd
