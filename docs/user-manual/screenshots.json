@@ -1,20 +1,39 @@
 [
-  { "media": "image12.jpeg", "screenshot": "surveys-local" },
+  {
+    "media": "image12.jpeg",
+    "screenshot": "surveys-local"
+  },
   {
     "media": "image15.jpeg",
     "screenshot": "records-empty",
     "crop": [0, 0, 1, 0.33]
   },
-  { "media": "image16.jpeg", "screenshot": "surveys-local" },
-  { "media": "image17.jpeg", "screenshot": "records-empty" },
-  { "media": "image23.png", "screenshot": "records-list" },
+  {
+    "media": "image16.jpeg",
+    "screenshot": "surveys-local"
+  },
+  {
+    "media": "image17.jpeg",
+    "screenshot": "records-empty"
+  },
+  {
+    "media": "image23.png",
+    "screenshot": "records-list"
+  },
   {
     "media": "image25.jpeg",
     "screenshot": "records-selected",
     "crop": [0, 0, 1, 0.4]
   },
-  { "media": "image27.jpeg", "screenshot": "record-form" },
-  { "media": "image29.jpeg", "screenshot": "drawer", "crop": [0, 0, 1, 0.6] },
+  {
+    "media": "image27.jpeg",
+    "screenshot": "record-form"
+  },
+  {
+    "media": "image29.jpeg",
+    "screenshot": "drawer",
+    "crop": [0, 0, 1, 0.6]
+  },
   {
     "media": "image30.png",
     "screenshot": "drawer",
@@ -24,6 +43,11 @@
     "media": "image32.jpeg",
     "screenshot": "record-form",
     "crop": [0, 0.745, 1, 0.845]
+  },
+  {
+    "media": "image33.jpeg",
+    "screenshot": "slope-warning",
+    "crop": [0, 0.43, 1, 0.53]
   },
   {
     "media": "image34.jpeg",
@@ -45,5 +69,59 @@
     "screenshot": "code-dropdown-open",
     "crop": [0, 0, 1, 0.7]
   },
-  { "media": "image74.jpeg", "screenshot": "records-list" }
+  {
+    "media": "image39.jpeg",
+    "screenshot": "code-checkbox",
+    "crop": [0, 0.67, 1, 0.9]
+  },
+  {
+    "media": "image40.jpeg",
+    "screenshot": "taxon-field",
+    "crop": [0, 0.35, 1, 0.48]
+  },
+  {
+    "media": "image41.jpeg",
+    "screenshot": "taxon-search-results",
+    "crop": [0, 0, 1, 0.4]
+  },
+  {
+    "media": "image42.jpeg",
+    "screenshot": "taxon-selected",
+    "crop": [0, 0.35, 1, 0.48]
+  },
+  {
+    "media": "image47.jpeg",
+    "screenshot": "media",
+    "crop": [0, 0.22, 1, 0.68]
+  },
+  {
+    "media": "image58.jpeg",
+    "screenshot": "single-node"
+  },
+  {
+    "media": "image59.jpeg",
+    "screenshot": "single-node-drawer"
+  },
+  {
+    "media": "image60.jpeg",
+    "screenshot": "regeneration-list"
+  },
+  {
+    "media": "image68.jpeg",
+    "screenshot": "slope-warning",
+    "crop": [0, 0.55, 1, 0.65]
+  },
+  {
+    "media": "image70.jpeg",
+    "screenshot": "validation-report",
+    "crop": [0, 0, 1, 0.55]
+  },
+  {
+    "media": "image73.jpeg",
+    "screenshot": "record-locked"
+  },
+  {
+    "media": "image74.jpeg",
+    "screenshot": "records-list"
+  }
 ]
