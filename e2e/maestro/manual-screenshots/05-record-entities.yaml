@@ -3,8 +3,10 @@ appId: ${APP_ID}
 # Multiple entities, taxon, files, position tracking, validation report, single node view
 - runFlow: _init.yaml
 - runFlow: _go-to-data-entry.yaml
-- tapOn: "Test Point 1.*"
-- waitForAnimationToEnd
+- runFlow:
+    file: _open-record.yaml
+    env:
+      RECORD: "Test Point 1.*"
 - runFlow:
     file: _shot.yaml
     env:
@@ -146,4 +148,3 @@ appId: ${APP_ID}
 - back
 - tapOn:
     id: "app-bar-record-view-mode-button"
-- runFlow: _leave-record.yaml

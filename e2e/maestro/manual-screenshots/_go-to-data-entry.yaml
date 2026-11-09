@@ -1,7 +1,5 @@
 appId: ${APP_ID}
 ---
-# Opens the list of records from the home screen.
-# The "Continue editing" dialog is shown when a record was being edited when the app was closed: dismissed
+# Opens the list of records from the home screen
 - tapOn: ${output.t.goToDataEntry}
 - waitForAnimationToEnd
-- runFlow: _dismiss-continue-editing.yaml
