@@ -125,6 +125,3 @@ appId: ${APP_ID}
     file: _shot.yaml
     env:
       NAME: single-node-drawer
-- back
-- tapOn:
-    id: "app-bar-record-view-mode-button"

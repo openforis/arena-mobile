@@ -3,6 +3,20 @@ appId: ${APP_ID}
 # Starts the app on the home screen, with the labels of the current language (output.t)
 - runScript: labels.js
 - launchApp
+# the "What's new" dialog, if still shown, covers the home screen
+- extendedWaitUntil:
+    visible: ${output.t.whatsNew}
+    timeout: 5000
+    optional: true
+- runFlow:
+    when:
+      visible: ${output.t.whatsNew}
+    commands:
+      - tapOn:
+          text: ${output.t.dontShowAgain}
+          optional: true
+      - tapOn:
+          id: "dialog-close-button"
 - extendedWaitUntil:
     visible:
       id: "home-surveys-button"
