@@ -2020,8 +2020,8 @@
   "target": "<s1>En Android, esta aplicación requiere Android 7.0 o posterior. En iOS, el dispositivo debe tener iOS 16.4 o posterior. El requisito mínimo de memoria RAM para que la aplicación funcione correctamente es de 1 GB, y disponer de suficiente espacio libre en la memoria es especialmente importante para almacenar imágenes, videos y mapas sin conexión.</s1>"
  },
  {
-  "source": "<s1>The </s1><s2>About</s2><s3> screen (in the options menu) shows the version of the app, the link to this </s3><s4>User manual</s4><s5> (in the language of the app, if available, otherwise in English), what’s new in the latest versions, the full change log and the links to the support forum and the support email.</s5>",
-  "target": "<s1>La pantalla </s1><s2>Acerca de</s2><s3> (en el menú de opciones) muestra la versión de la aplicación, el enlace a este </s3><s4>Manual de usuario</s4><s5> (en el idioma de la aplicación si está disponible; de lo contrario, en inglés), las novedades de las últimas versiones, el registro completo de cambios y los enlaces al foro de soporte y al correo electrónico de soporte.</s5>"
+  "source": "<s1>The </s1><s2>About</s2><s3> screen (in the options menu) shows the version of the app, the link to this </s3><s4>User manual</s4><s5> (for the installed version of the app, in its language if available, otherwise in English), what’s new in the latest versions, the full change log and the links to the support forum and the support email.</s5>",
+  "target": "<s1>La pantalla </s1><s2>Acerca de</s2><s3> (en el menú de opciones) muestra la versión de la aplicación, el enlace a este </s3><s4>Manual de usuario</s4><s5> (para la versión instalada de la aplicación, en su idioma si está disponible; de lo contrario, en inglés), las novedades de las últimas versiones, el registro completo de cambios y los enlaces al foro de soporte y al correo electrónico de soporte.</s5>"
  },
  {
   "source": "<s1>For any query, issue, or assistance regarding Arena Mobile, please contact us via:</s1>",

@@ -19,7 +19,7 @@ import {
   VView,
 } from "components";
 import { i18n, useTranslation } from "localization";
-import { AMConstants, UserManual } from "utils";
+import { AMConstants, SystemUtils, UserManual } from "utils";
 
 import { AboutListItem } from "./AboutListItem";
 import styles from "./styles";
@@ -48,9 +48,12 @@ export const AboutScreen = () => {
     await WebBrowser.openBrowserAsync(AMConstants.supportForumUrl);
   }, []);
 
-  // in the language of the app (English if not available)
+  // manual of this version of the app, in its language (English if not available)
   const onUserManualPress = useCallback(async () => {
-    await WebBrowser.openBrowserAsync(UserManual.getUrl(i18n.language));
+    const { version } = SystemUtils.getRecordAppInfo();
+    await WebBrowser.openBrowserAsync(
+      UserManual.getUrl({ lang: i18n.language, version }),
+    );
   }, []);
 
   const toggleChangelogDialogOpen = useCallback(

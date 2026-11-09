@@ -2020,8 +2020,8 @@
   "target": "<s1>Sur Android, cette application nécessite Android 7.0 ou une version ultérieure. Sur iOS, l’appareil doit disposer d’iOS 16.4 ou d’une version ultérieure. La mémoire vive minimale requise pour un bon fonctionnement de l’application est de 1 Go, et il est particulièrement important de disposer de suffisamment d’espace libre en mémoire pour stocker les images, les vidéos et les cartes hors ligne.</s1>"
  },
  {
-  "source": "<s1>The </s1><s2>About</s2><s3> screen (in the options menu) shows the version of the app, the link to this </s3><s4>User manual</s4><s5> (in the language of the app, if available, otherwise in English), what’s new in the latest versions, the full change log and the links to the support forum and the support email.</s5>",
-  "target": "<s1>L’écran </s1><s2>À propos</s2><s3> (dans le menu des options) affiche la version de l’application, le lien vers ce </s3><s4>Manuel d'utilisation</s4><s5> (dans la langue de l’application si elle est disponible, sinon en anglais), les nouveautés des dernières versions, le journal complet des modifications et les liens vers le forum d’assistance et l’adresse e-mail d’assistance.</s5>"
+  "source": "<s1>The </s1><s2>About</s2><s3> screen (in the options menu) shows the version of the app, the link to this </s3><s4>User manual</s4><s5> (for the installed version of the app, in its language if available, otherwise in English), what’s new in the latest versions, the full change log and the links to the support forum and the support email.</s5>",
+  "target": "<s1>L’écran </s1><s2>À propos</s2><s3> (dans le menu des options) affiche la version de l’application, le lien vers ce </s3><s4>Manuel d'utilisation</s4><s5> (pour la version installée de l’application, dans sa langue si elle est disponible, sinon en anglais), les nouveautés des dernières versions, le journal complet des modifications et les liens vers le forum d’assistance et l’adresse e-mail d’assistance.</s5>"
  },
  {
   "source": "<s1>For any query, issue, or assistance regarding Arena Mobile, please contact us via:</s1>",
