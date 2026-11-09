@@ -1,9 +1,13 @@
 appId: ${APP_ID}
 ---
-# Closes the "Continue editing" dialog, if shown, without opening the record
+# Closes the "Continue editing" dialog (shown on the list of records some seconds after it is opened,
+# when a record was being edited when the app was closed) without opening the record.
+# Its texts are not found by Maestro: its "No" button is tapped by position
+# (without the dialog, the tap is on the empty area below the records).
 - runFlow:
-    when:
-      visible: ${output.t.continueEditingTitle}
-    commands:
-      - tapOn: ${output.t.no}
-      - waitForAnimationToEnd
+    file: _wait.yaml
+    env:
+      SECONDS: 8
+- tapOn:
+    point: "57%,56%"
+- waitForAnimationToEnd

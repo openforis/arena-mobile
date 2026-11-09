@@ -67,8 +67,6 @@ const keys = {
   selectAnItem: "common:selectAnItem",
   true: "common:true",
   yes: "common:yes",
-  no: "common:no",
-  continueEditingTitle: "recordsList:continueEditing.title",
   freeMapLayers: "settings:mapProvider.options.freeLayers",
 };
 
