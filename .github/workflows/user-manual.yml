@@ -4,7 +4,7 @@ name: User manual
 # (French and Spanish: translated with docs/user-manual/translations, see docs/user-manual/README.md):
 # - pull requests changing it: uploaded as workflow artifact, to check the result
 # - published releases: attached to the release and published on GitHub Pages (open in the browser):
-#   https://openforis.github.io/arena-mobile/arena-mobile-user-manual.pdf
+#   https://openforis.github.io/arena-mobile/arena-mobile-user-manual-en.pdf
 #   https://openforis.github.io/arena-mobile/arena-mobile-user-manual-fr.pdf
 #   https://openforis.github.io/arena-mobile/arena-mobile-user-manual-es.pdf
 
@@ -83,7 +83,7 @@ jobs:
       id-token: write
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}arena-mobile-user-manual.pdf
+      url: ${{ steps.deployment.outputs.page_url }}arena-mobile-user-manual-en.pdf
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
