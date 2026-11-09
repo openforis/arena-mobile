@@ -7,4 +7,6 @@ export default {
   support: "Dukungan",
   version: "Versi",
   whatsNewDescription: "Sorotan fitur-fitur terbaru",
+  userManual: "Panduan pengguna",
+  userManualDescription: "Panduan semua fitur aplikasi (PDF)",
 };

@@ -7,4 +7,6 @@ export default {
   support: "ድጋፍ",
   version: "ቅጂ",
   whatsNewDescription: "የአዳዲስ ባህሪያት ዋና ዋና ነጥቦች",
+  userManual: "የተጠቃሚ መመሪያ",
+  userManualDescription: "የመተግበሪያው ሁሉም ባህሪያት መመሪያ (PDF)",
 };

@@ -7,4 +7,6 @@ export default {
   support: "پشتیبانی",
   version: "نسخه",
   whatsNewDescription: "نکات برجسته ویژگی‌های جدید",
+  userManual: "راهنمای کاربر",
+  userManualDescription: "راهنمای همه قابلیت‌های برنامه (PDF)",
 };

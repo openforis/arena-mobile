@@ -7,4 +7,6 @@ export default {
   support: "Tuki",
   version: "Versio",
   whatsNewDescription: "Uusimpien ominaisuuksien kohokohdat",
+  userManual: "Käyttöopas",
+  userManualDescription: "Opas sovelluksen kaikkiin toimintoihin (PDF)",
 };

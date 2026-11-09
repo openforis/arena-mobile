@@ -7,4 +7,6 @@ export default {
   support: "Support",
   version: "Version",
   whatsNewDescription: "Höjdpunkter bland de senaste funktionerna",
+  userManual: "Användarhandbok",
+  userManualDescription: "Guide till alla funktioner i appen (PDF)",
 };
