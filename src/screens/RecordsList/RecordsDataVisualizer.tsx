@@ -32,6 +32,7 @@ import {
 } from "model";
 import {
   DataEntryActions,
+  RemoteConnectionSelectors,
   ScreenOptionsSelectors,
   SurveySelectors,
   useAppDispatch,
@@ -294,8 +295,11 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
     defaultCycleKey,
     cycleKey: cycle,
   });
+  const canCreateRecords =
+    RemoteConnectionSelectors.useLoggedInUserCanCreateRecords();
   // records are cloned into the default cycle: from the previous cycle or within the default cycle itself
-  const canCloneRecords = isPrevCycle || cycle === defaultCycleKey;
+  const canCloneRecords =
+    canCreateRecords && (isPrevCycle || cycle === defaultCycleKey);
 
   const screenViewMode = ScreenOptionsSelectors.useCurrentScreenViewMode();
   const [selectedRecordUuids, setSelectedRecordUuids] = useState<string[]>([]);

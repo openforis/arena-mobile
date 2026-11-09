@@ -4,7 +4,7 @@ export default {
     surveyAdmin: "Survey administrator",
     surveyEditor: "Survey editor",
     surveyManager: "Survey manager",
-    surveyGuest: "Survey guest",
+    surveyGuest: "Guest",
     dataEditor: "Data editor",
     dataCleanser: "Data cleanser",
     dataAnalyst: "Data analyst",

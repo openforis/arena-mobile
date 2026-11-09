@@ -4,7 +4,7 @@ export default {
     surveyAdmin: "調査管理者",
     surveyEditor: "調査編集者",
     surveyManager: "調査マネージャー",
-    surveyGuest: "調査ゲスト",
+    surveyGuest: "ゲスト",
     dataEditor: "データ編集者",
     dataCleanser: "データクレンザー",
     dataAnalyst: "データアナリスト",

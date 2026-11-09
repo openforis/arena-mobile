@@ -61,6 +61,8 @@ export default {
   readOnly: "فقط خواندنی",
   readOnlyOfAnotherUserGroup:
     "رکورد گروه کاربری دیگر: قابل مشاهده یا کپی است، اما قابل ویرایش نیست",
+  readOnlyRole:
+    "نقش شما در این پیمایش امکان مشاهده رکوردها را می‌دهد، اما امکان ویرایش آن‌ها را نمی‌دهد",
   recordHasErrorsOrWarningsTooltip:
     "این رکورد {{count}} {{itemsTypeText}} دارد",
   recordType: {

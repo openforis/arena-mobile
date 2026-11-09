@@ -4,7 +4,7 @@ export default {
     surveyAdmin: "Enkätadministratör",
     surveyEditor: "Enkätredigerare",
     surveyManager: "Enkätansvarig",
-    surveyGuest: "Enkätgäst",
+    surveyGuest: "Gäst",
     dataEditor: "Dataredigerare",
     dataCleanser: "Datarensare",
     dataAnalyst: "Dataanalytiker",

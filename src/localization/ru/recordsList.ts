@@ -63,6 +63,8 @@ export default {
   readOnly: "Только чтение",
   readOnlyOfAnotherUserGroup:
     "Запись другой группы пользователей: её можно просматривать или клонировать, но не редактировать",
+  readOnlyRole:
+    "Ваша роль в этом опросе позволяет просматривать записи, но не редактировать их",
   recordHasErrorsOrWarningsTooltip:
     "Запись содержит {{count}} {{itemsTypeText}}",
   recordType: {

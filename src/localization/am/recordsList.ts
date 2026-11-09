@@ -61,6 +61,7 @@ export default {
   readOnly: "ለንባብ ብቻ",
   readOnlyOfAnotherUserGroup:
     "የሌላ የተጠቃሚ ቡድን መዝገብ፦ ማየት ወይም መቅዳት ይቻላል፣ ማርትዕ ግን አይቻልም",
+  readOnlyRole: "በዚህ ቅኝት ውስጥ ያለዎት ሚና መዝገቦቹን ማየት ይፈቅዳል፣ ማርትዕ ግን አይፈቅድም",
   recordHasErrorsOrWarningsTooltip: "መዝገቡ {{count}} {{itemsTypeText}} አለው",
   recordType: {
     all: "ሁሉም መዝገቦች",

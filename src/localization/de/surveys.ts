@@ -4,7 +4,7 @@ export default {
     surveyAdmin: "Umfrageadministrator",
     surveyEditor: "Umfrage-Editor",
     surveyManager: "Umfragemanager",
-    surveyGuest: "Umfragegast",
+    surveyGuest: "Gast",
     dataEditor: "Datenbearbeiter",
     dataCleanser: "Datenbereiniger",
     dataAnalyst: "Datenanalyst",

@@ -63,6 +63,8 @@ export default {
   readOnly: "Schreibgeschützt",
   readOnlyOfAnotherUserGroup:
     "Datensatz einer anderen Benutzergruppe: Er kann angezeigt oder geklont, aber nicht bearbeitet werden",
+  readOnlyRole:
+    "Ihre Rolle in dieser Erhebung erlaubt es, die Datensätze anzuzeigen, aber nicht zu bearbeiten",
   recordHasErrorsOrWarningsTooltip: "Datensatz hat {{count}} {{itemsTypeText}}",
   recordType: {
     all: "Alle Datensätze",

@@ -62,6 +62,8 @@ export default {
   readOnly: "Vain luku",
   readOnlyOfAnotherUserGroup:
     "Toisen käyttäjäryhmän tietue: sitä voi katsella tai kloonata, mutta ei muokata",
+  readOnlyRole:
+    "Roolisi tässä kyselyssä sallii tietueiden katselun, mutta ei niiden muokkaamista",
   recordHasErrorsOrWarningsTooltip: "Tietueessa on {{count}} {{itemsTypeText}}",
   recordType: {
     all: "Kaikki tietueet",

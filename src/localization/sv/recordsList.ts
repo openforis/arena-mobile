@@ -62,6 +62,8 @@ export default {
   readOnly: "Skrivskyddad",
   readOnlyOfAnotherUserGroup:
     "Post från en annan användargrupp: den kan visas eller klonas, men inte redigeras",
+  readOnlyRole:
+    "Din roll i denna undersökning gör det möjligt att visa posterna, men inte att redigera dem",
   recordHasErrorsOrWarningsTooltip: "Posten har {{count}} {{itemsTypeText}}",
   recordType: {
     all: "Alla poster",

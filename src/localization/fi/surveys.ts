@@ -4,7 +4,7 @@ export default {
     surveyAdmin: "Kyselyn ylläpitäjä",
     surveyEditor: "Kyselyn muokkaaja",
     surveyManager: "Kyselyn hallinnoija",
-    surveyGuest: "Kyselyn vieras",
+    surveyGuest: "Vieras",
     dataEditor: "Datan muokkaaja",
     dataCleanser: "Datan puhdistaja",
     dataAnalyst: "Data-analyytikko",
