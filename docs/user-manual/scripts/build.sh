@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 # Generates the user manual PDFs from arena-mobile-user-manual.docx with LibreOffice,
 # filling in the version and the date:
-# - arena-mobile-user-manual.pdf (English)
-# - arena-mobile-user-manual-<lang>.pdf, from the .docx translated with translations/<lang>.json
-#   and with the screenshots in screenshots/<lang> (see screenshots.json)
+# arena-mobile-user-manual-<lang>.pdf: English (en) from the .docx, the other languages from the .docx
+# translated with translations/<lang>.json and with the screenshots in screenshots/<lang> (see screenshots.json)
 # Requires LibreOffice, node and python3 with lxml and Pillow.
 # Usage: build.sh [languages (default: en fr es)]
 set -euo pipefail
@@ -53,11 +52,10 @@ trap cleanup EXIT
 cd "$MANUAL_DIR"
 
 for lang in $LANGS; do
+  output="$NAME-$lang.pdf"
   if [[ "$lang" == "en" ]]; then
-    output="$NAME.pdf"
     docx="$NAME.docx"
   else
-    output="$NAME-$lang.pdf"
     docx="$TMP_DIR/$NAME-$lang.docx"
     "$SEGMENTS_PYTHON" scripts/segments.py translate "$NAME.docx" "translations/$lang.json" "$TMP_DIR/translated.docx" "$lang"
     "$SEGMENTS_PYTHON" scripts/screenshots.py "$TMP_DIR/translated.docx" screenshots.json "screenshots/$lang" "$docx"
