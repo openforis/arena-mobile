@@ -67,6 +67,8 @@ export default {
   readOnly: "Somente leitura",
   readOnlyOfAnotherUserGroup:
     "Registro de outro grupo de usuários: pode ser visualizado ou clonado, mas não editado",
+  readOnlyRole:
+    "Sua função neste inventário permite visualizar os registros, mas não editá-los",
   recordHasErrorsOrWarningsTooltip: "O registo tem {{count}} {{itemsTypeText}}",
   recordType: {
     all: "Todos os registos",

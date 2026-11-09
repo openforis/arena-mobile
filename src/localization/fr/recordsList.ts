@@ -67,6 +67,8 @@ export default {
   readOnly: "Lecture seule",
   readOnlyOfAnotherUserGroup:
     "Enregistrement d'un autre groupe d'utilisateurs : il peut être consulté ou cloné, mais pas modifié",
+  readOnlyRole:
+    "Votre rôle dans ce formulaire permet de consulter les enregistrements, mais pas de les modifier",
   recordHasErrorsOrWarningsTooltip:
     "L'enregistrement a {{count}} {{itemsTypeText}}",
   recordType: {

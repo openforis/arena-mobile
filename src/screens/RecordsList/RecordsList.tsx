@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 
 import { Button, Loader, Searchbar, Text, VView } from "components";
-import { AutoSyncStatus } from "state";
+import { AutoSyncStatus, RemoteConnectionSelectors } from "state";
 
 import { RecordsDataVisualizer } from "./RecordsDataVisualizer";
 import { RecordsListLegend } from "./RecordsListLegend";
@@ -61,7 +61,9 @@ export const RecordsList = () => {
     [onSendDataPress, selectedRecordUuids],
   );
 
-  const canCreateNewRecord = defaultCycleKey === cycle;
+  const canCreateRecords =
+    RemoteConnectionSelectors.useLoggedInUserCanCreateRecords();
+  const canCreateNewRecord = canCreateRecords && defaultCycleKey === cycle;
 
   const newRecordButton = useMemo(
     () =>
