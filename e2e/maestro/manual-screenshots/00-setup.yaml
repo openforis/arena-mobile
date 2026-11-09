@@ -1,0 +1,57 @@
+appId: ${APP_ID}
+---
+# Fresh install, app language set to APP_LANG, demo survey (bundled) selected
+- runScript: labels.js
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "What's new|Surveys"
+    timeout: 90000
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: whats-new
+- runFlow:
+    when:
+      visible: "What's new"
+    commands:
+      - tapOn: "Don't show these again"
+      - tapOn:
+          id: "dialog-close-button"
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: home-no-survey
+- runFlow:
+    when:
+      true: ${APP_LANG != 'en'}
+    commands:
+      - runFlow:
+          file: _open-menu-item.yaml
+          env:
+            ITEM: "Settings"
+      # current value of the "Application language" dropdown
+      - tapOn: "System"
+      - scrollUntilVisible:
+          element: ${APP_LANG_LABEL}
+          optional: true
+      - tapOn: ${APP_LANG_LABEL}
+      - waitForAnimationToEnd
+      - back
+- scrollUntilVisible:
+    element:
+      id: "home-surveys-button"
+- tapOn:
+    id: "home-surveys-button"
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: surveys-local
+- tapOn: "Demo Survey"
+- extendedWaitUntil:
+    visible: ${output.t.noRecordsFound}
+    timeout: 20000
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: records-empty

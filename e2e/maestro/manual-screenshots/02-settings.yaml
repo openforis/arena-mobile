@@ -1,0 +1,59 @@
+appId: ${APP_ID}
+---
+- runFlow: _init.yaml
+- runFlow:
+    file: _open-menu-item.yaml
+    env:
+      ITEM: ${output.t.settings}
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: settings-1
+- swipe:
+    start: "50%,85%"
+    end: "50%,20%"
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: settings-2
+- swipe:
+    start: "50%,85%"
+    end: "50%,20%"
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: settings-3
+- swipe:
+    start: "50%,85%"
+    end: "50%,20%"
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: settings-4
+- swipe:
+    start: "50%,85%"
+    end: "50%,20%"
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: settings-5
+- swipe:
+    start: "50%,85%"
+    end: "50%,20%"
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: settings-6
+- scrollUntilVisible:
+    element: ${output.t.customMapLayers}
+    direction: UP
+- tapOn: ${output.t.customMapLayers}
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: custom-map-layers
+- tapOn: ${output.t.addLayer}
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: custom-map-layer-new

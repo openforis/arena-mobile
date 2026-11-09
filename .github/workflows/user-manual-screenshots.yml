@@ -1,0 +1,127 @@
+name: User manual screenshots
+
+# Takes the screenshots of the user manual (docs/user-manual/screenshots/<lang>) on an Android emulator,
+# with the flows in e2e/maestro/manual-screenshots (English, French and Spanish),
+# and commits them to the branch, to update the manual with them.
+
+on:
+  pull_request:
+    paths:
+      - e2e/maestro/manual-screenshots/**
+      - e2e/scripts/take-manual-screenshots-android.sh
+      - .github/workflows/user-manual-screenshots.yml
+  workflow_dispatch:
+
+concurrency:
+  group: user-manual-screenshots-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  screenshots:
+    # pull requests from forks cannot push to their branch
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: yarn
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --immutable --mode=skip-build
+
+      - name: Install Maestro CLI
+        env:
+          MAESTRO_VERSION: 2.11.0
+        run: |
+          curl --proto '=https' --tlsv1.2 -fsSL -o "$RUNNER_TEMP/install-maestro.sh" "https://get.maestro.mobile.dev"
+          bash "$RUNNER_TEMP/install-maestro.sh"
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
+      - name: Set up JDK
+        uses: actions/setup-java@v6
+        with:
+          java-version: "21"
+          distribution: "temurin"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5.0.2
+
+      # release build: no development notifications on the screen
+      - name: Build Android APK
+        env:
+          GOOGLE_MAPS_API_KEY_ANDROID: ${{ secrets.GOOGLE_MAPS_API_KEY_ANDROID || 'screenshots-no-key' }}
+        run: |
+          yarn expo prebuild --platform android
+          cd android
+          ./gradlew assembleRelease --no-daemon --build-cache --parallel \
+            -PreactNativeArchitectures=x86_64
+
+      - name: Enable KVM group perms
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Take screenshots
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2
+        with:
+          api-level: 35
+          # not google_atd: its screenshots of the app are black
+          target: google_apis
+          arch: x86_64
+          profile: pixel_6
+          force-avd-creation: false
+          emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none -accel on -cores 2 -memory 3072
+          disable-animations: true
+          emulator-boot-timeout: 900
+          script: bash e2e/scripts/take-manual-screenshots-android.sh android/app/build/outputs/apk/release/app-release.apk
+
+      # JPEG, to keep the repository small; if it fails, the screenshots are committed as PNG
+      - name: Convert screenshots
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends python3-pil > /dev/null
+          python3 - <<'PYTHON'
+          from pathlib import Path
+          from PIL import Image
+          for png in Path("docs/user-manual/screenshots").rglob("*.png"):
+              Image.open(png).convert("RGB").save(png.with_suffix(".jpg"), "JPEG", quality=85, optimize=True)
+              png.unlink()
+          PYTHON
+
+      # also when taking the screenshots failed: the screens at the failures are in screenshots/_debug
+      - name: Upload artifact
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: user-manual-screenshots
+          path: docs/user-manual/screenshots
+
+      - name: Commit screenshots
+        if: ${{ !cancelled() }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/user-manual/screenshots
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "User manual: screenshots of version $(node -p "require('./package.json').version")"
+            # the branch may have been updated while taking the screenshots
+            git pull --rebase origin "${{ github.head_ref || github.ref_name }}"
+            git push origin "HEAD:${{ github.head_ref || github.ref_name }}"
+          fi

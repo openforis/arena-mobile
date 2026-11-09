@@ -1,0 +1,2054 @@
+[
+ {
+  "source": "<s1>Open Foris Arena Mobile</s1>",
+  "target": "<s1>Open Foris Arena Mobile</s1>"
+ },
+ {
+  "source": "<s1>Version {{version}}</s1>",
+  "target": "<s1>Version {{version}}</s1>"
+ },
+ {
+  "source": "<s1>https://www.openforis.org/arena-mobile/</s1>",
+  "target": "<s1>https://www.openforis.org/arena-mobile/</s1>"
+ },
+ {
+  "source": "<s1>User Manual</s1>",
+  "target": "<s1>Manuel d’utilisation</s1>"
+ },
+ {
+  "source": "<s1>{{releaseDate}}</s1>",
+  "target": "<s1>{{releaseDate}}</s1>"
+ },
+ {
+  "source": "<s1>Forestry Division, FAO</s1>",
+  "target": "<s1>Division des forêts, FAO</s1>"
+ },
+ {
+  "source": "<s1>\n</s1><s2>Contents</s2>",
+  "target": "<s1>\n</s1><s2>Table des matières</s2>"
+ },
+ {
+  "source": "<s1>1\tIntroduction</s1>",
+  "target": "<s1>1\tIntroduction</s1>"
+ },
+ {
+  "source": "<s1>Arena Mobile is a free and open-source data collection app developed under the FAO </s1><s2>Open Foris initiative</s2><s3>. This app provides the opportunity to record field data using mobile devices such as tablets or mobile phones. Arena Mobile offers Android and iOS versions that can be downloaded and installed from the Google Play Store and App Store.</s3>",
+  "target": "<s1>Arena Mobile est une application de collecte de données gratuite et open source développée dans le cadre de l’</s1><s2>initiative Open Foris</s2><s3> de la FAO. Cette application permet d’enregistrer des données de terrain à l’aide d’appareils mobiles tels que des tablettes ou des téléphones portables. Arena Mobile est disponible en versions Android et iOS, qui peuvent être téléchargées et installées depuis le Google Play Store et l’App Store.</s3>"
+ },
+ {
+  "source": "<s1>The app is designed to streamline and improve data collection in an integrated environment by combining the </s1><s2>Open Foris Arena</s2><s3> online database with a mobile data collection tool. The Arena platform operates only online (in the cloud), but the Mobile app enables offline data collection. With the help of Arena templates, it is fast to tailor a new data collection survey (i.e., forms) and start using the app in a field data collection campaign.</s3>",
+  "target": "<s1>L’application est conçue pour simplifier et améliorer la collecte de données dans un environnement intégré, en associant la base de données en ligne </s1><s2>Open Foris Arena</s2><s3> à un outil de collecte de données mobile. La plateforme Arena fonctionne uniquement en ligne (dans le cloud), tandis que l’application mobile permet la collecte de données hors ligne. Grâce aux modèles Arena, il est rapide d’adapter une nouvelle enquête de collecte de données (c’est-à-dire des formulaires) et de commencer à utiliser l’application dans une campagne de collecte de données sur le terrain.</s3>"
+ },
+ {
+  "source": "<s1>Several digital data recording applications are available that can facilitate field data recording. However, Arena Mobile offers functionality, flexibility, and data hosting advantages. It supports complex data structures and methods for real-time data validation, which ensures better quality data. Users can detect all errors and navigate to them for checking and correcting. A wide range of data types can be recorded effectively and processed using this tool, such as numbers, coordinates, polygons, boolean values, images, videos, audio recordings, taxonomic data, texts, and coded attributes.</s1>",
+  "target": "<s1>Plusieurs applications d’enregistrement numérique des données sont disponibles pour faciliter la saisie des données de terrain. Arena Mobile offre toutefois des avantages en matière de fonctionnalités, de flexibilité et d’hébergement des données. Elle prend en charge des structures de données complexes et des méthodes de validation des données en temps réel, ce qui garantit une meilleure qualité des données. Les utilisateurs peuvent détecter toutes les erreurs et y accéder pour les vérifier et les corriger. Un large éventail de types de données peut être enregistré efficacement et traité avec cet outil : nombres, coordonnées, polygones, valeurs booléennes, images, vidéos, enregistrements audio, données taxonomiques, textes et attributs codés.</s1>"
+ },
+ {
+  "source": "<s1>Different selections and visualization options for surveys or data collection forms are available; those can be customized according to the user’s preferences. Data collected using the Arena Mobile app is hosted in cloud-based servers (Amazon Web Services, AWS), which offers a secured data hosting service. However, a </s1><s2>customized server</s2><s3> for hosting users’ data can be established and connected with the app. The Arena platform facilitates cloud computing with the help of the R language calculation chain.</s3>",
+  "target": "<s1>Différentes options de sélection et de visualisation des enquêtes ou des formulaires de collecte de données sont disponibles ; elles peuvent être personnalisées selon les préférences de l’utilisateur. Les données collectées avec l’application Arena Mobile sont hébergées sur des serveurs dans le cloud (Amazon Web Services, AWS), qui offrent un service d’hébergement sécurisé. Il est toutefois possible de mettre en place un </s1><s2>serveur personnalisé</s2><s3> pour héberger les données des utilisateurs et de le connecter à l’application. La plateforme Arena permet le calcul dans le cloud grâce à la chaîne de calcul en langage R.</s3>"
+ },
+ {
+  "source": "<s1>Arena Mobile can be used in several languages, and the Arena surveys can be built to show labels in any language.</s1>",
+  "target": "<s1>Arena Mobile peut être utilisée dans plusieurs langues, et les enquêtes Arena peuvent être conçues pour afficher les étiquettes dans n’importe quelle langue.</s1>"
+ },
+ {
+  "source": "<s1>With Arena Mobile, you can collect data in offline mode and store it locally on your device. However, an internet connection is required for the following tasks: installation of the app, logging into Arena, downloading or updating a survey, sending data to the server (manually or with auto-sync), downloading records from the server, and downloading offline maps.</s1>",
+  "target": "<s1>Avec Arena Mobile, vous pouvez collecter des données en mode hors ligne et les stocker localement sur votre appareil. Une connexion internet est toutefois nécessaire pour les tâches suivantes : installation de l’application, connexion à Arena, téléchargement ou mise à jour d’une enquête, envoi des données au serveur (manuellement ou par synchronisation automatique), téléchargement d’enregistrements depuis le serveur et téléchargement de cartes hors ligne.</s1>"
+ },
+ {
+  "source": "<s1>2\tKey Features</s1>",
+  "target": "<s1>2\tFonctionnalités principales</s1>"
+ },
+ {
+  "source": "<s1>Once you have installed the application on your device, you are ready to use it. The main features of Arena Mobile are as follows:</s1>",
+  "target": "<s1>Une fois l’application installée sur votre appareil, vous êtes prêt à l’utiliser. Les principales fonctionnalités d’Arena Mobile sont les suivantes :</s1>"
+ },
+ {
+  "source": "<s1>It is an offline data collection app;</s1>",
+  "target": "<s1>C’est une application de collecte de données hors ligne ;</s1>"
+ },
+ {
+  "source": "<s1>The app can support surveys in multiple languages;</s1>",
+  "target": "<s1>L’application prend en charge des enquêtes en plusieurs langues ;</s1>"
+ },
+ {
+  "source": "<s1>All common data types are supported, including coordinates, polygons (geospatial attributes), images, videos and audio recordings;</s1>",
+  "target": "<s1>Tous les types de données courants sont pris en charge, notamment les coordonnées, les polygones (attributs géospatiaux), les images, les vidéos et les enregistrements audio ;</s1>"
+ },
+ {
+  "source": "<s1>Supports preset default values, data relevancy (“relevant if”), conditionally required, editable and visible attributes, and validation rules;</s1>",
+  "target": "<s1>Prise en charge des valeurs par défaut prédéfinies, de la pertinence des données (« pertinent si »), des attributs conditionnellement obligatoires, modifiables et visibles, ainsi que des règles de validation ;</s1>"
+ },
+ {
+  "source": "<s1>Automatic saving of data while recording or editing data;</s1>",
+  "target": "<s1>Enregistrement automatique des données pendant la saisie ou la modification ;</s1>"
+ },
+ {
+  "source": "<s1>Automatic resizing of images to fit the file size limit specified in the survey design;</s1>",
+  "target": "<s1>Redimensionnement automatique des images pour respecter la taille de fichier maximale définie dans la conception de l’enquête ;</s1>"
+ },
+ {
+  "source": "<s1>Effective detection of errors and warnings during the recording of data or via a Validation Report page;</s1>",
+  "target": "<s1>Détection efficace des erreurs et des avertissements pendant la saisie des données ou via une page de rapport de validation ;</s1>"
+ },
+ {
+  "source": "<s1>Record completion progress: see at a glance how much of the record has been filled in;</s1>",
+  "target": "<s1>Progression de l’enregistrement : visualisez d’un coup d’œil la part de l’enregistrement déjà remplie ;</s1>"
+ },
+ {
+  "source": "<s1>Allows selecting the closest “sampling point” based on current location;</s1>",
+  "target": "<s1>Sélection du « point d’échantillonnage » le plus proche en fonction de la position actuelle ;</s1>"
+ },
+ {
+  "source": "<s1>Navigation to a target (point) position, with a compass or a radar view;</s1>",
+  "target": "<s1>Navigation vers une position cible (point), avec une boussole ou une vue radar ;</s1>"
+ },
+ {
+  "source": "<s1>Accuracy of the coordinate points can be detected with the help of an in-built accuracy detection view;</s1>",
+  "target": "<s1>La précision des points de coordonnées peut être contrôlée grâce à une vue intégrée de détection de la précision ;</s1>"
+ },
+ {
+  "source": "<s1>Support for external Bluetooth GPS receivers;</s1>",
+  "target": "<s1>Prise en charge des récepteurs GPS Bluetooth externes ;</s1>"
+ },
+ {
+  "source": "<s1>Position tracking: the path walked while filling in a record can be recorded;</s1>",
+  "target": "<s1>Suivi de position : le trajet parcouru pendant le remplissage d’un enregistrement peut être enregistré ;</s1>"
+ },
+ {
+  "source": "<s1>Maps: offline map areas, georeferenced PDF maps, custom map layers and records shown on a map, together with the areas of interest and the map layers of the survey;</s1>",
+  "target": "<s1>Cartes : zones de carte hors ligne, cartes PDF géoréférencées, couches de carte personnalisées et enregistrements affichés sur une carte, avec les zones d’intérêt et les couches de carte de l’enquête ;</s1>"
+ },
+ {
+  "source": "<s1>Access to the Arena server using the user’s credentials or a QR code, with support for two-factor authentication;</s1>",
+  "target": "<s1>Accès au serveur Arena à l’aide des identifiants de l’utilisateur ou d’un code QR, avec prise en charge de l’authentification à deux facteurs ;</s1>"
+ },
+ {
+  "source": "<s1>Easy to download or update a survey from the server;</s1>",
+  "target": "<s1>Téléchargement ou mise à jour facile d’une enquête depuis le serveur ;</s1>"
+ },
+ {
+  "source": "<s1>Submission of collected data to the Arena server, manually or automatically in the background (auto-sync);</s1>",
+  "target": "<s1>Envoi des données collectées au serveur Arena, manuellement ou automatiquement en arrière-plan (synchronisation automatique) ;</s1>"
+ },
+ {
+  "source": "<s1>Allows downloading existing records from the server to continue editing them on the mobile app;</s1>",
+  "target": "<s1>Téléchargement d’enregistrements existants depuis le serveur pour continuer à les modifier dans l’application mobile ;</s1>"
+ },
+ {
+  "source": "<s1>Export of the collected data to CSV files;</s1>",
+  "target": "<s1>Export des données collectées vers des fichiers CSV ;</s1>"
+ },
+ {
+  "source": "<s1>Supports multi-cycle surveys:</s1>",
+  "target": "<s1>Prise en charge des enquêtes multi-cycles :</s1>"
+ },
+ {
+  "source": "<s1>show values from previous cycle data;</s1>",
+  "target": "<s1>affichage des valeurs des données du cycle précédent ;</s1>"
+ },
+ {
+  "source": "<s1>clone records from a previous data collection cycle to the current cycle;</s1>",
+  "target": "<s1>clonage d’enregistrements d’un cycle de collecte de données précédent vers le cycle actuel ;</s1>"
+ },
+ {
+  "source": "<s1>Supports user groups: records of other user groups can be viewed (read-only);</s1>",
+  "target": "<s1>Prise en charge des groupes d’utilisateurs : les enregistrements des autres groupes d’utilisateurs peuvent être consultés (en lecture seule) ;</s1>"
+ },
+ {
+  "source": "<s1>Data filling in form or single node (one attribute at a time) view mode;</s1>",
+  "target": "<s1>Saisie des données en mode formulaire ou en mode nœud unique (un attribut à la fois) ;</s1>"
+ },
+ {
+  "source": "<s1>GPS locking: GPS can be locked at all times when activated to allow using GPS with the best accuracy possible.</s1>",
+  "target": "<s1>Verrouillage du GPS : une fois activé, le GPS peut rester verrouillé en permanence afin de l’utiliser avec la meilleure précision possible.</s1>"
+ },
+ {
+  "source": "<s1>3\tGetting started</s1>",
+  "target": "<s1>3\tPremiers pas</s1>"
+ },
+ {
+  "source": "<s1>3.1\tInstallation</s1>",
+  "target": "<s1>3.1\tInstallation</s1>"
+ },
+ {
+  "source": "<s1>Access to an app store:</s1><s2> Visit the Online Store; depending on the device’s operating system, it could be “</s2><s3>Play Store</s3><s4>” for Android users and “</s4><s5>App Store</s5><s6>” for iOS users. The installation process for both device types from their respective stores is similar.</s6>",
+  "target": "<s1>Accès à une boutique d’applications :</s1><s2> rendez-vous sur la boutique en ligne ; selon le système d’exploitation de l’appareil, il s’agit du « </s2><s3>Play Store</s3><s4> » pour les utilisateurs Android et de l’« </s4><s5>App Store</s5><s6> » pour les utilisateurs iOS. La procédure d’installation depuis ces boutiques est similaire pour les deux types d’appareils.</s6>"
+ },
+ {
+  "source": "<s1>Search for the application:</s1><s2> When the application window opens, find the search bar at the top of the window, type “</s2><s3>Open Foris Arena Mobile</s3><s4>”, and do the search. Find the “Open Foris Arena Mobile” application in the search list (published by </s4><s5>Open Foris Initiative</s5><s6> on the Play Store and by </s6><s7>FAO</s7><s8> on the App Store) and select it.</s8>",
+  "target": "<s1>Recherche de l’application :</s1><s2> lorsque la fenêtre de la boutique s’ouvre, repérez la barre de recherche en haut de la fenêtre, saisissez « </s2><s3>Open Foris Arena Mobile</s3><s4> » et lancez la recherche. Repérez l’application « Open Foris Arena Mobile » dans la liste des résultats (publiée par </s4><s5>Open Foris Initiative</s5><s6> sur le Play Store et par </s6><s7>FAO</s7><s8> sur l’App Store) et sélectionnez-la.</s8>"
+ },
+ {
+  "source": "<s1>Proceed to install on the device:</s1><s2> Once you press the icon, the application page will open. Find the </s2><s3>Install</s3><s4> button and press it. Read the description in the “</s4><s5>About this app</s5><s6>” section below the screenshots on the store’s page and the data safety measures (by using the arrow key provided on the page).</s6>",
+  "target": "<s1>Installation sur l’appareil :</s1><s2> lorsque vous appuyez sur l’icône, la page de l’application s’ouvre. Repérez le bouton </s2><s3>Installer</s3><s4> et appuyez dessus. Lisez la description dans la section « </s4><s5>À propos de cette appli</s5><s6> » sous les captures d’écran de la page de la boutique, ainsi que les mesures de sécurité des données (à l’aide de la flèche proposée sur la page).</s6>"
+ },
+ {
+  "source": "<s1>App permissions:</s1><s2> The store page lists the permissions used by the app: </s2><s3>Location</s3><s4>, </s4><s5>Photos/Media/Files</s5><s6>, </s6><s7>Camera</s7><s8>, </s8><s9>Microphone</s9><s10> (audio attributes), </s10><s11>Bluetooth</s11><s12> (external GPS devices) and </s12><s13>Internet connection</s13><s14>. Arena Mobile asks you to allow each of them the first time it is needed (e.g. location when you record a coordinate, camera when you take a picture). If you do not allow them, the related features will not work.</s14>",
+  "target": "<s1>Autorisations de l’application :</s1><s2> la page de la boutique indique les autorisations utilisées par l’application : </s2><s3>Localisation</s3><s4>, </s4><s5>Photos/Contenus multimédias/Fichiers</s5><s6>, </s6><s7>Appareil photo</s7><s8>, </s8><s9>Micro</s9><s10> (attributs audio), </s10><s11>Bluetooth</s11><s12> (appareils GPS externes) et </s12><s13>Connexion internet</s13><s14>. Arena Mobile vous demande d’accorder chacune d’elles la première fois qu’elle est nécessaire (par exemple la localisation lorsque vous enregistrez une coordonnée, l’appareil photo lorsque vous prenez une photo). Si vous ne les accordez pas, les fonctionnalités correspondantes ne fonctionneront pas.</s14>"
+ },
+ {
+  "source": "<s1>Ready to use</s1><s2>: The application is ready to use once the installation is completed. The screen shows the </s2><s3>Uninstall</s3><s4> and </s4><s5>Open</s5><s6> buttons. You can either directly open the application from here or open it from the shortcut on the applications screen.</s6>",
+  "target": "<s1>Prête à l’emploi</s1><s2> : l’application est prête à être utilisée une fois l’installation terminée. L’écran affiche les boutons </s2><s3>Désinstaller</s3><s4> et </s4><s5>Ouvrir</s5><s6>. Vous pouvez ouvrir l’application directement depuis cet écran ou depuis son raccourci sur l’écran des applications.</s6>"
+ },
+ {
+  "source": "<s1>If you need to set permissions after an installation, follow this </s1><s2>guideline</s2><s3> by Google.</s3>",
+  "target": "<s1>Si vous devez définir les autorisations après l’installation, suivez ce </s1><s2>guide</s2><s3> de Google.</s3>"
+ },
+ {
+  "source": "<s1>On iPhone (iOS): open the </s1><s2>Settings</s2><s3> app, tap </s3><s4>Privacy & Security</s4><s5>, tap the Arena Mobile heading to see what permissions are currently enabled, and toggle app permissions on (or off).</s5>",
+  "target": "<s1>Sur iPhone (iOS) : ouvrez l’app </s1><s2>Réglages</s2><s3>, touchez </s3><s4>Confidentialité et sécurité</s4><s5>, touchez la rubrique Arena Mobile pour voir les autorisations actuellement activées, et activez (ou désactivez) les autorisations de l’application.</s5>"
+ },
+ {
+  "source": "<s1>3.2\tHome page</s1>",
+  "target": "<s1>3.2\tPage d’accueil</s1>"
+ },
+ {
+  "source": "<s1>The home page shows the survey you are working with and gives access to the main sections of the app. The first time you open the app, a </s1><s2>What’s new</s2><s3> dialog presents the latest features (you can see it again from the </s3><s4>About</s4><s5> screen).</s5>",
+  "target": "<s1>La page d’accueil affiche l’enquête avec laquelle vous travaillez et donne accès aux principales sections de l’application. La première fois que vous ouvrez l’application, une boîte de dialogue </s1><s2>Nouveautés</s2><s3> présente les dernières fonctionnalités (vous pouvez la revoir depuis l’écran </s3><s4>À propos</s4><s5>).</s5>"
+ },
+ {
+  "source": "<s1>When no survey is selected</s1><s2>, a banner says </s2><s3>No survey selected</s3><s4>: press </s4><s5>Select a survey</s5><s6> to select or download a survey (see </s6><s7>Downloading a new survey into your device</s7><s8>).</s8>",
+  "target": "<s1>Lorsqu’aucune enquête n’est sélectionnée</s1><s2>, un bandeau indique </s2><s3>Aucune enquête sélectionnée</s3><s4> : appuyez sur </s4><s5>Sélectionner une enquête</s5><s6> pour sélectionner ou télécharger une enquête (voir </s6><s7>Téléchargement d’une nouvelle enquête sur votre appareil</s7><s8>).</s8>"
+ },
+ {
+  "source": "<s1>When a survey is selected</s1><s2>, the banner at the top shows:</s2>",
+  "target": "<s1>Lorsqu’une enquête est sélectionnée</s1><s2>, le bandeau en haut affiche :</s2>"
+ },
+ {
+  "source": "<s1>the name and label of the </s1><s2>current survey</s2><s3>, with an icon showing if a newer version of the survey is available on the server (see </s3><s4>Updating a survey</s4><s5>);</s5>",
+  "target": "<s1>le nom et l’étiquette de l’</s1><s2>enquête actuelle</s2><s3>, avec une icône indiquant si une version plus récente de l’enquête est disponible sur le serveur (voir </s3><s4>Mise à jour d’une enquête</s4><s5>) ;</s5>"
+ },
+ {
+  "source": "<s1>the survey description, the link to the </s1><s2>Field manual</s2><s3> (if defined in the survey), your </s3><s4>role</s4><s5> and your </s5><s6>user group</s6><s7> (if the survey uses user groups);</s7>",
+  "target": "<s1>la description de l’enquête, le lien vers le </s1><s2>Manuel de terrain</s2><s3> (s’il est défini dans l’enquête), votre </s3><s4>rôle</s4><s5> et votre </s5><s6>groupe d’utilisateurs</s6><s7> (si l’enquête utilise des groupes d’utilisateurs) ;</s7>"
+ },
+ {
+  "source": "<s1>a </s1><s2>Records</s2><s3> summary: the </s3><s4>Total</s4><s5> number of records, the records </s5><s6>To upload</s6><s7> to the server and the records </s7><s8>With errors</s8><s9>, with the date of the last edit;</s9>",
+  "target": "<s1>un résumé des </s1><s2>Enregistrements</s2><s3> : le nombre </s3><s4>Total</s4><s5> d’enregistrements, les enregistrements </s5><s6>À envoyer</s6><s7> au serveur et les enregistrements </s7><s8>Avec erreurs</s8><s9>, avec la date de la dernière modification ;</s9>"
+ },
+ {
+  "source": "<s1>the </s1><s2>Go to data entry</s2><s3> button, which opens the list of records (see </s3><s4>Data Entry</s4><s5>);</s5>",
+  "target": "<s1>le bouton </s1><s2>Aller à la saisie de données</s2><s3>, qui ouvre la liste des enregistrements (voir </s3><s4>Saisie de données</s4><s5>) ;</s5>"
+ },
+ {
+  "source": "<s1>the </s1><s2>Sync</s2><s3> button, which sends the new and updated records to the server (see </s3><s4>Data submission to Arena Server</s4><s5>).</s5>",
+  "target": "<s1>le bouton </s1><s2>Synchroniser</s2><s3>, qui envoie les enregistrements nouveaux et mis à jour au serveur (voir </s3><s4>Envoi des données au serveur Arena</s4><s5>).</s5>"
+ },
+ {
+  "source": "<s1>Below the banner:</s1>",
+  "target": "<s1>Sous le bandeau :</s1>"
+ },
+ {
+  "source": "<s1>Account</s1><s2> (or </s2><s3>Connect</s3><s4>, if you are not logged in): opens the connection to the Arena server (see </s4><s5>Connection to Arena server</s5><s6>);</s6>",
+  "target": "<s1>Compte</s1><s2> (ou </s2><s3>Se connecter</s3><s4>, si vous n’êtes pas connecté) : ouvre la connexion au serveur Arena (voir </s4><s5>Connexion au serveur Arena</s5><s6>) ;</s6>"
+ },
+ {
+  "source": "<s1>Surveys</s1><s2>: change, download or update surveys (see </s2><s3>Managing surveys on the device</s3><s4>);</s4>",
+  "target": "<s1>Enquêtes</s1><s2> : changer, télécharger ou mettre à jour des enquêtes (voir </s2><s3>Gestion des enquêtes sur l’appareil</s3><s4>) ;</s4>"
+ },
+ {
+  "source": "<s1>the version of the app, at the bottom of the page.</s1>",
+  "target": "<s1>la version de l’application, en bas de la page.</s1>"
+ },
+ {
+  "source": "<s1>Options menu</s1><s2> (the three dots in the top right corner) opens a menu to navigate to several sections:</s2>",
+  "target": "<s1>Menu des options</s1><s2> (les trois points dans le coin supérieur droit) : ouvre un menu permettant d’accéder à plusieurs sections :</s2>"
+ },
+ {
+  "source": "<s1>the user you are logged in with;</s1>",
+  "target": "<s1>l’utilisateur avec lequel vous êtes connecté ;</s1>"
+ },
+ {
+  "source": "<s1>Surveys</s1><s2> (list of local and remote surveys); while editing a record, this item is replaced by </s2><s3>Records</s3><s4> (list of records) and </s4><s5>Field manual</s5><s6> (if defined in the survey);</s6>",
+  "target": "<s1>Enquêtes</s1><s2> (liste des enquêtes locales et distantes) ; pendant la modification d’un enregistrement, cet élément est remplacé par </s2><s3>Enregistrements</s3><s4> (liste des enregistrements) et </s4><s5>Manuel de terrain</s5><s6> (s’il est défini dans l’enquête) ;</s6>"
+ },
+ {
+  "source": "<s1>Offline maps</s1><s2> (see </s2><s3>Maps</s3><s4>);</s4>",
+  "target": "<s1>Cartes hors ligne</s1><s2> (voir </s2><s3>Cartes</s3><s4>) ;</s4>"
+ },
+ {
+  "source": "<s1>Settings</s1><s2>: general settings of the app (e.g. language, theme, font size, etc.);</s2>",
+  "target": "<s1>Paramètres</s1><s2> : paramètres généraux de l’application (par exemple langue, thème, taille de la police, etc.) ;</s2>"
+ },
+ {
+  "source": "<s1>About</s1><s2>: information about the app, what’s new, the change log and links to the support forum;</s2>",
+  "target": "<s1>À propos</s1><s2> : informations sur l’application, nouveautés, journal des modifications et liens vers le forum d’assistance ;</s2>"
+ },
+ {
+  "source": "<s1>Exit</s1><s2> (only on Android): closes the app.</s2>",
+  "target": "<s1>Quitter</s1><s2> (uniquement sur Android) : ferme l’application.</s2>"
+ },
+ {
+  "source": "<s1>3.3\tConnection to Arena server</s1>",
+  "target": "<s1>3.3\tConnexion au serveur Arena</s1>"
+ },
+ {
+  "source": "<s1>After the installation, establish a connection to the Arena server: on the home page, press </s1><s2>Connect</s2><s3> (or open </s3><s4>Settings</s4><s5> > </s5><s6>Connection to server</s6><s7>).</s7>",
+  "target": "<s1>Après l’installation, établissez une connexion au serveur Arena : sur la page d’accueil, appuyez sur </s1><s2>Se connecter</s2><s3> (ou ouvrez </s3><s4>Paramètres</s4><s5> > </s5><s6>Connexion au serveur</s6><s7>).</s7>"
+ },
+ {
+  "source": "<s1>The app shows a login form with the following fields:</s1>",
+  "target": "<s1>L’application affiche un formulaire de connexion avec les champs suivants :</s1>"
+ },
+ {
+  "source": "<s1>Server URL</s1><s2>: choose </s2><s3>Default</s3><s4> to use the default Arena server (</s4><s5>https://www.openforis-arena.org</s5><s6>) or </s6><s7>Custom</s7><s8> if your organization uses its own Arena installation (server), then enter its address; </s8><s9>Test URL</s9><s10> checks that the server can be reached;</s10>",
+  "target": "<s1>URL du serveur</s1><s2> : choisissez </s2><s3>Par défaut</s3><s4> pour utiliser le serveur Arena par défaut (</s4><s5>https://www.openforis-arena.org</s5><s6>) ou </s6><s7>Personnalisée</s7><s8> si votre organisation utilise sa propre installation d’Arena (serveur), puis saisissez son adresse ; </s8><s9>Tester l'URL</s9><s10> vérifie que le serveur est joignable ;</s10>"
+ },
+ {
+  "source": "<s1>Email</s1><s2> and </s2><s3>Password</s3><s4>: your user credentials, the same as what you filled in while doing the registration to the Arena platform. For more information about registration in Arena, please follow the </s4><s5>Arena User Guide</s5><s6>.</s6>",
+  "target": "<s1>Adresse e-mail</s1><s2> et </s2><s3>Mot de passe</s3><s4> : vos identifiants d’utilisateur, les mêmes que ceux que vous avez saisis lors de votre inscription sur la plateforme Arena. Pour plus d’informations sur l’inscription à Arena, consultez le </s4><s5>Guide de l’utilisateur d’Arena</s5><s6>.</s6>"
+ },
+ {
+  "source": "<s1>Then press </s1><s2>Login</s2><s3>. The form also contains the links </s3><s4>Forgot password?</s4><s5> and </s5><s6>New to Arena? Request access</s6><s7>.</s7>",
+  "target": "<s1>Appuyez ensuite sur </s1><s2>Se connecter</s2><s3>. Le formulaire contient également les liens </s3><s4>Mot de passe oublié?</s4><s5> et </s5><s6>Nouveau sur Arena? Demander l'accès</s6><s7>.</s7>"
+ },
+ {
+  "source": "<s1>If you are a data entry person, then you may have received an invitation to Arena via your email, sent by your Survey Administrator (i.e., a person who manages the database). By following the link in the email, you can get registered and get credentials to access the Arena platform.</s1>",
+  "target": "<s1>Si vous êtes chargé de la saisie des données, vous avez peut-être reçu par e-mail une invitation à Arena, envoyée par l’administrateur de votre enquête (c’est-à-dire la personne qui gère la base de données). En suivant le lien de l’e-mail, vous pouvez vous inscrire et obtenir des identifiants pour accéder à la plateforme Arena.</s1>"
+ },
+ {
+  "source": "<s1>Login using QR code</s1><s2>: instead of typing your credentials, you can log in by scanning a QR code generated by Arena:</s2>",
+  "target": "<s1>Connexion avec un code QR</s1><s2> : au lieu de saisir vos identifiants, vous pouvez vous connecter en scannant un code QR généré par Arena :</s2>"
+ },
+ {
+  "source": "<s1>open </s1><s2>Arena</s2><s3> in your web browser;</s3>",
+  "target": "<s1>ouvrez </s1><s2>Arena</s2><s3> dans votre navigateur web ;</s3>"
+ },
+ {
+  "source": "<s1>press the button in the top right corner and open the user menu;</s1>",
+  "target": "<s1>appuyez sur le bouton dans le coin supérieur droit et ouvrez le menu utilisateur ;</s1>"
+ },
+ {
+  "source": "<s1>select </s1><s2>Login from Arena Mobile using QR code</s2><s3>;</s3>",
+  "target": "<s1>sélectionnez </s1><s2>Se connecter depuis Arena Mobile avec un code QR</s2><s3> ;</s3>"
+ },
+ {
+  "source": "<s1>in Arena Mobile, press </s1><s2>Login using QR code</s2><s3> and scan the QR code displayed.</s3>",
+  "target": "<s1>dans Arena Mobile, appuyez sur </s1><s2>Se connecter avec un code QR</s2><s3> et scannez le code QR affiché.</s3>"
+ },
+ {
+  "source": "<s1>Two-factor authentication (2FA)</s1><s2>: if two-factor authentication is enabled for your Arena account, after entering your email and password the app asks for the </s2><s3>2FA Code</s3><s4> generated by your authenticator app.</s4>",
+  "target": "<s1>Authentification à deux facteurs (2FA)</s1><s2> : si l’authentification à deux facteurs est activée pour votre compte Arena, après la saisie de votre adresse e-mail et de votre mot de passe, l’application demande le </s2><s3>Code 2FA</s3><s4> généré par votre application d’authentification.</s4>"
+ },
+ {
+  "source": "<s1>After a successful login, a dialog will appear; in that dialog, you can press the button </s1><s2>Continue</s2><s3> to go back to the home page.</s3>",
+  "target": "<s1>Une fois la connexion réussie, une boîte de dialogue s’affiche ; vous pouvez y appuyer sur le bouton </s1><s2>Continuer</s2><s3> pour revenir à la page d’accueil.</s3>"
+ },
+ {
+  "source": "<s1>When you are logged in, the </s1><s2>Connection to server</s2><s3> screen shows the user you are logged in with and a </s3><s4>Logout</s4><s5> button.</s5>",
+  "target": "<s1>Lorsque vous êtes connecté, l’écran </s1><s2>Connexion au serveur</s2><s3> affiche l’utilisateur avec lequel vous êtes connecté et un bouton </s3><s4>Se déconnecter</s4><s5>.</s5>"
+ },
+ {
+  "source": "<s1>Note:</s1><s2> If the version of Arena Mobile installed on your device is too old to work with the server, the app shows the message </s2><s3>App update required</s3><s4>: update the app from the store to continue.</s4>",
+  "target": "<s1>Remarque :</s1><s2> si la version d’Arena Mobile installée sur votre appareil est trop ancienne pour fonctionner avec le serveur, l’application affiche le message </s2><s3>Mise à jour requise</s3><s4> : mettez à jour l’application depuis la boutique pour continuer.</s4>"
+ },
+ {
+  "source": "<s1>3.4\tDownloading a new survey into your device</s1>",
+  "target": "<s1>3.4\tTéléchargement d’une nouvelle enquête sur votre appareil</s1>"
+ },
+ {
+  "source": "<s1>Once you are logged in, go back to the home page and press </s1><s2>Surveys</s2><s3> (or </s3><s4>Select a survey</s4><s5>, if you don’t have any survey selected). A screen with the </s5><s6>Surveys in the device</s6><s7> will appear:</s7>",
+  "target": "<s1>Une fois connecté, revenez à la page d’accueil et appuyez sur </s1><s2>Enquêtes</s2><s3> (ou </s3><s4>Sélectionner une enquête</s4><s5>, si aucune enquête n’est sélectionnée). Un écran </s5><s6>Enquêtes sur l'appareil</s6><s7> s’affiche :</s7>"
+ },
+ {
+  "source": "<s1>Press the button </s1><s2>Import from cloud</s2><s3> in the bottom right corner to download a survey from the remote server; a new screen will appear, showing all the surveys in the remote server that are available to your user:</s3>",
+  "target": "<s1>Appuyez sur le bouton </s1><s2>Importer depuis le cloud</s2><s3> dans le coin inférieur droit pour télécharger une enquête depuis le serveur distant ; un nouvel écran s’affiche, présentant toutes les enquêtes du serveur distant accessibles à votre utilisateur :</s3>"
+ },
+ {
+  "source": "<s1>If you want to see more details about every survey, press the view mode button in the top bar; this button switches the view from a table to cards, where you can see more details like description, date of publish and load status (if the survey is already in the device or not, or if it is not up to date).</s1>",
+  "target": "<s1>Pour voir plus de détails sur chaque enquête, appuyez sur le bouton de mode d’affichage dans la barre supérieure ; ce bouton fait passer l’affichage d’un tableau à des cartes, où vous pouvez voir plus de détails comme la description, la date de publication et l’état de chargement (si l’enquête est déjà sur l’appareil ou non, ou si elle n’est pas à jour).</s1>"
+ },
+ {
+  "source": "<s1>Press the row of the survey you want to import; a confirm dialog will appear.</s1>",
+  "target": "<s1>Appuyez sur la ligne de l’enquête que vous souhaitez importer ; une boîte de dialogue de confirmation s’affiche.</s1>"
+ },
+ {
+  "source": "<s1>Once confirmed, the survey is downloaded together with its files (e.g. areas of interest), and you will be redirected to the page with the list of records collected with that survey (empty if the survey has been downloaded for the first time), and the data collection process can start:</s1>",
+  "target": "<s1>Après confirmation, l’enquête est téléchargée avec ses fichiers (par exemple les zones d’intérêt), et vous êtes redirigé vers la page contenant la liste des enregistrements collectés avec cette enquête (vide si l’enquête est téléchargée pour la première fois) ; le processus de collecte de données peut alors commencer :</s1>"
+ },
+ {
+  "source": "<s1>Note:</s1><s2> If only one survey is available to your user on the server, Arena Mobile downloads and selects it automatically.</s2>",
+  "target": "<s1>Remarque :</s1><s2> si une seule enquête est accessible à votre utilisateur sur le serveur, Arena Mobile la télécharge et la sélectionne automatiquement.</s2>"
+ },
+ {
+  "source": "<s1>4\tManaging surveys on the device</s1>",
+  "target": "<s1>4\tGestion des enquêtes sur l’appareil</s1>"
+ },
+ {
+  "source": "<s1>4.1\tSelecting a survey</s1>",
+  "target": "<s1>4.1\tSélection d’une enquête</s1>"
+ },
+ {
+  "source": "<s1>Once a survey has been downloaded into the device, it is possible to work with it by selecting it in the list of surveys.</s1>",
+  "target": "<s1>Une fois qu’une enquête a été téléchargée sur l’appareil, vous pouvez travailler avec elle en la sélectionnant dans la liste des enquêtes.</s1>"
+ },
+ {
+  "source": "<s1>From the home page, press </s1><s2>Surveys</s2><s3>; in the </s3><s4>Surveys in the device</s4><s5> page, press the row related to the survey you want to use:</s5>",
+  "target": "<s1>Depuis la page d’accueil, appuyez sur </s1><s2>Enquêtes</s2><s3> ; sur la page </s3><s4>Enquêtes sur l'appareil</s4><s5>, appuyez sur la ligne correspondant à l’enquête que vous souhaitez utiliser :</s5>"
+ },
+ {
+  "source": "<s1>You will be redirected to the page with the list of records collected with that survey.</s1>",
+  "target": "<s1>Vous êtes redirigé vers la page contenant la liste des enregistrements collectés avec cette enquête.</s1>"
+ },
+ {
+  "source": "<s1>4.2\tUpdating a survey</s1>",
+  "target": "<s1>4.2\tMise à jour d’une enquête</s1>"
+ },
+ {
+  "source": "<s1>If you have already downloaded a survey on the device and the same survey is updated and published again on the Arena platform, and that survey is the “current” survey you are working with, the home page shows a warning icon next to the name of the survey.</s1>",
+  "target": "<s1>Si vous avez déjà téléchargé une enquête sur l’appareil, que cette même enquête est mise à jour et publiée à nouveau sur la plateforme Arena et qu’il s’agit de l’enquête « actuelle » avec laquelle vous travaillez, la page d’accueil affiche une icône d’avertissement à côté du nom de l’enquête.</s1>"
+ },
+ {
+  "source": "<s1>Pressing the warning icon will show a confirmation dialog, to confirm the update of the survey:</s1>",
+  "target": "<s1>Appuyer sur l’icône d’avertissement affiche une boîte de dialogue vous demandant de confirmer la mise à jour de l’enquête :</s1>"
+ },
+ {
+  "source": "<s1>Once confirmed, the local copy of the survey will be replaced with the most updated one on the server.</s1>",
+  "target": "<s1>Après confirmation, la copie locale de l’enquête est remplacée par la version la plus récente présente sur le serveur.</s1>"
+ },
+ {
+  "source": "<s1>Note:</s1><s2> </s2><s3>When a survey is updated and published in Arena, it is always recommended to update that survey in the Arena Mobile app.</s3>",
+  "target": "<s1>Remarque :</s1><s2> </s2><s3>lorsqu’une enquête est mise à jour et publiée dans Arena, il est toujours recommandé de mettre à jour cette enquête dans l’application Arena Mobile.</s3>"
+ },
+ {
+  "source": "<s1>You can also update a survey from the </s1><s2>Surveys in the device</s2><s3> screen; press the </s3><s4>Check updates</s4><s5> button in the bottom left corner. For every row, you will see a small icon indicating the status of the survey. To update a survey that is not up to date, select the row of the survey you want to update and confirm the update:</s5>",
+  "target": "<s1>Vous pouvez également mettre à jour une enquête depuis l’écran </s1><s2>Enquêtes sur l'appareil</s2><s3> ; appuyez sur le bouton </s3><s4>Vérifier les mises à jour</s4><s5> dans le coin inférieur gauche. Pour chaque ligne, une petite icône indique l’état de l’enquête. Pour mettre à jour une enquête qui n’est pas à jour, sélectionnez la ligne de l’enquête à mettre à jour et confirmez la mise à jour :</s5>"
+ },
+ {
+  "source": "<s1>Note:</s1><s2> </s2><s3>Updating a survey will keep your data on the device. It will not be deleted. However, it is recommended to transfer all data to the server before running an update, and to keep a full local backup copy of the data!</s3>",
+  "target": "<s1>Remarque :</s1><s2> </s2><s3>la mise à jour d’une enquête conserve vos données sur l’appareil. Elles ne seront pas supprimées. Il est toutefois recommandé de transférer toutes les données vers le serveur avant d’effectuer une mise à jour, et de conserver une copie de sauvegarde locale complète des données !</s3>"
+ },
+ {
+  "source": "<s1>4.3\tDeleting a survey</s1>",
+  "target": "<s1>4.3\tSuppression d’une enquête</s1>"
+ },
+ {
+  "source": "<s1>If you want to delete one of the surveys you have downloaded on your device, </s1><s2>long-press on it</s2><s3>. It will show the delete option, then press the </s3><s4>Delete</s4><s5> button on top, and confirm the deletion.</s5>",
+  "target": "<s1>Si vous souhaitez supprimer l’une des enquêtes téléchargées sur votre appareil, </s1><s2>appuyez longuement dessus</s2><s3>. L’option de suppression s’affiche : appuyez alors sur le bouton </s3><s4>Supprimer</s4><s5> en haut, puis confirmez la suppression.</s5>"
+ },
+ {
+  "source": "<s1>WARNING</s1><s2>: This operation will delete all the records and files/pictures collected using the selected survey (only locally; records stored on the server won’t be touched). Do it only if you need to free up space in the device and you are really sure you won’t need that survey anymore. Double-check that you have uploaded all the records to the server before deleting the survey.</s2>",
+  "target": "<s1>AVERTISSEMENT</s1><s2> : cette opération supprime tous les enregistrements et fichiers/photos collectés avec l’enquête sélectionnée (uniquement en local ; les enregistrements stockés sur le serveur ne sont pas affectés). Ne le faites que si vous devez libérer de l’espace sur l’appareil et que vous êtes vraiment sûr de ne plus avoir besoin de cette enquête. Vérifiez bien que vous avez envoyé tous les enregistrements au serveur avant de supprimer l’enquête.</s2>"
+ },
+ {
+  "source": "<s1>5\tSettings and data backup</s1>",
+  "target": "<s1>5\tParamètres et sauvegarde des données</s1>"
+ },
+ {
+  "source": "<s1>Press the menu icon button in the top right corner, then press </s1><s2>Settings</s2><s3>. Here, you will find options to make the app more user-friendly. Every setting shows a short description of what it does.</s3>",
+  "target": "<s1>Appuyez sur le bouton de menu dans le coin supérieur droit, puis sur </s1><s2>Paramètres</s2><s3>. Vous y trouverez des options pour rendre l’application plus conviviale. Chaque paramètre affiche une courte description de son effet.</s3>"
+ },
+ {
+  "source": "<s1>Connection to server</s1><s2>: allows users to check, set, or change the credentials used on the Arena server.</s2>",
+  "target": "<s1>Connexion au serveur</s1><s2> : permet de vérifier, définir ou modifier les identifiants utilisés sur le serveur Arena.</s2>"
+ },
+ {
+  "source": "<s1>Appearance</s1>",
+  "target": "<s1>Apparence</s1>"
+ },
+ {
+  "source": "<s1>Application language</s1><s2>: the language of the app’s user interface. Currently, the following languages are available: </s2><s3>English</s3><s4>, </s4><s5>Finnish</s5><s6>, </s6><s7>French</s7><s8>, </s8><s9>German</s9><s10>, </s10><s11>Bahasa Indonesia</s11><s12>, </s12><s13>Japanese</s13><s14>, </s14><s15>Persian</s15><s16>, </s16><s17>Portuguese</s17><s18>, </s18><s19>Russian</s19><s20>, </s20><s21>Serbian</s21><s22> and </s22><s23>Spanish</s23><s24> (if </s24><s25>System</s25><s26> is selected, the system language will be used if it is among the supported ones, otherwise English will be used by default). The language of the survey forms is chosen in the list of records.</s26>",
+  "target": "<s1>Langue de l'application</s1><s2> : la langue de l’interface utilisateur de l’application. Les langues suivantes sont actuellement disponibles : </s2><s3>English</s3><s4>, </s4><s5>Finnish</s5><s6>, </s6><s7>French</s7><s8>, </s8><s9>German</s9><s10>, </s10><s11>Bahasa Indonesia</s11><s12>, </s12><s13>Japanese</s13><s14>, </s14><s15>Persian</s15><s16>, </s16><s17>Portuguese</s17><s18>, </s18><s19>Russian</s19><s20>, </s20><s21>Serbian</s21><s22> et </s22><s23>Spanish</s23><s24> (si </s24><s25>System</s25><s26> est sélectionné, la langue du système est utilisée si elle fait partie des langues prises en charge ; sinon, l’anglais est utilisé par défaut). La langue des formulaires de l’enquête se choisit dans la liste des enregistrements.</s26>"
+ },
+ {
+  "source": "<s1>Theme</s1><s2>: 2 “light” themes and 2 “dark” themes are available (choosing </s2><s3>Auto</s3><s4> makes the app follow the system color scheme: if the system uses a dark theme, then the Dark theme will be selected, otherwise the Light one).</s4>",
+  "target": "<s1>Thème</s1><s2> : 2 thèmes « clairs » et 2 thèmes « sombres » sont disponibles (choisir </s2><s3>Automatique</s3><s4> fait suivre à l’application le jeu de couleurs du système : si le système utilise un thème sombre, le thème Sombre est sélectionné, sinon le thème Clair).</s4>"
+ },
+ {
+  "source": "<s1>Font scale</s1><s2>: increases or reduces the size of the text in the user interface.</s2>",
+  "target": "<s1>Échelle de la police</s1><s2> : augmente ou réduit la taille du texte dans l’interface utilisateur.</s2>"
+ },
+ {
+  "source": "<s1>Animations enabled</s1><s2>: turns on animations in the application (e.g., when an attribute becomes relevant, it will be shown with a fade animation); disable it to improve performance on slower devices.</s2>",
+  "target": "<s1>Animations activées</s1><s2> : active les animations dans l’application (par exemple, lorsqu’un attribut devient pertinent, il s’affiche avec une animation en fondu) ; désactivez cette option pour améliorer les performances sur les appareils plus lents.</s2>"
+ },
+ {
+  "source": "<s1>Data entry</s1>",
+  "target": "<s1>Saisie de données</s1>"
+ },
+ {
+  "source": "<s1>Auto sync</s1><s2>: uploads new and modified records to the server automatically (see </s2><s3>Auto-sync</s3><s4>).</s4>",
+  "target": "<s1>Synchronisation automatique</s1><s2> : envoie automatiquement au serveur les enregistrements nouveaux et modifiés (voir </s2><s3>Synchronisation automatique</s3><s4>).</s4>"
+ },
+ {
+  "source": "<s1>Auto-sync interval while editing</s1><s2> and </s2><s3>Auto-sync interval (slow check)</s3><s4>: see </s4><s5>Auto-sync</s5><s6>.</s6>",
+  "target": "<s1>Intervalle de synchronisation automatique pendant l'édition</s1><s2> et </s2><s3>Intervalle de synchronisation automatique (vérification lente)</s3><s4> : voir </s4><s5>Synchronisation automatique</s5><s6>.</s6>"
+ },
+ {
+  "source": "<s1>Data upload chunk size</s1><s2>: size of each piece a record is split into while uploading it to the server (from 500 KB to 50 MB). Lower values are more reliable on slow or unstable connections.</s2>",
+  "target": "<s1>Taille des blocs de téléversement des données</s1><s2> : taille de chacun des morceaux en lesquels un enregistrement est découpé lors de son envoi au serveur (de 500 Ko à 50 Mo). Les valeurs plus faibles sont plus fiables sur les connexions lentes ou instables.</s2>"
+ },
+ {
+  "source": "<s1>Full screen</s1><s2>: hides the system status and navigation bars.</s2>",
+  "target": "<s1>Plein écran</s1><s2> : masque la barre d’état et la barre de navigation du système.</s2>"
+ },
+ {
+  "source": "<s1>Keep screen awake</s1><s2>: if turned on, the screen will never turn off while the app is open (it can reduce the battery life).</s2>",
+  "target": "<s1>Maintenir l'écran allumé</s1><s2> : si cette option est activée, l’écran ne s’éteint jamais tant que l’application est ouverte (cela peut réduire l’autonomie de la batterie).</s2>"
+ },
+ {
+  "source": "<s1>Show record completion progress</s1><s2>: shows the percentage of the record that has been completed (see </s2><s3>Record completion</s3><s4>).</s4>",
+  "target": "<s1>Afficher la progression de l'enregistrement</s1><s2> : affiche le pourcentage de l’enregistrement qui a été rempli (voir </s2><s3>Progression de l’enregistrement</s3><s4>).</s4>"
+ },
+ {
+  "source": "<s1>Show status bar</s1><s2>: shows battery, storage and network status while editing a record.</s2>",
+  "target": "<s1>Afficher la barre d'état</s1><s2> : affiche l’état de la batterie, du stockage et du réseau pendant la modification d’un enregistrement.</s2>"
+ },
+ {
+  "source": "<s1>Location & GPS</s1>",
+  "target": "<s1>Localisation et GPS</s1>"
+ },
+ {
+  "source": "<s1>GPS source</s1><s2>: choose between the internal GPS of the device and an external Bluetooth GPS receiver (see </s2><s3>Using an external Bluetooth GPS device</s3><s4>).</s4>",
+  "target": "<s1>Source GPS</s1><s2> : choisissez entre le GPS interne de l’appareil et un récepteur GPS Bluetooth externe (voir </s2><s3>Utilisation d’un appareil GPS Bluetooth externe</s3><s4>).</s4>"
+ },
+ {
+  "source": "<s1>Location accuracy threshold</s1><s2> (meters): used when a coordinate is being collected; when the threshold is reached, the GPS antenna is stopped automatically. The value can depend on the accuracy level that you want to reach, but it should not be lower than the maximum reachable by the device; otherwise, the GPS antenna will always try to reach an impossible value (e.g. in a good smartphone, 2 meters is a good value).</s2>",
+  "target": "<s1>Seuil de précision de la localisation</s1><s2> (mètres) : utilisé lors de la collecte d’une coordonnée ; lorsque le seuil est atteint, l’antenne GPS s’arrête automatiquement. La valeur peut dépendre du niveau de précision que vous souhaitez atteindre, mais elle ne doit pas être inférieure à la précision maximale que l’appareil peut atteindre ; sinon, l’antenne GPS essaiera sans cesse d’atteindre une valeur impossible (par exemple, sur un bon smartphone, 2 mètres est une bonne valeur).</s2>"
+ },
+ {
+  "source": "<s1>Location accuracy watch timeout</s1><s2> (30–300 seconds): when the timeout is reached, the GPS antenna is stopped automatically (by default, it’s 120 seconds).</s2>",
+  "target": "<s1>Délai de surveillance de la précision de la localisation</s1><s2> (30–300 secondes) : lorsque ce délai est atteint, l’antenne GPS s’arrête automatiquement (par défaut, 120 secondes).</s2>"
+ },
+ {
+  "source": "<s1>Location averaging enabled</s1><s2>: the recorded location will be the average of multiple location readings, improving accuracy.</s2>",
+  "target": "<s1>Moyenne de localisation activée</s1><s2> : la position enregistrée est la moyenne de plusieurs relevés de position, ce qui améliore la précision.</s2>"
+ },
+ {
+  "source": "<s1>GPS locked</s1><s2>: the GPS signal will be locked while the app is running, so that collecting coordinates will be faster and more accurate (it will reduce battery life since the GPS antenna is always turned on).</s2>",
+  "target": "<s1>GPS verrouillé</s1><s2> : le signal GPS reste verrouillé tant que l’application est en cours d’exécution, de sorte que la collecte des coordonnées est plus rapide et plus précise (cela réduit l’autonomie de la batterie, car l’antenne GPS est toujours allumée).</s2>"
+ },
+ {
+  "source": "<s1>Position tracking accuracy threshold</s1><s2>, </s2><s3>Position tracking min distance</s3><s4> and </s4><s5>Position tracking battery saver</s5><s6>: see </s6><s7>Position tracking</s7><s8>.</s8>",
+  "target": "<s1>Position tracking accuracy threshold</s1><s2>, </s2><s3>Position tracking min distance</s3><s4> et </s4><s5>Position tracking battery saver</s5><s6> : voir </s6><s7>Suivi de position</s7><s8>.</s8>"
+ },
+ {
+  "source": "<s1>Maps</s1><s2>: map provider, default map layer, custom map layers, offline maps and PDF maps (see </s2><s3>Maps</s3><s4>).</s4>",
+  "target": "<s1>Maps</s1><s2> : fournisseur de cartes, couche de carte par défaut, couches de carte personnalisées, cartes hors ligne et cartes PDF (voir </s2><s3>Cartes</s3><s4>).</s4>"
+ },
+ {
+  "source": "<s1>Images</s1><s2>: maximum size (0.5–10 MB) images are resized to before being saved, unless the survey defines a smaller limit for a specific attribute; choose </s2><s3>Images size not limited</s3><s4> to store images in the maximum resolution provided by the device.</s4>",
+  "target": "<s1>Images</s1><s2> : taille maximale (0,5–10 Mo) à laquelle les images sont redimensionnées avant d’être enregistrées, sauf si l’enquête définit une limite plus petite pour un attribut donné ; choisissez </s2><s3>Taille des images illimitée</s3><s4> pour stocker les images à la résolution maximale fournie par l’appareil.</s4>"
+ },
+ {
+  "source": "<s1>Backup</s1><s2>: pressing the button </s2><s3>Full backup</s3><s4> generates a full backup of all the data used by the app, including surveys, records, and files/images collected. When the button is pressed, a confirm dialog appears, showing the size that the generated file will have; after confirming, a share dialog will appear and you will be able to select an app to use the generated file (e.g. select the File Manager app to store the file in the preferred folder).</s4>",
+  "target": "<s1>Sauvegarde</s1><s2> : le bouton </s2><s3>Sauvegarde complète</s3><s4> génère une sauvegarde complète de toutes les données utilisées par l’application, y compris les enquêtes, les enregistrements et les fichiers/images collectés. Lorsque vous appuyez sur le bouton, une boîte de dialogue de confirmation s’affiche, indiquant la taille du fichier qui sera généré ; après confirmation, une boîte de dialogue de partage s’affiche et vous pouvez choisir une application pour utiliser le fichier généré (par exemple, sélectionnez l’application Gestionnaire de fichiers pour enregistrer le fichier dans le dossier de votre choix).</s4>"
+ },
+ {
+  "source": "<s1>Logs</s1><s2>: log files store diagnostic information that can help troubleshoot issues. </s2><s3>Export Logs</s3><s4> shares them (e.g. to send them to the support team); </s4><s5>Clear Logs</s5><s6> deletes them.</s6>",
+  "target": "<s1>Journaux</s1><s2> : les fichiers journaux contiennent des informations de diagnostic qui peuvent aider à résoudre les problèmes. </s2><s3>Exporter les journaux</s3><s4> permet de les partager (par exemple pour les envoyer à l’équipe d’assistance) ; </s4><s5>Effacer les journaux</s5><s6> les supprime.</s6>"
+ },
+ {
+  "source": "<s1>6\tData Entry</s1>",
+  "target": "<s1>6\tSaisie de données</s1>"
+ },
+ {
+  "source": "<s1>Once a survey is downloaded into the device, it is ready to record data. While recording the data using the app, an internet connection is not needed. From the home page, press the </s1><s2>Go to data entry</s2><s3> button.</s3>",
+  "target": "<s1>Une fois qu’une enquête est téléchargée sur l’appareil, elle est prête pour la saisie des données. Aucune connexion internet n’est nécessaire pendant la saisie des données avec l’application. Depuis la page d’accueil, appuyez sur le bouton </s1><s2>Aller à la saisie de données</s2><s3>.</s3>"
+ },
+ {
+  "source": "<s1>6.1\tRecords page</s1>",
+  "target": "<s1>6.1\tPage des enregistrements</s1>"
+ },
+ {
+  "source": "<s1>You will be redirected to the Records page, where you can see the list of records collected using the current/selected survey (</s1><s2>empty if you don’t have any records yet</s2><s3>).</s3>",
+  "target": "<s1>Vous êtes redirigé vers la page des enregistrements, où vous pouvez voir la liste des enregistrements collectés avec l’enquête actuelle/sélectionnée (</s1><s2>vide si vous n’avez encore aucun enregistrement</s2><s3>).</s3>"
+ },
+ {
+  "source": "<s1>In the record list, a column for every “key” attribute (attributes marked as key defined inside the root entity of your survey in Arena) and a column with Errors (if any) are shown.</s1>",
+  "target": "<s1>La liste des enregistrements affiche une colonne pour chaque attribut « clé » (attributs marqués comme clés, définis dans l’entité racine de votre enquête dans Arena) ainsi qu’une colonne Erreurs (s’il y en a).</s1>"
+ },
+ {
+  "source": "<s1>If you want to see more details about each record, press the view mode button on top to switch between the table view and the </s1><s2>cards</s2><s3> view. Records can be sorted using the sort field and direction shown above the list.</s3>",
+  "target": "<s1>Pour voir plus de détails sur chaque enregistrement, appuyez sur le bouton de mode d’affichage en haut pour basculer entre la vue tableau et la vue </s1><s2>cartes</s2><s3>. Les enregistrements peuvent être triés à l’aide du champ et du sens de tri affichés au-dessus de la liste.</s3>"
+ },
+ {
+  "source": "<s1>By pressing (</s1><s2>with a short press</s2><s3>) one of the rows, you will enter the record edit view.</s3>",
+  "target": "<s1>En appuyant (</s1><s2>brièvement</s2><s3>) sur l’une des lignes, vous accédez à la vue de modification de l’enregistrement.</s3>"
+ },
+ {
+  "source": "<s1>Note:</s1><s2> When you open an existing record, the record editor will open in read-only view mode; you will have to “</s2><s3>unlock</s3><s4>” the edit (by pressing the lock icon in the top bar) to be able to update its values.</s4>",
+  "target": "<s1>Remarque :</s1><s2> lorsque vous ouvrez un enregistrement existant, l’éditeur d’enregistrement s’ouvre en mode lecture seule ; vous devez « </s2><s3>déverrouiller</s3><s4> » la modification (en appuyant sur l’icône de cadenas dans la barre supérieure) pour pouvoir modifier ses valeurs.</s4>"
+ },
+ {
+  "source": "<s1>If you want to start a new record, press the </s1><s2>New</s2><s3> button at the bottom of the screen </s3><x4/><s5>.</s5>",
+  "target": "<s1>Pour commencer un nouvel enregistrement, appuyez sur le bouton </s1><s2>Nouveau</s2><s3> en bas de l’écran </s3><x4/><s5>.</s5>"
+ },
+ {
+  "source": "<s1>Options</s1><s2>: the panel at the top of the list allows you to:</s2>",
+  "target": "<s1>Options</s1><s2> : le panneau en haut de la liste vous permet de :</s2>"
+ },
+ {
+  "source": "<s1>show </s1><s2>All records</s2><s3> or only the </s3><s4>Records in device</s4><s5>;</s5>",
+  "target": "<s1>afficher </s1><s2>Tous les enregistrements</s2><s3> ou uniquement les </s3><s4>Enregistrements sur l'appareil</s4><s5> ;</s5>"
+ },
+ {
+  "source": "<s1>choose the cycle of the records (in multi-cycle surveys) and the </s1><s2>Cycle for new records</s2><s3>;</s3>",
+  "target": "<s1>choisir le cycle des enregistrements (dans les enquêtes multi-cycles) et le </s1><s2>Cycle pour les nouveaux enregistrements</s2><s3> ;</s3>"
+ },
+ {
+  "source": "<s1>choose the language of the survey forms (in multi-language surveys);</s1>",
+  "target": "<s1>choisir la langue des formulaires de l’enquête (dans les enquêtes multilingues) ;</s1>"
+ },
+ {
+  "source": "<s1>Import</s1><s2> records from a file (a .zip file exported from Arena Mobile, e.g. with </s2><s3>Local backup</s3><s4>); select </s4><s5>Overwrite existing records</s5><s6> to replace the records already in the device;</s6>",
+  "target": "<s1>Importer</s1><s2> des enregistrements depuis un fichier (un fichier .zip exporté depuis Arena Mobile, par exemple avec </s2><s3>Sauvegarde locale</s3><s4>) ; sélectionnez </s4><s5>Remplacer les enregistrements existants</s5><s6> pour remplacer les enregistrements déjà présents sur l’appareil ;</s6>"
+ },
+ {
+  "source": "<s1>Revalidate all records</s1><s2> (see </s2><s3>Re-validating records</s3><s4>).</s4>",
+  "target": "<s1>Revalider tous les enregistrements</s1><s2> (voir </s2><s3>Revalidation des enregistrements</s3><s4>).</s4>"
+ },
+ {
+  "source": "<s1>Selecting records</s1><s2>: long-press one or more rows to select them; the bar that appears on top allows you to </s2><s3>Clone</s3><s4> (into another cycle), </s4><s5>Fetch</s5><s6> (download from the server), </s6><s7>Export</s7><s8>, </s8><s9>Revalidate</s9><s10> or </s10><s11>Delete</s11><s12> the selected records.</s12>",
+  "target": "<s1>Sélection d’enregistrements</s1><s2> : appuyez longuement sur une ou plusieurs lignes pour les sélectionner ; la barre qui s’affiche en haut vous permet de </s2><s3>Cloner</s3><s4> (dans un autre cycle), </s4><s5>Récupérer</s5><s6> (télécharger depuis le serveur), </s6><s7>Exporter</s7><s8>, </s8><s9>Revalider</s9><s10> ou </s10><s11>Supprimer</s11><s12> les enregistrements sélectionnés.</s12>"
+ },
+ {
+  "source": "<s1>Records of other user groups</s1><s2>: in surveys using user groups, records belonging to another user group are marked as </s2><s3>Read-only</s3><s4>: they can be viewed or cloned, but not edited.</s4>",
+  "target": "<s1>Enregistrements des autres groupes d’utilisateurs</s1><s2> : dans les enquêtes utilisant des groupes d’utilisateurs, les enregistrements appartenant à un autre groupe d’utilisateurs sont marqués </s2><s3>Lecture seule</s3><s4> : ils peuvent être consultés ou clonés, mais pas modifiés.</s4>"
+ },
+ {
+  "source": "<s1>6.2\tDelete a record</s1>",
+  "target": "<s1>6.2\tSupprimer un enregistrement</s1>"
+ },
+ {
+  "source": "<s1>If you want to </s1><s2>delete</s2><s3> a record, </s3><s4>long-press</s4><s5> the corresponding row and press the </s5><s6>Delete</s6><s7> button that appears on top:</s7>",
+  "target": "<s1>Pour </s1><s2>supprimer</s2><s3> un enregistrement, </s3><s4>appuyez longuement</s4><s5> sur la ligne correspondante, puis appuyez sur le bouton </s5><s6>Supprimer</s6><s7> qui s’affiche en haut :</s7>"
+ },
+ {
+  "source": "<s1>Note</s1><s2>: The record deletion </s2><s3>cannot be undone</s3><s4>; it will remove all the data collected in that record (including files/images), but it won’t affect data already submitted to the Arena server.</s4>",
+  "target": "<s1>Remarque</s1><s2> : la suppression d’un enregistrement </s2><s3>est irréversible</s3><s4> ; elle efface toutes les données collectées dans cet enregistrement (y compris les fichiers/images), mais n’affecte pas les données déjà envoyées au serveur Arena.</s4>"
+ },
+ {
+  "source": "<s1>6.3\tData entry form</s1>",
+  "target": "<s1>6.3\tFormulaire de saisie de données</s1>"
+ },
+ {
+  "source": "<s1>For the examples in this guide, we are using a demo survey; however, the basic data recording methods are the same for different surveys.</s1>",
+  "target": "<s1>Pour les exemples de ce guide, nous utilisons une enquête de démonstration ; les méthodes de base de saisie des données sont toutefois les mêmes pour les différentes enquêtes.</s1>"
+ },
+ {
+  "source": "<s1>On the data entry page, there are 2 panels:</s1>",
+  "target": "<s1>La page de saisie de données comporte 2 panneaux :</s1>"
+ },
+ {
+  "source": "<s1>On the </s1><s2>Top panel</s2><s3>, you will find some icon buttons:</s3>",
+  "target": "<s1>Dans le </s1><s2>panneau supérieur</s2><s3>, vous trouverez plusieurs boutons à icône :</s3>"
+ },
+ {
+  "source": "<s1>navigation sidebar trigger;</s1>",
+  "target": "<s1>ouverture de la barre latérale de navigation ;</s1>"
+ },
+ {
+  "source": "<s1>lock/unlock record edit;</s1>",
+  "target": "<s1>verrouillage/déverrouillage de la modification de l’enregistrement ;</s1>"
+ },
+ {
+  "source": "<s1>validation report;</s1>",
+  "target": "<s1>rapport de validation ;</s1>"
+ },
+ {
+  "source": "<s1>single node or form view mode switch;</s1>",
+  "target": "<s1>bascule entre le mode nœud unique et le mode formulaire ;</s1>"
+ },
+ {
+  "source": "<s1>options menu.</s1>",
+  "target": "<s1>menu des options.</s1>"
+ },
+ {
+  "source": "<s1>The </s1><s2>Lower panel</s2><s3> shows the “breadcrumbs” (where you can read in this example </s3><s4>Root entity[1,2]</s4><s5>); you can determine the position of the current page inside the record (i.e., the current entity name and the name of the ancestor entities, up to the root). It also contains “Records” and the next entity to check out.</s5>",
+  "target": "<s1>Le </s1><s2>panneau inférieur</s2><s3> affiche le « fil d’Ariane » (dans cet exemple, on peut lire </s3><s4>Root entity[1,2]</s4><s5>) ; il permet de déterminer la position de la page actuelle dans l’enregistrement (c’est-à-dire le nom de l’entité actuelle et le nom des entités ancêtres, jusqu’à la racine). Il contient également « Enregistrements » et l’entité suivante à consulter.</s5>"
+ },
+ {
+  "source": "<s1>Navigation</s1>",
+  "target": "<s1>Navigation</s1>"
+ },
+ {
+  "source": "<s1>On the top left corner, you can see a “hamburger” icon </s1><x2/><s3>. It opens a sidebar with a tree structure showing the hierarchy of the survey. Using this tree view, you can navigate to any page of the survey. If enabled in the settings, the sidebar also shows the record completion progress (see </s3><s4>Record completion</s4><s5>).</s5>",
+  "target": "<s1>Dans le coin supérieur gauche, vous pouvez voir une icône « hamburger » </s1><x2/><s3>. Elle ouvre une barre latérale avec une arborescence présentant la hiérarchie de l’enquête. Grâce à cette arborescence, vous pouvez accéder à n’importe quelle page de l’enquête. Si l’option est activée dans les paramètres, la barre latérale affiche également la progression de l’enregistrement (voir </s3><s4>Progression de l’enregistrement</s4><s5>).</s5>"
+ },
+ {
+  "source": "<s1>In the lower part of the side panel there are the navigation buttons, the </s1><s2>Records</s2><s3> button, a question mark (?) icon, which shows the documents attached to the survey, and the settings button.</s3>",
+  "target": "<s1>Dans la partie inférieure du panneau latéral se trouvent les boutons de navigation, le bouton </s1><s2>Enregistrements</s2><s3>, une icône de point d’interrogation (?), qui affiche les documents joints à l’enquête, et le bouton des paramètres.</s3>"
+ },
+ {
+  "source": "<s1>Access to the record list</s1>",
+  "target": "<s1>Accès à la liste des enregistrements</s1>"
+ },
+ {
+  "source": "<s1>At the bottom left of the survey hierarchy view, there is the </s1><s2>Records</s2><s3> button; by pressing it, you get access to the list of recorded data.</s3>",
+  "target": "<s1>En bas à gauche de la vue hiérarchique de l’enquête se trouve le bouton </s1><s2>Enregistrements</s2><s3> ; en appuyant dessus, vous accédez à la liste des données enregistrées.</s3>"
+ },
+ {
+  "source": "<s1>6.4\tData types</s1>",
+  "target": "<s1>6.4\tTypes de données</s1>"
+ },
+ {
+  "source": "<s1>Arena and Arena Mobile support collecting different data types. In this section, you will find how different data types are shown on the forms.</s1>",
+  "target": "<s1>Arena et Arena Mobile permettent de collecter différents types de données. Cette section présente la façon dont les différents types de données s’affichent dans les formulaires.</s1>"
+ },
+ {
+  "source": "<s1>Note:</s1><s2> data is always auto-saved in the device, and there isn’t any “Save” button in the data entry form.</s2>",
+  "target": "<s1>Remarque :</s1><s2> les données sont toujours enregistrées automatiquement sur l’appareil, et le formulaire de saisie ne comporte aucun bouton « Enregistrer ».</s2>"
+ },
+ {
+  "source": "<s1>6.4.1\tText</s1>",
+  "target": "<s1>6.4.1\tTexte</s1>"
+ },
+ {
+  "source": "<s1>Press the input box.</s1>",
+  "target": "<s1>Appuyez sur la zone de saisie.</s1>"
+ },
+ {
+  "source": "<s1>Type in text using the keyboard that appears.</s1>",
+  "target": "<s1>Saisissez le texte à l’aide du clavier qui s’affiche.</s1>"
+ },
+ {
+  "source": "<s1>6.4.2\tInteger, Decimal</s1>",
+  "target": "<s1>6.4.2\tEntier, décimal</s1>"
+ },
+ {
+  "source": "<s1>Type the numeric value using the numeric keyboard that will appear (in case you cannot find a comma or dot symbol in the keyboard, consider installing a custom keyboard app, like Google GBoard or SwiftKey).</s1>",
+  "target": "<s1>Saisissez la valeur numérique à l’aide du clavier numérique qui s’affiche (si vous ne trouvez pas de virgule ou de point sur le clavier, envisagez d’installer une application de clavier personnalisé, comme Google Gboard ou SwiftKey).</s1>"
+ },
+ {
+  "source": "<s1>6.4.3\tCoordinate</s1>",
+  "target": "<s1>6.4.3\tCoordonnée</s1>"
+ },
+ {
+  "source": "<s1>Press </s1><s2>Get location</s2><s3>.</s3>",
+  "target": "<s1>Appuyez sur </s1><s2>Obtenir la position</s2><s3>.</s3>"
+ },
+ {
+  "source": "<s1>Check the accuracy!</s1>",
+  "target": "<s1>Vérifiez la précision !</s1>"
+ },
+ {
+  "source": "<s1>Wait a bit to get better accuracy (green).</s1>",
+  "target": "<s1>Patientez un peu pour obtenir une meilleure précision (vert).</s1>"
+ },
+ {
+  "source": "<s1>The values you see in X and Y are the ones being stored in the data.</s1>",
+  "target": "<s1>Les valeurs affichées en X et Y sont celles qui sont enregistrées dans les données.</s1>"
+ },
+ {
+  "source": "<s1>When the accuracy threshold or the fetch timeout is reached (specified in the settings), the GPS antenna is automatically stopped.</s1>",
+  "target": "<s1>Lorsque le seuil de précision ou le délai d’acquisition (définis dans les paramètres) est atteint, l’antenne GPS s’arrête automatiquement.</s1>"
+ },
+ {
+  "source": "<s1>Press </s1><s2>Stop</s2><s3> if you cannot reach a better accuracy and you don’t want to wait anymore.</s3>",
+  "target": "<s1>Appuyez sur </s1><s2>Arrêter</s2><s3> si vous ne parvenez pas à obtenir une meilleure précision et que vous ne souhaitez plus attendre.</s3>"
+ },
+ {
+  "source": "<s1>The location can also be viewed on a map: choose </s1><s2>Arena Mobile</s2><s3> (it works offline with downloaded maps) or </s3><s4>Other app…</s4><s5> (any installed app that can show a location). In the Arena Mobile map, you can also move the location: long-press the marker, move it, and press </s5><s6>Save new position</s6><s7>.</s7>",
+  "target": "<s1>La position peut également être affichée sur une carte : choisissez </s1><s2>Arena Mobile</s2><s3> (fonctionne hors ligne avec les cartes téléchargées) ou </s3><s4>Autre application…</s4><s5> (toute application installée capable d’afficher une position). Sur la carte d’Arena Mobile, vous pouvez également déplacer la position : appuyez longuement sur le marqueur, déplacez-le, puis appuyez sur </s5><s6>Enregistrer la nouvelle position</s6><s7>.</s7>"
+ },
+ {
+  "source": "<s1>6.4.4\tBoolean</s1>",
+  "target": "<s1>6.4.4\tBooléen</s1>"
+ },
+ {
+  "source": "<s1>Just press Yes or No (True or False).</s1>",
+  "target": "<s1>Il suffit d’appuyer sur Oui ou Non (Vrai ou Faux).</s1>"
+ },
+ {
+  "source": "<s1>6.4.5\tCode (dropdown, single or multiple entry)</s1>",
+  "target": "<s1>6.4.5\tCode (liste déroulante, saisie unique ou multiple)</s1>"
+ },
+ {
+  "source": "<s1>Press the drop-down list.</s1>",
+  "target": "<s1>Appuyez sur la liste déroulante.</s1>"
+ },
+ {
+  "source": "<s1>Select one option.</s1>",
+  "target": "<s1>Sélectionnez une option.</s1>"
+ },
+ {
+  "source": "<s1>If the code is “single”, then the dialog is closed automatically after the selection, and the value will be saved automatically.</s1>",
+  "target": "<s1>Si le code est « unique », la boîte de dialogue se ferme automatiquement après la sélection et la valeur est enregistrée automatiquement.</s1>"
+ },
+ {
+  "source": "<s1>If the code is multiple, multiple choices are allowed, and you will have to close the dialog with the button at the bottom.</s1>",
+  "target": "<s1>Si le code est multiple, plusieurs choix sont possibles et vous devez fermer la boîte de dialogue à l’aide du bouton situé en bas.</s1>"
+ },
+ {
+  "source": "<s1>6.4.6\tCode (checkbox or radio button, single or multiple entry)</s1>",
+  "target": "<s1>6.4.6\tCode (case à cocher ou bouton radio, saisie unique ou multiple)</s1>"
+ },
+ {
+  "source": "<s1>All the items in the related category will be shown.</s1>",
+  "target": "<s1>Tous les éléments de la catégorie correspondante sont affichés.</s1>"
+ },
+ {
+  "source": "<s1>Select one or more options (if the code is multiple).</s1>",
+  "target": "<s1>Sélectionnez une ou plusieurs options (si le code est multiple).</s1>"
+ },
+ {
+  "source": "<s1>The selection(s) will be saved automatically.</s1>",
+  "target": "<s1>La ou les sélections sont enregistrées automatiquement.</s1>"
+ },
+ {
+  "source": "<s1>6.4.7\tTaxon (taxonomic data)</s1>",
+  "target": "<s1>6.4.7\tTaxon (données taxonomiques)</s1>"
+ },
+ {
+  "source": "<s1>Press the </s1><s2>Search taxon</s2><s3> button.</s3>",
+  "target": "<s1>Appuyez sur le bouton </s1><s2>Rechercher un taxon</s2><s3>.</s3>"
+ },
+ {
+  "source": "<s1>A dialog appears with the species list.</s1>",
+  "target": "<s1>Une boîte de dialogue s’affiche avec la liste des espèces.</s1>"
+ },
+ {
+  "source": "<s1>Type a few letters of the code, the scientific name, or the vernacular/local name into the search box to filter the visible items.</s1>",
+  "target": "<s1>Saisissez quelques lettres du code, du nom scientifique ou du nom vernaculaire/local dans le champ de recherche pour filtrer les éléments affichés.</s1>"
+ },
+ {
+  "source": "<s1>Select one name from the list.</s1>",
+  "target": "<s1>Sélectionnez un nom dans la liste.</s1>"
+ },
+ {
+  "source": "<s1>The search dialog will be closed automatically.</s1>",
+  "target": "<s1>La boîte de dialogue de recherche se ferme automatiquement.</s1>"
+ },
+ {
+  "source": "<s1>6.4.8\tDate</s1>",
+  "target": "<s1>6.4.8\tDate</s1>"
+ },
+ {
+  "source": "<s1>Press the text box or the calendar icon.</s1>",
+  "target": "<s1>Appuyez sur la zone de texte ou sur l’icône de calendrier.</s1>"
+ },
+ {
+  "source": "<s1>Choose the date using the calendar (the layout depends on the device).</s1>",
+  "target": "<s1>Choisissez la date à l’aide du calendrier (sa présentation dépend de l’appareil).</s1>"
+ },
+ {
+  "source": "<s1>6.4.9\tTime</s1>",
+  "target": "<s1>6.4.9\tHeure</s1>"
+ },
+ {
+  "source": "<s1>Press the input text box or the clock icon.</s1>",
+  "target": "<s1>Appuyez sur la zone de saisie ou sur l’icône d’horloge.</s1>"
+ },
+ {
+  "source": "<s1>Choose the time using the time selector (the layout depends on the device).</s1>",
+  "target": "<s1>Choisissez l’heure à l’aide du sélecteur d’heure (sa présentation dépend de l’appareil).</s1>"
+ },
+ {
+  "source": "<s1>6.4.10\tFiles (photos, videos, documents)</s1>",
+  "target": "<s1>6.4.10\tFichiers (photos, vidéos, documents)</s1>"
+ },
+ {
+  "source": "<s1>Press the “Camera” icon button to capture a photo or a video.</s1>",
+  "target": "<s1>Appuyez sur le bouton à icône « Appareil photo » pour prendre une photo ou une vidéo.</s1>"
+ },
+ {
+  "source": "<s1>Press </s1><s2>Select picture</s2><s3> (or </s3><s4>Select video</s4><s5>, </s5><s6>Select file</s6><s7>) to pick a file from your device.</s7>",
+  "target": "<s1>Appuyez sur </s1><s2>Sélectionner image</s2><s3> (ou </s3><s4>Sélectionner vidéo</s4><s5>, </s5><s6>Sélectionner fichier</s6><s7>) pour choisir un fichier sur votre appareil.</s7>"
+ },
+ {
+  "source": "<s1>In the case of an image file attribute, if a maximum size has been specified for the file in the Arena Survey Designer (or in the settings), the stored image will be resized to fit that size.</s1>",
+  "target": "<s1>Dans le cas d’un attribut de fichier image, si une taille maximale a été définie pour le fichier dans le concepteur d’enquêtes d’Arena (ou dans les paramètres), l’image enregistrée est redimensionnée pour respecter cette taille.</s1>"
+ },
+ {
+  "source": "<s1>Press the image:</s1>",
+  "target": "<s1>Appuyez sur l’image :</s1>"
+ },
+ {
+  "source": "<s1>to show a preview with some details like size and resolution;</s1>",
+  "target": "<s1>pour afficher un aperçu avec certains détails comme la taille et la résolution ;</s1>"
+ },
+ {
+  "source": "<s1>to </s1><s2>Rotate</s2><s3> it;</s3>",
+  "target": "<s1>pour la faire </s1><s2>Pivoter</s2><s3> ;</s3>"
+ },
+ {
+  "source": "<s1>to download or share it.</s1>",
+  "target": "<s1>pour la télécharger ou la partager.</s1>"
+ },
+ {
+  "source": "<s1>6.4.11\tAudio files</s1>",
+  "target": "<s1>6.4.11\tFichiers audio</s1>"
+ },
+ {
+  "source": "<s1>File attributes of type audio are supported. On the attribute you can:</s1>",
+  "target": "<s1>Les attributs de fichier de type audio sont pris en charge. Sur l’attribut, vous pouvez :</s1>"
+ },
+ {
+  "source": "<s1>record audio directly with the device microphone (with pause and resume), or</s1>",
+  "target": "<s1>enregistrer du son directement avec le micro de l’appareil (avec pause et reprise), ou</s1>"
+ },
+ {
+  "source": "<s1>select an existing audio file with </s1><s2>Select audio</s2><s3>.</s3>",
+  "target": "<s1>sélectionner un fichier audio existant avec </s1><s2>Sélectionner audio</s2><s3>.</s3>"
+ },
+ {
+  "source": "<s1>The recording can be played back, shared or deleted. It is stored with the record and uploaded to the server like images and videos.</s1>",
+  "target": "<s1>L’enregistrement peut être lu, partagé ou supprimé. Il est stocké avec l’enregistrement de l’enquête et envoyé au serveur comme les images et les vidéos.</s1>"
+ },
+ {
+  "source": "<s1>6.4.12\tGeotagged photos</s1>",
+  "target": "<s1>6.4.12\tPhotos géolocalisées</s1>"
+ },
+ {
+  "source": "<s1>In the Arena Form Designer, this property has to be selected for a file attribute to enable geotagging of photos:</s1>",
+  "target": "<s1>Dans le concepteur de formulaires d’Arena, cette propriété doit être sélectionnée pour un attribut de fichier afin d’activer la géolocalisation des photos :</s1>"
+ },
+ {
+  "source": "<s1>Arena Mobile allows you to capture or upload geotagged photos. These are images with location-specific metadata (i.e., latitude and longitude), embedded in the file’s EXIF data. This information can be captured automatically by GPS-enabled devices.</s1>",
+  "target": "<s1>Arena Mobile vous permet de prendre ou d’importer des photos géolocalisées. Il s’agit d’images contenant des métadonnées de localisation (c’est-à-dire la latitude et la longitude), intégrées dans les données EXIF du fichier. Ces informations peuvent être enregistrées automatiquement par les appareils équipés d’un GPS.</s1>"
+ },
+ {
+  "source": "<s1>6.4.13\tGeospatial (polygons)</s1>",
+  "target": "<s1>6.4.13\tGéospatial (polygones)</s1>"
+ },
+ {
+  "source": "<s1>Geospatial attributes store a polygon, e.g. the boundary of a site, a plot or a stand.</s1>",
+  "target": "<s1>Les attributs géospatiaux stockent un polygone, par exemple la limite d’un site, d’une placette ou d’un peuplement.</s1>"
+ },
+ {
+  "source": "<s1>Press </s1><s2>Draw polygon</s2><s3> and tap the map to add the points of the boundary; while walking along the boundary, you can also use </s3><s4>Add current location</s4><s5> to add your current location as a point. Press </s5><s6>Stop</s6><s7> when done.</s7>",
+  "target": "<s1>Appuyez sur </s1><s2>Dessiner un polygone</s2><s3> et touchez la carte pour ajouter les points de la limite ; en marchant le long de la limite, vous pouvez également utiliser </s3><s4>Ajouter la position actuelle</s4><s5> pour ajouter votre position actuelle comme point. Appuyez sur </s5><s6>Arrêter</s6><s7> lorsque vous avez terminé.</s7>"
+ },
+ {
+  "source": "<s1>To edit the polygon (</s1><s2>Edit polygon</s2><s3>), tap a point to select it, then long-press it and drag it to move it; tap a midpoint to add a new point; use </s3><s4>Delete selected point</s4><s5> to remove the selected point. Then press </s5><s6>Save</s6><s7>.</s7>",
+  "target": "<s1>Pour modifier le polygone (</s1><s2>Modifier le polygone</s2><s3>), touchez un point pour le sélectionner, puis appuyez longuement dessus et faites-le glisser pour le déplacer ; touchez un point médian pour ajouter un nouveau point ; utilisez </s3><s4>Supprimer le point sélectionné</s4><s5> pour retirer le point sélectionné. Appuyez ensuite sur </s5><s6>Enregistrer</s6><s7>.</s7>"
+ },
+ {
+  "source": "<s1>The polygon can be downloaded as a GeoJSON file (download button) or cleared (trash button).</s1>",
+  "target": "<s1>Le polygone peut être téléchargé sous forme de fichier GeoJSON (bouton de téléchargement) ou effacé (bouton corbeille).</s1>"
+ },
+ {
+  "source": "<s1>The map used depends on the </s1><s2>Map provider</s2><s3> setting; with free map layers it works offline with the downloaded map areas (see </s3><s4>Maps</s4><s5>).</s5>",
+  "target": "<s1>La carte utilisée dépend du paramètre </s1><s2>Map provider</s2><s3> ; avec les couches de carte gratuites, elle fonctionne hors ligne avec les zones de carte téléchargées (voir </s3><s4>Cartes</s4><s5>).</s5>"
+ },
+ {
+  "source": "<s1>A geospatial attribute can also be marked in Arena as </s1><s2>Position tracking</s2><s3>: in this case its value is the path walked while filling in the record (see </s3><s4>Position tracking</s4><s5>).</s5>",
+  "target": "<s1>Un attribut géospatial peut également être marqué dans Arena comme </s1><s2>Position tracking</s2><s3> : dans ce cas, sa valeur est le trajet parcouru pendant le remplissage de l’enregistrement (voir </s3><s4>Suivi de position</s4><s5>).</s5>"
+ },
+ {
+  "source": "<s1>6.5\tNavigating to the target location</s1>",
+  "target": "<s1>6.5\tNavigation vers la position cible</s1>"
+ },
+ {
+  "source": "<s1>If a </s1><s2>coordinate attribute</s2><s3> contains a validation rule with the “</s3><s4>distance</s4><s5>” or “</s5><s6>geoDistance</s6><s7>” function (e.g., </s7><s8>distance(this, target_location) < 100</s8><s9>), then in the data entry form, there will be the possibility to “navigate” to the target location (i.e., to the coordinate referenced by the distance function).</s9>",
+  "target": "<s1>Si un </s1><s2>attribut de coordonnées</s2><s3> contient une règle de validation utilisant la fonction « </s3><s4>distance</s4><s5> » ou « </s5><s6>geoDistance</s6><s7> » (par exemple, </s7><s8>distance(this, target_location) < 100</s8><s9>), le formulaire de saisie offre la possibilité de « naviguer » vers la position cible (c’est-à-dire vers la coordonnée référencée par la fonction distance).</s9>"
+ },
+ {
+  "source": "<s1>This feature requires only a good GPS signal. It does not require an internet connection.</s1>",
+  "target": "<s1>Cette fonctionnalité nécessite uniquement un bon signal GPS. Elle ne nécessite pas de connexion internet.</s1>"
+ },
+ {
+  "source": "<s1>In the coordinate attribute editor, a button with a compass icon will appear as follows:</s1>",
+  "target": "<s1>Dans l’éditeur de l’attribut de coordonnées, un bouton avec une icône de boussole s’affiche comme suit :</s1>"
+ },
+ {
+  "source": "<s1>Pressing that button will open the </s1><s2>Navigate to target</s2><s3> dialog (Location Navigator), showing your position relative to the target:</s3>",
+  "target": "<s1>Appuyer sur ce bouton ouvre la boîte de dialogue </s1><s2>Naviguer vers la cible</s2><s3> (navigateur de position), qui affiche votre position par rapport à la cible :</s3>"
+ },
+ {
+  "source": "<s1>Two view modes are available:</s1>",
+  "target": "<s1>Deux modes d’affichage sont disponibles :</s1>"
+ },
+ {
+  "source": "<s1>Compass</s1><s2>: a rotating compass rose aligned to North, with an arrow pointing toward the target. When very close to the target, the arrow is replaced with a dot on the accuracy circle showing the target’s relative position.</s2>",
+  "target": "<s1>Boussole</s1><s2> : une rose des vents rotative alignée sur le Nord, avec une flèche pointant vers la cible. Très près de la cible, la flèche est remplacée par un point sur le cercle de précision indiquant la position relative de la cible.</s2>"
+ },
+ {
+  "source": "<s1>Radar</s1><s2>: a top-down view with your position fixed at the center; the target dot moves around you in real time to reflect its actual direction and distance.</s2>",
+  "target": "<s1>Radar</s1><s2> : une vue de dessus où votre position est fixée au centre ; le point de la cible se déplace autour de vous en temps réel pour refléter sa direction et sa distance réelles.</s2>"
+ },
+ {
+  "source": "<s1>The direction (heading) can be taken from two </s1><s2>heading sources</s2><s3>:</s3>",
+  "target": "<s1>La direction (cap) peut provenir de deux </s1><s2>sources de cap</s2><s3> :</s3>"
+ },
+ {
+  "source": "<s1>Sensor</s1><s2> (magnetometer): works while standing still, but can be affected by nearby metal objects or magnetic interference. Please notice that it requires that the device has a magnetometer sensor; some cheap models may not have it!</s2>",
+  "target": "<s1>Capteur</s1><s2> (magnétomètre) : fonctionne même à l’arrêt, mais peut être perturbé par des objets métalliques à proximité ou des interférences magnétiques. Notez que cela nécessite que l’appareil dispose d’un capteur magnétomètre ; certains modèles bon marché n’en ont pas !</s2>"
+ },
+ {
+  "source": "<s1>GPS</s1><s2>: derives the heading from your movement. More accurate in open spaces, but it requires you to be walking and may not be available on all devices.</s2>",
+  "target": "<s1>GPS</s1><s2> : déduit le cap de vos déplacements. Plus précis dans les espaces dégagés, mais nécessite que vous soyez en train de marcher et peut ne pas être disponible sur tous les appareils.</s2>"
+ },
+ {
+  "source": "<s1>The following information is shown:</s1>",
+  "target": "<s1>Les informations suivantes sont affichées :</s1>"
+ },
+ {
+  "source": "<s1>accuracy of the measured coordinate,</s1>",
+  "target": "<s1>précision de la coordonnée mesurée,</s1>"
+ },
+ {
+  "source": "<s1>distance to target (in meters),</s1>",
+  "target": "<s1>distance jusqu’à la cible (en mètres),</s1>"
+ },
+ {
+  "source": "<s1>heading (azimuth angle from North</s1><x2/><s3>),</s3>",
+  "target": "<s1>cap (angle d’azimut par rapport au Nord</s1><x2/><s3>),</s3>"
+ },
+ {
+  "source": "<s1>angle to target (relative to North),</s1>",
+  "target": "<s1>angle vers la cible (par rapport au Nord),</s1>"
+ },
+ {
+  "source": "<s1>current location (in latitude-longitude).</s1>",
+  "target": "<s1>position actuelle (en latitude-longitude).</s1>"
+ },
+ {
+  "source": "<s1>The arrow can have three colors, as follows:</s1>",
+  "target": "<s1>La flèche peut prendre trois couleurs :</s1>"
+ },
+ {
+  "source": "<s1>green: the difference between the angle to target and the heading is less than 20° (you are going in the right direction),</s1>",
+  "target": "<s1>vert : la différence entre l’angle vers la cible et le cap est inférieure à 20° (vous allez dans la bonne direction),</s1>"
+ },
+ {
+  "source": "<s1>orange: the difference is less than 45°,</s1>",
+  "target": "<s1>orange : la différence est inférieure à 45°,</s1>"
+ },
+ {
+  "source": "<s1>red: the difference is greater than 45°.</s1>",
+  "target": "<s1>rouge : la différence est supérieure à 45°.</s1>"
+ },
+ {
+  "source": "<s1>Following the arrow and the distance to the target will guide you to reach the target location without looking at a map. Press </s1><s2>Use current location</s2><s3> to use your current location as the value of the coordinate attribute.</s3>",
+  "target": "<s1>En suivant la flèche et la distance jusqu’à la cible, vous pouvez atteindre la position cible sans regarder de carte. Appuyez sur </s1><s2>Utiliser la position actuelle</s2><s3> pour utiliser votre position actuelle comme valeur de l’attribut de coordonnées.</s3>"
+ },
+ {
+  "source": "<s1>6.6\tFinding the closest sampling point</s1>",
+  "target": "<s1>6.6\tRecherche du point d’échantillonnage le plus proche</s1>"
+ },
+ {
+  "source": "<s1>When a </s1><s2>code attribute</s2><s3> uses the “</s3><s4>sampling_point_data</s4><s5>” as a category table, each item in the category can have a coordinate associated with it. In this case, the user has the possibility to see the closest sampling point based on their current location.</s5>",
+  "target": "<s1>Lorsqu’un </s1><s2>attribut de code</s2><s3> utilise « </s3><s4>sampling_point_data</s4><s5> » comme table de catégorie, chaque élément de la catégorie peut être associé à une coordonnée. Dans ce cas, l’utilisateur peut voir le point d’échantillonnage le plus proche en fonction de sa position actuelle.</s5>"
+ },
+ {
+  "source": "<s1>Close to the dropdown where the user can select the category item, the button </s1><s2>Find closest sampling point</s2><s3> will appear:</s3>",
+  "target": "<s1>À côté de la liste déroulante permettant de sélectionner l’élément de catégorie, le bouton </s1><s2>Trouver le point d'échantillonnage le plus proche</s2><s3> s’affiche :</s3>"
+ },
+ {
+  "source": "<s1>Pressing that button will open a new dialog; Arena Mobile will start fetching the current location:</s1>",
+  "target": "<s1>Appuyer sur ce bouton ouvre une nouvelle boîte de dialogue ; Arena Mobile commence à obtenir la position actuelle :</s1>"
+ },
+ {
+  "source": "<s1>When the location has been fetched, one or a list of possible points will appear with the distance from the current location. These will be shown as follows:</s1>",
+  "target": "<s1>Une fois la position obtenue, un point ou une liste de points possibles s’affiche avec la distance par rapport à la position actuelle. Ils s’affichent comme suit :</s1>"
+ },
+ {
+  "source": "<s1>Confirming the selection (</s1><s2>Use selected item</s2><s3>) will close the dialog and let the user go back to the data entry form.</s3>",
+  "target": "<s1>La confirmation de la sélection (</s1><s2>Utiliser l'élément sélectionné</s2><s3>) ferme la boîte de dialogue et ramène l’utilisateur au formulaire de saisie.</s3>"
+ },
+ {
+  "source": "<s1>6.7\tSingle node view mode</s1>",
+  "target": "<s1>6.7\tMode d’affichage nœud unique</s1>"
+ },
+ {
+  "source": "<s1>By default, Arena Mobile shows the data entry form like a “form” with the attributes arranged vertically in a single column.</s1>",
+  "target": "<s1>Par défaut, Arena Mobile affiche le formulaire de saisie comme un « formulaire », avec les attributs disposés verticalement sur une seule colonne.</s1>"
+ },
+ {
+  "source": "<s1>The “single node” view mode can be useful especially when working with small devices: it helps to focus on one particular attribute at a time.</s1>",
+  "target": "<s1>Le mode d’affichage « nœud unique » peut être utile, notamment sur les petits appareils : il permet de se concentrer sur un seul attribut à la fois.</s1>"
+ },
+ {
+  "source": "<s1>If you want to switch to the “single node view mode”, press the icon </s1><x2/><s3> in the top bar while you are editing a record (the icon will turn into this </s3><x4/><s5>: press it again to go back to the form view mode).</s5>",
+  "target": "<s1>Pour passer au « mode d’affichage nœud unique », appuyez sur l’icône </s1><x2/><s3> dans la barre supérieure pendant la modification d’un enregistrement (l’icône devient celle-ci </s3><x4/><s5> : appuyez de nouveau dessus pour revenir au mode formulaire).</s5>"
+ },
+ {
+  "source": "<s1>A dotted bar will appear below, showing the position of the current attribute inside the current entity.</s1>",
+  "target": "<s1>Une barre en pointillés s’affiche en dessous, indiquant la position de l’attribut actuel dans l’entité actuelle.</s1>"
+ },
+ {
+  "source": "<s1>You can navigate from one attribute to another inside the same entity:</s1>",
+  "target": "<s1>Vous pouvez passer d’un attribut à l’autre au sein de la même entité :</s1>"
+ },
+ {
+  "source": "<s1>swiping from left to right or from right to left;</s1>",
+  "target": "<s1>en balayant de gauche à droite ou de droite à gauche ;</s1>"
+ },
+ {
+  "source": "<s1>using the buttons in the bottom bar: left (</s1><s2><</s2><s3>) and right (</s3><s4>></s4><s5>).</s5>",
+  "target": "<s1>en utilisant les boutons de la barre inférieure : gauche (</s1><s2><</s2><s3>) et droite (</s3><s4>></s4><s5>).</s5>"
+ },
+ {
+  "source": "<s1>Also, the left side navigation panel will change in this view mode, showing the list of attributes inside the current entity:</s1>",
+  "target": "<s1>Dans ce mode d’affichage, le panneau de navigation latéral gauche change également et affiche la liste des attributs de l’entité actuelle :</s1>"
+ },
+ {
+  "source": "<s1>6.8\tData entry with multiple entities (forms or tables)</s1>",
+  "target": "<s1>6.8\tSaisie de données avec des entités multiples (formulaires ou tableaux)</s1>"
+ },
+ {
+  "source": "<s1>When filling data for a multiple entity (that can have a table or form layout), Arena Mobile shows a landing page with a preview of the collected entities:</s1>",
+  "target": "<s1>Lors de la saisie des données d’une entité multiple (qui peut avoir une présentation en tableau ou en formulaire), Arena Mobile affiche une page d’accueil avec un aperçu des entités collectées :</s1>"
+ },
+ {
+  "source": "<s1>On this page, it is possible to edit an entity by pressing the corresponding row or delete one or more entities by long pressing the corresponding rows and pressing the </s1><s2>Delete</s2><s3> button that appears.</s3>",
+  "target": "<s1>Sur cette page, vous pouvez modifier une entité en appuyant sur la ligne correspondante, ou supprimer une ou plusieurs entités en appuyant longuement sur les lignes correspondantes puis sur le bouton </s1><s2>Supprimer</s2><s3> qui s’affiche.</s3>"
+ },
+ {
+  "source": "<s1>The attributes shown in the list are the key attributes and the attributes marked with “Include in multiple entity summary” in the Arena survey designer. When the key attributes are few and there is space (for example, when using a tablet or when rotating the smartphone and using it with landscape orientation), other attributes in the entity will be shown (up to 5).</s1>",
+  "target": "<s1>Les attributs affichés dans la liste sont les attributs clés et les attributs marqués « Inclure dans le résumé de l’entité multiple » (Include in multiple entity summary) dans le concepteur d’enquêtes d’Arena. Lorsque les attributs clés sont peu nombreux et qu’il y a de la place (par exemple sur une tablette, ou en faisant pivoter le smartphone pour l’utiliser en mode paysage), d’autres attributs de l’entité sont affichés (jusqu’à 5).</s1>"
+ },
+ {
+  "source": "<s1>The list can be sorted by pressing the column headers. Press </s1><s2>Columns</s2><s3> to choose the </s3><s4>Visible columns</s4><s5>: key attributes, summary attributes and other attributes can be shown or hidden (</s5><s6>Show all</s6><s7>, </s7><s8>Hide all</s8><s9>, or </s9><s10>Default</s10><s11> to go back to the default columns).</s11>",
+  "target": "<s1>La liste peut être triée en appuyant sur les en-têtes de colonne. Appuyez sur </s1><s2>Colonnes</s2><s3> pour choisir les </s3><s4>Colonnes visibles</s4><s5> : les attributs clés, les attributs de résumé et les autres attributs peuvent être affichés ou masqués (</s5><s6>Tout afficher</s6><s7>, </s7><s8>Tout masquer</s8><s9>, ou </s9><s10>Par défaut</s10><s11> pour revenir aux colonnes par défaut).</s11>"
+ },
+ {
+  "source": "<s1>6.9\tLink to the record in the previous cycle</s1>",
+  "target": "<s1>6.9\tLien vers l’enregistrement du cycle précédent</s1>"
+ },
+ {
+  "source": "<s1>In a survey with multiple cycles, the user can “link” the record being edited to a record in one of the previous cycles (if the record key matches the one of a record previously inserted).</s1>",
+  "target": "<s1>Dans une enquête comportant plusieurs cycles, l’utilisateur peut « lier » l’enregistrement en cours de modification à un enregistrement de l’un des cycles précédents (si la clé de l’enregistrement correspond à celle d’un enregistrement saisi précédemment).</s1>"
+ },
+ {
+  "source": "<s1>When editing a record in a multiple-cycle survey, the top bar changes, and another button will be visible:</s1>",
+  "target": "<s1>Lors de la modification d’un enregistrement dans une enquête multi-cycles, la barre supérieure change et un autre bouton devient visible :</s1>"
+ },
+ {
+  "source": "<s1>Pressing that button will open a dialog, where you will have to specify the cycle you want to link to (if the cycles are more than 2, otherwise there will be only one previous cycle to link to):</s1>",
+  "target": "<s1>Appuyer sur ce bouton ouvre une boîte de dialogue dans laquelle vous devez indiquer le cycle auquel vous souhaitez vous lier (s’il y a plus de 2 cycles ; sinon, il n’y a qu’un seul cycle précédent possible) :</s1>"
+ },
+ {
+  "source": "<s1>Once confirmed, Arena Mobile will look for a record in the selected cycle matching the same keys as the current one. First, it will try to look for the key among the records already in the device; otherwise, it will look for it in the remote server. If the record is found, it will ask for a confirmation to “fetch” the record from the server. If the record is not found, you will see a message at the bottom of the screen:</s1>",
+  "target": "<s1>Après confirmation, Arena Mobile recherche dans le cycle sélectionné un enregistrement ayant les mêmes clés que l’enregistrement actuel. Il le recherche d’abord parmi les enregistrements déjà présents sur l’appareil, puis, à défaut, sur le serveur distant. Si l’enregistrement est trouvé, une confirmation vous est demandée pour le « récupérer » depuis le serveur. Si l’enregistrement n’est pas trouvé, un message s’affiche en bas de l’écran :</s1>"
+ },
+ {
+  "source": "<s1>Otherwise, you will see a confirmation message saying that the record has been fetched:</s1>",
+  "target": "<s1>Sinon, un message de confirmation indique que l’enregistrement a été récupéré :</s1>"
+ },
+ {
+  "source": "<s1>The icon in the top bar will change, and for every attribute in the record, you will see a box containing the value in the linked previous cycle record:</s1>",
+  "target": "<s1>L’icône de la barre supérieure change et, pour chaque attribut de l’enregistrement, une zone affiche la valeur de l’enregistrement lié du cycle précédent :</s1>"
+ },
+ {
+  "source": "<s1>6.10\tKey attributes locking</s1>",
+  "target": "<s1>6.10\tVerrouillage des attributs clés</s1>"
+ },
+ {
+  "source": "<s1>To avoid changing them by mistake, key attributes that already have a value are locked: a lock icon is shown next to their label. Press the lock icon to unlock the attribute and change its value.</s1>",
+  "target": "<s1>Pour éviter de les modifier par erreur, les attributs clés qui ont déjà une valeur sont verrouillés : une icône de cadenas s’affiche à côté de leur étiquette. Appuyez sur l’icône de cadenas pour déverrouiller l’attribut et modifier sa valeur.</s1>"
+ },
+ {
+  "source": "<s1>6.11\tRecord completion</s1>",
+  "target": "<s1>6.11\tProgression de l’enregistrement</s1>"
+ },
+ {
+  "source": "<s1>A progress bar shows how much of the record’s requirements are already met (e.g. </s1><s2>64% completed</s2><s3>). It is shown at the top of the navigation sidebar, where each page also shows a status icon (completed, partially completed or not started):</s3>",
+  "target": "<s1>Une barre de progression indique dans quelle mesure les exigences de l’enregistrement sont déjà remplies (par exemple </s1><s2>64 % terminé</s2><s3>). Elle s’affiche en haut de la barre latérale de navigation, où chaque page affiche également une icône d’état (terminée, partiellement terminée ou non commencée) :</s3>"
+ },
+ {
+  "source": "<s1>The record completion progress can be turned off in </s1><s2>Settings</s2><s3> > </s3><s4>Data entry</s4><s5> > </s5><s6>Show record completion progress</s6><s7>.</s7>",
+  "target": "<s1>La progression de l’enregistrement peut être désactivée dans </s1><s2>Paramètres</s2><s3> > </s3><s4>Saisie de données</s4><s5> > </s5><s6>Afficher la progression de l'enregistrement</s6><s7>.</s7>"
+ },
+ {
+  "source": "<s1>6.12\tValues that no longer apply</s1>",
+  "target": "<s1>6.12\tValeurs qui ne s’appliquent plus</s1>"
+ },
+ {
+  "source": "<s1>When a change makes other attributes or entities not applicable (their “relevant if” condition is no longer met), Arena Mobile asks for confirmation before clearing them:</s1>",
+  "target": "<s1>Lorsqu’une modification rend d’autres attributs ou entités non applicables (leur condition « pertinent si » n’est plus remplie), Arena Mobile demande une confirmation avant de les effacer :</s1>"
+ },
+ {
+  "source": "<s1>A dialog titled </s1><s2>Nodes will no longer apply</s2><s3> lists the affected attributes and entities.</s3>",
+  "target": "<s1>Une boîte de dialogue intitulée </s1><s2>Les nœuds ne s'appliqueront plus</s2><s3> liste les attributs et entités concernés.</s3>"
+ },
+ {
+  "source": "<s1>Confirming clears their values; cancelling keeps the previous value of the attribute you were editing.</s1>",
+  "target": "<s1>La confirmation efface leurs valeurs ; l’annulation conserve la valeur précédente de l’attribut que vous modifiiez.</s1>"
+ },
+ {
+  "source": "<s1>The values are cleared also when the change is caused by adding or deleting an entity.</s1>",
+  "target": "<s1>Les valeurs sont également effacées lorsque la modification résulte de l’ajout ou de la suppression d’une entité.</s1>"
+ },
+ {
+  "source": "<s1>6.13\tAuto-sync</s1>",
+  "target": "<s1>6.13\tSynchronisation automatique</s1>"
+ },
+ {
+  "source": "<s1>With </s1><s2>Auto sync</s2><s3> enabled, Arena Mobile uploads new and modified records to the server automatically in the background, whenever an internet connection is available. It can be enabled with the </s3><s4>Auto sync</s4><s5> switch at the bottom of the list of records, or in the settings.</s5>",
+  "target": "<s1>Lorsque la </s1><s2>Synchronisation automatique</s2><s3> est activée, Arena Mobile envoie automatiquement au serveur, en arrière-plan, les enregistrements nouveaux et modifiés dès qu’une connexion internet est disponible. Elle peut être activée avec l’interrupteur </s3><s4>Synchronisation automatique</s4><s5> en bas de la liste des enregistrements, ou dans les paramètres.</s5>"
+ },
+ {
+  "source": "<s1>The </s1><s2>sync status icon</s2><s3> (in the records list and in the record editor top bar) shows: all records synchronized; records pending (they will be sent automatically); synchronization in progress (with percentage); records that need your attention; offline; session expired (log in again to resume).</s3>",
+  "target": "<s1>L’</s1><s2>icône d’état de synchronisation</s2><s3> (dans la liste des enregistrements et dans la barre supérieure de l’éditeur d’enregistrement) indique : tous les enregistrements synchronisés ; enregistrements en attente (ils seront envoyés automatiquement) ; synchronisation en cours (avec pourcentage) ; enregistrements nécessitant votre attention ; hors ligne ; session expirée (reconnectez-vous pour reprendre).</s3>"
+ },
+ {
+  "source": "<s1>Tap the icon to open the </s1><s2>Sync status</s2><s3> dialog, where you can also turn auto-sync on or off and use </s3><s4>Sync now</s4><s5> to sync immediately.</s5>",
+  "target": "<s1>Touchez l’icône pour ouvrir la boîte de dialogue </s1><s2>État de synchronisation</s2><s3>, dans laquelle vous pouvez également activer ou désactiver la synchronisation automatique et utiliser </s3><s4>Synchroniser maintenant</s4><s5> pour synchroniser immédiatement.</s5>"
+ },
+ {
+  "source": "<s1>The record open in the editor is uploaded only after it has been left untouched for the interval set in </s1><s2>Auto-sync interval while editing</s2><s3> (1–15 minutes).</s3>",
+  "target": "<s1>L’enregistrement ouvert dans l’éditeur n’est envoyé qu’après être resté inchangé pendant l’intervalle défini dans </s1><s2>Intervalle de synchronisation automatique pendant l'édition</s2><s3> (1–15 minutes).</s3>"
+ },
+ {
+  "source": "<s1>Once everything is synchronized, the app checks the server for changes made from other devices every </s1><s2>Auto-sync interval (slow check)</s2><s3> (2–60 minutes).</s3>",
+  "target": "<s1>Une fois que tout est synchronisé, l’application vérifie sur le serveur les modifications effectuées depuis d’autres appareils selon l’</s1><s2>Intervalle de synchronisation automatique (vérification lente)</s2><s3> (2–60 minutes).</s3>"
+ },
+ {
+  "source": "<s1>While auto-sync is running, sending data manually is not possible until it finishes.</s1>",
+  "target": "<s1>Pendant l’exécution de la synchronisation automatique, l’envoi manuel des données n’est pas possible tant qu’elle n’est pas terminée.</s1>"
+ },
+ {
+  "source": "<s1>Note:</s1><s2> Auto-sync may increase battery and mobile data usage when not on Wi-Fi.</s2>",
+  "target": "<s1>Remarque :</s1><s2> la synchronisation automatique peut augmenter la consommation de batterie et de données mobiles hors Wi-Fi.</s2>"
+ },
+ {
+  "source": "<s1>6.14\tRecords modified on several devices</s1>",
+  "target": "<s1>6.14\tEnregistrements modifiés sur plusieurs appareils</s1>"
+ },
+ {
+  "source": "<s1>If the same record was modified both on the device and on the server (for example, two team members adding trees and deadwood to the same plot), auto-sync merges the two versions automatically, without asking, provided the survey allows downloading records in Arena Mobile:</s1>",
+  "target": "<s1>Si le même enregistrement a été modifié à la fois sur l’appareil et sur le serveur (par exemple, deux membres de l’équipe ajoutant des arbres et du bois mort à la même placette), la synchronisation automatique fusionne automatiquement les deux versions, sans rien demander, à condition que l’enquête autorise le téléchargement des enregistrements dans Arena Mobile :</s1>"
+ },
+ {
+  "source": "<s1>For each attribute, the most recently edited value is kept; entities added on either side are kept.</s1>",
+  "target": "<s1>Pour chaque attribut, la valeur modifiée le plus récemment est conservée ; les entités ajoutées de part et d’autre sont conservées.</s1>"
+ },
+ {
+  "source": "<s1>After the merge, the merged record is downloaded and replaces the copy in the device (only files not already in the device are downloaded).</s1>",
+  "target": "<s1>Après la fusion, l’enregistrement fusionné est téléchargé et remplace la copie présente sur l’appareil (seuls les fichiers qui ne sont pas déjà sur l’appareil sont téléchargés).</s1>"
+ },
+ {
+  "source": "<s1>If the merged record is open in the editor, it becomes read-only for a few seconds (</s1><s2>This record is being synchronized with the server</s2><s3>) and is then reloaded on the same page.</s3>",
+  "target": "<s1>Si l’enregistrement fusionné est ouvert dans l’éditeur, il passe en lecture seule pendant quelques secondes (</s1><s2>Cet enregistrement est en cours de synchronisation avec le serveur</s2><s3>), puis il est rechargé sur la même page.</s3>"
+ },
+ {
+  "source": "<s1>Note:</s1><s2> A merge never deletes data: an entity deleted on one device can come back if the other device still has it.</s2>",
+  "target": "<s1>Remarque :</s1><s2> une fusion ne supprime jamais de données : une entité supprimée sur un appareil peut réapparaître si l’autre appareil la possède encore.</s2>"
+ },
+ {
+  "source": "<s1>Some records cannot be synced automatically until you fix them: records without key values, records that are no longer in the data entry step, or records with the same key(s) as another record on the server when merging is not allowed. Check their sync status in the records list.</s1>",
+  "target": "<s1>Certains enregistrements ne peuvent pas être synchronisés automatiquement tant que vous ne les avez pas corrigés : enregistrements sans valeurs de clé, enregistrements qui ne sont plus à l’étape de saisie, ou enregistrements ayant la ou les mêmes clés qu’un autre enregistrement du serveur lorsque la fusion n’est pas autorisée. Vérifiez leur état de synchronisation dans la liste des enregistrements.</s1>"
+ },
+ {
+  "source": "<s1>Note:</s1><s2> Changes are detected using the date of the device: make sure that the date and time of the device are correct. Records edited while the device date was behind the server date are not uploaded until you set the correct date and time and edit them again.</s2>",
+  "target": "<s1>Remarque :</s1><s2> les modifications sont détectées à l’aide de la date de l’appareil : assurez-vous que la date et l’heure de l’appareil sont correctes. Les enregistrements modifiés alors que la date de l’appareil était antérieure à celle du serveur ne sont pas envoyés tant que vous n’avez pas réglé la date et l’heure correctes et que vous ne les avez pas modifiés à nouveau.</s2>"
+ },
+ {
+  "source": "<s1>6.15\tMerging records with the same keys</s1>",
+  "target": "<s1>6.15\tFusion d’enregistrements ayant les mêmes clés</s1>"
+ },
+ {
+  "source": "<s1>When sending data, records that have the same key values as a different record already on the server can be merged into it (</s1><s2>Merge conflicting records</s2><s3>), if the survey administrator allowed it in the survey security settings. Otherwise those records are not sent: change their key values if they are different records, or contact the survey administrator if they are the same.</s3>",
+  "target": "<s1>Lors de l’envoi des données, les enregistrements ayant les mêmes valeurs de clé qu’un autre enregistrement déjà présent sur le serveur peuvent être fusionnés avec celui-ci (</s1><s2>Fusionner les enregistrements conflictuels</s2><s3>), si l’administrateur de l’enquête l’a autorisé dans les paramètres de sécurité de l’enquête. Sinon, ces enregistrements ne sont pas envoyés : modifiez leurs valeurs de clé s’il s’agit d’enregistrements différents, ou contactez l’administrateur de l’enquête s’il s’agit des mêmes.</s3>"
+ },
+ {
+  "source": "<s1>For records modified both on the device and on the server, the app asks to confirm the merge (</s1><s2>Merge records edited on both devices</s2><s3>) by swiping.</s3>",
+  "target": "<s1>Pour les enregistrements modifiés à la fois sur l’appareil et sur le serveur, l’application demande de confirmer la fusion (</s1><s2>Fusionner les enregistrements modifiés sur les deux appareils</s2><s3>) par un balayage.</s3>"
+ },
+ {
+  "source": "<s1>6.16\tRe-validating records</s1>",
+  "target": "<s1>6.16\tRevalidation des enregistrements</s1>"
+ },
+ {
+  "source": "<s1>If a record shows errors or warnings in the list that cannot be found when editing it, its validation can be recomputed:</s1>",
+  "target": "<s1>Si un enregistrement affiche dans la liste des erreurs ou des avertissements introuvables lors de sa modification, sa validation peut être recalculée :</s1>"
+ },
+ {
+  "source": "<s1>select one or more records and choose </s1><s2>Revalidate</s2><s3>, or</s3>",
+  "target": "<s1>sélectionnez un ou plusieurs enregistrements et choisissez </s1><s2>Revalider</s2><s3>, ou</s3>"
+ },
+ {
+  "source": "<s1>use </s1><s2>Revalidate all records</s2><s3> in the options of the list of records.</s3>",
+  "target": "<s1>utilisez </s1><s2>Revalider tous les enregistrements</s2><s3> dans les options de la liste des enregistrements.</s3>"
+ },
+ {
+  "source": "<s1>7\tData quality control</s1>",
+  "target": "<s1>7\tContrôle de la qualité des données</s1>"
+ },
+ {
+  "source": "<s1>7.1\tReal-time data validation</s1>",
+  "target": "<s1>7.1\tValidation des données en temps réel</s1>"
+ },
+ {
+  "source": "<s1>Arena Mobile supports real-time data validation. With the help of built-in data validation rules in the survey, Arena Mobile can search and list the possible errors in the input data. Arena supports a simple to complex set of </s1><s2>validation rules</s2><s3> and conditions to be fulfilled during the field data collection.</s3>",
+  "target": "<s1>Arena Mobile prend en charge la validation des données en temps réel. Grâce aux règles de validation des données intégrées à l’enquête, Arena Mobile peut rechercher et lister les erreurs possibles dans les données saisies. Arena prend en charge un ensemble de </s1><s2>règles de validation</s2><s3>, simples ou complexes, et de conditions à respecter pendant la collecte des données sur le terrain.</s3>"
+ },
+ {
+  "source": "<s1>7.2\tValidation report</s1>",
+  "target": "<s1>7.2\tRapport de validation</s1>"
+ },
+ {
+  "source": "<s1>The Validation Report can show a complete list of errors and warnings in the survey data, based on the validation rules set for the survey.</s1>",
+  "target": "<s1>Le rapport de validation peut afficher une liste complète des erreurs et des avertissements présents dans les données de l’enquête, en fonction des règles de validation définies pour l’enquête.</s1>"
+ },
+ {
+  "source": "<s1>It is highly suggested to review the </s1><s2>Validation Report</s2><s3> every time and fix the errors before submitting the data to the server.</s3>",
+  "target": "<s1>Il est fortement recommandé de consulter le </s1><s2>Rapport de validation</s2><s3> à chaque fois et de corriger les erreurs avant d’envoyer les données au serveur.</s3>"
+ },
+ {
+  "source": "<s1>To access the Validation Report, press the icon </s1><x2/><s3> in the top bar. The validation report will be shown on a separate screen:</s3>",
+  "target": "<s1>Pour accéder au rapport de validation, appuyez sur l’icône </s1><x2/><s3> dans la barre supérieure. Le rapport de validation s’affiche sur un écran distinct :</s3>"
+ },
+ {
+  "source": "<s1>By selecting an issue on the Validation Report list, you can directly navigate to the error case. Once the data is updated with a correct response, the error will disappear from the Validation Report list.</s1>",
+  "target": "<s1>En sélectionnant un problème dans la liste du rapport de validation, vous pouvez accéder directement à l’erreur concernée. Une fois les données corrigées avec une réponse valide, l’erreur disparaît de la liste du rapport de validation.</s1>"
+ },
+ {
+  "source": "<s1>7.3\tLocking of the records</s1>",
+  "target": "<s1>7.3\tVerrouillage des enregistrements</s1>"
+ },
+ {
+  "source": "<s1>Mistakes can happen due to unintentional swipes or touches on the device screen. Arena Mobile has a data-locking feature to avoid these types of issues.</s1>",
+  "target": "<s1>Des erreurs peuvent survenir en raison de balayages ou de touchers involontaires sur l’écran de l’appareil. Arena Mobile dispose d’une fonction de verrouillage des données pour éviter ce type de problème.</s1>"
+ },
+ {
+  "source": "<s1>Once the enumerator goes back to the </s1><s2>Records</s2><s3> list and selects any of the records there, the record will be in the locked state and will not be modifiable. To make changes, the enumerator must unlock the data for editing by pressing the </s3><x4/><s5> icon in the top bar:</s5>",
+  "target": "<s1>Lorsque l’enquêteur revient à la liste des </s1><s2>Enregistrements</s2><s3> et sélectionne l’un des enregistrements, celui-ci est verrouillé et ne peut pas être modifié. Pour effectuer des modifications, l’enquêteur doit déverrouiller les données en appuyant sur l’icône </s3><x4/><s5> dans la barre supérieure :</s5>"
+ },
+ {
+  "source": "<s1>8\tData submission to Arena Server</s1>",
+  "target": "<s1>8\tEnvoi des données au serveur Arena</s1>"
+ },
+ {
+  "source": "<s1>To transfer data to the Arena server from your device, follow the next steps (or enable </s1><s2>Auto-sync</s2><s3> to send the data automatically). You can also press </s3><s4>Sync</s4><s5> on the home page: it starts the same process described below.</s5>",
+  "target": "<s1>Pour transférer les données de votre appareil vers le serveur Arena, suivez les étapes ci-dessous (ou activez la </s1><s2>Synchronisation automatique</s2><s3> pour envoyer les données automatiquement). Vous pouvez également appuyer sur </s3><s4>Synchroniser</s4><s5> sur la page d’accueil : cela lance le même processus que celui décrit ci-dessous.</s5>"
+ },
+ {
+  "source": "<s1>Once you are okay with your data, go to the list of records:</s1>",
+  "target": "<s1>Lorsque vos données vous conviennent, accédez à la liste des enregistrements :</s1>"
+ },
+ {
+  "source": "<s1>On the records screen, you will see all the records collected using the current survey. Press the </s1><s2>Send data</s2><s3> button at the bottom of the screen </s3><x4/><s5>.</s5>",
+  "target": "<s1>Sur l’écran des enregistrements, vous verrez tous les enregistrements collectés avec l’enquête actuelle. Appuyez sur le bouton </s1><s2>Envoyer données</s2><s3> en bas de l’écran </s3><x4/><s5>.</s5>"
+ },
+ {
+  "source": "<s1>A confirmation dialog will appear; if there are only new or updated records, uploading data to the server will be quite easy:</s1>",
+  "target": "<s1>Une boîte de dialogue de confirmation s’affiche ; s’il n’y a que des enregistrements nouveaux ou mis à jour, l’envoi des données au serveur est très simple :</s1>"
+ },
+ {
+  "source": "<s1>When you confirm the data export, wait for the process to complete; the upload progress shows the file size, the upload speed and the estimated time left. If the connection is interrupted, the upload continues from the last part received by the server.</s1>",
+  "target": "<s1>Après avoir confirmé l’export des données, attendez la fin du processus ; la progression de l’envoi affiche la taille du fichier, la vitesse d’envoi et le temps restant estimé. Si la connexion est interrompue, l’envoi reprend à partir de la dernière partie reçue par le serveur.</s1>"
+ },
+ {
+  "source": "<s1>Once the process is complete, you can close the dialog and see that in your records list, all the rows will have a small green icon, meaning that the records have been sent successfully to the server:</s1>",
+  "target": "<s1>Une fois le processus terminé, vous pouvez fermer la boîte de dialogue : dans votre liste d’enregistrements, toutes les lignes affichent une petite icône verte, ce qui signifie que les enregistrements ont bien été envoyés au serveur :</s1>"
+ },
+ {
+  "source": "<s1>When you press the </s1><s2>Send data</s2><s3> button, Arena Mobile will check the synchronization status of each record, and a small icon will appear in each row depending on the status of the record. If you press that icon, you will see a detailed message, e.g.:</s3>",
+  "target": "<s1>Lorsque vous appuyez sur le bouton </s1><s2>Envoyer données</s2><s3>, Arena Mobile vérifie l’état de synchronisation de chaque enregistrement, et une petite icône s’affiche sur chaque ligne selon l’état de l’enregistrement. Si vous appuyez sur cette icône, un message détaillé s’affiche, par exemple :</s3>"
+ },
+ {
+  "source": "<s1>new (not uploaded yet);</s1>",
+  "target": "<s1>nouveau (pas encore téléchargé) ;</s1>"
+ },
+ {
+  "source": "<s1>not modified (no changes to upload);</s1>",
+  "target": "<s1>non modifié (aucune modification à télécharger) ;</s1>"
+ },
+ {
+  "source": "<s1>modified locally (it can be uploaded to the server);</s1>",
+  "target": "<s1>modifié localement (il peut être envoyé au serveur) ;</s1>"
+ },
+ {
+  "source": "<s1>modified in remote server;</s1>",
+  "target": "<s1>modifié sur le serveur distant ;</s1>"
+ },
+ {
+  "source": "<s1>modified both locally and in remote server (see </s1><s2>Merging records with the same keys</s2><s3>);</s3>",
+  "target": "<s1>modifié localement et sur le serveur distant (voir </s1><s2>Fusion d’enregistrements ayant les mêmes clés</s2><s3>) ;</s3>"
+ },
+ {
+  "source": "<s1>key(s) not specified;</s1>",
+  "target": "<s1>clé(s) non spécifiée(s) ;</s1>"
+ },
+ {
+  "source": "<s1>record with same key(s) already exists;</s1>",
+  "target": "<s1>un enregistrement avec la/les même(s) clé(s) existe déjà ;</s1>"
+ },
+ {
+  "source": "<s1>not in entry step anymore (in cleansing or analysis step).</s1>",
+  "target": "<s1>plus à l’étape de saisie (à l’étape de nettoyage ou d’analyse).</s1>"
+ },
+ {
+  "source": "<s1>In case there are conflicting records, press the cancel button, check in the records list which ones are conflicting, and double-check with the data manager if these records can be uploaded to the server and merged with the existing ones, before uploading them to the server.</s1>",
+  "target": "<s1>En cas d’enregistrements conflictuels, appuyez sur le bouton d’annulation, vérifiez dans la liste des enregistrements lesquels sont en conflit, et vérifiez auprès du gestionnaire des données si ces enregistrements peuvent être envoyés au serveur et fusionnés avec les enregistrements existants, avant de les envoyer au serveur.</s1>"
+ },
+ {
+  "source": "<s1>The menu that opens pressing the icon in the bottom right corner of the records list contains also:</s1>",
+  "target": "<s1>Le menu qui s’ouvre en appuyant sur l’icône dans le coin inférieur droit de la liste des enregistrements contient également :</s1>"
+ },
+ {
+  "source": "<s1>Check status</s1><s2>: checks the synchronization status of the records with the server;</s2>",
+  "target": "<s1>Vérifier synchronisation</s1><s2> : vérifie l’état de synchronisation des enregistrements avec le serveur ;</s2>"
+ },
+ {
+  "source": "<s1>Export new or updated records</s1><s2>: sends the new or updated records to the server;</s2>",
+  "target": "<s1>Exporter les nouveaux enregistrements ou les enregistrements mis à jour</s1><s2> : envoie au serveur les enregistrements nouveaux ou mis à jour ;</s2>"
+ },
+ {
+  "source": "<s1>Local backup</s1><s2>: exports all the records into a .zip file, saved in the Download folder or shared with another app (it can be imported again with </s2><s3>Options</s3><s4> > </s4><s5>Import</s5><s6>);</s6>",
+  "target": "<s1>Sauvegarde locale</s1><s2> : exporte tous les enregistrements dans un fichier .zip, enregistré dans le dossier Téléchargements ou partagé avec une autre application (il peut être réimporté avec </s2><s3>Options</s3><s4> > </s4><s5>Importer</s5><s6>) ;</s6>"
+ },
+ {
+  "source": "<s1>Export to CSV</s1><s2>: see </s2><s3>Exporting data to CSV</s3><s4>.</s4>",
+  "target": "<s1>Exporter en CSV</s1><s2> : voir </s2><s3>Export des données au format CSV</s3><s4>.</s4>"
+ },
+ {
+  "source": "<s1>8.1\tSubmitting only selected records to the server</s1>",
+  "target": "<s1>8.1\tEnvoi au serveur des seuls enregistrements sélectionnés</s1>"
+ },
+ {
+  "source": "<s1>In some cases (for example, if you have a very bad internet connection and you cannot submit all the records together to the server, since the transfer process would require too much time), it would be necessary to submit only a subset of the records to the server.</s1>",
+  "target": "<s1>Dans certains cas (par exemple, si vous disposez d’une très mauvaise connexion internet et que vous ne pouvez pas envoyer tous les enregistrements ensemble au serveur, car le transfert prendrait trop de temps), il peut être nécessaire de n’envoyer au serveur qu’une partie des enregistrements.</s1>"
+ },
+ {
+  "source": "<s1>To do this, you have to:</s1>",
+  "target": "<s1>Pour ce faire, vous devez :</s1>"
+ },
+ {
+  "source": "<s1>Check the data synchronization status by pressing the menu item </s1><s2>Check status</s2><s3> in the menu that opens pressing the icon in the bottom right corner:</s3>",
+  "target": "<s1>Vérifier l’état de synchronisation des données en appuyant sur l’élément </s1><s2>Vérifier synchronisation</s2><s3> du menu qui s’ouvre en appuyant sur l’icône dans le coin inférieur droit :</s3>"
+ },
+ {
+  "source": "<s1>long-press the rows with the records you want to submit to the server to select them:</s1>",
+  "target": "<s1>appuyer longuement sur les lignes des enregistrements que vous souhaitez envoyer au serveur pour les sélectionner :</s1>"
+ },
+ {
+  "source": "<s1>In the bar that appears on top, press the button </s1><s2>Export</s2><s3>.</s3>",
+  "target": "<s1>Dans la barre qui s’affiche en haut, appuyer sur le bouton </s1><s2>Exporter</s2><s3>.</s3>"
+ },
+ {
+  "source": "<s1>After confirming the export process in the dialog, the data export process will start and will take into account only the selected records.</s1>",
+  "target": "<s1>Après confirmation dans la boîte de dialogue, le processus d’export des données démarre et ne prend en compte que les enregistrements sélectionnés.</s1>"
+ },
+ {
+  "source": "<s1>8.2\tExporting data to CSV</s1>",
+  "target": "<s1>8.2\tExport des données au format CSV</s1>"
+ },
+ {
+  "source": "<s1>The records in the device can be exported to CSV files (one for every entity), e.g. to check them in a spreadsheet: in the records list, open the menu in the bottom right corner and press </s1><s2>Export to CSV</s2><s3>.</s3>",
+  "target": "<s1>Les enregistrements présents sur l’appareil peuvent être exportés vers des fichiers CSV (un par entité), par exemple pour les vérifier dans un tableur : dans la liste des enregistrements, ouvrez le menu dans le coin inférieur droit et appuyez sur </s1><s2>Exporter en CSV</s2><s3>.</s3>"
+ },
+ {
+  "source": "<s1>Select the export options:</s1>",
+  "target": "<s1>Sélectionnez les options d’export :</s1>"
+ },
+ {
+  "source": "<s1>Add cycle</s1><s2> (in multi-cycle surveys);</s2>",
+  "target": "<s1>Ajouter le cycle</s1><s2> (dans les enquêtes multi-cycles) ;</s2>"
+ },
+ {
+  "source": "<s1>Ancestor attributes</s1><s2>;</s2>",
+  "target": "<s1>Attributs ancêtres</s1><s2> ;</s2>"
+ },
+ {
+  "source": "<s1>Category items labels</s1><s2>;</s2>",
+  "target": "<s1>Étiquettes des éléments de catégorie</s1><s2> ;</s2>"
+ },
+ {
+  "source": "<s1>File attributes</s1><s2>: the files attached to the records (images, videos, audio files) are also exported;</s2>",
+  "target": "<s1>Attributs de fichier</s1><s2> : les fichiers joints aux enregistrements (images, vidéos, fichiers audio) sont également exportés ;</s2>"
+ },
+ {
+  "source": "<s1>Taxon scientific name</s1><s2>.</s2>",
+  "target": "<s1>Nom scientifique du taxon</s1><s2>.</s2>"
+ },
+ {
+  "source": "<s1>The exported file can then be shared or saved with another app.</s1>",
+  "target": "<s1>Le fichier exporté peut ensuite être partagé ou enregistré avec une autre application.</s1>"
+ },
+ {
+  "source": "<s1>9\tLocation and GPS</s1>",
+  "target": "<s1>9\tLocalisation et GPS</s1>"
+ },
+ {
+  "source": "<s1>9.1\tUsing an external Bluetooth GPS device</s1>",
+  "target": "<s1>9.1\tUtilisation d’un appareil GPS Bluetooth externe</s1>"
+ },
+ {
+  "source": "<s1>Arena Mobile can use a Bluetooth GPS receiver instead of the phone or tablet’s built-in GPS when recording coordinate attributes. External receivers are typically survey-grade and can provide significantly better accuracy than a phone’s internal GPS chip, which is useful when a survey requires precise plot or point locations.</s1>",
+  "target": "<s1>Arena Mobile peut utiliser un récepteur GPS Bluetooth à la place du GPS intégré du téléphone ou de la tablette pour enregistrer les attributs de coordonnées. Les récepteurs externes sont généralement de qualité topographique et peuvent offrir une précision nettement supérieure à celle de la puce GPS interne d’un téléphone, ce qui est utile lorsqu’une enquête exige des positions précises de placettes ou de points.</s1>"
+ },
+ {
+  "source": "<s1>9.1.1\tSupported devices</s1>",
+  "target": "<s1>9.1.1\tAppareils pris en charge</s1>"
+ },
+ {
+  "source": "<s1>Arena Mobile recognizes the following external GPS receivers automatically by their Bluetooth name. Any other Bluetooth device that is bonded to the phone (headphones, printers, etc.) is ignored and will not appear in the app’s GPS device lists.</s1>",
+  "target": "<s1>Arena Mobile reconnaît automatiquement les récepteurs GPS externes suivants grâce à leur nom Bluetooth. Tout autre appareil Bluetooth associé au téléphone (casques, imprimantes, etc.) est ignoré et n’apparaît pas dans les listes d’appareils GPS de l’application.</s1>"
+ },
+ {
+  "source": "<s1>The supported devices are:</s1>",
+  "target": "<s1>Les appareils pris en charge sont :</s1>"
+ },
+ {
+  "source": "<s1>Bad Elf (Flex, GNSS Surveyor, etc.)</s1>",
+  "target": "<s1>Bad Elf (Flex, GNSS Surveyor, etc.)</s1>"
+ },
+ {
+  "source": "<s1>Garmin GLO / GLO 2</s1>",
+  "target": "<s1>Garmin GLO / GLO 2</s1>"
+ },
+ {
+  "source": "<s1>Eos Arrow (Gold, 100, 200, Lite)</s1>",
+  "target": "<s1>Eos Arrow (Gold, 100, 200, Lite)</s1>"
+ },
+ {
+  "source": "<s1>Trimble (R1, R2, Catalyst, DA1/DA2)</s1>",
+  "target": "<s1>Trimble (R1, R2, Catalyst, DA1/DA2)</s1>"
+ },
+ {
+  "source": "<s1>Geneq SXBlue (II, 3)</s1>",
+  "target": "<s1>Geneq SXBlue (II, 3)</s1>"
+ },
+ {
+  "source": "<s1>Dual XGPS (150, 160)</s1>",
+  "target": "<s1>Dual XGPS (150, 160)</s1>"
+ },
+ {
+  "source": "<s1>Note:</s1><s2> </s2><s3>Device recognition is based on the name the receiver broadcasts over Bluetooth. If a supported receiver is not recognized, contact the Open Foris support forum so the recognition rule can be corrected.</s3>",
+  "target": "<s1>Remarque :</s1><s2> </s2><s3>la reconnaissance des appareils repose sur le nom que le récepteur diffuse par Bluetooth. Si un récepteur pris en charge n’est pas reconnu, contactez le forum d’assistance Open Foris afin que la règle de reconnaissance puisse être corrigée.</s3>"
+ },
+ {
+  "source": "<s1>9.1.2\tRequirements before you start</s1>",
+  "target": "<s1>9.1.2\tPrérequis</s1>"
+ },
+ {
+  "source": "<s1>Bluetooth must be turned on on the phone or tablet.</s1>",
+  "target": "<s1>Le Bluetooth doit être activé sur le téléphone ou la tablette.</s1>"
+ },
+ {
+  "source": "<s1>The external GPS receiver must be powered on and, for most models, in pairing/discoverable mode (check the receiver’s own manual).</s1>",
+  "target": "<s1>Le récepteur GPS externe doit être allumé et, pour la plupart des modèles, en mode d’appairage/visible (consultez le manuel du récepteur).</s1>"
+ },
+ {
+  "source": "<s1>On Android, Arena Mobile will ask for the “Bluetooth” (and, on older Android versions, “Location”) permissions the first time you scan for or connect to a device. These must be granted for the feature to work.</s1>",
+  "target": "<s1>Sur Android, Arena Mobile demande les autorisations « Bluetooth » (et, sur les anciennes versions d’Android, « Localisation ») la première fois que vous recherchez un appareil ou que vous vous y connectez. Ces autorisations doivent être accordées pour que la fonctionnalité fonctionne.</s1>"
+ },
+ {
+  "source": "<s1>On iOS, the receiver must first be paired in the device’s own Settings app (Settings > Bluetooth); Arena Mobile cannot scan for or pair Bluetooth devices itself on iOS.</s1>",
+  "target": "<s1>Sur iOS, le récepteur doit d’abord être associé dans l’app Réglages de l’appareil (Réglages > Bluetooth) ; sur iOS, Arena Mobile ne peut pas rechercher ni associer lui-même des appareils Bluetooth.</s1>"
+ },
+ {
+  "source": "<s1>9.1.3\tPairing a device</s1>",
+  "target": "<s1>9.1.3\tAssociation d’un appareil</s1>"
+ },
+ {
+  "source": "<s1>Android</s1>",
+  "target": "<s1>Android</s1>"
+ },
+ {
+  "source": "<s1>On Android, you can pair a new receiver directly from within Arena Mobile:</s1>",
+  "target": "<s1>Sur Android, vous pouvez associer un nouveau récepteur directement depuis Arena Mobile :</s1>"
+ },
+ {
+  "source": "<s1>Go to </s1><s2>Settings</s2><s3> > </s3><s4>Location & GPS</s4><s5> > </s5><s6>GPS source</s6><s7>, or tap the Bluetooth icon shown next to the </s7><s8>Get location</s8><s9> button on any coordinate attribute.</s9>",
+  "target": "<s1>Accédez à </s1><s2>Paramètres</s2><s3> > </s3><s4>Localisation et GPS</s4><s5> > </s5><s6>Source GPS</s6><s7>, ou touchez l’icône Bluetooth affichée à côté du bouton </s7><s8>Obtenir la position</s8><s9> de n’importe quel attribut de coordonnées.</s9>"
+ },
+ {
+  "source": "<s1>Tap </s1><s2>Pair a new device…</s2><s3>.</s3>",
+  "target": "<s1>Touchez </s1><s2>Associer un nouvel appareil…</s2><s3>.</s3>"
+ },
+ {
+  "source": "<s1>If prompted, allow the Bluetooth permission Arena Mobile requests, and turn on Bluetooth if asked to.</s1>",
+  "target": "<s1>Si cela vous est demandé, accordez l’autorisation Bluetooth demandée par Arena Mobile et activez le Bluetooth.</s1>"
+ },
+ {
+  "source": "<s1>Tap </s1><s2>Scan for devices</s2><s3>. Arena Mobile lists nearby Bluetooth devices it recognizes as GPS receivers while the scan is in progress.</s3>",
+  "target": "<s1>Touchez </s1><s2>Rechercher des appareils</s2><s3>. Pendant la recherche, Arena Mobile liste les appareils Bluetooth à proximité qu’il reconnaît comme récepteurs GPS.</s3>"
+ },
+ {
+  "source": "<s1>Tap the receiver you want to use, then wait for the app to report that pairing succeeded.</s1>",
+  "target": "<s1>Touchez le récepteur que vous souhaitez utiliser, puis attendez que l’application indique que l’association a réussi.</s1>"
+ },
+ {
+  "source": "<s1>Once paired, the receiver appears in the </s1><s2>Paired devices</s2><s3> list of the pairing screen and becomes available as a GPS source everywhere in the app.</s3>",
+  "target": "<s1>Une fois associé, le récepteur apparaît dans la liste </s1><s2>Appareils associés</s2><s3> de l’écran d’association et devient disponible comme source GPS partout dans l’application.</s3>"
+ },
+ {
+  "source": "<s1>Note:</s1><s2> if nothing is found, make sure the receiver is powered on and in pairing mode, then use </s2><s3>Scan again</s3><s4>. If scanning fails immediately, check that Bluetooth is enabled and that the requested permission was granted (</s4><s5>Settings</s5><s6> > </s6><s7>GPS source</s7><s8> will show a button to open the app’s system settings if permission was denied).</s8>",
+  "target": "<s1>Remarque :</s1><s2> si aucun appareil n’est trouvé, assurez-vous que le récepteur est allumé et en mode d’appairage, puis utilisez </s2><s3>Rechercher à nouveau</s3><s4>. Si la recherche échoue immédiatement, vérifiez que le Bluetooth est activé et que l’autorisation demandée a été accordée (</s4><s5>Paramètres</s5><s6> > </s6><s7>Source GPS</s7><s8> affiche un bouton permettant d’ouvrir les paramètres système de l’application si l’autorisation a été refusée).</s8>"
+ },
+ {
+  "source": "<s1>iOS</s1>",
+  "target": "<s1>iOS</s1>"
+ },
+ {
+  "source": "<s1>On iOS, external accessory pairing is handled by the operating system rather than by Arena Mobile:</s1>",
+  "target": "<s1>Sur iOS, l’association des accessoires externes est gérée par le système d’exploitation et non par Arena Mobile :</s1>"
+ },
+ {
+  "source": "<s1>Open the device’s Settings app and go to Bluetooth.</s1>",
+  "target": "<s1>Ouvrez l’app Réglages de l’appareil et accédez à Bluetooth.</s1>"
+ },
+ {
+  "source": "<s1>Turn on the GPS receiver and put it in pairing mode.</s1>",
+  "target": "<s1>Allumez le récepteur GPS et mettez-le en mode d’appairage.</s1>"
+ },
+ {
+  "source": "<s1>Select it from the list of Bluetooth devices in Settings to pair it.</s1>",
+  "target": "<s1>Sélectionnez-le dans la liste des appareils Bluetooth des Réglages pour l’associer.</s1>"
+ },
+ {
+  "source": "<s1>Open Arena Mobile: a paired, supported receiver is detected automatically and appears as a GPS source without any further action in the app.</s1>",
+  "target": "<s1>Ouvrez Arena Mobile : un récepteur pris en charge et associé est détecté automatiquement et apparaît comme source GPS sans aucune autre action dans l’application.</s1>"
+ },
+ {
+  "source": "<s1>Currently, Bad Elf receivers are the only devices confirmed to work this way on iOS; support for additional brands on iOS is being added over time.</s1>",
+  "target": "<s1>Actuellement, les récepteurs Bad Elf sont les seuls appareils dont le fonctionnement de cette manière sur iOS est confirmé ; la prise en charge d’autres marques sur iOS est ajoutée progressivement.</s1>"
+ },
+ {
+  "source": "<s1>9.1.4\tChoosing which GPS source to use</s1>",
+  "target": "<s1>9.1.4\tChoix de la source GPS à utiliser</s1>"
+ },
+ {
+  "source": "<s1>Once at least one external receiver is paired, you can choose which GPS source Arena Mobile should use:</s1>",
+  "target": "<s1>Une fois qu’au moins un récepteur externe est associé, vous pouvez choisir la source GPS qu’Arena Mobile doit utiliser :</s1>"
+ },
+ {
+  "source": "<s1>From </s1><s2>Settings</s2><s3> > </s3><s4>GPS source</s4><s5>, choose between </s5><s6>Auto (external if available)</s6><s7>, </s7><s8>Internal GPS</s8><s9>, or a specific paired receiver.</s9>",
+  "target": "<s1>Dans </s1><s2>Paramètres</s2><s3> > </s3><s4>Source GPS</s4><s5>, choisissez entre </s5><s6>Auto (externe si disponible)</s6><s7>, </s7><s8>GPS interne</s8><s9> ou un récepteur associé spécifique.</s9>"
+ },
+ {
+  "source": "<s1>From the coordinate attribute screen, tap the GPS-source menu (the crosshair icon next to </s1><s2>Get location</s2><s3>) to switch source before starting a location fix.</s3>",
+  "target": "<s1>Depuis l’écran de l’attribut de coordonnées, touchez le menu de source GPS (l’icône de réticule à côté de </s1><s2>Obtenir la position</s2><s3>) pour changer de source avant de lancer l’acquisition d’une position.</s3>"
+ },
+ {
+  "source": "<s1>Auto</s1><s2> is the recommended default: Arena Mobile will use a paired external receiver if one is connected, and will automatically fall back to the phone’s internal GPS if no external receiver is available or if the receiver disconnects.</s2>",
+  "target": "<s1>Auto</s1><s2> est le réglage par défaut recommandé : Arena Mobile utilise un récepteur externe associé s’il est connecté, et revient automatiquement au GPS interne du téléphone si aucun récepteur externe n’est disponible ou si le récepteur se déconnecte.</s2>"
+ },
+ {
+  "source": "<s1>9.1.5\tRecording a coordinate with an external receiver</s1>",
+  "target": "<s1>9.1.5\tEnregistrement d’une coordonnée avec un récepteur externe</s1>"
+ },
+ {
+  "source": "<s1>Open a coordinate attribute and, if you have more than one GPS source available, select the one you want to use.</s1>",
+  "target": "<s1>Ouvrez un attribut de coordonnées et, si plusieurs sources GPS sont disponibles, sélectionnez celle que vous souhaitez utiliser.</s1>"
+ },
+ {
+  "source": "<s1>Tap </s1><s2>Get location</s2><s3>. While Arena Mobile connects to the receiver, it shows “Connecting to <device name>…”.</s3>",
+  "target": "<s1>Touchez </s1><s2>Obtenir la position</s2><s3>. Pendant qu’Arena Mobile se connecte au récepteur, il affiche « Connexion à <nom de l’appareil>... ».</s3>"
+ },
+ {
+  "source": "<s1>Once connected, the accuracy bar and elapsed-time bar behave exactly as they do with the internal GPS, and the app shows which source is currently in use (for example, “Using Bad Elf Flex”).</s1>",
+  "target": "<s1>Une fois connecté, la barre de précision et la barre de temps écoulé se comportent exactement comme avec le GPS interne, et l’application indique la source actuellement utilisée (par exemple « Utilisation de Bad Elf Flex »).</s1>"
+ },
+ {
+  "source": "<s1>If the external receiver disconnects during the fix, Arena Mobile automatically switches to the internal GPS and shows “Using internal GPS (<device name> unavailable)” so you can continue recording without interruption.</s1>",
+  "target": "<s1>Si le récepteur externe se déconnecte pendant l’acquisition, Arena Mobile bascule automatiquement sur le GPS interne et affiche « Utilisation du GPS interne (<nom de l’appareil> indisponible) », afin que vous puissiez continuer l’enregistrement sans interruption.</s1>"
+ },
+ {
+  "source": "<s1>Tap </s1><s2>Stop</s2><s3> (or wait for the accuracy/timeout thresholds to be met, if configured) to record the point as usual.</s3>",
+  "target": "<s1>Touchez </s1><s2>Arrêter</s2><s3> (ou attendez que les seuils de précision/délai soient atteints, s’ils sont configurés) pour enregistrer le point comme d’habitude.</s3>"
+ },
+ {
+  "source": "<s1>9.1.6\tTroubleshooting</s1>",
+  "target": "<s1>9.1.6\tDépannage</s1>"
+ },
+ {
+  "source": "<s1>Message / situation</s1>",
+  "target": "<s1>Message / situation</s1>"
+ },
+ {
+  "source": "<s1>What to do</s1>",
+  "target": "<s1>Que faire</s1>"
+ },
+ {
+  "source": "<s1>“Bluetooth is turned off.”</s1>",
+  "target": "<s1>« Le Bluetooth est désactivé. »</s1>"
+ },
+ {
+  "source": "<s1>Tap </s1><s2>Enable Bluetooth</s2><s3> in the pairing screen, or turn on Bluetooth from the device’s system settings, then try again.</s3>",
+  "target": "<s1>Touchez </s1><s2>Activer le Bluetooth</s2><s3> dans l’écran d’association, ou activez le Bluetooth depuis les paramètres système de l’appareil, puis réessayez.</s3>"
+ },
+ {
+  "source": "<s1>“Bluetooth permission is required to scan for devices.”</s1>",
+  "target": "<s1>« L'autorisation Bluetooth est requise pour rechercher des appareils. »</s1>"
+ },
+ {
+  "source": "<s1>Tap </s1><s2>Open app settings</s2><s3> and grant the Bluetooth (and, on some Android versions, Location) permission to Arena Mobile.</s3>",
+  "target": "<s1>Touchez </s1><s2>Ouvrir les paramètres de l'application</s2><s3> et accordez à Arena Mobile l’autorisation Bluetooth (et, sur certaines versions d’Android, l’autorisation Localisation).</s3>"
+ },
+ {
+  "source": "<s1>“No devices found.”</s1>",
+  "target": "<s1>« Aucun appareil trouvé. »</s1>"
+ },
+ {
+  "source": "<s1>Confirm the receiver is powered on and in pairing/discoverable mode, keep it close to the phone, and tap </s1><s2>Scan again</s2><s3>.</s3>",
+  "target": "<s1>Vérifiez que le récepteur est allumé et en mode d’appairage/visible, gardez-le près du téléphone et touchez </s1><s2>Rechercher à nouveau</s2><s3>.</s3>"
+ },
+ {
+  "source": "<s1>“Could not pair with <device>.”</s1>",
+  "target": "<s1>« Impossible de s'associer avec <appareil>. »</s1>"
+ },
+ {
+  "source": "<s1>Move closer to the receiver and retry. If it keeps failing, unpair the device from the phone’s system Bluetooth settings and pair it again from Arena Mobile.</s1>",
+  "target": "<s1>Rapprochez-vous du récepteur et réessayez. Si l’échec persiste, dissociez l’appareil dans les paramètres Bluetooth du système du téléphone, puis associez-le à nouveau depuis Arena Mobile.</s1>"
+ },
+ {
+  "source": "<s1>Receiver not recognized / doesn’t appear in scan results</s1>",
+  "target": "<s1>Récepteur non reconnu / n’apparaît pas dans les résultats de la recherche</s1>"
+ },
+ {
+  "source": "<s1>Only devices Arena Mobile recognizes as GPS receivers are shown in the scan results (see </s1><s2>Supported devices</s2><s3>). Devices from other manufacturers, or with unusual firmware naming, may not be recognized yet.</s3>",
+  "target": "<s1>Seuls les appareils qu’Arena Mobile reconnaît comme récepteurs GPS sont affichés dans les résultats de la recherche (voir </s1><s2>Appareils pris en charge</s2><s3>). Les appareils d’autres fabricants, ou dont le micrologiciel utilise un nom inhabituel, peuvent ne pas encore être reconnus.</s3>"
+ },
+ {
+  "source": "<s1>App keeps falling back to the internal GPS</s1>",
+  "target": "<s1>L’application revient sans cesse au GPS interne</s1>"
+ },
+ {
+  "source": "<s1>Check the receiver’s battery and Bluetooth range, and confirm it is still paired in the phone’s system Bluetooth settings.</s1>",
+  "target": "<s1>Vérifiez la batterie et la portée Bluetooth du récepteur, et assurez-vous qu’il est toujours associé dans les paramètres Bluetooth du système du téléphone.</s1>"
+ },
+ {
+  "source": "<s1>9.2\tPosition tracking</s1>",
+  "target": "<s1>9.2\tSuivi de position</s1>"
+ },
+ {
+  "source": "<s1>This feature is experimental.</s1>",
+  "target": "<s1>Cette fonctionnalité est expérimentale.</s1>"
+ },
+ {
+  "source": "<s1>A geospatial attribute marked as </s1><s2>Position tracking</s2><s3> in Arena records the path walked by the device while the record is filled in (e.g. the route followed to reach and survey a plot). The track is saved in the record and uploaded to the server with it.</s3>",
+  "target": "<s1>Un attribut géospatial marqué comme </s1><s2>Position tracking</s2><s3> dans Arena enregistre le trajet parcouru par l’appareil pendant le remplissage de l’enregistrement (par exemple l’itinéraire suivi pour atteindre et inventorier une placette). La trace est enregistrée dans l’enregistrement et envoyée au serveur avec celui-ci.</s3>"
+ },
+ {
+  "source": "<s1>Press </s1><s2>Start tracking</s2><s3> to start recording the path; the status shows the accuracy of the current location, the number of points recorded, the length and the duration of the track.</s3>",
+  "target": "<s1>Appuyez sur </s1><s2>Start tracking</s2><s3> pour commencer à enregistrer le trajet ; l’état affiche la précision de la position actuelle, le nombre de points enregistrés, la longueur et la durée de la trace.</s3>"
+ },
+ {
+  "source": "<s1>Tracking can be paused and resumed (</s1><s2>Resume</s2><s3>); press </s3><s4>Stop</s4><s5> to stop it. The track is saved in the attribute and can be continued later.</s5>",
+  "target": "<s1>Le suivi peut être mis en pause et repris (</s1><s2>Resume</s2><s3>) ; appuyez sur </s3><s4>Stop</s4><s5> pour l’arrêter. La trace est enregistrée dans l’attribut et peut être poursuivie ultérieurement.</s5>"
+ },
+ {
+  "source": "<s1>Show track</s1><s2> shows the track on a map:</s2>",
+  "target": "<s1>Show track</s1><s2> affiche la trace sur une carte :</s2>"
+ },
+ {
+  "source": "<s1>Restart</s1><s2> deletes the points recorded so far and starts tracking from scratch; </s2><s3>Delete track</s3><s4> deletes the track and leaves the attribute empty.</s4>",
+  "target": "<s1>Restart</s1><s2> supprime les points enregistrés jusqu’à présent et recommence le suivi depuis le début ; </s2><s3>Delete track</s3><s4> supprime la trace et laisse l’attribut vide.</s4>"
+ },
+ {
+  "source": "<s1>Only one attribute at a time can be tracked: starting tracking another attribute stops the current one.</s1>",
+  "target": "<s1>Un seul attribut à la fois peut faire l’objet d’un suivi : démarrer le suivi d’un autre attribut arrête le suivi en cours.</s1>"
+ },
+ {
+  "source": "<s1>If tracking is interrupted (e.g. when the app is closed), the recorded track is saved: resume tracking to continue.</s1>",
+  "target": "<s1>Si le suivi est interrompu (par exemple lorsque l’application est fermée), la trace enregistrée est conservée : reprenez le suivi pour continuer.</s1>"
+ },
+ {
+  "source": "<s1>Position tracking can be adjusted in </s1><s2>Settings</s2><s3> > </s3><s4>Location & GPS</s4><s5>:</s5>",
+  "target": "<s1>Le suivi de position peut être réglé dans </s1><s2>Paramètres</s2><s3> > </s3><s4>Localisation et GPS</s4><s5> :</s5>"
+ },
+ {
+  "source": "<s1>Position tracking accuracy threshold</s1><s2> (5–50 m): locations less accurate than this are not added to the track;</s2>",
+  "target": "<s1>Position tracking accuracy threshold</s1><s2> (5–50 m) : les positions moins précises que ce seuil ne sont pas ajoutées à la trace ;</s2>"
+ },
+ {
+  "source": "<s1>Position tracking min distance</s1><s2> (2–50 m): minimum distance between two points of the track (larger if the location is less accurate);</s2>",
+  "target": "<s1>Position tracking min distance</s1><s2> (2–50 m) : distance minimale entre deux points de la trace (plus grande si la position est moins précise) ;</s2>"
+ },
+ {
+  "source": "<s1>Position tracking battery saver</s1><s2>: the track will be less precise, but the battery consumption will be reduced.</s2>",
+  "target": "<s1>Position tracking battery saver</s1><s2> : la trace est moins précise, mais la consommation de batterie est réduite.</s2>"
+ },
+ {
+  "source": "<s1>The tracks are also shown in the records map (see </s1><s2>Records map</s2><s3>).</s3>",
+  "target": "<s1>Les traces sont également affichées sur la carte des enregistrements (voir </s1><s2>Carte des enregistrements</s2><s3>).</s3>"
+ },
+ {
+  "source": "<s1>10\tMaps</s1>",
+  "target": "<s1>10\tCartes</s1>"
+ },
+ {
+  "source": "<s1>Maps are configured in </s1><s2>Settings</s2><s3> > </s3><s4>Maps</s4><s5>, and managed from </s5><s6>Offline maps</s6><s7> (in the main menu or in the Maps section of the settings).</s7>",
+  "target": "<s1>Les cartes se configurent dans </s1><s2>Paramètres</s2><s3> > </s3><s4>Maps</s4><s5>, et se gèrent depuis </s5><s6>Cartes hors ligne</s6><s7> (dans le menu principal ou dans la section Maps des paramètres).</s7>"
+ },
+ {
+  "source": "<s1>10.1\tMap provider and map layers</s1>",
+  "target": "<s1>10.1\tFournisseur de cartes et couches de carte</s1>"
+ },
+ {
+  "source": "<s1>The </s1><s2>Map provider</s2><s3> setting chooses the map used when drawing or viewing geographic attributes and in the records map:</s3>",
+  "target": "<s1>Le paramètre </s1><s2>Map provider</s2><s3> détermine la carte utilisée pour dessiner ou afficher les attributs géographiques ainsi que dans la carte des enregistrements :</s3>"
+ },
+ {
+  "source": "<s1>Google Maps (Apple Maps on iOS)</s1><s2>: the default; requires an internet connection.</s2>",
+  "target": "<s1>Google Maps (Apple Maps on iOS)</s1><s2> : option par défaut ; nécessite une connexion internet.</s2>"
+ },
+ {
+  "source": "<s1>Free map layers (satellite, topographic) - offline capable</s1><s2>: Satellite (Esri World Imagery), Topographic (OpenTopoMap) and Standard (OpenStreetMap, online only), plus your custom layers. These layers can be downloaded for offline use.</s2>",
+  "target": "<s1>Free map layers (satellite, topographic) - offline capable</s1><s2> : Satellite (Esri World Imagery), Topographique (OpenTopoMap) et Standard (OpenStreetMap, en ligne uniquement), ainsi que vos couches personnalisées. Ces couches peuvent être téléchargées pour une utilisation hors ligne.</s2>"
+ },
+ {
+  "source": "<s1>With free map layers, </s1><s2>Default map layer</s2><s3> chooses the layer shown when a map opens; it can always be changed on the map with the layers button.</s3>",
+  "target": "<s1>Avec les couches de carte gratuites, </s1><s2>Default map layer</s2><s3> détermine la couche affichée à l’ouverture d’une carte ; elle peut toujours être changée sur la carte avec le bouton des couches.</s3>"
+ },
+ {
+  "source": "<s1>10.2\tCustom map layers</s1>",
+  "target": "<s1>10.2\tCouches de carte personnalisées</s1>"
+ },
+ {
+  "source": "<s1>Map layers from other tile providers (XYZ raster tiles) can be added in </s1><s2>Settings</s2><s3> > </s3><s4>Maps</s4><s5> > </s5><s6>Custom map layers</s6><s7> > </s7><s8>Add layer</s8><s9>:</s9>",
+  "target": "<s1>Des couches de carte provenant d’autres fournisseurs de tuiles (tuiles raster XYZ) peuvent être ajoutées dans </s1><s2>Paramètres</s2><s3> > </s3><s4>Maps</s4><s5> > </s5><s6>Couches de carte personnalisées</s6><s7> > </s7><s8>Ajouter une couche</s8><s9> :</s9>"
+ },
+ {
+  "source": "<s1>Name</s1><s2> of the layer.</s2>",
+  "target": "<s1>Nom</s1><s2> de la couche.</s2>"
+ },
+ {
+  "source": "<s1>URL template</s1><s2>, starting with https:// and containing the {x}, {y} and {z} placeholders, e.g. https://tiles.example.org/{z}/{x}/{y}.png?key={apiKey}. The {s} (subdomain) placeholder is not supported: replace it with one of the provider’s subdomains.</s2>",
+  "target": "<s1>Modèle d'URL</s1><s2>, commençant par https:// et contenant les espaces réservés {x}, {y} et {z}, par exemple https://tiles.example.org/{z}/{x}/{y}.png?key={apiKey}. L’espace réservé {s} (sous-domaine) n’est pas pris en charge : remplacez-le par l’un des sous-domaines du fournisseur.</s2>"
+ },
+ {
+  "source": "<s1>API key</s1><s2> (optional): replaces {apiKey} in the URL. It is stored in the secure storage of the device and sent only to the tile provider.</s2>",
+  "target": "<s1>Clé API</s1><s2> (facultative) : remplace {apiKey} dans l’URL. Elle est conservée dans le stockage sécurisé de l’appareil et n’est envoyée qu’au fournisseur de tuiles.</s2>"
+ },
+ {
+  "source": "<s1>Attribution</s1><s2> (optional): copyright notice shown on the map.</s2>",
+  "target": "<s1>Attribution</s1><s2> (facultative) : mention de droits d’auteur affichée sur la carte.</s2>"
+ },
+ {
+  "source": "<s1>Test</s1><s2> downloads one tile to check the URL and the API key.</s2>",
+  "target": "<s1>Tester</s1><s2> télécharge une tuile pour vérifier l’URL et la clé API.</s2>"
+ },
+ {
+  "source": "<s1>Custom layers can be selected as default map layer and used for offline map areas.</s1>",
+  "target": "<s1>Les couches personnalisées peuvent être sélectionnées comme couche de carte par défaut et utilisées pour les zones de carte hors ligne.</s1>"
+ },
+ {
+  "source": "<s1>Note:</s1><s2> Make sure the terms of use of the provider allow this use, and in particular bulk downloads for offline areas: they could be forbidden or charged.</s2>",
+  "target": "<s1>Remarque :</s1><s2> assurez-vous que les conditions d’utilisation du fournisseur autorisent cet usage, et en particulier les téléchargements massifs pour les zones hors ligne : ils pourraient être interdits ou payants.</s2>"
+ },
+ {
+  "source": "<s1>10.3\tOffline maps (downloaded areas)</s1>",
+  "target": "<s1>10.3\tCartes hors ligne (zones téléchargées)</s1>"
+ },
+ {
+  "source": "<s1>Offline maps are configured in </s1><s2>Settings</s2><s3> > </s3><s4>Maps</s4><s5> > </s5><s6>Offline maps</s6><s7>, or from the top right corner menu, selecting </s7><s8>Offline maps</s8><s9>.</s9>",
+  "target": "<s1>Les cartes hors ligne se configurent dans </s1><s2>Paramètres</s2><s3> > </s3><s4>Maps</s4><s5> > </s5><s6>Cartes hors ligne</s6><s7>, ou depuis le menu du coin supérieur droit, en sélectionnant </s7><s8>Cartes hors ligne</s8><s9>.</s9>"
+ },
+ {
+  "source": "<s1>Download the map of your area of interest before going to the field: it is used, without an internet connection, when drawing or viewing geographic attributes and in the records map. Offline maps are used only when the map provider is </s1><s2>Free map layers</s2><s3> (the screen offers a </s3><s4>Use free map layers</s4><s5> button otherwise).</s5>",
+  "target": "<s1>Téléchargez la carte de votre zone d’intérêt avant de partir sur le terrain : elle est utilisée, sans connexion internet, pour dessiner ou afficher les attributs géographiques ainsi que dans la carte des enregistrements. Les cartes hors ligne ne sont utilisées que lorsque le fournisseur de cartes est </s1><s2>Free map layers</s2><s3> (sinon, l’écran propose un bouton </s3><s4>Utiliser les couches de carte gratuites</s4><s5>).</s5>"
+ },
+ {
+  "source": "<s1>Downloading an area</s1>",
+  "target": "<s1>Téléchargement d’une zone</s1>"
+ },
+ {
+  "source": "<s1>Open </s1><s2>Offline maps</s2><s3> > </s3><s4>Downloaded areas</s4><s5> and tap </s5><s6>Add area</s6><s7>.</s7>",
+  "target": "<s1>Ouvrez </s1><s2>Cartes hors ligne</s2><s3> > </s3><s4>Zones téléchargées</s4><s5> et touchez </s5><s6>Ajouter une zone</s6><s7>.</s7>"
+ },
+ {
+  "source": "<s1>Enter a </s1><s2>Name</s2><s3>, choose the </s3><s4>Layer</s4><s5> and the </s5><s6>Max zoom</s6><s7>.</s7>",
+  "target": "<s1>Saisissez un </s1><s2>Nom</s2><s3>, choisissez la </s3><s4>Couche</s4><s5> et le </s5><s6>Zoom max</s6><s7>.</s7>"
+ },
+ {
+  "source": "<s1>Draw the area of interest on the map, following the step-by-step guide. The editor shows the area surface, the number of tiles and the estimated size compared to the free space on the device.</s1>",
+  "target": "<s1>Dessinez la zone d’intérêt sur la carte en suivant le guide pas à pas. L’éditeur affiche la superficie de la zone, le nombre de tuiles et la taille estimée par rapport à l’espace libre sur l’appareil.</s1>"
+ },
+ {
+  "source": "<s1>Tap </s1><s2>Download</s2><s3>. The download runs with a progress dialog.</s3>",
+  "target": "<s1>Touchez </s1><s2>Télécharger</s2><s3>. Le téléchargement s’effectue avec une boîte de dialogue de progression.</s3>"
+ },
+ {
+  "source": "<s1>An area can contain at most 50,000 tiles: reduce the area or the max zoom if needed.</s1>",
+  "target": "<s1>Une zone peut contenir au maximum 50 000 tuiles : réduisez la zone ou le zoom maximal si nécessaire.</s1>"
+ },
+ {
+  "source": "<s1>The app asks for confirmation when the download would use a large part of the free space, or when a custom layer is used.</s1>",
+  "target": "<s1>L’application demande une confirmation lorsque le téléchargement utiliserait une grande partie de l’espace libre, ou lorsqu’une couche personnalisée est utilisée.</s1>"
+ },
+ {
+  "source": "<s1>If some tiles could not be downloaded, the area shows </s1><s2>Missing tiles</s2><s3> and a </s3><s4>Download missing</s4><s5> button.</s5>",
+  "target": "<s1>Si certaines tuiles n’ont pas pu être téléchargées, la zone affiche </s1><s2>Tuiles manquantes</s2><s3> et un bouton </s3><s4>Télécharger les manquantes</s4><s5>.</s5>"
+ },
+ {
+  "source": "<s1>Each area shows its layer, zoom levels, tiles, size and last update date; tap it to view it on the map, or delete it.</s1>",
+  "target": "<s1>Chaque zone affiche sa couche, ses niveaux de zoom, ses tuiles, sa taille et la date de sa dernière mise à jour ; touchez-la pour l’afficher sur la carte ou pour la supprimer.</s1>"
+ },
+ {
+  "source": "<s1>The screen shows the space used by map tiles and the free space on the device. </s1><s2>Clear map cache</s2><s3> deletes the tiles cached while browsing maps (not the downloaded areas); </s3><s4>Delete all</s4><s5> deletes everything.</s5>",
+  "target": "<s1>L’écran affiche l’espace utilisé par les tuiles de carte et l’espace libre sur l’appareil. </s1><s2>Vider le cache des cartes</s2><s3> supprime les tuiles mises en cache lors de la consultation des cartes (pas les zones téléchargées) ; </s3><s4>Tout supprimer</s4><s5> supprime tout.</s5>"
+ },
+ {
+  "source": "<s1>10.4\tPDF maps (georeferenced PDF files)</s1>",
+  "target": "<s1>10.4\tCartes PDF (fichiers PDF géoréférencés)</s1>"
+ },
+ {
+  "source": "<s1>Maps in geospatial (georeferenced) PDF format stored on the device can be imported and shown on top of the base map in all the maps of the app, also offline.</s1>",
+  "target": "<s1>Les cartes au format PDF géospatial (géoréférencé) stockées sur l’appareil peuvent être importées et affichées par-dessus le fond de carte dans toutes les cartes de l’application, y compris hors ligne.</s1>"
+ },
+ {
+  "source": "<s1>Open </s1><s2>Offline maps</s2><s3> > </s3><s4>PDF maps</s4><s5> (or </s5><s6>Settings</s6><s7> > </s7><s8>Maps</s8><s9> > </s9><s10>PDF maps</s10><s11>) and tap </s11><s12>Import PDF</s12><s13>.</s13>",
+  "target": "<s1>Ouvrez </s1><s2>Cartes hors ligne</s2><s3> > </s3><s4>Cartes PDF</s4><s5> (ou </s5><s6>Paramètres</s6><s7> > </s7><s8>Maps</s8><s9> > </s9><s10>Cartes PDF</s10><s11>) et touchez </s11><s12>Importer un PDF</s12><s13>.</s13>"
+ },
+ {
+  "source": "<s1>Select the PDF file. The app reads its georeferencing and shows a preview on the map.</s1>",
+  "target": "<s1>Sélectionnez le fichier PDF. L’application lit son géoréférencement et affiche un aperçu sur la carte.</s1>"
+ },
+ {
+  "source": "<s1>Choose the </s1><s2>Page</s2><s3> (for multi-page files), the </s3><s4>Name</s4><s5> and the </s5><s6>Max zoom</s6><s7>. Zoom levels above the resolution of the PDF will look blurred. The number of tiles and the space needed are estimated.</s7>",
+  "target": "<s1>Choisissez la </s1><s2>Page</s2><s3> (pour les fichiers de plusieurs pages), le </s3><s4>Nom</s4><s5> et le </s5><s6>Zoom max</s6><s7>. Les niveaux de zoom supérieurs à la résolution du PDF apparaîtront flous. Le nombre de tuiles et l’espace nécessaire sont estimés.</s7>"
+ },
+ {
+  "source": "<s1>Tap </s1><s2>Import</s2><s3>.</s3>",
+  "target": "<s1>Touchez </s1><s2>Importer</s2><s3>.</s3>"
+ },
+ {
+  "source": "<s1>Each imported map can be shown or hidden on the maps (</s1><s2>Show on maps</s2><s3>), and its </s3><s4>Opacity</s4><s5> can be adjusted.</s5>",
+  "target": "<s1>Chaque carte importée peut être affichée ou masquée sur les cartes (</s1><s2>Afficher sur les cartes</s2><s3>), et son </s3><s4>Opacité</s4><s5> peut être réglée.</s5>"
+ },
+ {
+  "source": "<s1>Only PDF</s1><s2> hides the base map, so only the PDF map is shown.</s2>",
+  "target": "<s1>PDF seul</s1><s2> masque le fond de carte, de sorte que seule la carte PDF est affichée.</s2>"
+ },
+ {
+  "source": "<s1>If the datum of the map is not WGS84, a warning is shown: the map could be shifted by some meters.</s1>",
+  "target": "<s1>Si le système géodésique de la carte n’est pas WGS84, un avertissement s’affiche : la carte pourrait être décalée de quelques mètres.</s1>"
+ },
+ {
+  "source": "<s1>Note:</s1><s2> Only PDF files with georeferencing in the ISO 32000 (Adobe) geospatial PDF format are supported (e.g. exported from QGIS, ArcGIS, GDAL or Avenza); the OGC GeoPDF encoding is not supported yet. Files without georeferencing cannot be imported.</s2>",
+  "target": "<s1>Remarque :</s1><s2> seuls les fichiers PDF géoréférencés au format PDF géospatial ISO 32000 (Adobe) sont pris en charge (par exemple exportés depuis QGIS, ArcGIS, GDAL ou Avenza) ; l’encodage OGC GeoPDF n’est pas encore pris en charge. Les fichiers sans géoréférencement ne peuvent pas être importés.</s2>"
+ },
+ {
+  "source": "<s1>10.5\tRecords map</s1>",
+  "target": "<s1>10.5\tCarte des enregistrements</s1>"
+ },
+ {
+  "source": "<s1>The records of the current survey can be shown on a map, from the list of records: tap the map icon in the top bar </s1><x2/><s3> (available when the survey has sampling points with a location, coordinate attributes, position tracks, areas of interest or map layers).</s3>",
+  "target": "<s1>Les enregistrements de l’enquête actuelle peuvent être affichés sur une carte depuis la liste des enregistrements : touchez l’icône de carte dans la barre supérieure </s1><x2/><s3> (disponible lorsque l’enquête comporte des points d’échantillonnage localisés, des attributs de coordonnées, des traces de position, des zones d’intérêt ou des couches de carte).</s3>"
+ },
+ {
+  "source": "<s1>Choose the map to use (</s1><s2>Show records on</s2><s3>: Google/Apple Maps or free map layers) and tap </s3><s4>Show map</s4><s5>.</s5>",
+  "target": "<s1>Choisissez la carte à utiliser (</s1><s2>Afficher les enregistrements sur</s2><s3> : Google/Apple Maps ou couches de carte gratuites) et touchez </s3><s4>Afficher la carte</s4><s5>.</s5>"
+ },
+ {
+  "source": "<s1>Use </s1><s2>Layers</s2><s3> </s3><x4/><s5> to choose what to show. The layers are grouped by type: </s5><s6>Sampling points</s6><s7> (one layer for each level of the sampling point data, marked as </s7><s8>Visited</s8><s9> or </s9><s10>Not visited</s10><s11>), </s11><s12>Coordinate attributes</s12><s13>, </s13><s14>Position tracks</s14><s15>, </s15><s16>Areas of interest</s16><s17> and </s17><s18>Map layers</s18><s19>. Point and track layers show their number of points (or tracks).</s19>",
+  "target": "<s1>Utilisez </s1><s2>Couches</s2><s3> </s3><x4/><s5> pour choisir ce qui est affiché. Les couches sont regroupées par type : </s5><s6>Points d'échantillonnage</s6><s7> (une couche pour chaque niveau des données des points d’échantillonnage, marqués </s7><s8>Visité</s8><s9> ou </s9><s10>Non visité</s10><s11>), </s11><s12>Attributs de coordonnées</s12><s13>, </s13><s14>Traces de position</s14><s15>, </s15><s16>Zones d'intérêt</s16><s17> et </s17><s18>Couches de carte</s18><s19>. Les couches de points et de traces indiquent leur nombre de points (ou de traces).</s19>"
+ },
+ {
+  "source": "<s1>Tap a point to see its details and tap </s1><s2>Open</s2><s3> to open the record.</s3>",
+  "target": "<s1>Touchez un point pour voir ses détails, puis touchez </s1><s2>Ouvrir</s2><s3> pour ouvrir l’enregistrement.</s3>"
+ },
+ {
+  "source": "<s1>The areas of interest defined in the survey in Arena (e.g. the boundaries of strata or administrative units) are listed in </s1><s2>Layers</s2><s3> under </s3><s4>Areas of interest</s4><s5> and shown on the map as colored areas. They are hidden by default: select them to show them. If an area is not available on this device, update the survey (see </s5><s6>Updating a survey</s6><s7>).</s7>",
+  "target": "<s1>Les zones d’intérêt définies dans l’enquête dans Arena (par exemple les limites des strates ou des unités administratives) sont listées dans </s1><s2>Couches</s2><s3> sous </s3><s4>Zones d'intérêt</s4><s5> et affichées sur la carte sous forme de zones colorées. Elles sont masquées par défaut : sélectionnez-les pour les afficher. Si une zone n’est pas disponible sur cet appareil, mettez à jour l’enquête (voir </s5><s6>Mise à jour d’une enquête</s6><s7>).</s7>"
+ },
+ {
+  "source": "<s1>The map layers defined in the survey in Arena (KML, KMZ or GeoJSON files, e.g. administrative boundaries, protected areas or rivers) are listed in </s1><s2>Layers</s2><s3> under </s3><s4>Map layers</s4><s5> and shown on the map with their points, lines and areas. Like the areas of interest, they are downloaded with the survey and are hidden by default. If a layer is not available on this device, update the survey (see </s5><s6>Updating a survey</s6><s7>).</s7>",
+  "target": "<s1>Les couches de carte définies dans l’enquête dans Arena (fichiers KML, KMZ ou GeoJSON, par exemple limites administratives, aires protégées ou cours d’eau) sont listées dans </s1><s2>Couches</s2><s3> sous </s3><s4>Couches de carte</s4><s5> et affichées sur la carte avec leurs points, lignes et zones. Comme les zones d’intérêt, elles sont téléchargées avec l’enquête et masquées par défaut. Si une couche n’est pas disponible sur cet appareil, mettez à jour l’enquête (voir </s5><s6>Mise à jour d’une enquête</s6><s7>).</s7>"
+ },
+ {
+  "source": "<s1>Note:</s1><s2> The map shows the data in this device. To include the records of your colleagues, tap </s2><s3>Check status</s3><s4> in the list of records when online.</s4>",
+  "target": "<s1>Remarque :</s1><s2> la carte affiche les données présentes sur cet appareil. Pour inclure les enregistrements de vos collègues, touchez </s2><s3>Vérifier synchronisation</s3><s4> dans la liste des enregistrements lorsque vous êtes en ligne.</s4>"
+ },
+ {
+  "source": "<s1>11\tTips and best practices</s1>",
+  "target": "<s1>11\tConseils et bonnes pratiques</s1>"
+ },
+ {
+  "source": "<s1>Here are several tips that may increase efficiency when recording data by using Arena Mobile:</s1>",
+  "target": "<s1>Voici plusieurs conseils qui peuvent améliorer l’efficacité de la saisie des données avec Arena Mobile :</s1>"
+ },
+ {
+  "source": "<s1>Do regular data submissions</s1><s2>: Ensure regular submission of data to the Arena Server (or enable auto-sync) to avoid losing valuable data (in case of device failure or mistakes).</s2>",
+  "target": "<s1>Envoyez régulièrement vos données</s1><s2> : envoyez régulièrement les données au serveur Arena (ou activez la synchronisation automatique) pour éviter de perdre des données précieuses (en cas de panne de l’appareil ou d’erreur).</s2>"
+ },
+ {
+  "source": "<s1>Keep the application up to date:</s1><s2> always check for the updated version of the application whenever you start using it. Updates come with new features and fixes.\n</s2><s3>Note:</s3><s4> Updating the app will keep your data on the device. It will not delete it.</s4>",
+  "target": "<s1>Maintenez l’application à jour :</s1><s2> vérifiez toujours si une nouvelle version de l’application est disponible lorsque vous commencez à l’utiliser. Les mises à jour apportent de nouvelles fonctionnalités et des corrections.\n</s2><s3>Remarque :</s3><s4> la mise à jour de l’application conserve vos données sur l’appareil. Elle ne les supprime pas.</s4>"
+ },
+ {
+  "source": "<s1>Prepare the maps before going to the field:</s1><s2> download the offline map areas (and PDF maps) you will need while you still have a good internet connection.</s2>",
+  "target": "<s1>Préparez les cartes avant de partir sur le terrain :</s1><s2> téléchargez les zones de carte hors ligne (et les cartes PDF) dont vous aurez besoin tant que vous disposez d’une bonne connexion internet.</s2>"
+ },
+ {
+  "source": "<s1>Keep the device memory as clean as possible</s1><s2>: Try to keep the device’s RAM as clean as possible, and avoid running heavy applications while collecting data with the Arena Mobile app.</s2>",
+  "target": "<s1>Libérez autant que possible la mémoire de l’appareil</s1><s2> : essayez de garder la mémoire vive (RAM) de l’appareil aussi libre que possible et évitez d’exécuter des applications gourmandes pendant la collecte de données avec l’application Arena Mobile.</s2>"
+ },
+ {
+  "source": "<s1>Purchase a modern device:</s1><s2> While purchasing a device to be used in the fieldwork, invest in devices with an updated operating system (version) and expandable memory.</s2>",
+  "target": "<s1>Achetez un appareil récent :</s1><s2> lors de l’achat d’un appareil destiné au travail de terrain, privilégiez des appareils dotés d’un système d’exploitation (version) récent et d’une mémoire extensible.</s2>"
+ },
+ {
+  "source": "<s1>Using offline mode:</s1><s2> If possible, prioritize using the device in the offline (flight) mode while doing data collection, and go online for data submission only.</s2>",
+  "target": "<s1>Utilisez le mode hors ligne :</s1><s2> si possible, privilégiez l’utilisation de l’appareil en mode hors ligne (mode avion) pendant la collecte des données, et passez en ligne uniquement pour l’envoi des données.</s2>"
+ },
+ {
+  "source": "<s1>Keep your device’s operating system up to date:</s1><s2> Keep the device OS updated by allowing automatic system updates.</s2>",
+  "target": "<s1>Maintenez le système d’exploitation de votre appareil à jour :</s1><s2> maintenez le système d’exploitation de l’appareil à jour en autorisant les mises à jour automatiques du système.</s2>"
+ },
+ {
+  "source": "<s1>Keep the device date and time correct:</s1><s2> they are used to detect the changes made to the records.</s2>",
+  "target": "<s1>Veillez à ce que la date et l’heure de l’appareil soient correctes :</s1><s2> elles servent à détecter les modifications apportées aux enregistrements.</s2>"
+ },
+ {
+  "source": "<s1>Keep the device fully charged:</s1><s2> Ensure proper charging of the mobile device before starting to work in the field.</s2>",
+  "target": "<s1>Gardez l’appareil complètement chargé :</s1><s2> veillez à bien charger l’appareil mobile avant de commencer à travailler sur le terrain.</s2>"
+ },
+ {
+  "source": "<s1>Monitor battery:</s1><s2> Monitor battery usage during prolonged data collection sessions and carry an external power source (if needed).</s2>",
+  "target": "<s1>Surveillez la batterie :</s1><s2> surveillez la consommation de la batterie lors des longues sessions de collecte de données et emportez une source d’alimentation externe (si nécessaire).</s2>"
+ },
+ {
+  "source": "<s1>Optimize the survey in the design phase</s1><s2>: Simplify survey questions, use relatively short labels, and avoid complex data structures to get better usability and a higher response rate with your device. Use the data validation rules, default values, and necessary calculated attributes to reduce the complexity and enhance the ease of the field crews for collecting accurate data and reducing input errors.</s2>",
+  "target": "<s1>Optimisez l’enquête dès la phase de conception</s1><s2> : simplifiez les questions de l’enquête, utilisez des étiquettes relativement courtes et évitez les structures de données complexes afin d’obtenir une meilleure ergonomie et un meilleur taux de réponse sur votre appareil. Utilisez les règles de validation des données, les valeurs par défaut et les attributs calculés nécessaires pour réduire la complexité, faciliter le travail des équipes de terrain dans la collecte de données exactes et réduire les erreurs de saisie.</s2>"
+ },
+ {
+  "source": "<s1>Maintain Data Integrity:</s1><s2> Assign user roles and permissions correctly on the Arena platform to maintain data integrity and security.</s2>",
+  "target": "<s1>Préservez l’intégrité des données :</s1><s2> attribuez correctement les rôles et les autorisations des utilisateurs sur la plateforme Arena afin de préserver l’intégrité et la sécurité des données.</s2>"
+ },
+ {
+  "source": "<s1>Test the app and the survey in different environments:</s1><s2> Before widespread deployment, test the app with your survey in various environments to identify and mitigate potential issues.</s2>",
+  "target": "<s1>Testez l’application et l’enquête dans différents environnements :</s1><s2> avant un déploiement à grande échelle, testez l’application avec votre enquête dans divers environnements afin d’identifier et de limiter les problèmes potentiels.</s2>"
+ },
+ {
+  "source": "<s1>Train users adequately:</s1><s2> Provide comprehensive training to all users to ensure efficient usage and minimize errors.</s2>",
+  "target": "<s1>Formez correctement les utilisateurs :</s1><s2> dispensez une formation complète à tous les utilisateurs afin de garantir une utilisation efficace et de réduire au minimum les erreurs.</s2>"
+ },
+ {
+  "source": "<s1>User feedback</s1><s2>: Encourage users to provide feedback for continuous improvement and address user concerns effectively.</s2>",
+  "target": "<s1>Retours des utilisateurs</s1><s2> : encouragez les utilisateurs à faire part de leurs retours pour une amélioration continue et répondez efficacement à leurs préoccupations.</s2>"
+ },
+ {
+  "source": "<s1>12\tSupport</s1>",
+  "target": "<s1>12\tAssistance</s1>"
+ },
+ {
+  "source": "<s1>Arena Mobile works on mobile devices, such as mobile phones and tablets. The app is available on Android and iOS.</s1>",
+  "target": "<s1>Arena Mobile fonctionne sur des appareils mobiles, tels que les téléphones portables et les tablettes. L’application est disponible sur Android et iOS.</s1>"
+ },
+ {
+  "source": "<s1>For Android, this app requires Android version 7.0 or newer. For iOS, the device should have iOS 16.4 or newer. The minimum RAM requirement for operating this application nicely is 1 GB, and having enough free space in the memory is particularly important to store images, videos and offline maps.</s1>",
+  "target": "<s1>Sur Android, cette application nécessite Android 7.0 ou une version ultérieure. Sur iOS, l’appareil doit disposer d’iOS 16.4 ou d’une version ultérieure. La mémoire vive minimale requise pour un bon fonctionnement de l’application est de 1 Go, et il est particulièrement important de disposer de suffisamment d’espace libre en mémoire pour stocker les images, les vidéos et les cartes hors ligne.</s1>"
+ },
+ {
+  "source": "<s1>The </s1><s2>About</s2><s3> screen (in the options menu) shows the version of the app, what’s new in the latest versions, the full change log and the links to the support forum and the support email.</s3>",
+  "target": "<s1>L’écran </s1><s2>À propos</s2><s3> (dans le menu des options) affiche la version de l’application, les nouveautés des dernières versions, le journal complet des modifications ainsi que les liens vers le forum d’assistance et l’adresse e-mail d’assistance.</s3>"
+ },
+ {
+  "source": "<s1>For any query, issue, or assistance regarding Arena Mobile, please contact us via:</s1>",
+  "target": "<s1>Pour toute question, tout problème ou toute demande d’aide concernant Arena Mobile, contactez-nous via :</s1>"
+ },
+ {
+  "source": "<s1>Open Foris Support Forum</s1><s2>: </s2><s3>https://openforis.support</s3><s4> (tags: “arena”, “arena-mobile”)</s4>",
+  "target": "<s1>Forum d’assistance Open Foris</s1><s2> : </s2><s3>https://openforis.support</s3><s4> (étiquettes : « arena », « arena-mobile »)</s4>"
+ },
+ {
+  "source": "<s1>Arena on GitHub</s1><s2>: </s2><s3>https://github.com/openforis/arena</s3>",
+  "target": "<s1>Arena sur GitHub</s1><s2> : </s2><s3>https://github.com/openforis/arena</s3>"
+ },
+ {
+  "source": "<s1>Arena Mobile on GitHub</s1><s2>: </s2><s3>https://github.com/openforis/arena-mobile</s3>",
+  "target": "<s1>Arena Mobile sur GitHub</s1><s2> : </s2><s3>https://github.com/openforis/arena-mobile</s3>"
+ },
+ {
+  "source": "<x1/><s2> Mobile device’s compass typically points to the magnetic north, not true north. The magnetic north is based on the Earth’s magnetic field, while true north refers to the geographic North Pole. You might be able to calibrate your device’s compass with a known declination value. This means that, depending on your location, your device can adjust readings to provide more accurate direction relative to true north.</s2>",
+  "target": "<x1/><s2> La boussole d’un appareil mobile indique généralement le nord magnétique, et non le nord géographique. Le nord magnétique est déterminé par le champ magnétique terrestre, tandis que le nord géographique correspond au pôle Nord géographique. Vous pouvez éventuellement étalonner la boussole de votre appareil avec une valeur de déclinaison connue. Ainsi, selon votre position, votre appareil peut ajuster ses relevés pour fournir une direction plus précise par rapport au nord géographique.</s2>"
+ },
+ {
+  "source": "<x1/><s2>   Open Foris Arena Mobile - User Manual</s2>",
+  "target": "<x1/><s2>   Open Foris Arena Mobile - Manuel d’utilisation</s2>"
+ },
+ {
+  "source": "<x1/><x2/><x3/><s4>56</s4><x5/>",
+  "target": "<x1/><x2/><x3/><s4>56</s4><x5/>"
+ }
+]

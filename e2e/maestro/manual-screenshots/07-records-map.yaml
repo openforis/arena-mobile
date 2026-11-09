@@ -1,0 +1,27 @@
+appId: ${APP_ID}
+---
+- runFlow: _init.yaml
+- tapOn: ${output.t.goToDataEntry}
+- tapOn:
+    id: "app-bar-records-map-button"
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: records-map-chooser
+- tapOn:
+    text: ${output.t.freeMapLayers}
+    optional: true
+- tapOn: ${output.t.showMap}
+- runFlow:
+    file: _wait.yaml
+    env:
+      SECONDS: 15
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: records-map
+- tapOn: ${output.t.layers}
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: records-map-layers

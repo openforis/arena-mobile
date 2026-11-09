@@ -41,7 +41,13 @@ export const OptionsMenu = (props: Props) => {
     : null;
 
   const anchor = useMemo(
-    () => <AppBarAction icon="dots-vertical" onPress={toggleMenu} />,
+    () => (
+      <AppBarAction
+        icon="dots-vertical"
+        onPress={toggleMenu}
+        testID="app-bar-options-menu-button"
+      />
+    ),
     [toggleMenu],
   );
 

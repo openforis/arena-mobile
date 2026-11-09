@@ -1,0 +1,155 @@
+appId: ${APP_ID}
+---
+# New record in the demo survey: form, data types, navigation, validation
+- runFlow: _init.yaml
+- tapOn: ${output.t.goToDataEntry}
+- tapOn: ${output.t.newRecord}
+- extendedWaitUntil:
+    visible: "Level 1 Unit no"
+    timeout: 20000
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: record-new
+
+# closest sampling point (Test Point 1)
+- setLocation:
+    latitude: 3.9768
+    longitude: 42.10738
+- tapOn: ${output.t.findClosestSamplingPoint}
+- runFlow:
+    file: _wait.yaml
+    env:
+      SECONDS: 8
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: closest-sampling-point
+- back
+
+# code attribute (dropdown)
+- tapOn:
+    text: ${output.t.selectItem}
+    below: "Level 1 Unit no"
+    index: 0
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: code-dropdown-open
+- tapOn: "Test Point 1"
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: record-form
+- swipe:
+    start: "50%,80%"
+    end: "50%,30%"
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: record-form-2
+
+# navigation drawer
+- tapOn:
+    id: "app-bar-drawer-button"
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: drawer
+- tapOn: "Site Details"
+- waitForAnimationToEnd
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: site-details
+- tapOn:
+    text: ${output.t.selectItem}
+    below: "Region"
+    index: 0
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: code-dropdown-region
+- tapOn: "Central Region.*"
+- tapOn:
+    text: ${output.t.selectItem}
+    below: "District"
+    index: 0
+- tapOn: "Plateau District.*"
+
+# coordinate (~106 m north of Test Point 1)
+- scrollUntilVisible:
+    element: ${output.t.getLocation}
+    direction: DOWN
+- tapOn: ${output.t.getLocation}
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: coordinate-getting-location
+- runFlow:
+    file: _wait.yaml
+    env:
+      SECONDS: 6
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: coordinate
+- tapOn:
+    id: "coordinate-navigate-to-target-button"
+- runFlow:
+    file: _wait.yaml
+    env:
+      SECONDS: 5
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: navigate-to-target-compass
+- tapOn: ${output.t.radar}
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: navigate-to-target-radar
+- tapOn:
+    id: "dialog-close-button"
+    optional: true
+
+# integer with validation warning
+- scrollUntilVisible:
+    element:
+      id: "site_slope"
+    direction: DOWN
+- tapOn:
+    id: "site_slope"
+- inputText: "75"
+- tapOn: "Slope \\[%\\]"
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: slope-warning
+
+# code attribute (checkbox / radio buttons)
+- scrollUntilVisible:
+    element: "North-East \\(NE\\)"
+    direction: DOWN
+- tapOn: "North-East \\(NE\\)"
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: code-checkbox
+
+# date, time, table (multiple entity)
+- scrollUntilVisible:
+    element: "Date of previous visit"
+    direction: DOWN
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: date-time
+- scrollUntilVisible:
+    element: "Total ground cover.*"
+    direction: DOWN
+    optional: true
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: ground-cover

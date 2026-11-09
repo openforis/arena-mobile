@@ -1,0 +1,27 @@
+appId: ${APP_ID}
+---
+- runFlow: _init.yaml
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: home
+- tapOn:
+    id: "app-bar-options-menu-button"
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: options-menu
+- back
+- tapOn:
+    id: "home-connect-button"
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: login
+- scrollUntilVisible:
+    element: ${output.t.login}
+    optional: true
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: login-2

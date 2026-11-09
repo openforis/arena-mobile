@@ -1,0 +1,7 @@
+appId: ${APP_ID}
+---
+# Params: NAME (file name, without extension).
+# Saved in the test output folder as shot-NAME.png (collected by take-manual-screenshots-android.sh)
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: shot-${NAME}

@@ -1,0 +1,27 @@
+appId: ${APP_ID}
+---
+- runFlow: _init.yaml
+- runFlow:
+    file: _open-menu-item.yaml
+    env:
+      ITEM: ${output.t.offlineMaps}
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: offline-maps
+- tapOn: ${output.t.pdfMaps}
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: pdf-maps
+- tapOn: ${output.t.downloadedAreas}
+- tapOn: ${output.t.addArea}
+# map tiles downloaded from the internet
+- runFlow:
+    file: _wait.yaml
+    env:
+      SECONDS: 15
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: offline-map-area-new
