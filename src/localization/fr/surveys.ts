@@ -4,7 +4,7 @@ export default {
     surveyAdmin: "Administrateur de l'enquête",
     surveyEditor: "Éditeur de l'enquête",
     surveyManager: "Gestionnaire de l'enquête",
-    surveyGuest: "Invité de l'enquête",
+    surveyGuest: "Invité",
     dataEditor: "Éditeur de données",
     dataCleanser: "Nettoyeur de données",
     dataAnalyst: "Analyste de données",

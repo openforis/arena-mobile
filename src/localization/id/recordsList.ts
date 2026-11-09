@@ -63,6 +63,8 @@ export default {
   readOnly: "Hanya baca",
   readOnlyOfAnotherUserGroup:
     "Rekaman grup pengguna lain: dapat dilihat atau dikloning, tetapi tidak dapat diedit",
+  readOnlyRole:
+    "Peran Anda dalam survei ini memungkinkan melihat rekaman, tetapi tidak mengeditnya",
   recordHasErrorsOrWarningsTooltip:
     "Data isian memiliki {{count}} {{itemsTypeText}}",
   recordType: {

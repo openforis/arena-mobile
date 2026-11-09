@@ -4,7 +4,7 @@ export default {
     surveyAdmin: "Администратор опроса",
     surveyEditor: "Редактор опроса",
     surveyManager: "Менеджер опроса",
-    surveyGuest: "Гость опроса",
+    surveyGuest: "Гость",
     dataEditor: "Редактор данных",
     dataCleanser: "Специалист по очистке данных",
     dataAnalyst: "Аналитик данных",

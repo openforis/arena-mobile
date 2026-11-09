@@ -8,6 +8,11 @@ import {
 
 import { RemoteConnectionSelectors } from "./selectors";
 
+// survey selectors dependencies (native modules)
+jest.mock("model", () => ({}));
+jest.mock("service", () => ({ SurveyService: {} }));
+jest.mock("localization", () => ({}));
+
 const { entityDef, integerDef, textDef } = SurveyObjectBuilders;
 
 describe("selectLoggedUserSafe", () => {
@@ -38,5 +43,58 @@ describe("selectLoggedUserSafe", () => {
       record,
     });
     expect(Object.keys(recordUpdated.nodes ?? {}).length).toBeGreaterThan(0);
+  });
+});
+
+const surveyUuid = "survey-1";
+const survey = { uuid: surveyUuid, published: true, props: {} };
+
+const userWithGroup = (name: string, groupSurveyUuid = surveyUuid) => ({
+  uuid: "user-1",
+  props: {},
+  authGroups: [
+    {
+      name,
+      surveyUuid: groupSurveyUuid,
+      permissions: [],
+      recordSteps: {},
+    },
+  ],
+});
+
+const createState = (user: any) => ({
+  survey: { currentSurvey: survey },
+  remoteConnection: { user },
+});
+
+const { selectLoggedUserCanCreateRecords } = RemoteConnectionSelectors;
+
+describe("selectLoggedUserCanCreateRecords", () => {
+  test("not logged in: records can be created (offline)", () => {
+    expect(selectLoggedUserCanCreateRecords(createState(null))).toBe(true);
+  });
+
+  test("data editor can create records", () => {
+    expect(
+      selectLoggedUserCanCreateRecords(
+        createState(userWithGroup("dataEditor")),
+      ),
+    ).toBe(true);
+  });
+
+  test("survey guest cannot create records", () => {
+    expect(
+      selectLoggedUserCanCreateRecords(
+        createState(userWithGroup("surveyGuest")),
+      ),
+    ).toBe(false);
+  });
+
+  test("survey guest of another survey: no role in this survey", () => {
+    expect(
+      selectLoggedUserCanCreateRecords(
+        createState(userWithGroup("surveyGuest", "survey-2")),
+      ),
+    ).toBe(true);
   });
 });

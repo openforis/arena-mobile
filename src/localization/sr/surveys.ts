@@ -4,7 +4,7 @@ export default {
     surveyAdmin: "Administrator istraživanja",
     surveyEditor: "Urednik istraživanja",
     surveyManager: "Menadžer istraživanja",
-    surveyGuest: "Gost istraživanja",
+    surveyGuest: "Gost",
     dataEditor: "Unosilac podataka",
     dataCleanser: "Čistač podataka",
     dataAnalyst: "Analitičar podataka",

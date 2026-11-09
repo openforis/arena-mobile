@@ -62,6 +62,8 @@ export default {
   readOnly: "Samo za čitanje",
   readOnlyOfAnotherUserGroup:
     "Zapis druge grupe korisnika: može da se pregleda ili klonira, ali ne i da se mijenja",
+  readOnlyRole:
+    "Vaša uloga u ovom istraživanju omogućava pregled zapisa, ali ne i njihovo mijenjanje",
   recordHasErrorsOrWarningsTooltip: "{{itemsTypeText}} u zapisu: {{count}}",
   recordType: {
     all: "Svi zapisi",

@@ -4,7 +4,7 @@ export default {
     surveyAdmin: "مدیر نظرسنجی",
     surveyEditor: "ویرایشگر نظرسنجی",
     surveyManager: "سرپرست نظرسنجی",
-    surveyGuest: "مهمان نظرسنجی",
+    surveyGuest: "مهمان",
     dataEditor: "ویرایشگر داده",
     dataCleanser: "پاکسازی‌کننده داده",
     dataAnalyst: "تحلیل‌گر داده",
