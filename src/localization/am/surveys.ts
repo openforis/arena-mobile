@@ -4,7 +4,7 @@ export default {
     surveyAdmin: "የዳሰሳ አስተዳዳሪ",
     surveyEditor: "የዳሰሳ አርታዒ",
     surveyManager: "የዳሰሳ አስተባባሪ",
-    surveyGuest: "የዳሰሳ እንግዳ",
+    surveyGuest: "እንግዳ",
     dataEditor: "የመረጃ አርታዒ",
     dataCleanser: "የመረጃ አጣሪ",
     dataAnalyst: "የመረጃ ተንታኝ",
