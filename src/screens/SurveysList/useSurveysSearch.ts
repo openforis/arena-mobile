@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 import { Objects } from "@openforis/arena-core";
 
@@ -9,9 +9,11 @@ export const useSurveysSearch = ({ surveys }: any) => {
   });
   const { surveysFiltered, searchValue } = state;
 
-  useEffect(() => {
+  const [prevSurveys, setPrevSurveys] = useState(surveys);
+  if (surveys !== prevSurveys) {
+    setPrevSurveys(surveys);
     setState({ surveysFiltered: surveys, searchValue: "" });
-  }, [surveys]);
+  }
 
   const onSearchValueChange = useCallback(
     (val: any) => {

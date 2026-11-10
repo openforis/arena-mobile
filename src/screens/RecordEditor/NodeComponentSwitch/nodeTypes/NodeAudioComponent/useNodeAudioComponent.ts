@@ -4,7 +4,7 @@ import {
   setAudioModeAsync,
   useAudioRecorder,
 } from "expo-audio";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { UUIDs } from "@openforis/arena-core";
 
@@ -37,7 +37,6 @@ export const useNodeAudioComponent = ({ nodeUuid }: any) => {
     isMeteringEnabled: true,
   });
 
-  const [fileUri, setFileUri] = useState(null as string | null);
   const [audioRecordingInProgress, setAudioRecordingInProgress] =
     useState(false);
   const [audioRecordingPaused, setAudioRecordingPaused] = useState(false);
@@ -49,12 +48,13 @@ export const useNodeAudioComponent = ({ nodeUuid }: any) => {
     [fileNameCalculated, valueFileName],
   );
 
-  useEffect(() => {
-    const fileUriUpdated = fileUuid
-      ? RecordFileService.getRecordFileUri({ surveyId, fileUuid })
-      : null;
-    setFileUri(fileUriUpdated);
-  }, [fileUuid, surveyId]);
+  const fileUri = useMemo(
+    () =>
+      fileUuid
+        ? RecordFileService.getRecordFileUri({ surveyId, fileUuid })
+        : null,
+    [fileUuid, surveyId],
+  );
 
   const onFileSelected = useCallback(
     async (result: DocumentPicker.DocumentPickerResult) => {

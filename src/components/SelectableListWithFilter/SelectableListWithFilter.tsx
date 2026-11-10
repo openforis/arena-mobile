@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { Chip } from "react-native-paper";
 
@@ -17,6 +17,8 @@ import { SelectableList } from "../SelectableList";
 
 import styles from "./styles";
 import { SelectableListProps } from "components/SelectableList/SelectableList";
+
+const noItems: any[] = [];
 
 const _objToArray = (obj: any) => {
   if (!obj) return [];
@@ -49,17 +51,22 @@ export const SelectableListWithFilter = (props: Props) => {
     selectedItems = [],
   } = props;
 
-  const inputValueRef = useRef(null);
-
   const filterVisible = items.length > itemsCountToShowFilter;
   const debounceFiltering = items.length > maxItemsToShow;
 
-  const calculateItemsFiltered = useCallback(() => {
+  const [filterInputValue, setFilterInputValue] = useState<string | null>(null);
+  // the value the items are filtered with (debounced when there are many items)
+  const [filterValue, setFilterValue] = useState<string | null>(null);
+  const setFilterValueDebounced = useMemo(
+    () => Functions.debounce(setFilterValue, 500),
+    [],
+  );
+  const loading = debounceFiltering && filterInputValue !== filterValue;
+
+  const itemsFilteredNext = useMemo(() => {
     if (!filterVisible) return items;
 
-    const filterInputValue: string | null = inputValueRef.current;
-
-    if (Objects.isEmpty(filterInputValue)) {
+    if (Objects.isEmpty(filterValue)) {
       if (selectedItems.length === 0) {
         return items.slice(0, maxItemsToShow);
       } else {
@@ -69,18 +76,18 @@ export const SelectableListWithFilter = (props: Props) => {
       }
     }
     if (filterItems) {
-      return filterItems({ items, filterInputValue });
+      return filterItems({ items, filterInputValue: filterValue });
     }
     return items.filter(
       (item: any) =>
         !selectedItems.includes(item) &&
-        (Objects.isEmpty(filterInputValue) ||
-          itemLabelExtractor(item)
-            .toLocaleLowerCase()
-            .includes(filterInputValue!.toLocaleLowerCase())),
+        itemLabelExtractor(item)
+          .toLocaleLowerCase()
+          .includes(filterValue!.toLocaleLowerCase()),
     );
   }, [
     filterItems,
+    filterValue,
     filterVisible,
     itemLabelExtractor,
     items,
@@ -88,61 +95,38 @@ export const SelectableListWithFilter = (props: Props) => {
     selectedItems,
   ]);
 
-  const [state, setState] = useState({
-    loading: false,
-    itemsFiltered: calculateItemsFiltered(),
+  // same array while the filtered items don't change (callers can pass new arrays on every render): the list is not re-rendered
+  const [itemsFilteredState, setItemsFilteredState] = useState({
+    source: itemsFilteredNext,
+    items: itemsFilteredNext,
   });
-  const { loading, itemsFiltered } = state;
-
-  const updateItemsFiltered = useCallback(() => {
-    const itemsFilteredNext = calculateItemsFiltered();
-    setState((statePrev) => {
-      const { itemsFiltered } = statePrev;
-      if (!Objects.isEqual(itemsFiltered, itemsFilteredNext)) {
-        return {
-          ...statePrev,
-          loading: false,
-          itemsFiltered: itemsFilteredNext,
-        };
-      }
-      return debounceFiltering ? { ...statePrev, loading: false } : statePrev;
+  if (itemsFilteredState.source !== itemsFilteredNext) {
+    setItemsFilteredState({
+      source: itemsFilteredNext,
+      items: Objects.isEqual(itemsFilteredState.items, itemsFilteredNext)
+        ? itemsFilteredState.items
+        : itemsFilteredNext,
     });
-  }, [calculateItemsFiltered, debounceFiltering]);
-
-  const updateItemsFilteredDebouced = useMemo(
-    () => Functions.debounce(updateItemsFiltered, 500),
-    [updateItemsFiltered],
-  );
+  }
+  const itemsFiltered = loading ? noItems : itemsFilteredState.items;
 
   const onFilterInputChange = useCallback(
-    (text: any) => {
-      inputValueRef.current = text;
+    (text: string) => {
+      setFilterInputValue(text);
       if (debounceFiltering) {
-        if (!loading) {
-          setState((statePrev) => ({
-            ...statePrev,
-            loading: true,
-            itemsFiltered: [],
-          }));
-        }
-        updateItemsFilteredDebouced();
+        setFilterValueDebounced(text);
       } else {
-        updateItemsFiltered();
+        setFilterValue(text);
       }
     },
-    [
-      debounceFiltering,
-      loading,
-      updateItemsFiltered,
-      updateItemsFilteredDebouced,
-    ],
+    [debounceFiltering, setFilterValueDebounced],
   );
 
   const _onSelectedItemsChange = useCallback(
     (selectedItemsNext: any) => {
-      onSelectedItemsChange(selectedItemsNext, inputValueRef.current);
+      onSelectedItemsChange(selectedItemsNext, filterInputValue);
     },
-    [onSelectedItemsChange],
+    [filterInputValue, onSelectedItemsChange],
   );
 
   const onListSelectionChange = useCallback(
@@ -158,10 +142,6 @@ export const SelectableListWithFilter = (props: Props) => {
     },
     [_onSelectedItemsChange, selectedItems],
   );
-
-  useEffect(() => {
-    updateItemsFiltered();
-  }, [updateItemsFiltered, items, selectedItems]);
 
   const onClearPress = useCallback(() => {
     _onSelectedItemsChange([]);

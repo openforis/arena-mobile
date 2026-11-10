@@ -53,6 +53,13 @@ const initialState: RecordsListState = {
   syncStatusFetched: false,
 };
 
+// state set when the records start being (re)loaded
+const loadingStartState: Partial<RecordsListState> = {
+  loading: true,
+  syncStatusFetched: false,
+  syncStatusLoading: false,
+};
+
 export const useRecordsList = () => {
   const navigator = useNavigator();
   const dispatch = useAppDispatch();
@@ -88,7 +95,9 @@ export const useRecordsList = () => {
   // mirrors state.records without needing to be a useCallback dependency itself - see
   // loadRecordsWithSyncStatus below for why that matters
   const recordsRef = useRef(records);
-  recordsRef.current = records;
+  useEffect(() => {
+    recordsRef.current = records;
+  }, [records]);
   // incremented by every records load: only the latest one's response is applied
   const loadRequestIdRef = useRef(0);
 
@@ -98,34 +107,35 @@ export const useRecordsList = () => {
     [],
   );
 
-  const loadRecords = useCallback(async () => {
+  // called by an effect too: state set only in the promise callbacks, the caller sets the loading state
+  const fetchRecords = useCallback(() => {
     const requestId = ++loadRequestIdRef.current;
-    setState((statePrev) => ({
-      ...statePrev,
-      loading: true,
-      syncStatusFetched: false,
-      syncStatusLoading: false,
-    }));
+    return RecordService.fetchRecords({ survey, cycle, onlyLocal }).then(
+      (_records) => {
+        if (requestId !== loadRequestIdRef.current) return;
 
-    try {
-      const _records = await RecordService.fetchRecords({
-        survey,
-        cycle,
-        onlyLocal,
-      });
-      if (requestId !== loadRequestIdRef.current) return;
-
-      setState((statePrev) => ({
-        ...statePrev,
-        records: _records,
-        loading: false,
-      }));
-    } catch (error) {
-      if (requestId !== loadRequestIdRef.current) return;
-      setState((statePrev) => ({ ...statePrev, records: [], loading: false }));
-      toaster("dataEntry:errorLoadingRecords", { details: String(error) });
-    }
+        setState((statePrev) => ({
+          ...statePrev,
+          records: _records,
+          loading: false,
+        }));
+      },
+      (error) => {
+        if (requestId !== loadRequestIdRef.current) return;
+        setState((statePrev) => ({
+          ...statePrev,
+          records: [],
+          loading: false,
+        }));
+        toaster("dataEntry:errorLoadingRecords", { details: String(error) });
+      },
+    );
   }, [survey, cycle, onlyLocal, toaster]);
+
+  const loadRecords = useCallback(async () => {
+    setState((statePrev) => ({ ...statePrev, ...loadingStartState }));
+    await fetchRecords();
+  }, [fetchRecords]);
 
   const loadRecordsWithSyncStatus =
     useCallback(async (): Promise<RecordsListState> => {
@@ -191,10 +201,12 @@ export const useRecordsList = () => {
     lastCheckedAt: autoSyncLastCheckedAt,
     lastLocalChangeAt: autoSyncLastLocalChangeAt,
   });
-  autoSyncThrottleStateRef.current = {
-    lastCheckedAt: autoSyncLastCheckedAt,
-    lastLocalChangeAt: autoSyncLastLocalChangeAt,
-  };
+  useEffect(() => {
+    autoSyncThrottleStateRef.current = {
+      lastCheckedAt: autoSyncLastCheckedAt,
+      lastLocalChangeAt: autoSyncLastLocalChangeAt,
+    };
+  }, [autoSyncLastCheckedAt, autoSyncLastLocalChangeAt]);
 
   // when auto sync is on, keep the sync status visible in the list without requiring the
   // user to press "check status" manually; skip it if auto-sync itself couldn't run anyway
@@ -234,7 +246,9 @@ export const useRecordsList = () => {
   }, [canCheckAutoSyncStatus, loadRecordsWithSyncStatus, dispatch]);
 
   const checkAutoSyncStatusIfNeededRef = useRef(checkAutoSyncStatusIfNeeded);
-  checkAutoSyncStatusIfNeededRef.current = checkAutoSyncStatusIfNeeded;
+  useEffect(() => {
+    checkAutoSyncStatusIfNeededRef.current = checkAutoSyncStatusIfNeeded;
+  }, [checkAutoSyncStatusIfNeeded]);
 
   // sequenced so the network-based sync status refresh always applies after the local-only reload
   const refreshRecords = useCallback(async () => {
@@ -242,11 +256,29 @@ export const useRecordsList = () => {
     checkAutoSyncStatusIfNeededRef.current();
   }, [loadRecords]);
 
-  // initial load and reload on survey, cycle or "only local" change
+  // survey, cycle or "only local" changed: reset the search and set the loading state
+  const [loadParamsPrev, setLoadParamsPrev] = useState({
+    survey,
+    cycle,
+    onlyLocal,
+  });
+  if (
+    survey !== loadParamsPrev.survey ||
+    cycle !== loadParamsPrev.cycle ||
+    onlyLocal !== loadParamsPrev.onlyLocal
+  ) {
+    setLoadParamsPrev({ survey, cycle, onlyLocal });
+    setState((statePrev) => ({
+      ...statePrev,
+      ...loadingStartState,
+      searchValue: "",
+    }));
+  }
+
+  // initial load and reload on survey, cycle or "only local" change (loading state set above)
   useEffect(() => {
-    setState((statePrev) => ({ ...statePrev, searchValue: "" }));
-    refreshRecords();
-  }, [refreshRecords]);
+    fetchRecords().then(() => checkAutoSyncStatusIfNeededRef.current());
+  }, [fetchRecords]);
 
   // check the sync status as soon as it becomes possible (e.g. network back, user logged in)
   const canCheckAutoSyncStatusPrevRef = useRef(canCheckAutoSyncStatus);

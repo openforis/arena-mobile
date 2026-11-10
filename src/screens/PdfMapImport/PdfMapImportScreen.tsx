@@ -183,17 +183,20 @@ export const PdfMapImportScreen = () => {
   );
 
   // default name and max zoom when the selected page changes
-  useEffect(() => {
-    if (!candidate) return;
-    setName(
-      PdfMapsService.generateDefaultName({
-        fileName,
-        candidate,
-        candidatesCount: candidates.length,
-      }),
-    );
-    setMaxZoom(candidate.zoomRange.maxZoom);
-  }, [candidate, candidates.length, fileName]);
+  const [prevCandidate, setPrevCandidate] = useState<typeof candidate>();
+  if (candidate !== prevCandidate) {
+    setPrevCandidate(candidate);
+    if (candidate) {
+      setName(
+        PdfMapsService.generateDefaultName({
+          fileName,
+          candidate,
+          candidatesCount: candidates.length,
+        }),
+      );
+      setMaxZoom(candidate.zoomRange.maxZoom);
+    }
+  }
 
   const pageItems = useMemo(
     () =>

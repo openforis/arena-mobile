@@ -19,23 +19,31 @@ export const useAvailableGpsSources = () => {
   >([]);
   const [loading, setLoading] = useState(true);
 
+  const loadAvailableGpsSources = useCallback(
+    () =>
+      ExternalGpsService.listAvailableSources()
+        .then((sources) => {
+          if (isMountedRef.current) {
+            setAvailableGpsSources(sources);
+          }
+        })
+        .finally(() => {
+          if (isMountedRef.current) {
+            setLoading(false);
+          }
+        }),
+    [isMountedRef],
+  );
+
   const refreshAvailableGpsSources = useCallback(async () => {
     setLoading(true);
-    try {
-      const sources = await ExternalGpsService.listAvailableSources();
-      if (isMountedRef.current) {
-        setAvailableGpsSources(sources);
-      }
-    } finally {
-      if (isMountedRef.current) {
-        setLoading(false);
-      }
-    }
-  }, [isMountedRef]);
+    await loadAvailableGpsSources();
+  }, [loadAvailableGpsSources]);
 
+  // loading is already true on mount
   useEffect(() => {
-    refreshAvailableGpsSources();
-  }, [refreshAvailableGpsSources]);
+    loadAvailableGpsSources();
+  }, [loadAvailableGpsSources]);
 
   useNavigationFocus(refreshAvailableGpsSources);
 

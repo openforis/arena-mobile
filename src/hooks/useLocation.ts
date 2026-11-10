@@ -10,7 +10,6 @@ const defaultState = {
   locationAccuracy: null,
   locationFetched: false,
   pointLatLong: null,
-  watchingLocation: false,
 };
 
 export const useLocation = (): {
@@ -29,13 +28,7 @@ export const useLocation = (): {
 } => {
   const [state, setState] = useState(defaultState);
 
-  const {
-    location,
-    locationAccuracy,
-    locationFetched,
-    pointLatLong,
-    watchingLocation,
-  } = state;
+  const { location, locationAccuracy, locationFetched, pointLatLong } = state;
 
   const locationCallback = useCallback(
     ({ location, locationAccuracy, pointLatLong, thresholdReached }: any) => {
@@ -46,7 +39,6 @@ export const useLocation = (): {
           locationFetched: true,
           location,
           pointLatLong,
-          watchingLocation: false,
         }));
       } else {
         setState((statePrev) => ({
@@ -66,33 +58,16 @@ export const useLocation = (): {
     locationWatchStatus,
     startLocationWatch,
     stopLocationWatch,
+    watchingLocation,
   } = useLocationWatch({ locationCallback });
 
   useEffect(() => {
     startLocationWatch();
-    setState((statePrev) => ({
-      ...statePrev,
-      ...defaultState,
-      watchingLocation: true,
-    }));
 
     return () => {
       stopLocationWatch();
     };
   }, [startLocationWatch, stopLocationWatch]);
-
-  useEffect(() => {
-    if (locationWatchStatus !== "idle") return;
-
-    setState((statePrev) =>
-      statePrev.watchingLocation
-        ? {
-            ...statePrev,
-            watchingLocation: false,
-          }
-        : statePrev,
-    );
-  }, [locationWatchStatus]);
 
   return {
     location,

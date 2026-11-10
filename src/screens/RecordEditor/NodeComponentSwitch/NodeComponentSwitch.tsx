@@ -1,3 +1,5 @@
+import { createElement } from "react";
+
 import { NodeDefType, NodeDefs } from "@openforis/arena-core";
 
 import { RecordEditViewMode } from "model";
@@ -13,6 +15,7 @@ import { NodeComponentProps } from "./nodeTypes/nodeComponentPropTypes";
 
 // Entity components render NodeDefFormItem, which renders NodeComponentSwitch again:
 // require them lazily (at render time) to avoid a require cycle at module load time.
+// require returns the same (cached) component every time: rendered with createElement.
 const getNodeSingleEntityComponent = () =>
   (
     require("./nodeTypes/NodeSingleEntityComponent") as typeof import("./nodeTypes/NodeSingleEntityComponent")
@@ -32,22 +35,16 @@ export const NodeComponentSwitch = (props: NodeComponentProps) => {
 
   if (NodeDefs.isEntity(nodeDef)) {
     if (NodeDefs.isSingle(nodeDef)) {
-      const NodeSingleEntityComponent = getNodeSingleEntityComponent();
-      return (
-        <NodeSingleEntityComponent
-          nodeDef={nodeDef}
-          parentNodeUuid={parentNodeUuid}
-        />
-      );
+      return createElement(getNodeSingleEntityComponent(), {
+        nodeDef,
+        parentNodeUuid,
+      });
     }
     if (viewMode === RecordEditViewMode.oneNode) {
-      const NodeMultipleEntityComponent = getNodeMultipleEntityComponent();
-      return (
-        <NodeMultipleEntityComponent
-          entityDef={nodeDef}
-          parentEntityUuid={parentNodeUuid}
-        />
-      );
+      return createElement(getNodeMultipleEntityComponent(), {
+        entityDef: nodeDef,
+        parentEntityUuid: parentNodeUuid,
+      });
     }
     return (
       <NodeMultipleEntityPreviewComponent

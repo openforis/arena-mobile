@@ -127,20 +127,27 @@ export const PdfMapsTab = () => {
   const [freeDiskStorage, setFreeDiskStorage] = useState<number | null>(null);
   const [deleting, setDeleting] = useState(false);
 
+  const fetchStorageInfo = useCallback(
+    () =>
+      Promise.all([
+        PdfMapsService.getStorageSize(),
+        Files.getFreeDiskStorage(),
+      ]).then(([size, freeSpace]) => {
+        setStorageSize(size);
+        setFreeDiskStorage(freeSpace);
+      }),
+    [],
+  );
+
   const loadStorageInfo = useCallback(async () => {
     setStorageSize(null);
-    const [size, freeSpace] = await Promise.all([
-      PdfMapsService.getStorageSize(),
-      Files.getFreeDiskStorage(),
-    ]);
-    setStorageSize(size);
-    setFreeDiskStorage(freeSpace);
-  }, []);
+    await fetchStorageInfo();
+  }, [fetchStorageInfo]);
 
-  // tabs are mounted when the screen is already focused: load on mount too
+  // tabs are mounted when the screen is already focused: load on mount too (storage size is initially null)
   useEffect(() => {
-    void loadStorageInfo();
-  }, [loadStorageInfo]);
+    void fetchStorageInfo();
+  }, [fetchStorageInfo]);
   useNavigationFocus(loadStorageInfo);
 
   const onImportPress = useCallback(async () => {

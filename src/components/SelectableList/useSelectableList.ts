@@ -2,10 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import { Arrays } from "@openforis/arena-core";
 
-const initialState = {
-  selectionEnabled: false,
-  selectedItemIds: [],
-};
+const noItemIds: string[] = [];
 
 export const useSelectableList = (props: any) => {
   const {
@@ -18,36 +15,31 @@ export const useSelectableList = (props: any) => {
     selectedItemIds: selectedItemIdsProp,
   } = props;
 
-  const [state, setState] = useState({
-    ...initialState,
-    selectedItemIds: selectedItemIdsProp ?? [],
+  // the selection is valid for the items (and selectable) it was made with
+  const [selection, setSelection] = useState({
+    items,
+    selectable,
+    selectedItemIds: noItemIds,
   });
+  const selectionValid =
+    selection.items === items && selection.selectable === selectable;
 
-  const { selectedItemIds, selectionEnabled } = state;
+  // controlled by the parent when it passes selectedItemIds
+  const selectedItemIds: string[] =
+    selectedItemIdsProp ??
+    (selectionValid ? selection.selectedItemIds : noItemIds);
+  const selectionEnabled = selectedItemIds.length > 0;
 
-  // reset state on items change
+  const setSelectedItemIds = useCallback(
+    (selectedItemIdsNext: string[]) =>
+      setSelection({ items, selectable, selectedItemIds: selectedItemIdsNext }),
+    [items, selectable],
+  );
+
+  // the selection is reset on items change: notify the parent
   useEffect(() => {
-    setState((statePrev) => ({ ...statePrev, ...initialState }));
     onSelectionChange?.([]);
   }, [items, onSelectionChange, selectable]);
-
-  // update internal selected item ids on prop change
-  useEffect(() => {
-    if (
-      selectedItemIds === selectedItemIdsProp ||
-      (selectedItemIds?.length === 0 && selectedItemIdsProp?.length === 0)
-    ) {
-      return;
-    }
-    const selectedItemIdsNext = selectedItemIdsProp ?? selectedItemIds;
-    const selectionEnabledNext = selectedItemIdsNext?.length > 0;
-
-    setState((statePrev) => ({
-      ...statePrev,
-      selectedItemIds: selectedItemIdsNext,
-      selectionEnabled: selectionEnabledNext,
-    }));
-  }, [selectedItemIds, selectedItemIdsProp]);
 
   const onItemSelect = useCallback(
     (item: any) => {
@@ -57,21 +49,17 @@ export const useSelectableList = (props: any) => {
         ? Arrays.addItem(key)(selectedItemIds)
         : Arrays.removeItem(key)(selectedItemIds);
 
-      setState((statePrev) => ({
-        ...statePrev,
-        selectionEnabled: selectedItemIdsNext.length > 0,
-        selectedItemIds: selectedItemIdsNext,
-      }));
+      setSelectedItemIds(selectedItemIdsNext);
 
       onSelectionChange?.(selectedItemIdsNext);
     },
-    [onSelectionChange, selectedItemIds],
+    [onSelectionChange, selectedItemIds, setSelectedItemIds],
   );
 
   const onDeleteSelected = useCallback(() => {
     const performDelete = () => {
       onSelectionChange?.([]);
-      setState((statePrev) => ({ ...statePrev, ...initialState }));
+      setSelectedItemIds(noItemIds);
     };
     if (onDeleteSelectedItemIds) {
       // Only an explicit `false` (e.g. user canceled the confirm dialog) means nothing was
@@ -88,7 +76,12 @@ export const useSelectableList = (props: any) => {
     } else {
       performDelete();
     }
-  }, [selectedItemIds, onDeleteSelectedItemIds, onSelectionChange]);
+  }, [
+    selectedItemIds,
+    onDeleteSelectedItemIds,
+    onSelectionChange,
+    setSelectedItemIds,
+  ]);
 
   const onItemPress = useCallback(
     (item: any) => {

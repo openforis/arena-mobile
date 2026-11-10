@@ -23,7 +23,6 @@ export const useNodeComponentLocalState = ({
   isNodeValueEqual = isNodeValueEqualDefault,
 }: any) => {
   const dispatch = useAppDispatch();
-  const dirtyRef = useRef(false);
   const debouncedUpdateRef = useRef(null as any);
   const confirm = useConfirm();
 
@@ -36,23 +35,23 @@ export const useNodeComponentLocalState = ({
   });
 
   const [state, setState] = useState({
+    // value being updated by the user: keep the UI value until the store is in sync with it
+    dirty: false,
     invalidValue: false,
     value: nodeValue,
     uiValue: nodeValueToUiValue(nodeValue),
     validation: nodeValidation,
   });
-  const { invalidValue, value, uiValue, validation } = state;
+  const { dirty, invalidValue, value, uiValue, validation } = state;
 
-  useEffect(() => {
-    if (!updateDelay) return;
-
+  // local state synced with the node value during render (not in an effect)
+  if (updateDelay) {
     const nodeValueFromUI = uiValueToNodeValue(uiValue);
-    const dirty = dirtyRef.current;
 
     if (isNodeValueEqual(nodeValue, nodeValueFromUI)) {
       if (dirty) {
         // node value updated according to user needs: set dirty to false
-        dirtyRef.current = false;
+        setState((statePrev) => ({ ...statePrev, dirty: false }));
       }
     } else if (dirty) {
       // component is dirty (value is being updated by the user): do not update UI using node value
@@ -60,31 +59,21 @@ export const useNodeComponentLocalState = ({
       // UI value not in sync with node value: update UI
       const uiValueNext = nodeValueToUiValue(nodeValue);
 
-      // keep the same state when already updated: uiValue is an effect dependency,
-      // a new object would loop if isNodeValueEqual never matches
-      setState((statePrev) =>
-        statePrev.value === nodeValue &&
-        statePrev.validation === nodeValidation &&
-        Objects.isEqual(statePrev.uiValue, uiValueNext)
-          ? statePrev
-          : {
-              ...statePrev,
-              value: nodeValue,
-              uiValue: uiValueNext,
-              validation: nodeValidation,
-            },
-      );
+      // only when changed: it would loop if isNodeValueEqual never matches
+      if (
+        value !== nodeValue ||
+        validation !== nodeValidation ||
+        !Objects.isEqual(uiValue, uiValueNext)
+      ) {
+        setState((statePrev) => ({
+          ...statePrev,
+          value: nodeValue,
+          uiValue: uiValueNext,
+          validation: nodeValidation,
+        }));
+      }
     }
-  }, [
-    invalidValue,
-    isNodeValueEqual,
-    nodeValue,
-    nodeValidation,
-    nodeValueToUiValue,
-    uiValue,
-    uiValueToNodeValue,
-    updateDelay,
-  ]);
+  }
 
   const updateNodeValue = useCallback(
     ({
@@ -119,11 +108,10 @@ export const useNodeComponentLocalState = ({
         // a pending debounced update would overwrite this one
         debouncedUpdateRef.current?.cancel();
         debouncedUpdateRef.current = null;
-        // keep the UI value until the store is in sync with it
-        dirtyRef.current = true;
 
         setState((statePrev) => ({
           ...statePrev,
+          dirty: true,
           invalidValue: false,
           value: nodeValueUpdated,
           uiValue: uiValueUpdated,

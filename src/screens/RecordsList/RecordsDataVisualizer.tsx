@@ -430,14 +430,21 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
   );
 
   // records are refreshed often (focus, sync status checks): keep the selection, dropping only uuids no longer listed
-  useEffect(() => {
+  const [recordsPrev, setRecordsPrev] = useState(records);
+  if (records !== recordsPrev) {
+    setRecordsPrev(records);
     const selectionPruned = selectedRecordUuids.filter((uuid) =>
       records.some((record) => record.uuid === uuid),
     );
     if (selectionPruned.length !== selectedRecordUuids.length) {
-      onSelectionChange(selectionPruned);
+      setSelectedRecordUuids(selectionPruned);
     }
-  }, [onSelectionChange, records, selectedRecordUuids]);
+  }
+
+  // the parent keeps its own copy of the selection: notify it of the pruned one too
+  useEffect(() => {
+    onSelectedRecordUuidsChange?.(selectedRecordUuids);
+  }, [onSelectedRecordUuidsChange, selectedRecordUuids]);
 
   const onFetchSelectedItems = useCallback(() => {
     onFetchSelectedRecordUuids(selectedRecordUuids);

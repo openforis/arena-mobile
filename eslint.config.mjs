@@ -6,7 +6,7 @@ import tseslint from "typescript-eslint";
 import prettierConfig from "eslint-config-prettier";
 import globals from "globals";
 
-// React Compiler rules: reported as warnings until the existing code is adapted
+// React Compiler rules
 const reactCompilerRules = [
   "globals",
   "immutability",
@@ -55,7 +55,7 @@ export default [
       ...reactPlugin.configs.recommended.rules,
       ...reactHooksPlugin.configs.recommended.rules,
       ...Object.fromEntries(
-        reactCompilerRules.map((rule) => [`react-hooks/${rule}`, "warn"]),
+        reactCompilerRules.map((rule) => [`react-hooks/${rule}`, "error"]),
       ),
       "react/jsx-uses-react": "off",
       "react/react-in-jsx-scope": "off",

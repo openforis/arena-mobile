@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigator } from "navigation/navigator";
 
 import { useIsNetworkConnected, useToast } from "hooks";
@@ -33,7 +33,9 @@ export const useHomeSync = ({ onSyncEnd, records }: Props) => {
 
   const [syncing, setSyncing] = useState(false);
   const recordsRef = useRef(records);
-  recordsRef.current = records;
+  useEffect(() => {
+    recordsRef.current = records;
+  }, [records]);
 
   const loadRecordsWithSyncStatus =
     useCallback(async (): Promise<RecordsListState> => {

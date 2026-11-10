@@ -46,18 +46,19 @@ export const PreviewInitializer = ({ children }: Props) => {
   );
 
   const startPreview = useCallback(
-    async ({ survey, lang, cycle }: PreviewParams) => {
-      try {
-        await dispatch(DataEntryActions.startPreview({ survey, lang, cycle }));
-        setError(null);
-        setReady(true);
-      } catch (err: any) {
-        log.error("Error starting survey preview", err);
-        const message = String(err?.message ?? err);
-        setError(message);
-        postToParent({ type: PreviewMessageType.error, message });
-      }
-    },
+    ({ survey, lang, cycle }: PreviewParams) =>
+      dispatch(DataEntryActions.startPreview({ survey, lang, cycle })).then(
+        () => {
+          setError(null);
+          setReady(true);
+        },
+        (err: any) => {
+          log.error("Error starting survey preview", err);
+          const message = String(err?.message ?? err);
+          setError(message);
+          postToParent({ type: PreviewMessageType.error, message });
+        },
+      ),
     [dispatch],
   );
 
