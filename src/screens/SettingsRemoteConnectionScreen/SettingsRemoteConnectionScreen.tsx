@@ -25,6 +25,7 @@ import {
 } from "components";
 import { useTranslation } from "localization";
 import { SettingsService } from "service";
+import { invalidTwoFactorCodeError } from "service/authService";
 import {
   MessageActions,
   RemoteConnectionActions,
@@ -35,11 +36,22 @@ import { useEffectiveTheme, useIsNetworkConnected } from "hooks";
 import { AMConstants } from "utils";
 
 import { LoggedInUserSummary } from "./LoggedInUserSummary";
+import {
+  twoFactorCodeLength,
+  TwoFactorVerification,
+} from "./TwoFactorVerification";
 import styles from "./styles";
 
 const serverUrlTypes = {
   default: "default",
   custom: "custom",
+};
+
+const twoFactorInitialState = {
+  twoFactorRequired: false,
+  backupCodeMode: false,
+  twoFactorCode: "",
+  twoFactorCodeNotValid: false,
 };
 
 const parseLoginQrCodeData = (data: string) => {
@@ -76,6 +88,7 @@ export const SettingsRemoteConnectionScreen = () => {
     email: "",
     password: "",
     qrScannerVisible: false,
+    ...twoFactorInitialState,
   });
 
   const {
@@ -86,6 +99,10 @@ export const SettingsRemoteConnectionScreen = () => {
     serverUrlType,
     serverUrlVerified,
     qrScannerVisible,
+    twoFactorRequired,
+    backupCodeMode,
+    twoFactorCode,
+    twoFactorCodeNotValid,
   } = state;
 
   const initialize = useCallback(
@@ -165,25 +182,84 @@ export const SettingsRemoteConnectionScreen = () => {
     [],
   );
 
-  const onLogin = useCallback(async () => {
-    // normalize email
-    const emailNew = email.trim().toLocaleLowerCase();
-    setState((statePrev) => ({
-      ...statePrev,
-      email: emailNew,
-      loading: true,
-    }));
-    await dispatch(
-      RemoteConnectionActions.login({
-        serverUrl,
+  const login = useCallback(
+    async (twoFactorToken?: string) => {
+      // normalize email
+      const emailNew = email.trim().toLocaleLowerCase();
+      setState((statePrev) => ({
+        ...statePrev,
         email: emailNew,
-        password,
-        navigator,
-        showBack: true,
-      }),
-    );
-    setState((statePrev) => ({ ...statePrev, loading: false }));
-  }, [dispatch, email, navigator, password, serverUrl]);
+        loading: true,
+      }));
+      const res = await dispatch(
+        RemoteConnectionActions.login({
+          serverUrl,
+          email: emailNew,
+          password,
+          twoFactorToken,
+          navigator,
+          showBack: true,
+        }),
+      );
+      setState((statePrev) => {
+        if (res.user) {
+          return { ...statePrev, ...twoFactorInitialState, loading: false };
+        }
+        const codeNotValid = res.error === invalidTwoFactorCodeError;
+        return {
+          ...statePrev,
+          loading: false,
+          // stay in the two-step verification on other errors (e.g. network errors)
+          twoFactorRequired:
+            statePrev.twoFactorRequired || Boolean(res.twoFactorRequired),
+          twoFactorCode: codeNotValid ? "" : statePrev.twoFactorCode,
+          twoFactorCodeNotValid: codeNotValid,
+        };
+      });
+    },
+    [dispatch, email, navigator, password, serverUrl],
+  );
+
+  const onLogin = useCallback(() => login(), [login]);
+
+  const onTwoFactorCodeChange = useCallback(
+    (code: string) => {
+      if (loading) return;
+      setState((statePrev) => ({
+        ...statePrev,
+        twoFactorCode: code,
+        twoFactorCodeNotValid: false,
+      }));
+      if (!backupCodeMode && code.length === twoFactorCodeLength) {
+        login(code);
+      }
+    },
+    [backupCodeMode, loading, login],
+  );
+
+  const onTwoFactorVerify = useCallback(
+    () =>
+      login(
+        backupCodeMode ? twoFactorCode.trim().toUpperCase() : twoFactorCode,
+      ),
+    [backupCodeMode, login, twoFactorCode],
+  );
+
+  const onTwoFactorGoBack = useCallback(
+    () => setState((statePrev) => ({ ...statePrev, ...twoFactorInitialState })),
+    [],
+  );
+
+  const onBackupCodeModeToggle = useCallback(
+    () =>
+      setState((statePrev) => ({
+        ...statePrev,
+        backupCodeMode: !statePrev.backupCodeMode,
+        twoFactorCode: "",
+        twoFactorCodeNotValid: false,
+      })),
+    [],
+  );
 
   const onScanQrCode = useCallback(() => {
     setState((statePrev) => ({ ...statePrev, qrScannerVisible: true }));
@@ -234,7 +310,8 @@ export const SettingsRemoteConnectionScreen = () => {
     }
   }, [dispatch, networkAvailable]);
 
-  if (loading) {
+  // the two-step verification shows its own progress
+  if (loading && !twoFactorRequired) {
     return <Loader />;
   }
 
@@ -255,6 +332,43 @@ export const SettingsRemoteConnectionScreen = () => {
     );
   }
 
+  const offlineBanner = !networkAvailable && (
+    <HView
+      style={[
+        styles.offlineBanner,
+        { backgroundColor: theme.colors.errorContainer },
+      ]}
+    >
+      <Icon color={theme.colors.onErrorContainer} source="wifi-off" />
+      <Text
+        style={{ color: theme.colors.onErrorContainer }}
+        textKey="common:networkNotAvailable"
+      />
+    </HView>
+  );
+
+  if (twoFactorRequired) {
+    return (
+      <ScreenView>
+        <VView style={styles.container}>
+          {offlineBanner}
+          <TwoFactorVerification
+            backupCodeMode={backupCodeMode}
+            code={twoFactorCode}
+            codeNotValid={twoFactorCodeNotValid}
+            disabled={!networkAvailable}
+            email={email}
+            loading={loading}
+            onBackupCodeModeToggle={onBackupCodeModeToggle}
+            onCodeChange={onTwoFactorCodeChange}
+            onGoBack={onTwoFactorGoBack}
+            onVerify={onTwoFactorVerify}
+          />
+        </VView>
+      </ScreenView>
+    );
+  }
+
   const loginDisabled =
     !networkAvailable ||
     Objects.isEmpty(email?.trim()) ||
@@ -263,20 +377,7 @@ export const SettingsRemoteConnectionScreen = () => {
   return (
     <ScreenView>
       <VView style={styles.container}>
-        {!networkAvailable && (
-          <HView
-            style={[
-              styles.offlineBanner,
-              { backgroundColor: theme.colors.errorContainer },
-            ]}
-          >
-            <Icon color={theme.colors.onErrorContainer} source="wifi-off" />
-            <Text
-              style={{ color: theme.colors.onErrorContainer }}
-              textKey="common:networkNotAvailable"
-            />
-          </HView>
-        )}
+        {offlineBanner}
         <Card contentStyle={styles.cardContent}>
           <AppLogo style={styles.logo} />
           <TextInput

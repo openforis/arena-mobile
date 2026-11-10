@@ -1,4 +1,4 @@
-import { Objects, User } from "@openforis/arena-core";
+import { User } from "@openforis/arena-core";
 
 import { i18n } from "localization";
 import type { Navigator } from "navigation/navigator";
@@ -23,7 +23,7 @@ import { loginAndSetUser } from "./actionsLoginAndSetUser";
 import { RemoteConnectionSelectors } from "./selectors";
 import { AsyncStorageUtils } from "service/asyncStorage/AsyncStorageUtils";
 import { asyncStorageKeys } from "service/asyncStorage/asyncStorageKeys";
-import { invalidCredentialsError, LoginResponse } from "service/authService";
+import { invalidTwoFactorCodeError, LoginResponse } from "service/authService";
 import type { AppDispatch, AppGetState } from "../store";
 
 const { USER_SET, USER_PROFILE_ICON_INFO_SET } = RemoteConnectionActionTypes;
@@ -91,8 +91,6 @@ const onLoginResponse = async ({
   res,
   serverUrl,
   email,
-  password,
-  twoFactorToken,
   showBack,
 }: {
   dispatch: AppDispatch;
@@ -100,11 +98,9 @@ const onLoginResponse = async ({
   res: LoginResponse;
   serverUrl: string;
   email?: string;
-  password?: string;
-  twoFactorToken?: string;
   showBack?: boolean;
 }) => {
-  const { user, error, message, twoFactorRequired } = res;
+  const { user, error, message } = res;
   if (user) {
     await onLoginResponseSuccessful({
       user,
@@ -114,36 +110,6 @@ const onLoginResponse = async ({
       dispatch,
       navigator,
     });
-  } else if (
-    twoFactorRequired ||
-    (twoFactorToken && error === invalidCredentialsError)
-  ) {
-    dispatch(
-      ConfirmActions.show({
-        titleKey: "authService:twoFactorRequiredConfirm.title",
-        messageKey: twoFactorToken
-          ? "authService:twoFactorRequiredConfirm.messageError"
-          : "authService:twoFactorRequiredConfirm.message",
-        confirmButtonTextKey: "common:continue",
-        confirmButtonEnableFn: ({ textInputValue }) =>
-          Objects.isNotEmpty(textInputValue),
-        cancelButtonTextKey: "common:cancel",
-        onConfirm: async ({ textInputValue }) => {
-          await dispatch(
-            login({
-              navigator,
-              serverUrl,
-              email: email!,
-              password: password!,
-              twoFactorToken: textInputValue,
-              showBack,
-            }),
-          );
-        },
-        textInputToConfirm: true,
-        textInputToConfirmLabelKey: "authService:twoFactorCode",
-      }),
-    );
   } else if (message || error) {
     const errorKeySuffix =
       message &&
@@ -181,23 +147,25 @@ const login =
     showBack?: boolean;
     twoFactorToken?: string;
   }) =>
-  async (dispatch: AppDispatch) => {
+  async (dispatch: AppDispatch): Promise<LoginResponse> => {
     const res = await AuthService.login({
       serverUrl,
       email,
       password,
       twoFactorToken,
     });
-    await onLoginResponse({
-      res,
-      email,
-      password,
-      twoFactorToken,
-      serverUrl,
-      dispatch,
-      showBack,
-      navigator,
-    });
+    // two-step verification is handled by the login form
+    if (!res.twoFactorRequired && res.error !== invalidTwoFactorCodeError) {
+      await onLoginResponse({
+        res,
+        email,
+        serverUrl,
+        dispatch,
+        showBack,
+        navigator,
+      });
+    }
+    return res;
   };
 
 const loginWithTempAuthToken =

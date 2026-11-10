@@ -25,4 +25,16 @@ export default {
   },
   testUrl: "Testiraj URL",
   title: "Veza sa serverom",
+  twoFactor: {
+    backupCode: "Rezervni kod",
+    code: "2FA kod",
+    description:
+      "Unesite kod koji je generisala vaša aplikacija za autentifikaciju.",
+    descriptionBackupCode:
+      "Unesite jedan od rezervnih kodova koje ste sačuvali prilikom podešavanja verifikacije u dva koraka.",
+    title: "Verifikacija u dva koraka",
+    useAuthenticatorApp: "Koristi aplikaciju za autentifikaciju",
+    useBackupCode: "Koristi rezervni kod",
+    verify: "Potvrdi",
+  },
 };

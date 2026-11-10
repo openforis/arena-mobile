@@ -77,6 +77,7 @@ export { TextInput } from "./TextInput";
 export { TextInputPassword } from "./TextInputPassword";
 export { Tooltip } from "./Tooltip";
 export { UpdateStatusIcon } from "./UpdateStatusIcon";
+export { VerificationCodeInput } from "./VerificationCodeInput";
 export { View } from "./View";
 export { ViewMoreText } from "./ViewMoreText";
 export { VView } from "./VView";

@@ -3,6 +3,7 @@ export default {
     generic: "Kesalahan: {{details}}",
     invalidServerUrl: "URL Server Salah",
     invalidCredentials: "Email atau Kata Sandi Salah",
+    invalidTwoFactorCode: "Kode 2FA salah. Silakan coba lagi.",
   },
   loginRequired: "Wajib untuk Login",
   loginSuccessful: "Login berhasil!",
@@ -10,12 +11,5 @@ export default {
   logoutConfirmMessage: "Apakah Anda yakin ingin keluar?",
   logoutOptions: {
     keepEmailAddress: "Simpan alamat email",
-  },
-  twoFactorCode: "Kode 2FA",
-  twoFactorRequiredConfirm: {
-    title: "2FA Diperlukan",
-    message:
-      "Silakan masukkan kode yang dihasilkan oleh aplikasi autentikator Anda.",
-    messageError: "Kode 2FA salah. Silakan coba lagi.",
   },
 };

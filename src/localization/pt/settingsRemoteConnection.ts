@@ -26,4 +26,16 @@ export default {
   },
   testUrl: "Testar URL",
   title: "Ligação ao servidor",
+  twoFactor: {
+    backupCode: "Código de backup",
+    code: "Código 2FA",
+    description:
+      "Por favor, insira o código gerado pelo seu aplicativo autenticador.",
+    descriptionBackupCode:
+      "Insira um dos códigos de backup que você salvou ao configurar a verificação em duas etapas.",
+    title: "Verificação em duas etapas",
+    useAuthenticatorApp: "Usar o aplicativo autenticador",
+    useBackupCode: "Usar um código de backup",
+    verify: "Verificar",
+  },
 };
