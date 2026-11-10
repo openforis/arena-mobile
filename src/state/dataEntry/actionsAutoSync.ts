@@ -19,10 +19,8 @@ import {
 } from "../autoSync";
 import { SurveySelectors } from "../survey";
 import { ToastActions } from "../toast";
-import {
-  exportRecords,
-  fetchRecordsChangedRemotely,
-} from "./actionsDataExport";
+import { exportRecords } from "./actionsDataExport";
+import { fetchRecordsChangedRemotely } from "./actionsMergedRecords";
 import { DataEntryActionsRecordSync } from "./actionsRecordSync";
 import { DataEntrySelectors } from "./selectors";
 import type { AppDispatch, AppGetState } from "../store";

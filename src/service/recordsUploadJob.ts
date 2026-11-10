@@ -7,7 +7,7 @@ import { RecordService } from "./recordService";
 
 // a stable identifier for this job class, independent of `this.constructor.name` (which a
 // minified production build isn't guaranteed to preserve) - read by RecordsUploadAndProcessJob's
-// caller (see actionsDataExport.ts) to tell which of its inner jobs is currently active/failed
+// caller (see actionsRecordsUpload.ts) to tell which of its inner jobs is currently active/failed
 export const RECORDS_UPLOAD_JOB_TYPE = "RecordsUploadJob";
 
 export class RecordsUploadJob extends JobMobile<RecordsUploadAndProcessJobContext> {

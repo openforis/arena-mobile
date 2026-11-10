@@ -74,6 +74,7 @@ jest.mock("../remoteConnection", () => ({
     selectLoggedUserSafe: (state: any) => state.user,
   },
 }));
+jest.mock("./actionsCsvDataExport", () => ({}));
 jest.mock("./actionsDataExport", () => ({}));
 jest.mock("./actionsAutoSync", () => ({}));
 jest.mock("./actionsRecordPreviousCycle", () => ({

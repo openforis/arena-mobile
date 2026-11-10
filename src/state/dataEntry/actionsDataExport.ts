@@ -1,47 +1,30 @@
-import {
-  FlatDataExportDefaultOptions,
-  FlatDataExportOption,
-  FlatDataExportOptions,
-  JobSerialized,
-  JobStatus,
-  Objects,
-  Surveys,
-  UUIDs,
-} from "@openforis/arena-core";
+import { JobStatus, Objects } from "@openforis/arena-core";
 
-import {
-  AppCompatibilityOperation,
-  RecordService,
-  SettingsService,
-  UserService,
-} from "service";
+import { RecordService, UserService } from "service";
 import { RecordsExportFileGenerationJob } from "service/recordsExportFileGenerationJob";
 
 import { i18n } from "localization";
-import { JobCancelError, RecordUtils, ValidationUtils } from "model";
-import {
-  FlatDataExportJob,
-  FlatDataExportJobResult,
-} from "service/dataExportJob";
-import type { RecordsUploadState } from "service/RecordsUploadAndProcessJobContext";
-import { RecordsUploadAndProcessJob } from "service/recordsUploadAndProcessJob";
-import { RECORDS_UPLOAD_JOB_TYPE } from "service/recordsUploadJob";
-import { REMOTE_JOB_WATCHER_JOB_TYPE } from "service/remoteJobWatcherJob";
-import {
-  AppCompatibilityActions,
-  RemoteConnectionSelectors,
-} from "state/remoteConnection";
-import type { AppDispatch, AppGetState, RootState } from "state/store";
-import { Files, Jobs, log } from "utils";
+import { JobCancelError, ValidationUtils } from "model";
+import type { AppDispatch, AppGetState } from "state/store";
+import { Files, log } from "utils";
 
-import { fetchRecordsFromServer } from "./actionsRecordsImport";
 import { AutoSyncActions } from "../autoSync";
 import { ConfirmActions, ConfirmUtils, OnConfirmParams } from "../confirm";
 import { JobMonitorActions } from "../jobMonitor";
 import { MessageActions } from "../message";
 import { SurveySelectors } from "../survey";
 import { DataEntryActionsRecordSync } from "./actionsRecordSync";
-import { DataEntrySelectors } from "./selectors";
+import {
+  errorTextLooksLikeAuthError,
+  handleDataExportError,
+  REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES,
+} from "./dataExportUtils";
+import { startUploadDataToRemoteServer } from "./actionsRecordsUpload";
+import {
+  fetchMergedRecordsAndNotify,
+  fetchMergedSameRecordsSilently,
+  getMergedSameRecordUuidsToFetch,
+} from "./actionsMergedRecords";
 
 const { t } = i18n;
 
@@ -49,372 +32,6 @@ const exportType = {
   remote: "remote",
   share: "share",
 };
-
-// zip preparation and upload+processing (see RecordsUploadAndProcessJob) are two separate
-// job-monitor calls (see JobMonitorActions.startAsync calls below), each with its own 0-100%
-// progress - without this, the bar would restart from 0% between them instead of climbing
-// smoothly through one continuous operation (see JobMonitorState.progressRangeStart/End). Only
-// applied when going straight to the remote server (onlyRemote): a plain "export" only knows
-// whether it'll continue into an upload after the zip is ready and the user picks a target, so
-// its zip-preparation phase can't be pre-allocated a slice of a chain that might not happen.
-// Upload and server-side processing don't need their own synthetic split the way zip-generation
-// does here: they're composed into one job (RecordsUploadAndProcessJob), so JobBase's own
-// inner-job progress weighting already makes that half continuous natively.
-const REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES = {
-  zipGeneration: { progressRangeStart: 0, progressRangeEnd: 33 },
-  uploadAndProcess: { progressRangeStart: 33, progressRangeEnd: 100 },
-};
-
-const errorOrJobToString = (errorOrJob: any) => {
-  if (!errorOrJob) {
-    return "";
-  }
-  if (errorOrJob instanceof Error) {
-    return errorOrJob.message ?? errorOrJob.toString();
-  }
-  // job
-  if (errorOrJob.status === JobStatus.failed) {
-    return JSON.stringify(errorOrJob.errors);
-  }
-  return JSON.stringify(errorOrJob);
-};
-
-// a failed job's error has already been collapsed into a {key, params: {text}} shape by the
-// time it gets here (see JobBase.getErrorInfo), losing the original HTTP status - fall back to
-// sniffing it out of the stringified error text
-const errorTextLooksLikeAuthError = (text: string) =>
-  /\bstatus code 401\b/.test(text);
-
-// a raw axios error still has response.status
-const isAuthError = (error: any) =>
-  error?.response?.status === 401 ||
-  error?.status === 401 ||
-  errorTextLooksLikeAuthError(errorOrJobToString(error));
-
-const handleError =
-  (error: any, silent = false) =>
-  (dispatch: AppDispatch) => {
-    if (silent) {
-      // an unattended tick must never surface a blocking error dialog; shown through the sync
-      // status icon instead, which also stops further automatic ticks until the user retries
-      log.warn(`auto-sync: export/upload failed: ${errorOrJobToString(error)}`);
-      dispatch(
-        isAuthError(error)
-          ? AutoSyncActions.authError()
-          : AutoSyncActions.checkError(),
-      );
-      return;
-    }
-    dispatch(
-      MessageActions.setMessage({
-        content: "dataEntry:dataExport.error",
-        contentParams: { details: errorOrJobToString(error) },
-      }),
-    );
-  };
-
-/**
- * Helper to handle a job error and prompt the user for a retry.
- * Returns true if the user confirms a retry, false otherwise.
- * */
-const handleUploadJobError = async ({
-  dispatch,
-  error,
-}: {
-  error: any;
-  dispatch: AppDispatch;
-}): Promise<boolean> => {
-  if (error instanceof JobCancelError) {
-    // job canceled
-    return false;
-  }
-  // error occurred
-  const { errors } = error;
-  const errorMessage = errors
-    ? Jobs.extractErrorMessage({ errors, t })
-    : String(error);
-
-  // break the loop if user doesn't confirm to retry
-  const retryConfirmed = await ConfirmUtils.confirm({
-    dispatch,
-    messageKey: "dataEntry:dataExport.error",
-    messageParams: { details: errorMessage },
-    confirmButtonTextKey: "common:tryAgain",
-  });
-  return !!retryConfirmed;
-};
-
-// which of RecordsUploadAndProcessJob's two inner jobs the given (rejected) job summary/error
-// was current on - see JobBase's own `innerJobs`/`currentInnerJobIndex` (both part of
-// toJSON(), which is what startAsync rejects with on failure). A JobCancelError (the user
-// canceled either phase) never has these fields, so this correctly returns undefined for it too.
-const getFailedInnerJobType = (error: any): string | undefined =>
-  error?.innerJobs?.[error?.currentInnerJobIndex]?.type;
-
-// static: doesn't depend on any per-call value, so it's built once instead of on every retry
-// attempt - see JobMonitorActions.startAsync's innerJobUiConfigByType
-const UPLOAD_AND_PROCESS_INNER_JOB_UI_CONFIG = {
-  [RECORDS_UPLOAD_JOB_TYPE]: {
-    titleKey: "dataEntry:uploadingData.title",
-    showTransferStats: true,
-  },
-  [REMOTE_JOB_WATCHER_JOB_TYPE]: {
-    titleKey: "dataEntry:processingData.title",
-    showTransferStats: false,
-  },
-};
-
-// decides what a failed upload+processing attempt should do next: false to stop (the failure
-// is already fully handled, or isn't worth retrying), true to try again. Kept separate from
-// startUploadDataToRemoteServer's own retry loop to keep that loop's own cognitive complexity
-// down to something SonarQube is happy with.
-const handleUploadAndProcessError = async ({
-  dispatch,
-  error,
-  silent,
-}: {
-  dispatch: AppDispatch;
-  error: any;
-  silent: boolean;
-}): Promise<boolean> => {
-  if (silent) {
-    // an unattended tick must never block on a retry confirmation; shown through the sync status
-    // icon instead, which also stops further automatic ticks until the user retries - covers a
-    // failure in either phase (upload or server-side processing)
-    log.warn(
-      `auto-sync: upload/processing failed: ${errorOrJobToString(error)}`,
-    );
-    dispatch(
-      isAuthError(error)
-        ? AutoSyncActions.authError()
-        : AutoSyncActions.checkError(),
-    );
-    return false;
-  }
-  // only the upload phase is worth silently retrying (e.g. a network hiccup) - a processing
-  // failure already happened server-side after a successful upload, so re-uploading the whole
-  // file again wouldn't help; it's left to surface through the job monitor dialog's own failed
-  // state instead, same as before this job existed
-  if (getFailedInnerJobType(error) !== RECORDS_UPLOAD_JOB_TYPE) {
-    return false;
-  }
-  return handleUploadJobError({ dispatch, error });
-};
-
-const startUploadDataToRemoteServer =
-  ({
-    outputFileUri,
-    conflictResolutionStrategy,
-    skipMissingFiles = false,
-    onJobComplete = null,
-    silent = false,
-    // true when the whole zip-generation -> upload+processing chain was known upfront (see
-    // REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES) - so this phase can keep filling the same overall
-    // progress bar the zip-generation phase already started, instead of resetting it back to 0%
-    chained = false,
-  }: any) =>
-  async (dispatch: AppDispatch, getState: AppGetState) => {
-    const state = getState();
-    const user = RemoteConnectionSelectors.selectLoggedUser(state);
-    const survey = SurveySelectors.selectCurrentSurvey(state)!;
-    const cycle = Surveys.getDefaultCycleKey(survey);
-
-    const appVersionSupported = await dispatch(
-      AppCompatibilityActions.checkAppVersionSupported({
-        operation: AppCompatibilityOperation.recordsUpload,
-        silent,
-      }),
-    );
-    if (!appVersionSupported) {
-      if (silent) {
-        // shown through the sync status icon, as the other unattended upload failures
-        dispatch(AutoSyncActions.checkError());
-      }
-      return;
-    }
-
-    log.debug(
-      `startUploadDataToRemoteServer: starting upload+processing of ${outputFileUri} (survey=${survey.uuid}, cycle=${cycle})`,
-    );
-
-    const { dataUploadChunkSizeKB } = await SettingsService.fetchSettings();
-    const uploadState: RecordsUploadState = {
-      fileId: UUIDs.v4(),
-      chunkSize: dataUploadChunkSizeKB * 1024,
-      nextChunk: 1,
-    };
-    // uploads the zip, then watches the server-side job it kicks off, as ONE job - see
-    // RecordsUploadAndProcessJob for why (and why only these two, not zip-generation too)
-    const createUploadAndProcessJob = () =>
-      new RecordsUploadAndProcessJob({
-        user,
-        survey,
-        cycle,
-        fileUri: outputFileUri,
-        conflictResolutionStrategy,
-        skipMissingFiles,
-        uploadState,
-      });
-    const progressRange = chained
-      ? REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES.uploadAndProcess
-      : {};
-
-    // runs the job, starting it again while the user chooses to retry it
-    const runUploadAndProcessJob = async (): Promise<any> => {
-      let jobComplete: any = null;
-      let shouldRetry: boolean;
-      try {
-        jobComplete = await JobMonitorActions.startAsync({
-          dispatch,
-          // a job that has ended can't be started again
-          job: createUploadAndProcessJob(),
-          // initial values, matching the upload phase (the first inner job to run) - see
-          // innerJobUiConfigByType for how these switch once processing takes over
-          titleKey: "dataEntry:uploadingData.title",
-          showTransferStats: true,
-          transferSizeTextKey: "dataEntry:uploadingData.size",
-          transferSpeedTextKey: "dataEntry:uploadingData.speed",
-          transferEtaTextKey: "dataEntry:uploadingData.eta",
-          innerJobUiConfigByType: UPLOAD_AND_PROCESS_INNER_JOB_UI_CONFIG,
-          onJobComplete,
-          silent,
-          ...progressRange,
-        });
-        shouldRetry = !jobComplete;
-      } catch (error: any) {
-        shouldRetry = await handleUploadAndProcessError({
-          dispatch,
-          error,
-          silent,
-        });
-      }
-      return shouldRetry ? runUploadAndProcessJob() : jobComplete;
-    };
-
-    const jobComplete = await runUploadAndProcessJob();
-    if (!jobComplete) {
-      log.debug(
-        "startUploadDataToRemoteServer: upload/processing canceled or failed",
-      );
-    }
-  };
-
-const determineAvailableDataExportOptions = ({
-  state,
-}: {
-  state: RootState;
-}): FlatDataExportOption[] => {
-  const survey = SurveySelectors.selectCurrentSurvey(state)!;
-  const result = [
-    FlatDataExportOption.includeAncestorAttributes,
-    FlatDataExportOption.includeCategoryItemsLabels,
-    FlatDataExportOption.includeFiles,
-    FlatDataExportOption.includeTaxonScientificName,
-  ];
-  if (Surveys.getCycleKeys(survey).length > 1) {
-    result.push(FlatDataExportOption.addCycle);
-  }
-  return result;
-};
-
-const selectedOptionsToDataExportOptions = ({
-  availableOptions,
-  selectedOptions,
-}: {
-  availableOptions: FlatDataExportOption[];
-  selectedOptions: string[] | undefined;
-}) => {
-  const options: FlatDataExportOptions = {};
-  for (const option of availableOptions) {
-    options[option] = selectedOptions?.includes(option) ?? false;
-  }
-  if (selectedOptions?.includes(FlatDataExportOption.includeFiles)) {
-    options[FlatDataExportOption.includeFileAttributeDefs] = true;
-  }
-  return options;
-};
-
-export const startCsvDataExportJob =
-  () => (dispatch: AppDispatch, getState: AppGetState) => {
-    try {
-      const state = getState();
-
-      const availableDataExportOptions = determineAvailableDataExportOptions({
-        state,
-      });
-      const multipleChoiceOptions = availableDataExportOptions.map(
-        (option) => ({
-          value: option,
-          label: `dataEntry:dataExport.option.${option}`,
-        }),
-      );
-
-      const onConfirm = async ({
-        selectedMultipleChoiceValues,
-      }: OnConfirmParams) => {
-        log.debug(
-          `starting CSV data export with options:`,
-          selectedMultipleChoiceValues,
-        );
-
-        await dispatch(ConfirmActions.dismiss());
-
-        const user = RemoteConnectionSelectors.selectLoggedUserSafe(state);
-        const survey = SurveySelectors.selectCurrentSurvey(state)!;
-        const cycle = SurveySelectors.selectCurrentSurveyCycle(state)!;
-
-        const selectedDataExportOptions = {
-          ...FlatDataExportDefaultOptions,
-          ...selectedOptionsToDataExportOptions({
-            availableOptions: availableDataExportOptions,
-            selectedOptions: selectedMultipleChoiceValues,
-          }),
-        };
-
-        log.debug("Initializing FlatDataExportJob");
-
-        const dataExportJob = new FlatDataExportJob({
-          type: "FlatDataExportJob",
-          user,
-          survey,
-          surveyId: survey.id!,
-          cycle,
-          options: selectedDataExportOptions,
-        });
-
-        await JobMonitorActions.startAsync({
-          autoDismiss: true,
-          dispatch,
-          job: dataExportJob,
-          titleKey: "dataEntry:dataExport.exportingData",
-          onJobComplete: (
-            jobComplete: JobSerialized<FlatDataExportJobResult>,
-          ) => {
-            const { result } = jobComplete;
-            const { outputFileUri } = result || {};
-            if (outputFileUri) {
-              void Files.shareFile({
-                url: outputFileUri,
-                mimeType: Files.MIME_TYPES.zip,
-                dialogTitle: t("dataEntry:dataExport.shareExportedFile"),
-              });
-            }
-          },
-        });
-      };
-      dispatch(
-        ConfirmActions.show({
-          titleKey: "dataEntry:dataExport.confirm.title",
-          messageKey: "dataEntry:dataExport.confirm.selectOptions",
-          onConfirm,
-          multipleChoiceOptions,
-          confirmButtonTextKey: "common:export",
-        }),
-      );
-    } catch (error) {
-      dispatch(handleError(error));
-    }
-  };
 
 const onExportConfirmed =
   ({
@@ -448,7 +65,7 @@ const onExportConfirmed =
         });
       }
     } catch (error) {
-      dispatch(handleError(error));
+      dispatch(handleDataExportError(error));
     }
   };
 
@@ -559,149 +176,6 @@ const _onExportFileGenerationSucceeded = async ({
     );
   }
 };
-
-const showMergedRecordsMessage = async ({
-  dispatch,
-  survey,
-  lang,
-  cycle,
-  recordUuids,
-}: any) => {
-  const recordsSummary = await RecordService.fetchRecords({
-    survey,
-    cycle,
-    onlyLocal: false,
-  });
-  const recordsList = recordsSummary
-    .filter((recordSummary: any) => recordUuids.includes(recordSummary.uuid))
-    .map((recordSummary: any) => {
-      const keyValuesByName = RecordUtils.getRecordSummaryValuesByKeyFormatted({
-        survey,
-        lang,
-        recordSummary,
-        t,
-      });
-      const keysText =
-        Object.values(keyValuesByName).join(" - ") || recordSummary.uuid;
-      return `- ${keysText}`;
-    })
-    .join("\n");
-
-  dispatch(
-    MessageActions.setMessage({
-      content: "dataEntry:dataExport.recordsMergedMessage",
-      contentParams: { recordsList },
-    }),
-  );
-};
-
-// re-downloads the given records (their content on the server is now the merged version,
-// whether merged with newer edits on the same uuid or merged into a pre-existing uuid with the
-// same key(s)) so the local copy reflects it, then lets the user know which records were merged.
-// Awaited by the caller so the fetch (nodes + files) has actually finished, and the local copy is
-// marked as fully downloaded, before anything reloads the records list.
-// Returns true only if the records have actually been fetched and stored in the device (the
-// fetch can fail, be canceled, or not be allowed by the survey - none of which is thrown).
-// When silent (auto-sync), nothing is shown: neither the fetch progress, nor the final message.
-const fetchMergedRecordsAndNotify = async ({
-  dispatch,
-  survey,
-  lang,
-  cycle,
-  recordUuids,
-  mergeKeepLocalOriginRecordUuids,
-  silent = false,
-}: any): Promise<boolean> => {
-  let fetched = false;
-  await dispatch(
-    fetchRecordsFromServer({
-      recordUuids,
-      mergeKeepLocalOriginRecordUuids,
-      silent,
-      onImportComplete: async () => {
-        fetched = true;
-        if (!silent) {
-          await showMergedRecordsMessage({
-            dispatch,
-            survey,
-            lang,
-            cycle,
-            recordUuids,
-          });
-        }
-      },
-    }),
-  );
-  return fetched;
-};
-
-// the records merged with their own server copy whose local copy can be replaced right away
-// with the merged version. When the merge wasn't started by the user (auto-sync), the record open
-// in the editor can be replaced only if it's been made read-only for this (see lockOpenRecordForSync);
-// otherwise (e.g. it's been opened after the upload started) the editor may hold edits the merged
-// version doesn't have, which the next edit would write over it. It's then left as it is (still
-// "modified on the server too"), to be merged again later.
-const getMergedSameRecordUuidsToFetch = ({
-  getState,
-  mergedSameRecordUuids,
-  silent,
-}: any): string[] => {
-  if (!silent) return mergedSameRecordUuids;
-  const state = getState();
-  if (DataEntrySelectors.selectRecordSyncInProgress(state))
-    return mergedSameRecordUuids;
-  const openRecordUuid = DataEntrySelectors.selectRecord(state)?.uuid;
-  return mergedSameRecordUuids.filter(
-    (uuid: string) => uuid !== openRecordUuid,
-  );
-};
-
-// replaces the local copy of the given records with the version merged on the server, without
-// showing anything; if one of them is open in the editor (read-only meanwhile, see above), the
-// editor is then given the merged version too
-const fetchMergedSameRecordsSilently = async ({
-  dispatch,
-  getState,
-  survey,
-  lang,
-  cycle,
-  recordUuids,
-}: any) => {
-  await DataEntryActionsRecordSync.runReplacingRecords(
-    recordUuids,
-    async () => {
-      const fetched = await fetchMergedRecordsAndNotify({
-        dispatch,
-        survey,
-        lang,
-        cycle,
-        recordUuids,
-        mergeKeepLocalOriginRecordUuids: recordUuids,
-        silent: true,
-      });
-      const openRecordUuid = DataEntrySelectors.selectRecord(getState())?.uuid;
-      if (fetched && openRecordUuid && recordUuids.includes(openRecordUuid)) {
-        await dispatch(DataEntryActionsRecordSync.reloadOpenRecord());
-      }
-    },
-  );
-};
-
-export const fetchRecordsChangedRemotely =
-  ({ cycle, recordUuids }: any) =>
-  async (dispatch: AppDispatch, getState: AppGetState) => {
-    const state = getState();
-    const survey = SurveySelectors.selectCurrentSurvey(state)!;
-    const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
-    await fetchMergedSameRecordsSilently({
-      dispatch,
-      getState,
-      survey,
-      lang,
-      cycle,
-      recordUuids,
-    });
-  };
 
 export const exportRecords =
   ({
@@ -887,7 +361,7 @@ export const exportRecords =
         });
       } else {
         log.warn(`exportRecords: unexpected error: ${error}`);
-        dispatch(handleError(error, silent));
+        dispatch(handleDataExportError(error, silent));
       }
     }
     await onEnd?.();

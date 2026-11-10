@@ -2,46 +2,28 @@ import { Keyboard } from "react-native";
 
 import {
   Dates,
-  LanguageCode,
   NodeDefs,
-  NodeDefType,
-  Nodes,
-  NodesMap,
-  Numbers,
-  Objects,
-  PointFactory,
-  Points,
   RecordFactory,
   Records,
   RecordUpdater,
-  Survey,
   Surveys,
-  Validations,
 } from "@openforis/arena-core";
 
-import {
-  RecordLoadStatus,
-  RecordUtils,
-  RecordOrigin,
-  SurveyDefs,
-  UserGroupQualifiers,
-} from "model";
+import { RecordLoadStatus, RecordOrigin, UserGroupQualifiers } from "model";
 import { PreferencesService } from "service/preferencesService";
-import { RecordFileService } from "service/recordFileService";
 import { RecordService } from "service/recordService";
 
-import { Errors, log, StringUtils, SystemUtils } from "utils";
-import { PreviewMode } from "utils/PreviewMode";
-import { i18n } from "localization";
+import { log, SystemUtils } from "utils";
 
 import { AutoSyncActions } from "../autoSync";
 import { ConfirmActions, ConfirmUtils } from "../confirm";
-import { DeviceInfoActions, DeviceInfoSelectors } from "../deviceInfo";
+import { DeviceInfoActions } from "../deviceInfo";
 import { MessageActions } from "../message";
 import { PositionTrackingActions } from "../positionTracking/actions";
 import { SurveySelectors } from "../survey";
 
-import { exportRecords, startCsvDataExportJob } from "./actionsDataExport";
+import { startCsvDataExportJob } from "./actionsCsvDataExport";
+import { exportRecords } from "./actionsDataExport";
 import { runAutoSync } from "./actionsAutoSync";
 import { DataEntryActionsRecordPreviousCycle } from "./actionsRecordPreviousCycle";
 import { cloneRecordsIntoDefaultCycle } from "./actionsRecordsClone";
@@ -59,71 +41,32 @@ import { serializeRecordUpdate } from "./recordUpdateQueue";
 import { selectRecordUpdaterParams } from "./recordUpdaterParams";
 import { ToastActions } from "state/toast";
 import type { AppDispatch, AppGetState } from "../store";
+import {
+  addNewAttribute,
+  updateAttribute,
+  updateCoordinateValueFromLatLong,
+  updateCoordinateValueSrs,
+} from "./actionsAttributeUpdate";
+import {
+  navigateToRecordsList,
+  selectCurrentPageEntity,
+  selectCurrentPageEntityActiveChildIndex,
+  toggleRecordEditLock,
+  toggleRecordPageMenuOpen,
+} from "./actionsPageNavigation";
+import {
+  confirmClearNewlyInapplicableValues,
+  handleError,
+  isRecordSyncInProgress,
+  prepareRecordForStorage,
+  removeNodesFlags,
+  updateRecord,
+} from "./recordUpdateHelpers";
 
-const {
-  DATA_ENTRY_RESET,
-  PAGE_ENTITY_ACTIVE_CHILD_INDEX_SET,
-  PAGE_ENTITY_SET,
-  PAGE_SELECTOR_MENU_OPEN_SET,
-  RECORD_EDIT_LOCKED,
-  RECORD_SET,
-} = DataEntryActionTypes;
+const { RECORD_SET } = DataEntryActionTypes;
 
-const {
-  linkToRecordInPreviousCycle,
-  unlinkFromRecordInPreviousCycle,
-  updatePreviousCyclePageEntity,
-} = DataEntryActionsRecordPreviousCycle;
-
-const handleError = (
-  dispatch: AppDispatch,
-  error: any,
-  messageKey: string,
-  messageParams = {},
-) => {
-  const errorMessage = Errors.getErrorMessage(error);
-  const params = { ...messageParams, error: errorMessage };
-  log.error(i18n.t(messageKey, params));
-  dispatch(ToastActions.show(messageKey, params));
-};
-
-const removeNodesFlags = (nodes: NodesMap) => {
-  for (const node of Object.values(nodes)) {
-    Nodes.removeStatusFlags({ node, sideEffect: true });
-  }
-};
-
-// the record open in the editor can't be modified while it's being merged with its server copy
-// (see lockOpenRecordForSync): the editor is read-only meanwhile, this stops an edit already on
-// its way (e.g. a debounced text update) from overwriting the merged version
-const _isRecordSyncInProgress = (
-  dispatch: AppDispatch,
-  getState: AppGetState,
-): boolean => {
-  if (!DataEntrySelectors.selectRecordSyncInProgress(getState())) return false;
-  dispatch(ToastActions.show("dataEntry:autoSync.recordSyncInProgress"));
-  return true;
-};
-
-const _isRootKeyDuplicate = async ({ survey, record, lang }: any) => {
-  // no other records in preview mode
-  if (PreviewMode.isActive) return false;
-  const recordSummaries = await RecordService.findRecordSummariesWithSameKeys({
-    survey,
-    record,
-    lang,
-  });
-  return (
-    recordSummaries.length > 1 ||
-    (recordSummaries.length === 1 && recordSummaries[0]!.uuid !== record.uuid)
-  );
-};
-
-const prepareRecordForStorage = ({ record }: any) => {
-  const validation = Validations.getValidation(record);
-  const validationUpdated = Validations.updateCounts(validation);
-  return { ...record, validation: validationUpdated };
-};
+const { linkToRecordInPreviousCycle, unlinkFromRecordInPreviousCycle } =
+  DataEntryActionsRecordPreviousCycle;
 
 const createNewRecord =
   ({ navigator }: any) =>
@@ -188,7 +131,7 @@ const createNewRecord =
   };
 
 const _performAddEntity = serializeRecordUpdate(async (dispatch, getState) => {
-  if (_isRecordSyncInProgress(dispatch, getState)) return;
+  if (isRecordSyncInProgress(dispatch, getState)) return;
   const state = getState();
   const updaterParams = selectRecordUpdaterParams(state);
   const { survey } = updaterParams;
@@ -249,7 +192,7 @@ const _performAddEntity = serializeRecordUpdate(async (dispatch, getState) => {
     (nodeCreated) => nodeCreated.nodeDefUuid === nodeDef.uuid,
   )!;
 
-  await _updateRecord({ dispatch, survey, record: recordUpdated });
+  await updateRecord({ dispatch, survey, record: recordUpdated });
 
   dispatch(
     selectCurrentPageEntity({
@@ -274,7 +217,7 @@ const addNewEntity =
 
 const deleteNodes = (nodeUuids: any) =>
   serializeRecordUpdate(async (dispatch, getState) => {
-    if (_isRecordSyncInProgress(dispatch, getState)) return;
+    if (isRecordSyncInProgress(dispatch, getState)) return;
     const state = getState();
     const updaterParams = selectRecordUpdaterParams(state);
     const { survey } = updaterParams;
@@ -306,7 +249,7 @@ const deleteNodes = (nodeUuids: any) =>
 
     removeNodesFlags(nodes);
 
-    await _updateRecord({ dispatch, survey, record: recordUpdated });
+    await updateRecord({ dispatch, survey, record: recordUpdated });
   });
 
 const deleteRecords =
@@ -442,530 +385,6 @@ const fetchAndEditRecord =
       });
     }
   };
-
-const _updateRecord = async ({ dispatch, survey, record }: any) => {
-  const recordUpdated = prepareRecordForStorage({ record });
-  if (PreviewMode.isActive) {
-    // record kept in memory only
-    await dispatch({ type: RECORD_SET, record: recordUpdated });
-    return recordUpdated;
-  }
-  const recordStored = await RecordService.updateRecord({
-    survey,
-    record: recordUpdated,
-  });
-  dispatch(AutoSyncActions.markPending());
-  await dispatch({ type: RECORD_SET, record: recordStored });
-  return recordStored;
-};
-
-const saveRecordNodeFile = async ({ survey, fileUri, value }: any) => {
-  if (!fileUri) return;
-  log.debug(
-    `Saving record node file with value ${JSON.stringify(value)} and fileUri ${fileUri}`,
-  );
-  await RecordFileService.saveRecordFile({
-    surveyId: survey.id,
-    fileUuid: value?.fileUuid,
-    sourceFileUri: fileUri,
-  });
-};
-
-// to be called once the record is stored: until then it still references the previous file
-const deletePreviousRecordNodeFile = async ({
-  survey,
-  value,
-  node,
-  dispatch,
-}: any) => {
-  const fileUuidPrev = node.value?.fileUuid;
-  if (fileUuidPrev && fileUuidPrev !== value?.fileUuid) {
-    log.debug(`Deleting previous file with uuid ${fileUuidPrev}`);
-    try {
-      await RecordFileService.deleteRecordFile({
-        surveyId: survey.id,
-        fileUuid: fileUuidPrev,
-      });
-    } catch (error) {
-      // the value is already stored: an unused file left behind must not look like a failed update
-      log.warn(`error deleting file ${fileUuidPrev}: ${error}`);
-    }
-  }
-  // files kept in memory in preview mode
-  if (!PreviewMode.isActive) {
-    dispatch(DeviceInfoActions.updateFreeDiskStorage());
-  }
-};
-
-const checkAndConfirmUpdateNode = async ({
-  dispatch,
-  getState,
-  node,
-  nodeDef,
-}: any) => {
-  const state = getState();
-  const survey = SurveySelectors.selectCurrentSurvey(state)!;
-  const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
-  const record = DataEntrySelectors.selectRecord(state);
-  const dependentEnumeratedEntityDefs =
-    Records.findDependentEnumeratedEntityDefsNotEmpty({
-      survey,
-      node,
-      nodeDef,
-    })(record);
-  const dependentEnumeratedEntityDefsLabel = dependentEnumeratedEntityDefs
-    ?.map((def) => NodeDefs.getLabelOrName(def, lang))
-    .join(", ");
-  if (dependentEnumeratedEntityDefsLabel) {
-    return await ConfirmUtils.confirm({
-      dispatch,
-      titleKey: "dataEntry:confirmUpdateDependentEnumeratedEntities.title",
-      messageKey: "dataEntry:confirmUpdateDependentEnumeratedEntities.message",
-      messageParams: { entityDefs: dependentEnumeratedEntityDefsLabel },
-    });
-  }
-  return true;
-};
-
-const findNewlyInapplicableNodeDefNames = ({
-  survey,
-  lang,
-  clearedDefUuids,
-}: {
-  survey: Survey;
-  lang: LanguageCode;
-  clearedDefUuids: Set<string>;
-}): string[] => {
-  if (clearedDefUuids.size === 0) return [];
-
-  // Separate deleted multiple entity defs from individual attribute defs
-  const deletedMultipleEntityDefUuids = new Set<string>();
-  const otherDefUuids: string[] = [];
-
-  for (const defUuid of clearedDefUuids) {
-    const nodeDef = Surveys.getNodeDefByUuid({ survey, uuid: defUuid });
-    if (nodeDef && NodeDefs.isMultipleEntity(nodeDef)) {
-      deletedMultipleEntityDefUuids.add(defUuid);
-    } else {
-      otherDefUuids.push(defUuid);
-    }
-  }
-
-  // Keep only attributes not inside a multiple entity that is being deleted
-  const standaloneDefUuids = otherDefUuids.filter((defUuid) => {
-    const nodeDef = Surveys.getNodeDefByUuid({ survey, uuid: defUuid });
-    if (!nodeDef) return false;
-    const ancestorMultipleEntity = Surveys.getNodeDefAncestorMultipleEntity({
-      survey,
-      nodeDef,
-    });
-    return (
-      !ancestorMultipleEntity ||
-      !deletedMultipleEntityDefUuids.has(ancestorMultipleEntity.uuid)
-    );
-  });
-
-  // Entity names first, then standalone attribute names
-  const defsToShow = [
-    ...Array.from(deletedMultipleEntityDefUuids),
-    ...standaloneDefUuids,
-  ];
-
-  if (defsToShow.length === 0) return [];
-
-  const maxToShow = 10;
-  const overflow = defsToShow.length - maxToShow;
-  const nodeDefUuidsToShow = defsToShow.slice(0, maxToShow);
-  const attributeNames = SurveyDefs.getNodeDefsLabelsOrNames({
-    survey,
-    nodeDefUuids: nodeDefUuidsToShow,
-    lang,
-  }).map((name) => `- ${StringUtils.truncateWithEllipsis(name, 40)}`);
-
-  return [
-    ...attributeNames,
-    ...(overflow > 0 ? [i18n.t("common:andMore", { count: overflow })] : []),
-  ];
-};
-
-const confirmClearNewlyInapplicableValues = async ({
-  dispatch,
-  survey,
-  lang,
-  clearedDefUuids,
-}: {
-  dispatch: AppDispatch;
-  survey: Survey;
-  lang: LanguageCode;
-  clearedDefUuids: Set<string>;
-}): Promise<boolean> => {
-  const attributeNamesToShow = findNewlyInapplicableNodeDefNames({
-    survey,
-    lang,
-    clearedDefUuids,
-  });
-  if (attributeNamesToShow.length === 0) {
-    return true;
-  }
-  return !!(await ConfirmUtils.confirm({
-    dispatch,
-    titleKey: "dataEntry:confirmUpdateNodesBecameNotApplicable.title",
-    messageIsMarkdown: true,
-    messageKey: "dataEntry:confirmUpdateNodesBecameNotApplicable.message",
-    messageParams: { attributeNames: attributeNamesToShow.join("\n") },
-    swipeToConfirm: true,
-  }));
-};
-
-const _onAttributeUpdated = async ({
-  dispatch,
-  state,
-  survey,
-  record,
-  nodeDef,
-  lang,
-}: any) => {
-  const cycle = Records.getCycle(record);
-  const isRootKeyDef = SurveyDefs.isRootKeyDef({ survey, cycle, nodeDef });
-  if (
-    DataEntrySelectors.selectIsLinkedToPreviousCycleRecord(state) &&
-    NodeDefs.isKey(nodeDef)
-  ) {
-    if (isRootKeyDef) {
-      dispatch(unlinkFromRecordInPreviousCycle());
-    } else {
-      // key of a nested entity changed: refresh the matching previous-cycle entity
-      dispatch(updatePreviousCyclePageEntity);
-    }
-  }
-
-  if (isRootKeyDef && (await _isRootKeyDuplicate({ survey, record, lang }))) {
-    const keyValues = RecordUtils.getRootEntityKeysFormatted({
-      survey,
-      record,
-      lang,
-    }).join(", ");
-
-    dispatch(
-      MessageActions.setMessage({
-        content: "recordsList:duplicateKey.message",
-        contentParams: { keyValues },
-        title: "recordsList:duplicateKey.title",
-      }),
-    );
-  }
-};
-
-const updateAttribute = ({
-  uuid,
-  value,
-  fileUri = null,
-}: {
-  uuid: string;
-  value: any;
-  fileUri?: string | null;
-}) =>
-  serializeRecordUpdate(async (dispatch, getState) => {
-    try {
-      const state = getState();
-      const record = DataEntrySelectors.selectRecord(state);
-      const node = Records.getNodeByUuid(uuid)(record);
-      if (!node) return;
-
-      const updaterParams = selectRecordUpdaterParams(state);
-      const { survey } = updaterParams;
-      const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
-
-      // nothing actually changed (e.g. a field was focused and left as is): don't touch the
-      // record, otherwise it would look modified and the auto-sync status would turn pending
-      if (!fileUri && Objects.isEqual(node.value ?? null, value ?? null)) {
-        return;
-      }
-      if (_isRecordSyncInProgress(dispatch, getState)) return;
-
-      const nodeDef = Surveys.getNodeDefByUuid({
-        survey,
-        uuid: node.nodeDefUuid,
-      });
-
-      if (
-        !(await checkAndConfirmUpdateNode({
-          dispatch,
-          getState,
-          node,
-          nodeDef,
-        }))
-      )
-        return;
-
-      const {
-        record: recordUpdated,
-        nodes: nodesUpdated,
-        clearedDefUuids,
-      } = await RecordUpdater.updateAttributeValue({
-        ...updaterParams,
-        record,
-        attributeUuid: uuid,
-        value,
-        clearNonApplicableValues: !Surveys.isKeepNonApplicableValues(survey),
-      });
-
-      if (
-        !(await confirmClearNewlyInapplicableValues({
-          dispatch,
-          survey,
-          lang,
-          clearedDefUuids,
-        }))
-      ) {
-        log.debug(`Newly inapplicable values not confirmed. Reverting update.`);
-        return;
-      }
-
-      removeNodesFlags(nodesUpdated);
-
-      const isFileDef = NodeDefs.getType(nodeDef) === NodeDefType.file;
-      if (isFileDef) {
-        await saveRecordNodeFile({ survey, fileUri, value });
-      }
-
-      // a sync started meanwhile would be overwritten
-      if (_isRecordSyncInProgress(dispatch, getState)) return;
-
-      await _updateRecord({ dispatch, survey, record: recordUpdated });
-      if (isFileDef) {
-        await deletePreviousRecordNodeFile({ survey, value, node, dispatch });
-      }
-      await _onAttributeUpdated({
-        dispatch,
-        state,
-        survey,
-        record: recordUpdated,
-        nodeDef,
-        lang,
-      });
-      log.debug(`Node updated successfully.`);
-    } catch (error) {
-      handleError(dispatch, error, "dataEntry:updateAttributeError");
-    }
-  });
-
-const performCoordinateValueSrsConversion =
-  ({ nodeUuid, srsTo }: any) =>
-  (dispatch: AppDispatch, getState: AppGetState) => {
-    const state = getState();
-    const survey = SurveySelectors.selectCurrentSurvey(state)!;
-    const record = DataEntrySelectors.selectRecord(state);
-    const srsIndex = Surveys.getSRSIndex(survey);
-
-    const node = Records.getNodeByUuid(nodeUuid)(record);
-    const prevValue = node?.value ?? {};
-    const { x, y, srs } = prevValue;
-    const pointFrom = PointFactory.createInstance({ x, y, srs })!;
-    const pointTo = Points.transform(pointFrom, srsTo, srsIndex)!;
-    const nextValue = {
-      ...prevValue,
-      x: Numbers.roundToPrecision(pointTo.x, 6),
-      y: Numbers.roundToPrecision(pointTo.y, 6),
-      srs: srsTo,
-    };
-    dispatch(updateAttribute({ uuid: nodeUuid, value: nextValue }));
-  };
-
-const updateCoordinateValueFromLatLong =
-  ({ nodeUuid, latitude, longitude }: any) =>
-  (dispatch: AppDispatch, getState: AppGetState) => {
-    const state = getState();
-    const survey = SurveySelectors.selectCurrentSurvey(state)!;
-    const record = DataEntrySelectors.selectRecord(state);
-    const srsIndex = Surveys.getSRSIndex(survey);
-
-    const node = Records.getNodeByUuid(nodeUuid)(record);
-    const prevValue = node?.value ?? {};
-    const srsTo = prevValue.srs ?? Surveys.getSRSs(survey)[0]!.code;
-    const pointLatLong = PointFactory.createInstance({
-      x: longitude,
-      y: latitude,
-    })!;
-    const pointTo = Points.transform(pointLatLong, srsTo, srsIndex);
-    if (!pointTo) return;
-    const nextValue = {
-      ...prevValue,
-      x: Numbers.roundToPrecision(pointTo.x, 6),
-      y: Numbers.roundToPrecision(pointTo.y, 6),
-      srs: srsTo,
-    };
-    dispatch(updateAttribute({ uuid: nodeUuid, value: nextValue }));
-  };
-
-const updateCoordinateValueSrs =
-  ({ nodeUuid, srsTo }: any) =>
-  (dispatch: AppDispatch, getState: AppGetState) => {
-    const state = getState();
-    const record = DataEntrySelectors.selectRecord(state);
-
-    const node = Records.getNodeByUuid(nodeUuid)(record);
-    const prevValue = node?.value ?? {};
-    const { x, y, srs } = prevValue;
-
-    if (srsTo === srs) return;
-
-    const nextValue = {
-      ...prevValue,
-      x: Objects.isEmpty(x) ? 0 : x,
-      y: Objects.isEmpty(y) ? 0 : y,
-      srs: srsTo,
-    };
-    if (Objects.isEmpty(x) || Objects.isEmpty(y)) {
-      dispatch(updateAttribute({ uuid: nodeUuid, value: nextValue }));
-    } else {
-      dispatch(
-        ConfirmActions.show({
-          messageKey: "dataEntry:coordinate.confirmConvertCoordinate",
-          messageParams: { srsFrom: srs, srsTo },
-          confirmButtonTextKey: "dataEntry:coordinate.convert",
-          cancelButtonTextKey: "dataEntry:coordinate.keepXAndY",
-          onConfirm: () =>
-            dispatch(performCoordinateValueSrsConversion({ nodeUuid, srsTo })),
-          onCancel: () =>
-            dispatch(updateAttribute({ uuid: nodeUuid, value: nextValue })),
-        }),
-      );
-    }
-  };
-
-const addNewAttribute = ({ nodeDef, parentNodeUuid, value = null }: any) =>
-  serializeRecordUpdate(async (dispatch, getState) => {
-    if (_isRecordSyncInProgress(dispatch, getState)) return;
-    const state = getState();
-    const updaterParams = selectRecordUpdaterParams(state);
-    const { survey } = updaterParams;
-    const record = DataEntrySelectors.selectRecord(state);
-    const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
-
-    const { record: recordUpdated, nodes: nodesCreated } =
-      await RecordUpdater.createNodeAndDescendants({
-        ...updaterParams,
-        record,
-        parentNode,
-        nodeDef,
-      });
-
-    const nodeCreated = Object.values(nodesCreated).find(
-      (nodeCreated) => nodeCreated.nodeDefUuid === nodeDef.uuid,
-    )!;
-
-    const { record: recordUpdated2 } = await RecordUpdater.updateAttributeValue(
-      {
-        ...updaterParams,
-        record: recordUpdated,
-        attributeUuid: nodeCreated.uuid,
-        value,
-      },
-    );
-
-    await _updateRecord({ dispatch, survey, record: recordUpdated2 });
-  });
-
-const selectCurrentPageEntity =
-  ({ parentEntityUuid, entityDefUuid, entityUuid = undefined }: any) =>
-  async (dispatch: AppDispatch, getState: AppGetState) => {
-    const state = getState();
-    const surveyId = SurveySelectors.selectCurrentSurveyId(state);
-    const record = DataEntrySelectors.selectRecord(state);
-    const { id: recordId } = record;
-    const { entityDef: prevEntityDef, entityUuid: prevEntityUuid } =
-      DataEntrySelectors.selectCurrentPageEntity(state);
-    const isPhone = DeviceInfoSelectors.selectIsPhone(state);
-    const locked = DataEntrySelectors.selectRecordEditLocked(state);
-
-    const nextEntityUuid =
-      entityDefUuid === prevEntityDef.uuid &&
-      entityUuid === prevEntityUuid &&
-      NodeDefs.isMultiple(prevEntityDef)
-        ? null // set pointer to list of entities
-        : entityUuid;
-
-    if (!!nextEntityUuid && nextEntityUuid === prevEntityUuid) {
-      // same entity selected (e.g. single entity from breadcrumb): do nothing
-      return;
-    }
-
-    const payload = {
-      parentEntityUuid,
-      entityDefUuid,
-      entityUuid: nextEntityUuid,
-      locked,
-    };
-
-    dispatch({ type: PAGE_ENTITY_SET, payload });
-
-    if (DataEntrySelectors.selectIsLinkedToPreviousCycleRecord(state)) {
-      dispatch(updatePreviousCyclePageEntity);
-    }
-
-    if (isPhone) {
-      dispatch(closeRecordPageMenu);
-    }
-    await PreferencesService.setSurveyRecordLastEditedPage(
-      surveyId,
-      recordId,
-      payload,
-    );
-  };
-
-const selectCurrentPageEntityActiveChildIndex =
-  (index: any) => (dispatch: AppDispatch, getState: AppGetState) => {
-    dispatch({ type: PAGE_ENTITY_ACTIVE_CHILD_INDEX_SET, index });
-    const state = getState();
-    const isPhone = DeviceInfoSelectors.selectIsPhone(state);
-    if (isPhone) {
-      dispatch(closeRecordPageMenu);
-    }
-  };
-
-const toggleRecordPageMenuOpen = (
-  dispatch: AppDispatch,
-  getState: AppGetState,
-) => {
-  Keyboard.dismiss();
-  const state = getState();
-  const open = DataEntrySelectors.selectRecordPageSelectorMenuOpen(state);
-  dispatch({ type: PAGE_SELECTOR_MENU_OPEN_SET, open: !open });
-};
-
-const closeRecordPageMenu = (dispatch: AppDispatch, getState: AppGetState) => {
-  const state = getState();
-  const pageSelectorMenuOpen =
-    DataEntrySelectors.selectRecordPageSelectorMenuOpen(state);
-  if (pageSelectorMenuOpen) {
-    dispatch({ type: PAGE_SELECTOR_MENU_OPEN_SET, open: false });
-  }
-};
-
-const toggleRecordEditLock = (dispatch: AppDispatch, getState: AppGetState) => {
-  Keyboard.dismiss();
-  const state = getState();
-  const locked = DataEntrySelectors.selectRecordEditLocked(state);
-  dispatch({ type: RECORD_EDIT_LOCKED, locked: !locked });
-};
-
-const navigateToRecordsList =
-  ({ navigator }: any) =>
-  (dispatch: AppDispatch) =>
-    dispatch(
-      ConfirmActions.show({
-        confirmButtonTextKey: "dataEntry:goToListOfRecords",
-        messageKey: "dataEntry:confirmGoToListOfRecords",
-        onConfirm: async () => {
-          // the recorded track is written into the record before closing it
-          await dispatch(PositionTrackingActions.closeTrack());
-          // pop=true pops the current screen from the stack and avoids going back to it (unmounts the RecordEditor component)
-          navigator.navigateToRecordsList({ pop: true });
-          dispatch({ type: DATA_ENTRY_RESET });
-        },
-      }),
-    );
 
 export const DataEntryActions = {
   createNewRecord,
