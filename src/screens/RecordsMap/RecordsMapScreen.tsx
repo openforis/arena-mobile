@@ -1,49 +1,26 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useRef, useState } from "react";
 import RNMapView, {
   MapPressEvent,
   Polygon,
   Polyline,
   Region,
 } from "react-native-maps";
-import { AreaOfInterest } from "@openforis/arena-core";
-import { useFocusEffect } from "@react-navigation/native";
 
 import { useNavigator, useScreenParams } from "navigation/navigator";
 import { screenKeys } from "screens/screenKeys";
 import { IconButton, Loader, MapView, Text, VView } from "components";
 import { CurrentLocationDot } from "components/MapView/CurrentLocationDot";
-import { useCurrentLocationWatch, useToast } from "hooks";
+import { useCurrentLocationWatch } from "hooks";
 import { useTranslation } from "localization";
-import { LatLng, MapProvider, RecordUtils, SurveyDefs } from "model";
-import { RecordService } from "service";
-import { AreaOfInterestProviderDefault } from "service/areaOfInterestProvider";
-import { PreloadedMapLayerService } from "service/preloadedMapLayerService";
+import { LatLng, MapProvider } from "model";
 import { DataEntryActions, SurveySelectors, useAppDispatch } from "state";
 import { log } from "utils";
-import { MapLayerFileGeometries } from "utils/MapLayerFileParser";
 
 import {
-  buildAreaOfInterestPolygons,
-  buildCoordinateAttributeFeatures,
-  buildPreloadedMapLayerShapes,
-  buildSamplingPointFeatures,
-  buildTrackFeatures,
-  getAvailableLayers,
-  getDefaultVisibleLayerKeys,
   getLayerLabel,
-  getRecordUuidsBySamplingPointItemUuid,
-  RecordsMapAreaPolygon,
   RecordsMapLayer,
   RecordsMapLayerType,
-  RecordsMapPointFeature,
   RecordsMapPointProperties,
-  RecordsMapPreloadedLayerShapes,
   RecordsMapTrackFeature,
 } from "./recordsMapLayers";
 import { RecordsMapLayerMarkers } from "./RecordsMapLayerMarkers";
@@ -53,18 +30,11 @@ import {
   RecordsMapSelectionPanel,
 } from "./RecordsMapSelectionPanel";
 import styles from "./styles";
+import { useRecordsMapData } from "./useRecordsMapData";
 
 export type RecordsMapParams = {
   // map provider chosen when opening the map (the one in the settings, if not specified)
   mapProvider?: MapProvider;
-};
-
-type NodeValue = { recordUuid: string; nodeDefUuid: string; value: any };
-
-type DataState = {
-  loading: boolean;
-  recordSummaries: any[];
-  nodeValues: NodeValue[];
 };
 
 const worldRegion: Region = {
@@ -78,30 +48,6 @@ const fitEdgePadding = { top: 80, right: 80, bottom: 80, left: 80 };
 
 // on iOS the map press event is fired also right after a track (polyline) press
 const TRACK_PRESS_MAP_PRESS_IGNORE_MS = 500;
-
-// bounding box corners (to fit the map without passing all the points of tracks and areas)
-const getBoundsCorners = (coordinates: LatLng[]): LatLng[] => {
-  if (coordinates.length === 0) return [];
-  let minLat = Infinity;
-  let maxLat = -Infinity;
-  let minLng = Infinity;
-  let maxLng = -Infinity;
-  for (const { latitude, longitude } of coordinates) {
-    minLat = Math.min(minLat, latitude);
-    maxLat = Math.max(maxLat, latitude);
-    minLng = Math.min(minLng, longitude);
-    maxLng = Math.max(maxLng, longitude);
-  }
-  return [
-    { latitude: minLat, longitude: minLng },
-    { latitude: maxLat, longitude: maxLng },
-  ];
-};
-
-const toLatLng = (feature: RecordsMapPointFeature): LatLng => {
-  const [longitude, latitude] = feature.geometry.coordinates;
-  return { latitude, longitude };
-};
 
 // region including all the given points (used only as initial region, refined by fitToCoordinates)
 const calculateRegion = (coordinates: LatLng[]): Region => {
@@ -127,397 +73,35 @@ export const RecordsMapScreen = () => {
   const navigator = useNavigator();
   const { mapProvider } = useScreenParams<screenKeys.recordsMap>();
   const { t } = useTranslation();
-  const toaster = useToast();
   const survey = SurveySelectors.useCurrentSurvey()!;
-  const cycle = SurveySelectors.useCurrentSurveyCycle()!;
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
 
   const mapRef = useRef<RNMapView | null>(null);
   const [region, setRegion] = useState<Region | null>(null);
-  const [dataState, setDataState] = useState<DataState>({
-    loading: true,
-    recordSummaries: [],
-    nodeValues: [],
-  });
-  const { loading, recordSummaries, nodeValues } = dataState;
   const [layersPanelVisible, setLayersPanelVisible] = useState(false);
   const [selection, setSelection] = useState<RecordsMapSelection | null>(null);
   const currentLocation = useCurrentLocationWatch();
 
-  const layers = useMemo(
-    () => getAvailableLayers({ survey, cycle }),
-    [cycle, survey],
-  );
-
-  const [visibleLayerKeys, setVisibleLayerKeys] = useState<string[]>(() =>
-    getDefaultVisibleLayerKeys({ survey, cycle, layers }),
-  );
-
-  const loadData = useCallback(async () => {
-    try {
-      // local records plus the summaries of the remote ones fetched with the last sync status check
-      const _recordSummaries = await RecordService.fetchRecords({
-        survey,
-        cycle,
-        onlyLocal: false,
-      });
-      // tracks are loaded only when their layer is visible (see trackValues)
-      const coordinateDefUuids = layers
-        .filter(
-          (layer) => layer.type === RecordsMapLayerType.coordinateAttribute,
-        )
-        .map((layer) => layer.nodeDefUuid!);
-      const _nodeValues = await RecordService.fetchNodeValuesByDefUuids({
-        surveyId: survey.id!,
-        cycle,
-        nodeDefUuids: coordinateDefUuids,
-      });
-      setDataState({
-        loading: false,
-        recordSummaries: _recordSummaries,
-        nodeValues: _nodeValues,
-      });
-    } catch (error) {
-      setDataState((statePrev) => ({ ...statePrev, loading: false }));
-      toaster("recordsMap:errorLoadingData", { details: String(error) });
-    }
-  }, [cycle, layers, survey, toaster]);
-
-  // incremented on focus, to reload the tracks too
-  const [focusCount, setFocusCount] = useState(0);
-
-  // (re)load data on focus, e.g. when coming back from the record editor
-  useFocusEffect(
-    useCallback(() => {
-      void loadData();
-      setFocusCount((countPrev) => countPrev + 1);
-    }, [loadData]),
-  );
-
-  const visibleTrackDefUuidsJoint = useMemo(
-    () =>
-      layers
-        .filter(
-          (layer) =>
-            layer.type === RecordsMapLayerType.positionTrack &&
-            visibleLayerKeys.includes(layer.key),
-        )
-        .map((layer) => layer.nodeDefUuid!)
-        .join(","),
-    [layers, visibleLayerKeys],
-  );
-
-  const [trackValues, setTrackValues] = useState<NodeValue[]>([]);
-
-  useEffect(() => {
-    if (!visibleTrackDefUuidsJoint) {
-      setTrackValues([]);
-      return;
-    }
-    let cancelled = false;
-    RecordService.fetchNodeValuesByDefUuids({
-      surveyId: survey.id!,
-      cycle,
-      nodeDefUuids: visibleTrackDefUuidsJoint.split(","),
-    })
-      .then((values) => {
-        if (!cancelled) setTrackValues(values);
-      })
-      .catch((error) => {
-        toaster("recordsMap:errorLoadingData", { details: String(error) });
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [cycle, focusCount, survey.id, toaster, visibleTrackDefUuidsJoint]);
-
-  const visibleAreaNames = useMemo(
-    () =>
-      layers
-        .filter(
-          (layer) =>
-            layer.type === RecordsMapLayerType.areaOfInterest &&
-            visibleLayerKeys.includes(layer.key),
-        )
-        .map((layer) => layer.areaName!),
-    [layers, visibleLayerKeys],
-  );
-
-  // null when the area file cannot be read
-  const [areaOfInterestByName, setAreaOfInterestByName] = useState<
-    Record<string, AreaOfInterest | null>
-  >({});
-  const requestedAreaNamesRef = useRef(new Set<string>());
-
-  // areas are loaded only when their layer is visible, once (survey files never change)
-  useEffect(() => {
-    const names = visibleAreaNames.filter(
-      (name) => !requestedAreaNamesRef.current.has(name),
-    );
-    if (names.length === 0) return;
-    names.forEach((name) => requestedAreaNamesRef.current.add(name));
-    Promise.all(
-      names.map((name) =>
-        AreaOfInterestProviderDefault.getAreaOfInterest({ survey, name }),
-      ),
-    )
-      .then((areas) => {
-        setAreaOfInterestByName((areasPrev) => {
-          const areasNext = { ...areasPrev };
-          names.forEach((name, index) => {
-            areasNext[name] = areas[index] ?? null;
-          });
-          return areasNext;
-        });
-        const missingNames = names.filter((_name, index) => !areas[index]);
-        if (missingNames.length > 0) {
-          toaster("recordsMap:areaOfInterestNotAvailable", {
-            names: missingNames.join(", "),
-          });
-        }
-      })
-      .catch((error) => {
-        toaster("recordsMap:errorLoadingData", { details: String(error) });
-      });
-  }, [survey, toaster, visibleAreaNames]);
-
-  const visiblePreloadedFileUuids = useMemo(
-    () =>
-      layers
-        .filter(
-          (layer) =>
-            layer.type === RecordsMapLayerType.preloadedMapLayer &&
-            visibleLayerKeys.includes(layer.key),
-        )
-        .map((layer) => layer.fileUuid!),
-    [layers, visibleLayerKeys],
-  );
-
-  // null when the file cannot be read
-  const [preloadedGeometriesByFileUuid, setPreloadedGeometriesByFileUuid] =
-    useState<Record<string, MapLayerFileGeometries | null>>({});
-  const requestedPreloadedFileUuidsRef = useRef(new Set<string>());
-
-  // preloaded layers are loaded only when visible, once (survey files never change)
-  useEffect(() => {
-    const files = SurveyDefs.getPreloadedMapLayers(survey).filter(
-      ({ uuid }) =>
-        visiblePreloadedFileUuids.includes(uuid) &&
-        !requestedPreloadedFileUuidsRef.current.has(uuid),
-    );
-    if (files.length === 0) return;
-    files.forEach(({ uuid }) =>
-      requestedPreloadedFileUuidsRef.current.add(uuid),
-    );
-    Promise.all(
-      files.map((file) =>
-        PreloadedMapLayerService.readPreloadedMapLayer({ survey, file }),
-      ),
-    )
-      .then((results) => {
-        setPreloadedGeometriesByFileUuid((prev) => {
-          const next = { ...prev };
-          files.forEach(({ uuid }, index) => {
-            next[uuid] = results[index] ?? null;
-          });
-          return next;
-        });
-        const missingNames = files
-          .filter((_file, index) => !results[index])
-          .map(({ props }) => props.labels?.[lang] || props.name);
-        if (missingNames.length > 0) {
-          toaster("recordsMap:preloadedMapLayerNotAvailable", {
-            names: missingNames.join(", "),
-          });
-        }
-      })
-      .catch((error) => {
-        toaster("recordsMap:errorLoadingData", { details: String(error) });
-      });
-  }, [lang, survey, toaster, visiblePreloadedFileUuids]);
-
-  const preloadedShapesByLayerKey = useMemo(
-    () =>
-      layers.reduce(
-        (acc, layer) => {
-          const geometries =
-            layer.type === RecordsMapLayerType.preloadedMapLayer
-              ? preloadedGeometriesByFileUuid[layer.fileUuid!]
-              : null;
-          if (geometries) {
-            acc[layer.key] = buildPreloadedMapLayerShapes({
-              layer,
-              geometries,
-            });
-          }
-          return acc;
-        },
-        {} as Record<string, RecordsMapPreloadedLayerShapes>,
-      ),
-    [layers, preloadedGeometriesByFileUuid],
-  );
-
-  const recordSummaryByUuid = useMemo(
-    () =>
-      recordSummaries.reduce(
-        (acc, recordSummary) => {
-          acc[recordSummary.uuid] = recordSummary;
-          return acc;
-        },
-        {} as Record<string, any>,
-      ),
-    [recordSummaries],
-  );
-
-  const recordLabelByUuid = useMemo(
-    () =>
-      recordSummaries.reduce(
-        (acc, recordSummary) => {
-          const keyValues = RecordUtils.getRecordSummaryValuesByKeyFormatted({
-            survey,
-            lang,
-            recordSummary,
-            t,
-          });
-          acc[recordSummary.uuid] = Object.values(keyValues).join(" - ");
-          return acc;
-        },
-        {} as Record<string, string>,
-      ),
-    [lang, recordSummaries, survey, t],
-  );
-
-  const pointsByLayerKey = useMemo(() => {
-    const recordUuidsByItemUuid = getRecordUuidsBySamplingPointItemUuid({
-      survey,
-      cycle,
-      recordSummaries,
-    });
-    return layers.reduce(
-      (acc, layer) => {
-        if (layer.type === RecordsMapLayerType.samplingPoints) {
-          acc[layer.key] = buildSamplingPointFeatures({
-            survey,
-            layer,
-            recordUuidsByItemUuid,
-          });
-        } else if (layer.type === RecordsMapLayerType.coordinateAttribute) {
-          acc[layer.key] = buildCoordinateAttributeFeatures({
-            survey,
-            layer,
-            nodeValues,
-            recordLabelByUuid,
-          });
-        } else if (preloadedShapesByLayerKey[layer.key]) {
-          acc[layer.key] = preloadedShapesByLayerKey[layer.key]!.points;
-        }
-        return acc;
-      },
-      {} as Record<string, RecordsMapPointFeature[]>,
-    );
-  }, [
-    cycle,
+  const {
+    loading,
     layers,
-    nodeValues,
-    preloadedShapesByLayerKey,
+    visibleLayers,
+    visibleLayerKeys,
+    toggleLayer,
+    recordSummaryByUuid,
     recordLabelByUuid,
-    recordSummaries,
-    survey,
-  ]);
-
-  const tracksByLayerKey = useMemo(
-    () =>
-      layers.reduce(
-        (acc, layer) => {
-          // hidden track layers are not loaded: no entry, so their count is not shown
-          if (
-            layer.type === RecordsMapLayerType.positionTrack &&
-            visibleLayerKeys.includes(layer.key)
-          ) {
-            acc[layer.key] = buildTrackFeatures({
-              layer,
-              nodeValues: trackValues,
-              recordLabelByUuid,
-            });
-          }
-          return acc;
-        },
-        {} as Record<string, RecordsMapTrackFeature[]>,
-      ),
-    [layers, recordLabelByUuid, trackValues, visibleLayerKeys],
-  );
-
-  const areaPolygonsByLayerKey = useMemo(
-    () =>
-      layers.reduce(
-        (acc, layer) => {
-          const areaOfInterest =
-            layer.type === RecordsMapLayerType.areaOfInterest
-              ? areaOfInterestByName[layer.areaName!]
-              : null;
-          if (areaOfInterest) {
-            acc[layer.key] = buildAreaOfInterestPolygons({
-              layer,
-              areaOfInterest,
-            });
-          } else if (preloadedShapesByLayerKey[layer.key]) {
-            acc[layer.key] = preloadedShapesByLayerKey[layer.key]!.polygons;
-          }
-          return acc;
-        },
-        {} as Record<string, RecordsMapAreaPolygon[]>,
-      ),
-    [areaOfInterestByName, layers, preloadedShapesByLayerKey],
-  );
-
-  const layerLabelByKey = useMemo(
-    () =>
-      layers.reduce(
-        (acc, layer) => {
-          acc[layer.key] = getLayerLabel({ survey, layer, lang, t });
-          return acc;
-        },
-        {} as Record<string, string>,
-      ),
-    [lang, layers, survey, t],
-  );
-
-  const visibleLayers = useMemo(
-    () => layers.filter((layer) => visibleLayerKeys.includes(layer.key)),
-    [layers, visibleLayerKeys],
-  );
-
-  const visibleCoordinates = useMemo(
-    () =>
-      visibleLayers.flatMap((layer) => [
-        ...(pointsByLayerKey[layer.key] ?? []).map(toLatLng),
-        ...(tracksByLayerKey[layer.key] ?? []).flatMap((track) =>
-          getBoundsCorners(track.lines.flat()),
-        ),
-        ...getBoundsCorners(
-          (areaPolygonsByLayerKey[layer.key] ?? []).flatMap(
-            (polygon) => polygon.coordinates,
-          ),
-        ),
-        ...getBoundsCorners(
-          (preloadedShapesByLayerKey[layer.key]?.lines ?? []).flatMap(
-            (line) => line.coordinates,
-          ),
-        ),
-      ]),
-    [
-      areaPolygonsByLayerKey,
-      pointsByLayerKey,
-      preloadedShapesByLayerKey,
-      tracksByLayerKey,
-      visibleLayers,
-    ],
-  );
+    layerLabelByKey,
+    pointsByLayerKey,
+    tracksByLayerKey,
+    areaPolygonsByLayerKey,
+    preloadedShapesByLayerKey,
+    visibleCoordinates,
+  } = useRecordsMapData();
 
   // computed only once, when data is loaded the first time
-  const initialRegionRef = useRef<Region | null>(null);
-  if (!loading && !initialRegionRef.current) {
-    initialRegionRef.current = calculateRegion(visibleCoordinates);
+  const [initialRegion, setInitialRegion] = useState<Region | null>(null);
+  if (!loading && !initialRegion) {
+    setInitialRegion(calculateRegion(visibleCoordinates));
   }
 
   const fitToVisiblePoints = useCallback(() => {
@@ -537,14 +121,13 @@ export const RecordsMapScreen = () => {
     });
   }, [currentLocation]);
 
-  const onLayerToggle = useCallback((layerKey: string) => {
-    setVisibleLayerKeys((keysPrev) =>
-      keysPrev.includes(layerKey)
-        ? keysPrev.filter((key) => key !== layerKey)
-        : [...keysPrev, layerKey],
-    );
-    setSelection(null);
-  }, []);
+  const onLayerToggle = useCallback(
+    (layerKey: string) => {
+      toggleLayer(layerKey);
+      setSelection(null);
+    },
+    [toggleLayer],
+  );
 
   const onPointPress = useCallback(
     ({
@@ -640,7 +223,7 @@ export const RecordsMapScreen = () => {
     }
   };
 
-  if (loading || !initialRegionRef.current) {
+  if (loading || !initialRegion) {
     return <Loader />;
   }
 
@@ -648,7 +231,7 @@ export const RecordsMapScreen = () => {
     <VView style={styles.container}>
       <MapView
         ref={mapRef}
-        initialRegion={initialRegionRef.current}
+        initialRegion={initialRegion}
         onMapReady={fitToVisiblePoints}
         onPress={onMapPress}
         onRegionChangeComplete={setRegion}
@@ -702,7 +285,7 @@ export const RecordsMapScreen = () => {
             onClusterPress={onClusterPress}
             onPointPress={onPointPress}
             points={pointsByLayerKey[layer.key] ?? []}
-            region={region ?? initialRegionRef.current}
+            region={region ?? initialRegion}
           />
         ))}
         {currentLocation && (
