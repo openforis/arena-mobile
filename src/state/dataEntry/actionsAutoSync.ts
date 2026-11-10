@@ -23,7 +23,7 @@ import { exportRecords } from "./actionsDataExport";
 import { fetchRecordsChangedRemotely } from "./actionsMergedRecords";
 import { DataEntryActionsRecordSync } from "./actionsRecordSync";
 import { DataEntrySelectors } from "./selectors";
-import type { AppDispatch, RootState } from "../store";
+import type { AppDispatch, AppGetState } from "../store";
 
 // the record currently open in the editor gets an idle threshold instead of being excluded
 // outright: otherwise a record edited slowly (a field every minute or two) would never leave
@@ -329,7 +329,7 @@ const runAutoSync =
     ignoreOpenRecordIdleThreshold?: boolean;
     prefetchedRecords?: any[];
   } = {}) =>
-  async (dispatch: AppDispatch, getState: () => RootState) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     if (tickInProgress) {
       log.debug("auto-sync: tick already in progress, skipping");
       return;

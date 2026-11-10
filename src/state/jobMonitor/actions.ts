@@ -5,7 +5,7 @@ import { RemoteJobService, WebSocketService } from "service";
 import { log } from "utils";
 
 import { createCallbackRegistry } from "../callbackRegistry";
-import type { AppDispatch, RootState } from "../store";
+import type { AppDispatch, AppGetState, RootState } from "../store";
 
 // the websocket can miss the final update (e.g. a job ending before the handshake)
 const REMOTE_JOB_STATUS_POLL_INTERVAL_MS = 30_000;
@@ -313,7 +313,7 @@ const start =
     transferEtaTextKey = null,
     innerJobUiConfigByType = undefined,
   }: JobStartParams) =>
-  async (dispatch: AppDispatch, getState: () => RootState) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     // the state of a previous job (if any) is replaced: its callbacks won't be used anymore
     JobMonitorCallbacksRegistry.remove(
       getJobMonitorState(getState()).callbacksId,
@@ -422,15 +422,14 @@ const startAsync = async ({
     );
   });
 
-const cancel =
-  () => async (dispatch: AppDispatch, getState: () => RootState) => {
-    const state = getState();
-    const { callbacksId } = getJobMonitorState(state);
-    await JobMonitorCallbacksRegistry.get(callbacksId)?.onCancel?.();
-    dispatch(close());
-  };
+const cancel = () => async (dispatch: AppDispatch, getState: AppGetState) => {
+  const state = getState();
+  const { callbacksId } = getJobMonitorState(state);
+  await JobMonitorCallbacksRegistry.get(callbacksId)?.onCancel?.();
+  dispatch(close());
+};
 
-const close = () => (dispatch: AppDispatch, getState: () => RootState) => {
+const close = () => (dispatch: AppDispatch, getState: AppGetState) => {
   const state = getState();
   const { callbacksId } = getJobMonitorState(state);
   const onClose = JobMonitorCallbacksRegistry.get(callbacksId)?.onClose;

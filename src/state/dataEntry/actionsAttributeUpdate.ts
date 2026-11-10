@@ -26,7 +26,7 @@ import { DataEntryActionsRecordPreviousCycle } from "./actionsRecordPreviousCycl
 import { DataEntrySelectors } from "./selectors";
 import { serializeRecordUpdate } from "./recordUpdateQueue";
 import { selectRecordUpdaterParams } from "./recordUpdaterParams";
-import type { AppDispatch, RootState } from "../store";
+import type { AppDispatch, AppGetState } from "../store";
 import {
   confirmClearNewlyInapplicableValues,
   handleError,
@@ -255,7 +255,7 @@ export const updateAttribute = ({
 
 const performCoordinateValueSrsConversion =
   ({ nodeUuid, srsTo }: any) =>
-  (dispatch: AppDispatch, getState: () => RootState) => {
+  (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const record = DataEntrySelectors.selectRecord(state);
@@ -277,7 +277,7 @@ const performCoordinateValueSrsConversion =
 
 export const updateCoordinateValueFromLatLong =
   ({ nodeUuid, latitude, longitude }: any) =>
-  (dispatch: AppDispatch, getState: () => RootState) => {
+  (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const record = DataEntrySelectors.selectRecord(state);
@@ -303,7 +303,7 @@ export const updateCoordinateValueFromLatLong =
 
 export const updateCoordinateValueSrs =
   ({ nodeUuid, srsTo }: any) =>
-  (dispatch: AppDispatch, getState: () => RootState) => {
+  (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const record = DataEntrySelectors.selectRecord(state);
 

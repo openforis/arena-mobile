@@ -40,7 +40,7 @@ import { DataEntrySelectors } from "./selectors";
 import { serializeRecordUpdate } from "./recordUpdateQueue";
 import { selectRecordUpdaterParams } from "./recordUpdaterParams";
 import { ToastActions } from "state/toast";
-import type { AppDispatch, RootState } from "../store";
+import type { AppDispatch, AppGetState } from "../store";
 import {
   addNewAttribute,
   updateAttribute,
@@ -70,7 +70,7 @@ const { linkToRecordInPreviousCycle, unlinkFromRecordInPreviousCycle } =
 
 const createNewRecord =
   ({ navigator }: any) =>
-  async (dispatch: AppDispatch, getState: () => RootState) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     try {
       let state = getState();
       const survey = SurveySelectors.selectCurrentSurvey(state)!;
@@ -254,7 +254,7 @@ const deleteNodes = (nodeUuids: any) =>
 
 const deleteRecords =
   (recordUuids: any) =>
-  async (dispatch: AppDispatch, getState: () => RootState) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
 
@@ -282,7 +282,7 @@ const checkEntityPageIsValidAndNotRoot = ({
 
 const editRecord =
   ({ navigator, record, locked = true }: any) =>
-  async (dispatch: AppDispatch, getState: () => RootState) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const surveyId = SurveySelectors.selectCurrentSurveyId(state);
@@ -336,7 +336,7 @@ const _fetchAndEditRecordInternal = async ({
 
 const fetchAndEditRecord =
   ({ navigator, recordSummary }: any) =>
-  async (dispatch: AppDispatch, getState: () => RootState) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const {

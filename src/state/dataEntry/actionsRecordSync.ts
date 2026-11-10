@@ -8,7 +8,7 @@ import { log } from "utils";
 import { SurveySelectors } from "../survey/selectors";
 import { DataEntryActionTypes } from "./actionTypes";
 import { DataEntrySelectors } from "./selectors";
-import type { AppDispatch, RootState } from "../store";
+import type { AppDispatch, AppGetState } from "../store";
 
 const { PAGE_ENTITY_SET, RECORD_SET, RECORD_SYNC_IN_PROGRESS_SET } =
   DataEntryActionTypes;
@@ -63,7 +63,7 @@ const stopSyncLockWatchdog = () => {
 };
 
 const unlockOpenRecordAfterSync =
-  () => (dispatch: AppDispatch, getState: () => RootState) => {
+  () => (dispatch: AppDispatch, getState: AppGetState) => {
     stopSyncLockWatchdog();
     if (DataEntrySelectors.selectRecordSyncInProgress(getState())) {
       dispatch({ type: RECORD_SYNC_IN_PROGRESS_SET, inProgress: false });
@@ -79,7 +79,7 @@ const unlockOpenRecordAfterSync =
  */
 const lockOpenRecordForSync =
   ({ isBusy }: { isBusy?: () => boolean } = {}) =>
-  (dispatch: AppDispatch, getState: () => RootState) => {
+  (dispatch: AppDispatch, getState: AppGetState) => {
     Keyboard.dismiss();
     dispatch({ type: RECORD_SYNC_IN_PROGRESS_SET, inProgress: true });
 
@@ -113,7 +113,7 @@ const isPageEntityPointerValid = ({ survey, record, pointer }: any) => {
  * exists in the record, otherwise the editor goes back to the root entity page.
  */
 const reloadOpenRecord =
-  () => async (dispatch: AppDispatch, getState: () => RootState) => {
+  () => async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const recordOpen = DataEntrySelectors.selectRecord(state);
