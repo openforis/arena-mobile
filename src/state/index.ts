@@ -77,4 +77,4 @@ export { ToastActions, ToastReducer, ToastSelectors } from "./toast";
 
 export { store } from "./store";
 export { useAppDispatch, useAppSelector } from "./storeHooks";
-export type { RootState, AppDispatch } from "./store";
+export type { RootState, AppDispatch, AppGetState } from "./store";

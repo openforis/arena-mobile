@@ -21,7 +21,7 @@ import { ConfirmUtils } from "../confirm";
 import { DataEntryActionTypes } from "./actionTypes";
 import { DataEntrySelectors } from "./selectors";
 import { ToastActions } from "state/toast";
-import type { AppDispatch, RootState } from "../store";
+import type { AppDispatch, AppGetState } from "../store";
 
 const { RECORD_SET } = DataEntryActionTypes;
 
@@ -48,7 +48,7 @@ export const removeNodesFlags = (nodes: NodesMap) => {
 // its way (e.g. a debounced text update) from overwriting the merged version
 export const isRecordSyncInProgress = (
   dispatch: AppDispatch,
-  getState: () => RootState,
+  getState: AppGetState,
 ): boolean => {
   if (!DataEntrySelectors.selectRecordSyncInProgress(getState())) return false;
   dispatch(ToastActions.show("dataEntry:autoSync.recordSyncInProgress"));

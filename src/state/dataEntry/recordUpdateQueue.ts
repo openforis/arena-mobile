@@ -1,20 +1,15 @@
 import { DataEntrySelectors } from "./selectors";
-import type { AppDispatch, RootState } from "../store";
+import type { AppDispatch, AppGetState } from "../store";
 
 let queue: Promise<unknown> = Promise.resolve();
 
-const selectRecordUuid = (getState: () => RootState) =>
+const selectRecordUuid = (getState: AppGetState) =>
   DataEntrySelectors.selectRecord(getState())?.uuid;
 
 // one at a time: an update stores the whole record, so concurrent ones would lose changes
 export const serializeRecordUpdate =
-  <T>(
-    update: (dispatch: AppDispatch, getState: () => RootState) => Promise<T>,
-  ) =>
-  (
-    dispatch: AppDispatch,
-    getState: () => RootState,
-  ): Promise<T | undefined> => {
+  <T>(update: (dispatch: AppDispatch, getState: AppGetState) => Promise<T>) =>
+  (dispatch: AppDispatch, getState: AppGetState): Promise<T | undefined> => {
     const recordUuid = selectRecordUuid(getState);
     const result = queue.then(() =>
       recordUuid && selectRecordUuid(getState) === recordUuid

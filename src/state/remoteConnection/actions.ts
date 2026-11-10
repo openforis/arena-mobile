@@ -24,7 +24,7 @@ import { RemoteConnectionSelectors } from "./selectors";
 import { AsyncStorageUtils } from "service/asyncStorage/AsyncStorageUtils";
 import { asyncStorageKeys } from "service/asyncStorage/asyncStorageKeys";
 import { invalidCredentialsError, LoginResponse } from "service/authService";
-import type { AppDispatch, RootState } from "../store";
+import type { AppDispatch, AppGetState } from "../store";
 
 const { USER_SET, USER_PROFILE_ICON_INFO_SET } = RemoteConnectionActionTypes;
 
@@ -225,7 +225,7 @@ const loginWithTempAuthToken =
 
 const fetchLoggedInUserProfileIcon = async (
   dispatch: AppDispatch,
-  getState: () => RootState,
+  getState: AppGetState,
 ) => {
   log.debug("fetching user profile icon");
   const state = getState();

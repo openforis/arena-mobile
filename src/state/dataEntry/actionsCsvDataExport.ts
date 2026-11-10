@@ -12,7 +12,7 @@ import {
   FlatDataExportJobResult,
 } from "service/dataExportJob";
 import { RemoteConnectionSelectors } from "state/remoteConnection";
-import type { AppDispatch, RootState } from "state/store";
+import type { AppDispatch, AppGetState, RootState } from "state/store";
 import { Files, log } from "utils";
 
 import { ConfirmActions, OnConfirmParams } from "../confirm";
@@ -58,7 +58,7 @@ const selectedOptionsToDataExportOptions = ({
 };
 
 export const startCsvDataExportJob =
-  () => (dispatch: AppDispatch, getState: () => RootState) => {
+  () => (dispatch: AppDispatch, getState: AppGetState) => {
     try {
       const state = getState();
 

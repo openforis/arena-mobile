@@ -5,7 +5,7 @@ import { RecordsExportFileGenerationJob } from "service/recordsExportFileGenerat
 
 import { i18n } from "localization";
 import { JobCancelError, ValidationUtils } from "model";
-import type { AppDispatch, RootState } from "state/store";
+import type { AppDispatch, AppGetState } from "state/store";
 import { Files, log } from "utils";
 
 import { AutoSyncActions } from "../autoSync";
@@ -188,7 +188,7 @@ export const exportRecords =
     onEnd = null,
     silent = false,
   }: any) =>
-  async (dispatch: AppDispatch, getState: () => RootState) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
