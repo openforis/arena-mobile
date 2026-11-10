@@ -1,10 +1,16 @@
 name: E2E Maestro Android
 
-on: [pull_request]
+on:
+  pull_request:
+  # on master the app is only built (no tests): it fills the Gradle and APK caches restored by the pull requests
+  push:
+    branches: [master]
 
 jobs:
   e2e-tests-maestro-android:
     runs-on: ubuntu-latest
+    env:
+      APK_PATH: e2e-build/apk/app-debug.apk
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -22,17 +28,38 @@ jobs:
         # no dependency needs lifecycle (install/postinstall) scripts: skip them
         run: yarn install --immutable --mode=skip-build
 
-      - name: Install Maestro CLI
+      # The APK is cached by native fingerprint and bundled assets: when only the JS code changes,
+      # the cached APK gets the new JS bundle (see repack-android-apk.sh) and Gradle doesn't run.
+      - name: Bundle JS and assets
+        id: bundle
         env:
-          # pinned version, installed by the official install script
-          MAESTRO_VERSION: 2.11.0
+          # read by app.config.ts: part of the fingerprint
+          GOOGLE_MAPS_API_KEY_ANDROID: ${{ secrets.GOOGLE_MAPS_API_KEY_ANDROID || 'e2e-tests-no-key' }}
         run: |
-          curl --proto '=https' --tlsv1.2 -fsSL -o "$RUNNER_TEMP/install-maestro.sh" "https://get.maestro.mobile.dev"
-          bash "$RUNNER_TEMP/install-maestro.sh"
-          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+          mkdir -p e2e-build/bundle/assets e2e-build/bundle/res
+          yarn expo export:embed \
+            --platform android \
+            --dev false \
+            --entry-file node_modules/expo/AppEntry.js \
+            --bundle-output e2e-build/bundle/assets/index.android.bundle \
+            --assets-dest e2e-build/bundle/res
 
-      # Build the APK FIRST (No emulator yet)
+          # before prebuild: the fingerprint includes the android folder when it exists
+          fingerprint=$(node node_modules/@expo/fingerprint/bin/cli.js fingerprint:generate --platform android \
+            | node -p 'JSON.parse(require("fs").readFileSync(0, "utf8")).hash')
+          # images and other assets are compiled into the APK resources: a change needs a native build
+          assets_hash=$(cd e2e-build/bundle/res && find . -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | cut -c1-40)
+          echo "apk-cache-key=e2e-apk-${fingerprint}-${assets_hash}" >> "$GITHUB_OUTPUT"
+
+      - name: Restore APK
+        id: apk-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: e2e-build/apk
+          key: ${{ steps.bundle.outputs.apk-cache-key }}
+
       - name: Set up JDK
+        if: steps.apk-cache.outputs.cache-hit != 'true'
         uses: actions/setup-java@v6
         with:
           java-version: "21"
@@ -42,54 +69,68 @@ jobs:
       # (setup-java's "cache: gradle" is keyed on **/*.gradle* files, but android/ doesn't exist yet at
       # that point, so its key never changes and the cache is never updated)
       - name: Set up Gradle
+        if: steps.apk-cache.outputs.cache-hit != 'true'
         # v5: v6 moved caching to a proprietary component (see https://blog.gradle.org/github-actions-for-gradle-v6)
         uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5.0.2
 
-      - name: Cache Expo prebuild output
-        uses: actions/cache@v6
-        id: cache-android-prebuild
-        with:
-          path: android/
-          # "maps-key": prebuild output with the Google Maps API key meta-data (see the build step)
-          key: android-prebuild-maps-key-${{ hashFiles('package.json', 'yarn.lock', 'app.config.ts', 'plugins/**') }}
-
       - name: Build Android APK
+        if: steps.apk-cache.outputs.cache-hit != 'true'
         env:
           # without the API key meta-data Google Maps crashes the app as soon as a map is shown
           # (e.g. the track of a position tracking attribute): an invalid key only shows an empty map
           GOOGLE_MAPS_API_KEY_ANDROID: ${{ secrets.GOOGLE_MAPS_API_KEY_ANDROID || 'e2e-tests-no-key' }}
         run: |
-          if [ "${{ steps.cache-android-prebuild.outputs.cache-hit }}" != "true" ]; then
-            yarn expo prebuild --platform android
-          fi
+          yarn expo prebuild --platform android
 
-          # Manually create the bundle and assets folder
           mkdir -p android/app/src/main/assets
-
-          # Manually bundle the JS into the assets folder
-          yarn expo export:embed \
-           --platform android \
-            --dev false \
-            --entry-file node_modules/expo/AppEntry.js \
-            --bundle-output android/app/src/main/assets/index.android.bundle \
-            --assets-dest android/app/src/main/res
+          cp e2e-build/bundle/assets/index.android.bundle android/app/src/main/assets/
+          cp -r e2e-build/bundle/res/. android/app/src/main/res/
 
           cd android
           # build native code only for the emulator architecture (default: 4 architectures)
           ./gradlew assembleDebug --no-daemon --build-cache --parallel \
             -PreactNativeArchitectures=x86_64
+
+          mkdir -p "$(dirname "../$APK_PATH")"
+          cp app/build/outputs/apk/debug/app-debug.apk "../$APK_PATH"
+
+      - name: Save APK
+        if: steps.apk-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v6
+        with:
+          path: e2e-build/apk
+          key: ${{ steps.bundle.outputs.apk-cache-key }}
+
+      - name: Update the JS bundle of the cached APK
+        if: steps.apk-cache.outputs.cache-hit == 'true'
+        run: e2e/scripts/repack-android-apk.sh "$APK_PATH" e2e-build/bundle/assets/index.android.bundle "$APK_PATH"
+
+      - name: Install Maestro CLI
+        if: github.event_name == 'pull_request'
+        env:
+          # pinned version, installed by the official install script
+          MAESTRO_VERSION: 2.11.0
+        run: |
+          curl --proto '=https' --tlsv1.2 -fsSL -o "$RUNNER_TEMP/install-maestro.sh" "https://get.maestro.mobile.dev"
+          bash "$RUNNER_TEMP/install-maestro.sh"
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
       - name: Enable KVM group perms
+        if: github.event_name == 'pull_request'
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
       - name: Run Maestro Tests
+        if: github.event_name == 'pull_request'
         uses: reactivecircus/android-emulator-runner@v2
         env:
           ARENA_SERVER_URL: ${{secrets.ARENA_SERVER_URL}}
           ARENA_SERVER_USERNAME: ${{secrets.ARENA_SERVER_USERNAME}}
           ARENA_SERVER_PASSWORD: ${{secrets.ARENA_SERVER_PASSWORD}}
+          # bundled with --dev false: no LogBox notifications to dismiss
+          DEV_BUNDLE: "false"
         with:
           api-level: 35
           target: google_atd
@@ -102,14 +143,14 @@ jobs:
           script: bash e2e/scripts/run-maestro-android.sh
 
       - name: Upload artifacts
-        if: always()
+        if: always() && github.event_name == 'pull_request'
         uses: actions/upload-artifact@v7
         with:
           name: e2e-test-logs
           path: ~/.maestro/tests/**/*
 
       - name: Store tests result
-        if: always()
+        if: always() && github.event_name == 'pull_request'
         uses: actions/upload-artifact@v7
         with:
           name: e2e_android_report
