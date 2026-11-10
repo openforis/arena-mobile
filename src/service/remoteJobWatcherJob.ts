@@ -7,7 +7,7 @@ import { RecordsUploadAndProcessJobContext } from "./RecordsUploadAndProcessJobC
 
 // a stable identifier for this job class, independent of `this.constructor.name` (which a
 // minified production build isn't guaranteed to preserve) - read by RecordsUploadAndProcessJob's
-// caller (see actionsDataExport.ts) to tell which of its inner jobs is currently active/failed
+// caller (see actionsRecordsUpload.ts) to tell which of its inner jobs is currently active/failed
 export const REMOTE_JOB_WATCHER_JOB_TYPE = "RemoteJobWatcherJob";
 
 // the websocket can miss the final update (connection drop, job ended before the handshake)

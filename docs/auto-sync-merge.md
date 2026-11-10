@@ -186,14 +186,16 @@ arena-mobile, branch `feat/auto-sync-merge` (on top of `fix/merged-record-local-
   `src/state/autoSync/actions.ts` reads the auto-sync setting.
 - `src/state/dataEntry/actionsAutoSync.ts`: `selectAutoMergeCandidates`, one upload per tick
   (S2, S3).
-- `src/state/dataEntry/actionsDataExport.ts`: baseline not stamped for merged records, open
-  record skipped, silent download, "upload follow-up in progress" guard (S4, S5).
+- `src/state/dataEntry/actionsDataExport.ts` and `actionsMergedRecords.ts`: baseline not stamped
+  for merged records, open record skipped, silent download, "upload follow-up in progress" guard
+  (S4, S5).
 - `src/state/dataEntry/actionsRecordsImport.ts`: silent mode for the download and import of
   records.
 - `src/state/dataEntry/actionsRecordSync.ts` (new): lock/unlock of the open record with its
   watchdog, reload of the open record, "being replaced" and "upload follow-up" guards (S5).
-- `src/state/dataEntry/actions.ts`: edits rejected while locked; a record being replaced can't
-  be opened. `selectors.ts`/`reducer.ts`/`types.ts`: `recordSyncInProgress` state.
+- `src/state/dataEntry/actions.ts` and `actionsAttributeUpdate.ts`: edits rejected while locked;
+  a record being replaced can't be opened. `selectors.ts`/`reducer.ts`/`types.ts`:
+  `recordSyncInProgress` state.
 - `src/screens/RecordEditor/RecordEditor.tsx`: "being synchronized" line.
 
 ### Phase 3 (files already in the device)

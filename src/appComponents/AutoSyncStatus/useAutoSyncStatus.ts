@@ -113,7 +113,7 @@ export const useAutoSyncStatus = () => {
     typeof jobProgressPercent === "number" &&
     jobProgressPercent >= 0;
   // the zip preparation, upload and server-side processing phases are chained into one
-  // continuous 0-100% bar (see REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES in actionsDataExport.ts and
+  // continuous 0-100% bar (see REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES in dataExportUtils.ts and
   // JobMonitorState.progressRangeStart/End) instead of each phase's own progress, which would
   // otherwise restart the bar from 0% up to three times in a row
   const progressPercent = combinedProgressPercent;
