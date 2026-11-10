@@ -3,6 +3,7 @@ export default {
     generic: "ስህተት: {{details}}",
     invalidServerUrl: "የማገልገያ አድራሻ ልክ አይደለም",
     invalidCredentials: "ትክክል ያልሆነ ኢሜይል ወይም የይለፍ ቃል",
+    invalidTwoFactorCode: "2FA ኮድ ትክክል አይደለም። እንደገና ሞክር።",
   },
   loginRequired: "መግባት ያስፈልጋል",
   loginSuccessful: "መግባት ተሳክቷል!",
@@ -10,11 +11,5 @@ export default {
   logoutConfirmMessage: "ከመለያዎ መውጣትዎን እርግጠኛ ነዎት?",
   logoutOptions: {
     keepEmailAddress: "የኢሜይል አድራሻውን ያቆዩ",
-  },
-  twoFactorCode: "2FA ኮድ",
-  twoFactorRequiredConfirm: {
-    title: "2FA ያስፈልጋል",
-    message: "ለዋስ ማረጋገጫ ትግبግልዎ ያስፈላለጠውን ኮድ ያስገቡ።",
-    messageError: "2FA ኮድ ትክክል አይደለም። እንደገና ሞክር።",
   },
 };

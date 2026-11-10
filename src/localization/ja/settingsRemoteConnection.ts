@@ -25,4 +25,15 @@ export default {
   },
   testUrl: "URLをテスト",
   title: "サーバーへの接続",
+  twoFactor: {
+    backupCode: "バックアップコード",
+    code: "2FA（二要素認証）コード",
+    description: "認証アプリが生成したコードを入力してください。",
+    descriptionBackupCode:
+      "2段階認証の設定時に保存したバックアップコードのいずれかを入力してください。",
+    title: "2段階認証",
+    useAuthenticatorApp: "認証アプリを使用する",
+    useBackupCode: "バックアップコードを使用する",
+    verify: "確認",
+  },
 };

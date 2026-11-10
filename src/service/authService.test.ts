@@ -1,5 +1,9 @@
 import { API } from "./api";
-import { AuthService, invalidCredentialsError } from "./authService";
+import {
+  AuthService,
+  invalidCredentialsError,
+  invalidTwoFactorCodeError,
+} from "./authService";
 import { SecureStoreService } from "./SecureStoreService";
 import { SettingsService } from "./settingsService";
 
@@ -176,6 +180,25 @@ describe("AuthService login errors", () => {
     });
     const res = await AuthService.login({ email: "a@b.c", password: "pwd" });
     expect(res.error).toBe(invalidCredentialsError);
+  });
+
+  it("reports a wrong 2FA code apart from wrong credentials", async () => {
+    postMock.mockRejectedValue(
+      Object.assign(new Error("Request failed with status code 401"), {
+        response: { status: 401 },
+      }),
+    );
+    const resWithCode = await AuthService.login({
+      email: "a@b.c",
+      password: "pwd",
+      twoFactorToken: "123456",
+    });
+    expect(resWithCode.error).toBe(invalidTwoFactorCodeError);
+    const resWithoutCode = await AuthService.login({
+      email: "a@b.c",
+      password: "pwd",
+    });
+    expect(resWithoutCode.error).toBe(invalidCredentialsError);
   });
 });
 

@@ -3,6 +3,8 @@ export default {
     generic: "Erro: {{details}}",
     invalidServerUrl: "URL do servidor inválido",
     invalidCredentials: "Email ou senha inválidos",
+    invalidTwoFactorCode:
+      "O código 2FA está incorreto. Por favor, tente novamente.",
   },
   loginRequired: "Login obrigatório",
   loginSuccessful: "Login efetuado com sucesso!",
@@ -10,12 +12,5 @@ export default {
   logoutConfirmMessage: "Tem certeza que deseja sair?",
   logoutOptions: {
     keepEmailAddress: "Manter endereço de email",
-  },
-  twoFactorCode: "Código 2FA",
-  twoFactorRequiredConfirm: {
-    title: "2FA Obrigatório",
-    message:
-      "Por favor, insira o código gerado pelo seu aplicativo autenticador.",
-    messageError: "O código 2FA está incorreto. Por favor, tente novamente.",
   },
 };

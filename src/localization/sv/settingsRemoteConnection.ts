@@ -25,4 +25,15 @@ export default {
   },
   testUrl: "Testa URL",
   title: "Anslutning till servern",
+  twoFactor: {
+    backupCode: "Reservkod",
+    code: "2FA-kod",
+    description: "Vänligen ange koden som genererats av din autentiseringsapp.",
+    descriptionBackupCode:
+      "Ange en av de reservkoder som du sparade när du konfigurerade tvåstegsverifiering.",
+    title: "Tvåstegsverifiering",
+    useAuthenticatorApp: "Använd autentiseringsappen",
+    useBackupCode: "Använd en reservkod",
+    verify: "Verifiera",
+  },
 };

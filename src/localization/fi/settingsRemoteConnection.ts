@@ -25,4 +25,15 @@ export default {
   },
   testUrl: "Testaa URL-osoite",
   title: "Yhteys palvelimeen",
+  twoFactor: {
+    backupCode: "Varakoodi",
+    code: "2FA-koodi",
+    description: "Syötä todentajasovelluksesi tuottama koodi.",
+    descriptionBackupCode:
+      "Anna jokin varakoodeista, jotka tallensit kaksivaiheisen vahvistuksen käyttöönoton yhteydessä.",
+    title: "Kaksivaiheinen vahvistus",
+    useAuthenticatorApp: "Käytä todentajasovellusta",
+    useBackupCode: "Käytä varakoodia",
+    verify: "Vahvista",
+  },
 };

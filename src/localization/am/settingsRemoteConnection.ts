@@ -25,4 +25,15 @@ export default {
   },
   testUrl: "URL ይሞክሩ",
   title: "ከአገልጋይ ጋር ግንኙነት",
+  twoFactor: {
+    backupCode: "የመጠባበቂያ ኮድ",
+    code: "2FA ኮድ",
+    description: "በማረጋገጫ መተግበሪያዎ የተፈጠረውን ኮድ ያስገቡ።",
+    descriptionBackupCode:
+      "ባለሁለት ደረጃ ማረጋገጫን ሲያዋቅሩ ካስቀመጧቸው የመጠባበቂያ ኮዶች አንዱን ያስገቡ።",
+    title: "ባለሁለት ደረጃ ማረጋገጫ",
+    useAuthenticatorApp: "የማረጋገጫ መተግበሪያውን ተጠቀም",
+    useBackupCode: "የመጠባበቂያ ኮድ ተጠቀም",
+    verify: "አረጋግጥ",
+  },
 };

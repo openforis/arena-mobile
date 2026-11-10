@@ -12,6 +12,8 @@ const authTokenRefreshUrl = "/auth/token/refresh";
 
 export const invalidServerUrlError = "authService:error.invalidServerUrl";
 export const invalidCredentialsError = "authService:error.invalidCredentials";
+export const invalidTwoFactorCodeError =
+  "authService:error.invalidTwoFactorCode";
 
 const extractCookieValue = (
   headers: Dictionary<string>,
@@ -141,6 +143,10 @@ const login = async ({
     }
     return result;
   } catch (err: any) {
+    // the 2FA code is sent only after the password has been accepted
+    if (twoFactorToken && err.response?.status === 401) {
+      return { error: invalidTwoFactorCodeError };
+    }
     return extractErrorMessageFromLoginError(err);
   }
 };

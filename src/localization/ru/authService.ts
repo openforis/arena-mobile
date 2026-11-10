@@ -3,6 +3,7 @@ export default {
     generic: "Ошибка: {{details}}",
     invalidServerUrl: "Неверный URL сервера",
     invalidCredentials: "Неверный адрес электронной почты или пароль",
+    invalidTwoFactorCode: "Код 2FA неверен. Пожалуйста, попробуйте снова.",
   },
   loginRequired: "Требуется вход",
   loginSuccessful: "Вход выполнен успешно!",
@@ -10,12 +11,5 @@ export default {
   logoutConfirmMessage: "Вы уверены, что хотите выйти?",
   logoutOptions: {
     keepEmailAddress: "Сохранить адрес электронной почты",
-  },
-  twoFactorCode: "Код 2FA",
-  twoFactorRequiredConfirm: {
-    title: "Требуется 2FA",
-    message:
-      "Пожалуйста, введите код, сгенерированный вашим приложением аутентификации.",
-    messageError: "Код 2FA неверен. Пожалуйста, попробуйте снова.",
   },
 };

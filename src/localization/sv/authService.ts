@@ -3,6 +3,7 @@ export default {
     generic: "Fel: {{details}}",
     invalidServerUrl: "Ogiltig server-URL",
     invalidCredentials: "Ogiltig e-postadress eller lösenord",
+    invalidTwoFactorCode: "2FA-koden är felaktig. Vänligen försök igen.",
   },
   loginRequired: "Inloggning krävs",
   loginSuccessful: "Inloggning lyckades!",
@@ -10,11 +11,5 @@ export default {
   logoutConfirmMessage: "Är du säker på att du vill logga ut?",
   logoutOptions: {
     keepEmailAddress: "Behåll e-postadress",
-  },
-  twoFactorCode: "2FA-kod",
-  twoFactorRequiredConfirm: {
-    title: "2FA Krävs",
-    message: "Vänligen ange koden som genererats av din autentiseringsapp.",
-    messageError: "2FA-koden är felaktig. Vänligen försök igen.",
   },
 };

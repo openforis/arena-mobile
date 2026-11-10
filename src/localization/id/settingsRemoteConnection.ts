@@ -25,4 +25,16 @@ export default {
   },
   testUrl: "Uji URL",
   title: "Koneksi ke server",
+  twoFactor: {
+    backupCode: "Kode cadangan",
+    code: "Kode 2FA",
+    description:
+      "Silakan masukkan kode yang dihasilkan oleh aplikasi autentikator Anda.",
+    descriptionBackupCode:
+      "Masukkan salah satu kode cadangan yang Anda simpan saat menyiapkan verifikasi dua langkah.",
+    title: "Verifikasi dua langkah",
+    useAuthenticatorApp: "Gunakan aplikasi autentikator",
+    useBackupCode: "Gunakan kode cadangan",
+    verify: "Verifikasi",
+  },
 };
