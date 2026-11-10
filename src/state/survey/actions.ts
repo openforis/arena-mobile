@@ -14,6 +14,7 @@ import { SurveyActionTypes } from "./actionTypes";
 import { SurveySelectors } from "./selectors";
 import { log } from "utils/Logger";
 import { SurveyUtils } from "model/index";
+import type { AppDispatch, AppGetState } from "../store";
 
 const {
   CURRENT_SURVEY_SET,
@@ -32,7 +33,7 @@ const {
 // currentSurveyUserGroupReady is set to true once a value (remote or cached) is settled on.
 const fetchCurrentSurveyUserGroup =
   ({ survey }: any) =>
-  async (dispatch: any, getState: any) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     const surveyId = survey?.id;
     // Avoid race conditions when the user switches surveys quickly: only apply the result
     // if the fetched survey is still the current one.
@@ -75,7 +76,7 @@ const fetchCurrentSurveyUserGroup =
 // Refetches the current survey user group, if a survey is currently selected.
 // Used on login, since a different user may now be logged in for the same survey selection.
 const fetchCurrentSurveyUserGroupIfSurveySelected =
-  () => (dispatch: any, getState: any) => {
+  () => (dispatch: AppDispatch, getState: AppGetState) => {
     const survey = SurveySelectors.selectCurrentSurvey(getState());
     if (survey) {
       dispatch(fetchCurrentSurveyUserGroup({ survey }));
@@ -90,7 +91,7 @@ const resetCurrentSurveyUserGroup = () => ({
 
 const setCurrentSurvey =
   ({ survey, preferredLanguage = null, navigator = null }: any) =>
-  async (dispatch: any) => {
+  async (dispatch: AppDispatch) => {
     dispatch({
       type: CURRENT_SURVEY_SET,
       survey,
@@ -106,7 +107,7 @@ const setCurrentSurvey =
 
 const setCurrentSurveyPreferredLanguage =
   ({ lang }: any) =>
-  async (dispatch: any, getState: any) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     dispatch({ type: CURRENT_SURVEY_PREFERRED_LANG_SET, lang });
     const state = getState();
     const surveyId = SurveySelectors.selectCurrentSurveyId(state);
@@ -115,7 +116,7 @@ const setCurrentSurveyPreferredLanguage =
 
 const setCurrentSurveyCycle =
   ({ cycleKey }: any) =>
-  (dispatch: any) => {
+  (dispatch: AppDispatch) => {
     dispatch({ type: CURRENT_SURVEY_CYCLE_SET, cycleKey });
   };
 
@@ -127,7 +128,7 @@ const fetchAndSetCurrentSurvey =
     surveyId: number;
     navigator?: Navigator | null;
   }) =>
-  async (dispatch: any) => {
+  async (dispatch: AppDispatch) => {
     const survey = await SurveyService.fetchSurveyById(surveyId);
     if (survey) {
       if (!Surveys.isVisibleInMobile(survey)) {
@@ -148,13 +149,13 @@ const fetchAndSetCurrentSurvey =
     }
   };
 
-const fetchAndSetLocalSurveys = () => async (dispatch: any) => {
+const fetchAndSetLocalSurveys = () => async (dispatch: AppDispatch) => {
   const surveys = await SurveyService.fetchSurveySummariesLocal();
   dispatch({ type: SURVEYS_LOCAL_SET, surveys });
 };
 
 const fetchAndSetRemoteSurveyIfOnlyOne =
-  () => async (dispatch: any, getState: any) => {
+  () => async (dispatch: AppDispatch, getState: AppGetState) => {
     try {
       const state = getState();
       const loggedUser = RemoteConnectionSelectors.selectLoggedUser(state);
@@ -221,14 +222,14 @@ const fetchAndSetRemoteSurveyIfOnlyOne =
 
 const _onSurveyInsertOrUpdate =
   ({ survey, navigator }: any) =>
-  (dispatch: any) => {
+  (dispatch: AppDispatch) => {
     dispatch(setCurrentSurvey({ survey, navigator }));
     dispatch(fetchAndSetLocalSurveys());
   };
 
 const importSurveyRemote =
   ({ surveyId, navigator }: any) =>
-  async (dispatch: any) => {
+  async (dispatch: AppDispatch) => {
     const survey = await SurveyService.importSurveyRemote({ id: surveyId });
     dispatch(_onSurveyInsertOrUpdate({ survey, navigator }));
   };
@@ -245,7 +246,7 @@ const updateSurveyRemote =
     onComplete = null,
     skipConfirmation = false,
   }: any) =>
-  async (dispatch: any) => {
+  async (dispatch: AppDispatch) => {
     const executeUpdate = async () => {
       onConfirm?.();
       try {
@@ -279,7 +280,7 @@ const updateSurveyRemote =
   };
 
 const deleteSurveys =
-  (surveyIds: any) => async (dispatch: any, getState: any) => {
+  (surveyIds: any) => async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const currentSurveyId = SurveySelectors.selectCurrentSurveyId(state);
     await SurveyService.deleteSurveys(surveyIds);

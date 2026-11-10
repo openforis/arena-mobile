@@ -1,4 +1,4 @@
-import { StoreUtils } from "../storeUtils";
+import { ActionHandlers, StoreUtils } from "../storeUtils";
 
 import { PositionTrackingState, PositionTrackingStatus } from "./types";
 
@@ -18,8 +18,8 @@ export const positionTrackingInitialState: PositionTrackingState = {
   errorKey: null,
 };
 
-const actionHandlers = {
-  [POSITION_TRACKING_UPDATE]: ({ state, action }: any) => ({
+const actionHandlers: ActionHandlers<PositionTrackingState> = {
+  [POSITION_TRACKING_UPDATE]: ({ state, action }) => ({
     ...state,
     ...action.payload,
   }),

@@ -1,5 +1,3 @@
-import { useSelector } from "react-redux";
-
 import {
   NodeDefs,
   Nodes,
@@ -15,6 +13,7 @@ import {
   SurveySelectors,
 } from "state";
 import { PreviewMode } from "utils";
+import { useAppSelector } from "state/storeHooks";
 
 const calculateIsMaxCountReached = ({
   entityDef,
@@ -53,7 +52,7 @@ const calculateHasCurrentEntityKeysSpecified = ({
 };
 
 export const useBottomNavigationBar = () =>
-  useSelector((state) => {
+  useAppSelector((state) => {
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const record = DataEntrySelectors.selectRecord(state);
     const currentEntityPointer =

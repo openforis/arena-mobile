@@ -37,7 +37,7 @@ type StatusBarPanelProps = {
   batteryTimeToDischargeFormattedShort?: string;
   batteryTimeToFullChargeFormattedShort?: string;
   freeDiskStorageFormatted?: string;
-  isNetworkConnected?: boolean;
+  isNetworkConnected?: boolean | null;
 };
 
 const StatusBarPanel = (props: StatusBarPanelProps) => {

@@ -5,6 +5,7 @@ import { RemoteJobService, WebSocketService } from "service";
 import { log } from "utils";
 
 import { createCallbackRegistry } from "../callbackRegistry";
+import type { AppDispatch, AppGetState, RootState } from "../store";
 
 // the websocket can miss the final update (e.g. a job ending before the handshake)
 const REMOTE_JOB_STATUS_POLL_INTERVAL_MS = 30_000;
@@ -13,7 +14,7 @@ const JOB_MONITOR_START = "JOB_MONITOR_START";
 const JOB_MONITOR_UPDATE = "JOB_MONITOR_UPDATE";
 const JOB_MONITOR_END = "JOB_MONITOR_END";
 
-const getJobMonitorState = (state: any) => state.jobMonitor;
+const getJobMonitorState = (state: RootState) => state.jobMonitor;
 
 type JobMonitorCallbacks = {
   onCancel?: () => Promise<void> | void;
@@ -312,7 +313,7 @@ const start =
     transferEtaTextKey = null,
     innerJobUiConfigByType = undefined,
   }: JobStartParams) =>
-  async (dispatch: any, getState: any) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     // the state of a previous job (if any) is replaced: its callbacks won't be used anymore
     JobMonitorCallbacksRegistry.remove(
       getJobMonitorState(getState()).callbacksId,
@@ -394,7 +395,7 @@ const start =
 const startAsync = async ({
   dispatch,
   ...otherParams
-}: JobStartParams & { dispatch: any }): Promise<
+}: JobStartParams & { dispatch: AppDispatch }): Promise<
   JobSerialized<any> | undefined
 > =>
   new Promise((resolve, reject) => {
@@ -421,14 +422,14 @@ const startAsync = async ({
     );
   });
 
-const cancel = () => async (dispatch: any, getState: any) => {
+const cancel = () => async (dispatch: AppDispatch, getState: AppGetState) => {
   const state = getState();
   const { callbacksId } = getJobMonitorState(state);
   await JobMonitorCallbacksRegistry.get(callbacksId)?.onCancel?.();
   dispatch(close());
 };
 
-const close = () => (dispatch: any, getState: any) => {
+const close = () => (dispatch: AppDispatch, getState: AppGetState) => {
   const state = getState();
   const { callbacksId } = getJobMonitorState(state);
   const onClose = JobMonitorCallbacksRegistry.get(callbacksId)?.onClose;

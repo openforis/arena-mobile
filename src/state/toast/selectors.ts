@@ -1,9 +1,10 @@
-import { useSelector } from "react-redux";
+import type { RootState } from "../store";
+import { useAppSelector } from "../storeHooks";
 
-const selectToastContent = (state: any) => state.toast;
+const selectToastContent = (state: RootState) => state.toast;
 
 export const ToastSelectors = {
   selectToastContent,
 
-  useToastContent: () => useSelector(selectToastContent),
+  useToastContent: () => useAppSelector(selectToastContent),
 };

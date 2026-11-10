@@ -1,11 +1,11 @@
 import { useCallback } from "react";
-import { useSelector } from "react-redux";
 
 import { NodeDefs, Objects, Records, Surveys } from "@openforis/arena-core";
 
 import { useTranslation } from "localization";
 import { RecordUtils } from "model";
 import { DataEntrySelectors, SettingsSelectors, SurveySelectors } from "state";
+import { useAppSelector } from "state/storeHooks";
 
 export type BreadcrumbItemData = {
   parentEntityUuid?: string;
@@ -55,7 +55,7 @@ export const useBreadcrumbItems = () => {
     [lang, survey, t],
   );
 
-  return useSelector((state) => {
+  return useAppSelector((state) => {
     if (!actualEntityUuid) return [];
 
     const record = DataEntrySelectors.selectRecord(state);

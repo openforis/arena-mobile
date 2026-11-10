@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useSelector } from "react-redux";
 
 import { Arrays } from "@openforis/arena-core";
 
@@ -9,7 +8,7 @@ import {
   ConfirmState,
   OnConfirmParams,
 } from "./reducer";
-import { useAppDispatch } from "state/storeHooks";
+import { useAppDispatch, useAppSelector } from "state/storeHooks";
 
 type ConfirmDialogLocalState = {
   confirmButtonEnabled: boolean;
@@ -40,7 +39,7 @@ export const useConfirmDialog = (): ConfirmState &
   } => {
   const dispatch = useAppDispatch();
 
-  const confirmState: ConfirmState = useSelector((state: any) => state.confirm);
+  const confirmState: ConfirmState = useAppSelector((state) => state.confirm);
 
   const { showId, swipeToConfirm } = confirmState;
 

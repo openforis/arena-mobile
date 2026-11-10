@@ -1,12 +1,15 @@
 import { Surveys } from "@openforis/arena-core";
 
-import { StoreUtils } from "../storeUtils";
+import { ActionHandlers, StoreUtils } from "../storeUtils";
 
 import { SurveyActionTypes } from "./actionTypes";
+import type { SurveyState } from "./state";
 import { determinePreferredSurveyLanguage } from "./surveyStateUtils";
 
-const actionHandlers = {
-  [SurveyActionTypes.CURRENT_SURVEY_SET]: ({ state, action }: any) => {
+const initialState: SurveyState = { surveysLocal: [] };
+
+const actionHandlers: ActionHandlers<SurveyState> = {
+  [SurveyActionTypes.CURRENT_SURVEY_SET]: ({ state, action }) => {
     const { survey, preferredLanguage = null } = action;
 
     return {
@@ -24,32 +27,29 @@ const actionHandlers = {
   [SurveyActionTypes.CURRENT_SURVEY_PREFERRED_LANG_SET]: ({
     state,
     action,
-  }: any) => ({
+  }) => ({
     ...state,
     currentSurveyPreferredLanguage: action.lang,
   }),
-  [SurveyActionTypes.CURRENT_SURVEY_USER_GROUP_LOADING]: ({ state }: any) => ({
+  [SurveyActionTypes.CURRENT_SURVEY_USER_GROUP_LOADING]: ({ state }) => ({
     ...state,
     currentSurveyUserGroupReady: false,
   }),
-  [SurveyActionTypes.CURRENT_SURVEY_USER_GROUP_SET]: ({
-    state,
-    action,
-  }: any) => ({
+  [SurveyActionTypes.CURRENT_SURVEY_USER_GROUP_SET]: ({ state, action }) => ({
     ...state,
     currentSurveyUserGroup: action.userGroup,
     currentSurveyUserGroupReady: true,
   }),
-  [SurveyActionTypes.CURRENT_SURVEY_USER_GROUP_RESET]: ({ state }: any) => ({
+  [SurveyActionTypes.CURRENT_SURVEY_USER_GROUP_RESET]: ({ state }) => ({
     ...state,
     currentSurveyUserGroup: null,
     currentSurveyUserGroupReady: false,
   }),
-  [SurveyActionTypes.CURRENT_SURVEY_CYCLE_SET]: ({ state, action }: any) => ({
+  [SurveyActionTypes.CURRENT_SURVEY_CYCLE_SET]: ({ state, action }) => ({
     ...state,
     currentSurveyCycle: action.cycleKey,
   }),
-  [SurveyActionTypes.SURVEYS_LOCAL_SET]: ({ state, action }: any) => ({
+  [SurveyActionTypes.SURVEYS_LOCAL_SET]: ({ state, action }) => ({
     ...state,
     surveysLocal: action.surveys,
   }),
@@ -57,5 +57,5 @@ const actionHandlers = {
 
 export const SurveyReducer = StoreUtils.exportReducer({
   actionHandlers,
-  initialState: false,
+  initialState,
 });

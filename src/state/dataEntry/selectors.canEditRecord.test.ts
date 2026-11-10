@@ -1,3 +1,4 @@
+import type { RootState } from "../store";
 import { DataEntrySelectors } from "./selectors";
 
 let mockPreviewActive = false;
@@ -17,10 +18,11 @@ jest.mock("localization", () => ({}));
 // survey with 2 cycles: the default one is the last one ("1")
 const survey = { props: { cycles: { "0": {}, "1": {} } } };
 
-const createState = (recordCycle: string, readOnly = false) => ({
-  survey: { currentSurvey: survey },
-  dataEntry: { record: { cycle: recordCycle, readOnly } },
-});
+const createState = (recordCycle: string, readOnly = false) =>
+  ({
+    survey: { currentSurvey: survey },
+    dataEntry: { record: { cycle: recordCycle, readOnly } },
+  }) as unknown as RootState;
 
 describe("selectCanEditRecord", () => {
   afterEach(() => {

@@ -1,7 +1,7 @@
 import { ScreenViewMode } from "model/ScreenViewMode";
 import { screenKeys } from "screens/screenKeys";
 
-import { StoreUtils } from "../storeUtils";
+import { ActionHandlers, StoreUtils } from "../storeUtils";
 
 import { ScreenOptionsActions } from "./actions";
 import { ScreenOptionsState } from "./state";
@@ -16,11 +16,11 @@ const initialState = [
       screenKey,
       viewMode: ScreenViewMode.cards,
     })(acc),
-  {},
+  {} as ScreenOptionsState,
 );
 
-const actionHandlers = {
-  [ScreenOptionsActions.SCREEN_VIEW_MODE_SET]: ({ state, action }: any) =>
+const actionHandlers: ActionHandlers<ScreenOptionsState> = {
+  [ScreenOptionsActions.SCREEN_VIEW_MODE_SET]: ({ state, action }) =>
     ScreenOptionsState.assocViewMode({
       screenKey: action.screenKey,
       viewMode: action.viewMode,
