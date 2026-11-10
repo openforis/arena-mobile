@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Accelerometer, Magnetometer } from "expo-sensors";
 
 import { Numbers } from "@openforis/arena-core";
@@ -134,17 +134,16 @@ export const useMagnetometerHeading = ({
     setHeading(Numbers.roundToPrecision(filtered, 1));
   }, []);
 
-  const throttledUpdateHeading = useMemo(
-    () => Functions.throttle(updateHeading, THROTTLE_DELAY_MS),
-    [updateHeading],
-  );
-
   useEffect(() => {
     if (!enabled) {
       filteredHeadingRef.current = null;
       return;
     }
 
+    const throttledUpdateHeading = Functions.throttle(
+      updateHeading,
+      THROTTLE_DELAY_MS,
+    );
     let cancelled = false;
     let magSub: ReturnType<typeof Magnetometer.addListener> | undefined;
     let accSub: ReturnType<typeof Accelerometer.addListener> | undefined;
@@ -184,7 +183,7 @@ export const useMagnetometerHeading = ({
       accSub?.remove();
       throttledUpdateHeading.cancel();
     };
-  }, [enabled, throttledUpdateHeading]);
+  }, [enabled, updateHeading]);
 
   return { magnetometerAvailable, heading };
 };

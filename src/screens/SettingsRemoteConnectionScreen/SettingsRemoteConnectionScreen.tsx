@@ -88,23 +88,27 @@ export const SettingsRemoteConnectionScreen = () => {
     qrScannerVisible,
   } = state;
 
-  const initialize = useCallback(async () => {
-    const settings = await SettingsService.fetchSettings();
-    const serverUrlNext = settings.serverUrl ?? AMConstants.defaultServerUrl;
+  const initialize = useCallback(
+    () =>
+      SettingsService.fetchSettings().then((settings) => {
+        const serverUrlNext =
+          settings.serverUrl ?? AMConstants.defaultServerUrl;
 
-    const serverUrlTypeNext =
-      serverUrlNext === AMConstants.defaultServerUrl
-        ? serverUrlTypes.default
-        : serverUrlTypes.custom;
+        const serverUrlTypeNext =
+          serverUrlNext === AMConstants.defaultServerUrl
+            ? serverUrlTypes.default
+            : serverUrlTypes.custom;
 
-    setState((statePrev) => ({
-      ...statePrev,
-      serverUrl: serverUrlNext,
-      serverUrlType: serverUrlTypeNext,
-      email: settings.email ?? "",
-      password: settings.password ?? "",
-    }));
-  }, []);
+        setState((statePrev) => ({
+          ...statePrev,
+          serverUrl: serverUrlNext,
+          serverUrlType: serverUrlTypeNext,
+          email: settings.email ?? "",
+          password: settings.password ?? "",
+        }));
+      }),
+    [],
+  );
 
   // initialize form on load and reset form on logout
   useEffect(() => {

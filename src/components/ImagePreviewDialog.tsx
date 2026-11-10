@@ -39,6 +39,23 @@ type ImageInfoProps = {
   showGeotagInfo?: boolean;
 };
 
+const fetchImageInfo = async (imageUri: string): Promise<ImageInfoState> => {
+  const { width, height } = await ImageUtils.getSize(imageUri);
+
+  const { latitude, longitude } =
+    (await ImageUtils.getGPSLocation(imageUri)) ?? {};
+
+  const size = await Files.getSize(imageUri);
+
+  return {
+    width,
+    height,
+    size: Files.toHumanReadableFileSize(size),
+    latitude,
+    longitude,
+  };
+};
+
 const ImageInfo = (props: ImageInfoProps) => {
   const { imageUri: imageUriProp, showGeotagInfo = false } = props;
 
@@ -48,30 +65,15 @@ const ImageInfo = (props: ImageInfoProps) => {
 
   const { width, height, size, latitude, longitude } = (info ?? {}) as any;
 
-  const fetchInfo = useCallback(async () => {
-    const { width, height } = await ImageUtils.getSize(imageUri);
-
-    const { latitude, longitude } =
-      (await ImageUtils.getGPSLocation(imageUri)) ?? {};
-
-    const size = await Files.getSize(imageUri);
-
-    setInfo({
-      width,
-      height,
-      size: Files.toHumanReadableFileSize(size),
-      latitude,
-      longitude,
-    });
-  }, [imageUri]);
-
   useEffect(() => {
     if (imageUri) {
-      fetchInfo().catch(() => {
-        // ignore it
-      });
+      fetchImageInfo(imageUri)
+        .then(setInfo)
+        .catch(() => {
+          // ignore it
+        });
     }
-  }, [fetchInfo, imageUri]);
+  }, [imageUri]);
 
   if (!info) return <LoadingIcon />;
 

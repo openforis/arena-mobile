@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { Objects, Points } from "@openforis/arena-core";
 
@@ -7,7 +7,6 @@ import {
   FieldSet,
   FormItem,
   HView,
-  LoadingIcon,
   LocationWatchingMonitor,
   Modal,
   SelectableList,
@@ -44,19 +43,8 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
     watchingLocation,
   } = useLocation();
 
-  const [state, setState] = useState({
-    findingMinDistanceItems: false,
-    minDistance: Number.NaN,
-    minDistanceItems: null as any[] | null,
-    selectedMinDistanceItem: null,
-  });
-
-  const {
-    findingMinDistanceItems,
-    minDistance,
-    minDistanceItems,
-    selectedMinDistanceItem,
-  } = state;
+  const [selectedMinDistanceItem, setSelectedMinDistanceItem] =
+    useState<any>(null);
 
   const findItemsWithMinDistance = useCallback(() => {
     let minDistanceItems: any = [];
@@ -90,23 +78,13 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
     };
   }, [items, pointLatLong, srsIndex]);
 
-  useEffect(() => {
-    if (items && locationFetched && pointLatLong) {
-      setState((statePrev) => ({
-        ...statePrev,
-        findingMinDistanceItems: true,
-        minDistance: Number.NaN,
-        minDistanceItems: null,
-      }));
-      const { minDistance, minDistanceItems } = findItemsWithMinDistance();
-      setState((statePrev) => ({
-        ...statePrev,
-        findingMinDistanceItems: false,
-        minDistance,
-        minDistanceItems,
-      }));
-    }
-  }, [findItemsWithMinDistance, items, locationFetched, pointLatLong]);
+  const { minDistance, minDistanceItems } = useMemo(
+    (): { minDistance: number; minDistanceItems: any[] | null } =>
+      items && locationFetched && pointLatLong
+        ? findItemsWithMinDistance()
+        : { minDistance: Number.NaN, minDistanceItems: null },
+    [findItemsWithMinDistance, items, locationFetched, pointLatLong],
+  );
 
   const onUseSelectedItemPress = useCallback(() => {
     onItemSelected(selectedMinDistanceItem);
@@ -147,8 +125,6 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
         </FieldSet>
       )}
 
-      {findingMinDistanceItems && <LoadingIcon />}
-
       {minDistanceItems && (
         <>
           <Text
@@ -163,10 +139,7 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
             itemLabelExtractor={itemLabelFunction}
             items={minDistanceItems}
             onChange={(selectedItems: any) => {
-              setState((statePrev) => ({
-                ...statePrev,
-                selectedMinDistanceItem: selectedItems[0],
-              }));
+              setSelectedMinDistanceItem(selectedItems[0]);
             }}
             selectedItems={
               selectedMinDistanceItem ? [selectedMinDistanceItem] : []

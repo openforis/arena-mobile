@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 import { Button } from "components/Button";
 import { Dialog } from "components/Dialog";
@@ -21,16 +21,19 @@ const DateTimePickerModal = (props: Props) => {
   const { date, isVisible = false, mode = "date", onCancel, onConfirm } = props;
   const [dateInitial, setDateInitial] = useState(() => date ?? new Date());
   const [inputValue, setInputValue] = useState("");
-  // date can be a new object on every render: read it only when the dialog opens
-  const dateRef = useRef(date);
-  dateRef.current = date;
+  const [prevIsVisible, setPrevIsVisible] = useState(false);
+  const [prevMode, setPrevMode] = useState(mode);
 
-  useEffect(() => {
-    if (!isVisible) return;
-    const dateNext = dateRef.current ?? new Date();
-    setDateInitial(dateNext);
-    setInputValue(DateTimeInputFormat.format(dateNext, mode));
-  }, [isVisible, mode]);
+  // date can be a new object on every render: read it only when the dialog opens
+  if (isVisible !== prevIsVisible || mode !== prevMode) {
+    setPrevIsVisible(isVisible);
+    setPrevMode(mode);
+    if (isVisible) {
+      const dateNext = date ?? new Date();
+      setDateInitial(dateNext);
+      setInputValue(DateTimeInputFormat.format(dateNext, mode));
+    }
+  }
 
   const dateSelected = DateTimeInputFormat.parse(inputValue, mode, dateInitial);
   const placeholder = DateTimeInputFormat.placeholderByMode[mode];

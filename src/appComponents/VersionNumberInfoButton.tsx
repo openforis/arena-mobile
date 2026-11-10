@@ -24,8 +24,10 @@ export const VersionNumberInfoButton = () => {
     changelogDialogOpen: false,
     updateStatus: UpdateStatus.loading,
   } as State);
-  const { changelogDialogOpen, updateStatus, updateStatusError, updateUrl } =
-    state;
+  const { changelogDialogOpen, updateStatusError, updateUrl } = state;
+  const updateStatus = networkAvailable
+    ? state.updateStatus
+    : UpdateStatus.networkNotAvailable;
 
   useEffect(() => {
     if (networkAvailable) {
@@ -52,8 +54,6 @@ export const VersionNumberInfoButton = () => {
             updateStatusError: error.toString(),
           });
         });
-    } else {
-      setState({ updateStatus: UpdateStatus.networkNotAvailable });
     }
   }, [networkAvailable]);
 

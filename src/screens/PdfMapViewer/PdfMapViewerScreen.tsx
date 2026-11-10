@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Keyboard } from "react-native";
 import { Polygon } from "react-native-maps";
 import { useScreenParams } from "navigation/navigator";
@@ -36,9 +36,11 @@ export const PdfMapViewerScreen = () => {
   const [baseMapHidden, setBaseMapHidden] = useState(false);
   const [currentZoom, setCurrentZoom] = useState<number | null>(null);
 
-  useEffect(() => {
+  const [prevPdfMap, setPrevPdfMap] = useState(pdfMap);
+  if (pdfMap !== prevPdfMap) {
+    setPrevPdfMap(pdfMap);
     if (pdfMap) setName(pdfMap.name);
-  }, [pdfMap]);
+  }
 
   const pdfMapIds = useMemo(() => (mapId ? [mapId] : []), [mapId]);
 

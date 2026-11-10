@@ -17,19 +17,16 @@ export const Fade = (props: Props) => {
     ...otherProps
   } = props;
 
-  const [state, setState] = useState({
-    animatedValue: new Animated.Value(visibleProp ? 1 : 0),
-    childrenVisible: visibleProp,
-  });
-  const { animatedValue, childrenVisible } = state;
-
-  const setChildrenVisible = (value: any) =>
-    setState((statePrev) => ({ ...statePrev, childrenVisible: value }));
+  const [animatedValue] = useState(
+    () => new Animated.Value(visibleProp ? 1 : 0),
+  );
+  // shown as soon as visible, hidden at the end of the fade out
+  const [childrenVisible, setChildrenVisible] = useState(visibleProp);
+  if (visibleProp && !childrenVisible) {
+    setChildrenVisible(true);
+  }
 
   useEffect(() => {
-    if (visibleProp) {
-      setChildrenVisible(true);
-    }
     Animated.timing(animatedValue, {
       toValue: visibleProp ? 1 : 0,
       duration,

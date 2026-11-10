@@ -12,12 +12,17 @@ const WAITING_FOR_FIX_THRESHOLD_MS = 10000;
 const TICK_INTERVAL_MS = 1000;
 
 const useNow = (active: boolean) => {
-  const [now, setNow] = useState(Date.now());
+  const [now, setNow] = useState(() => Date.now());
   useEffect(() => {
     if (!active) return undefined;
-    setNow(Date.now());
-    const interval = setInterval(() => setNow(Date.now()), TICK_INTERVAL_MS);
-    return () => clearInterval(interval);
+    const tick = () => setNow(Date.now());
+    // refresh right away: now can be stale when tracking starts
+    const timeout = setTimeout(tick, 0);
+    const interval = setInterval(tick, TICK_INTERVAL_MS);
+    return () => {
+      clearTimeout(timeout);
+      clearInterval(interval);
+    };
   }, [active]);
   return now;
 };

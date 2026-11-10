@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { TouchableHighlight } from "react-native";
 
 import { NodeDefFileType, NodeDefs } from "@openforis/arena-core";
@@ -19,18 +19,18 @@ export const ImageOrVideoValuePreview = (props: NodeValuePreviewProps) => {
 
   const surveyId = SurveySelectors.useCurrentSurveyId();
   const [imagePreviewOpen, setImagePreviewOpen] = useState(false);
-  const [fileUri, setFileUri] = useState(null as string | null);
 
   const { fileName: valueFileName, fileNameCalculated, fileUuid } = value || {};
 
   const fileName = fileNameCalculated ?? valueFileName;
 
-  useEffect(() => {
-    const fileUriUpdated = fileUuid
-      ? RecordFileService.getRecordFileUri({ surveyId, fileUuid })
-      : null;
-    setFileUri(fileUriUpdated);
-  }, [fileUuid, surveyId]);
+  const fileUri = useMemo(
+    () =>
+      fileUuid
+        ? RecordFileService.getRecordFileUri({ surveyId, fileUuid })
+        : null,
+    [fileUuid, surveyId],
+  );
 
   const imageSource = useMemo(
     () =>

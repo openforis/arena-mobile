@@ -142,30 +142,39 @@ export const OfflineMapAreasTab = () => {
   });
   const { areas, loading, deleting, tilesStorageSize, freeDiskStorage } = state;
 
+  const fetchAreas = useCallback(
+    () =>
+      Promise.all([
+        OfflineMapsService.fetchAreas(),
+        Files.getFreeDiskStorage(),
+      ]).then(async ([areasLoaded, freeDiskStorageLoaded]) => {
+        // default area names are "Area YYYY-MM-DD HH:mm": sorting by name also sorts them chronologically
+        areasLoaded.sort((areaA, areaB) =>
+          areaA.name.localeCompare(areaB.name),
+        );
+        setState((prev) => ({
+          ...prev,
+          areas: areasLoaded,
+          loading: false,
+          freeDiskStorage: freeDiskStorageLoaded,
+          tilesStorageSize: null,
+        }));
+        // computing the size of the tiles folder can take a while: do it after the areas are shown
+        const size = await OfflineMapsService.getTilesStorageSize();
+        setState((prev) => ({ ...prev, tilesStorageSize: size }));
+      }),
+    [],
+  );
+
   const loadAreas = useCallback(async () => {
     setState((prev) => ({ ...prev, loading: true }));
-    const [areasLoaded, freeDiskStorageLoaded] = await Promise.all([
-      OfflineMapsService.fetchAreas(),
-      Files.getFreeDiskStorage(),
-    ]);
-    // default area names are "Area YYYY-MM-DD HH:mm": sorting by name also sorts them chronologically
-    areasLoaded.sort((areaA, areaB) => areaA.name.localeCompare(areaB.name));
-    setState((prev) => ({
-      ...prev,
-      areas: areasLoaded,
-      loading: false,
-      freeDiskStorage: freeDiskStorageLoaded,
-      tilesStorageSize: null,
-    }));
-    // computing the size of the tiles folder can take a while: do it after the areas are shown
-    const size = await OfflineMapsService.getTilesStorageSize();
-    setState((prev) => ({ ...prev, tilesStorageSize: size }));
-  }, []);
+    await fetchAreas();
+  }, [fetchAreas]);
 
-  // tabs are mounted when the screen is already focused: load on mount too
+  // tabs are mounted when the screen is already focused: load on mount too (loading is initially true)
   useEffect(() => {
-    void loadAreas();
-  }, [loadAreas]);
+    void fetchAreas();
+  }, [fetchAreas]);
   useNavigationFocus(loadAreas);
 
   const onAddAreaPress = useCallback(() => {

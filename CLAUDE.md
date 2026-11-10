@@ -240,7 +240,7 @@ All permission checks are in `src/utils/Permissions.ts`.
 
 ## Linting & Code Style
 
-- ESLint configured in `eslint.config.mjs` (typescript-eslint, react, react-hooks; React Compiler rules are warnings for now)
+- ESLint configured in `eslint.config.mjs` (typescript-eslint, react, react-hooks, including the React Compiler rules)
 - Prettier for formatting with default options (`.prettierrc` not present); `.prettierignore` excludes build output and docs
 - Always run `yarn lint` before committing
 
