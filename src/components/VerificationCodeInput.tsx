@@ -10,8 +10,7 @@ import { useEffectiveTheme } from "hooks/useEffectiveTheme";
 import { useTranslation } from "localization";
 
 import { Text } from "./Text";
-
-const nonDigitsRegExp = /\D/g;
+import { VerificationCodeInputUtils } from "./VerificationCodeInputUtils";
 
 const styles = StyleSheet.create({
   container: { alignSelf: "stretch" },
@@ -96,7 +95,13 @@ export const VerificationCodeInput = ({
         keyboardType="number-pad"
         onBlur={() => setFocused(false)}
         onChangeText={(text) =>
-          onChange(text.replaceAll(nonDigitsRegExp, "").slice(0, length))
+          onChange(
+            VerificationCodeInputUtils.getCodeFromText({
+              code: value,
+              length,
+              text,
+            }),
+          )
         }
         onFocus={() => setFocused(true)}
         style={styles.input}
