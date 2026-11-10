@@ -1,17 +1,14 @@
-import { useSelector } from "react-redux";
-
 import { useScreenKey } from "hooks/useScreenKey";
 
+import type { RootState } from "../store";
+import { useAppSelector } from "../storeHooks";
 import { ScreenOptionsState } from "./state";
 
-const getScreenOptionsState = (state: any) =>
-  state[ScreenOptionsState.stateKey];
+const selectScreenViewMode = (screenKey: string) => (state: RootState) =>
+  ScreenOptionsState.getViewMode(screenKey)(state.screenOptions);
 
-const selectScreenViewMode = (screenKey: any) => (state: any) =>
-  ScreenOptionsState.getViewMode(screenKey)(getScreenOptionsState(state));
-
-const useScreenViewMode = (screenKey: any) =>
-  useSelector(selectScreenViewMode(screenKey));
+const useScreenViewMode = (screenKey: string) =>
+  useAppSelector(selectScreenViewMode(screenKey));
 
 export const ScreenOptionsSelectors = {
   selectScreenViewMode,

@@ -1,11 +1,11 @@
-import { useSelector } from "react-redux";
-
 import { SettingsObject } from "model/SettingsModel";
+import type { RootState } from "../store";
+import { useAppSelector } from "../storeHooks";
 
-const selectSettings = (state: any): SettingsObject => state.settings;
+const selectSettings = (state: RootState): SettingsObject => state.settings;
 
 export const SettingsSelectors = {
   selectSettings,
 
-  useSettings: () => useSelector(selectSettings),
+  useSettings: () => useAppSelector(selectSettings),
 };

@@ -1,11 +1,11 @@
-import { useSelector } from "react-redux";
-
 import { PositionTrackingState, PositionTrackingStatus } from "./types";
+import type { RootState } from "../store";
+import { useAppSelector } from "../storeHooks";
 
-const selectPositionTrackingState = (state: any): PositionTrackingState =>
+const selectPositionTrackingState = (state: RootState): PositionTrackingState =>
   state.positionTracking;
 
-const selectIsTrackActive = (state: any): boolean => {
+const selectIsTrackActive = (state: RootState): boolean => {
   const { status } = selectPositionTrackingState(state);
   return (
     status === PositionTrackingStatus.tracking ||
@@ -17,5 +17,5 @@ const selectIsTrackActive = (state: any): boolean => {
 export const PositionTrackingSelectors = {
   selectPositionTrackingState,
   selectIsTrackActive,
-  usePositionTrackingState: () => useSelector(selectPositionTrackingState),
+  usePositionTrackingState: () => useAppSelector(selectPositionTrackingState),
 };

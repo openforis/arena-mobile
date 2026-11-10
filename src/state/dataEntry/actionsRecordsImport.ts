@@ -13,6 +13,7 @@ import { JobCancelError } from "model/JobCancelError";
 import { log } from "utils";
 
 import { AutoSyncActions } from "../autoSync/actions";
+import type { AppDispatch, RootState } from "../store";
 
 const handleImportErrors = ({
   dispatch,
@@ -51,7 +52,7 @@ export const importRecordsFromFile =
     // true when not started by the user (see fetchRecordsFromServer): no dialog nor message
     silent = false,
   }: any) =>
-  async (dispatch: any, getState: any) => {
+  async (dispatch: AppDispatch, getState: () => RootState) => {
     const state = getState();
     const user = RemoteConnectionSelectors.selectLoggedUserSafe(state);
     const survey = SurveySelectors.selectCurrentSurvey(state);
@@ -171,7 +172,7 @@ export const fetchRecordsFromServer =
     // nothing is shown, neither while fetching nor at the end
     silent = false,
   }: any) =>
-  async (dispatch: any, getState: any) => {
+  async (dispatch: AppDispatch, getState: () => RootState) => {
     try {
       const state = getState();
       const survey = SurveySelectors.selectCurrentSurvey(state);

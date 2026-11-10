@@ -1,15 +1,14 @@
 import { useCallback } from "react";
-import { useSelector } from "react-redux";
 
-import { useAppDispatch } from "state/storeHooks";
+import { useAppDispatch, useAppSelector } from "state/storeHooks";
 import { JobMonitorActions } from "./actions";
 import { JobMonitorState } from "./types";
 
 export const useJobMonitor = () => {
   const dispatch = useAppDispatch();
 
-  const jobMonitorState: JobMonitorState = useSelector(
-    (state: any) => state.jobMonitor,
+  const jobMonitorState: JobMonitorState = useAppSelector(
+    (state) => state.jobMonitor,
   );
 
   const { progressPercent, progressRangeStart, progressRangeEnd } =

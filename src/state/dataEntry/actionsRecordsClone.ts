@@ -8,12 +8,13 @@ import { SurveySelectors } from "state/survey";
 import { ToastActions } from "state/toast";
 
 import { ensureUserGroupReady } from "./actionsUserGroup";
+import type { AppDispatch, RootState } from "../store";
 
 const textKeyPrefix = "recordsList:cloneRecords.";
 
 export const cloneRecordsIntoDefaultCycle =
   ({ recordSummaries, callback = null }: any) =>
-  async (dispatch: any, getState: any) => {
+  async (dispatch: AppDispatch, getState: () => RootState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const cycle = Surveys.getDefaultCycleKey(survey);

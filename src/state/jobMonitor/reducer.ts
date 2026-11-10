@@ -1,6 +1,6 @@
 import { JobStatus } from "@openforis/arena-core";
 
-import { StoreUtils } from "../storeUtils";
+import { ActionHandlers, StoreUtils } from "../storeUtils";
 import { JobMonitorActions } from "./actions";
 import type { JobMonitorState } from "./types";
 
@@ -23,13 +23,13 @@ const initialState: JobMonitorState = {
   etaSeconds: null,
 };
 
-const actionHandlers = {
-  [JobMonitorActions.JOB_MONITOR_START]: ({ action }: any) => ({
+const actionHandlers: ActionHandlers<JobMonitorState> = {
+  [JobMonitorActions.JOB_MONITOR_START]: ({ action }) => ({
     ...initialState,
     ...action.payload,
     isOpen: true,
   }),
-  [JobMonitorActions.JOB_MONITOR_UPDATE]: ({ state, action }: any) => ({
+  [JobMonitorActions.JOB_MONITOR_UPDATE]: ({ state, action }) => ({
     ...state,
     ...action.payload,
   }),

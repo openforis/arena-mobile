@@ -3,12 +3,13 @@ import { ConfirmUtils } from "state/confirm";
 import { RemoteConnectionSelectors } from "state/remoteConnection";
 import { SurveySelectors } from "state/survey";
 import { ToastActions } from "state/toast";
+import type { AppDispatch, RootState } from "../store";
 
 const textKeyPrefix = "recordsList:revalidateRecords.";
 
 export const revalidateRecords =
   ({ recordIds, callback = null }: any) =>
-  async (dispatch: any, getState: any) => {
+  async (dispatch: AppDispatch, getState: () => RootState) => {
     if (recordIds.length === 0) return;
 
     const state = getState();

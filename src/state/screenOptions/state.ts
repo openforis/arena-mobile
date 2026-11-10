@@ -8,14 +8,16 @@ const keys = {
   viewMode: "viewMode",
 };
 
+export type ScreenOptionsState = Record<string, { viewMode?: ScreenViewMode }>;
+
 const getViewMode =
-  (screenKey: any) =>
-  (state: any): ScreenViewMode =>
-    state?.[screenKey]?.[keys.viewMode] ?? ScreenViewMode.table;
+  (screenKey: string) =>
+  (state: ScreenOptionsState): ScreenViewMode =>
+    state?.[screenKey]?.viewMode ?? ScreenViewMode.table;
 
 const assocViewMode =
-  ({ screenKey, viewMode }: any) =>
-  (state: any) =>
+  ({ screenKey, viewMode }: { screenKey: string; viewMode: ScreenViewMode }) =>
+  (state: ScreenOptionsState): ScreenOptionsState =>
     Objects.assocPath({
       obj: state,
       path: [screenKey, keys.viewMode],

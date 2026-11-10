@@ -1,10 +1,10 @@
-import { useSelector } from "react-redux";
-
 import { AutoSyncState } from "./types";
+import type { RootState } from "../store";
+import { useAppSelector } from "../storeHooks";
 
-const selectAutoSyncState = (state: any): AutoSyncState => state.autoSync;
+const selectAutoSyncState = (state: RootState): AutoSyncState => state.autoSync;
 
-const useAutoSyncState = () => useSelector(selectAutoSyncState);
+const useAutoSyncState = () => useAppSelector(selectAutoSyncState);
 
 // true while records are being checked against the server (a manual "check status"/"send
 // data" or a background auto-sync tick) or while auto-sync's own upload job is in flight.
@@ -14,13 +14,13 @@ const useAutoSyncState = () => useSelector(selectAutoSyncState);
 // manual export, to check the live value instead of a value a component closure captured
 // earlier - a useCallback capturing the hook value below can otherwise go stale mid-flight,
 // e.g. if the callback itself is what triggers the "checking" phase it also gates on.
-const selectAutoSyncRunning = (state: any) => {
+const selectAutoSyncRunning = (state: RootState) => {
   const { checking } = selectAutoSyncState(state);
   const { isOpen, silent } = state.jobMonitor;
   return checking || (isOpen && silent);
 };
 
-const useAutoSyncRunning = () => useSelector(selectAutoSyncRunning);
+const useAutoSyncRunning = () => useAppSelector(selectAutoSyncRunning);
 
 export const AutoSyncSelectors = {
   selectAutoSyncState,

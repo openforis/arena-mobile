@@ -1,5 +1,3 @@
-import { useSelector } from "react-redux";
-
 import {
   LanguageCode,
   Objects,
@@ -13,60 +11,65 @@ import { SurveyDefs } from "model";
 import { SurveyService } from "service";
 
 import { determinePreferredSurveyLanguage } from "./surveyStateUtils";
+import type { RootState } from "../store";
+import { useAppSelector } from "../storeHooks";
 
-const getSurveyState = (state: any) => state.survey;
+const getSurveyState = (state: RootState) => state.survey;
 
 const selectCurrentSurvey = (
-  state: any,
+  state: RootState,
 ): (Survey & { remoteId?: number }) | undefined =>
   getSurveyState(state).currentSurvey;
 
-const selectIsCurrentSurveyDemo = (state: any): boolean =>
+const selectIsCurrentSurveyDemo = (state: RootState): boolean =>
   selectCurrentSurvey(state)?.uuid === SurveyService.demoSurveyUuid;
 
-const selectCurrentSurveyIdUnsafe = (state: any): number | undefined =>
+const selectCurrentSurveyIdUnsafe = (state: RootState): number | undefined =>
   selectCurrentSurvey(state)?.id;
 
-const selectCurrentSurveyId = (state: any): number =>
+const selectCurrentSurveyId = (state: RootState): number =>
   selectCurrentSurveyIdUnsafe(state) ?? 0;
 
-const selectCurrentSurveySrsIndex = (state: any): SRSIndex | undefined => {
+const selectCurrentSurveySrsIndex = (
+  state: RootState,
+): SRSIndex | undefined => {
   const survey = selectCurrentSurvey(state);
   return survey ? Surveys.getSRSIndex(survey) : undefined;
 };
 
 const selectIsNodeDefEnumerator =
   (nodeDef: any) =>
-  (state: any): boolean => {
+  (state: RootState): boolean => {
     const survey = selectCurrentSurvey(state);
     return survey ? Surveys.isNodeDefEnumerator({ survey, nodeDef }) : false;
   };
 
-const selectIsNodeDefRootKey = (nodeDef: any) => (state: any) => {
+const selectIsNodeDefRootKey = (nodeDef: any) => (state: RootState) => {
   const survey = selectCurrentSurvey(state);
   const keyDefs = SurveyDefs.getRootKeyDefs({ survey });
   return keyDefs.includes(nodeDef);
 };
 
-const selectSurveysLocal = (state: any) => getSurveyState(state).surveysLocal;
+const selectSurveysLocal = (state: RootState) =>
+  getSurveyState(state).surveysLocal;
 
-const selectCurrentSurveyPreferredLang = (state: any): LanguageCode => {
+const selectCurrentSurveyPreferredLang = (state: RootState): LanguageCode => {
   const preferredLang = getSurveyState(state).currentSurveyPreferredLanguage;
   if (preferredLang) return preferredLang;
   const survey = selectCurrentSurvey(state);
   return determinePreferredSurveyLanguage(survey)!;
 };
 
-const selectCurrentSurveyCycle = (state: any) =>
-  getSurveyState(state).currentSurveyCycle;
+const selectCurrentSurveyCycle = (state: RootState): string | undefined =>
+  getSurveyState(state).currentSurveyCycle ?? undefined;
 
-const selectCurrentSurveyUserGroup = (state: any): UserGroup | null =>
+const selectCurrentSurveyUserGroup = (state: RootState): UserGroup | null =>
   getSurveyState(state).currentSurveyUserGroup ?? null;
 
 // True once fetchCurrentSurveyUserGroup has resolved (successfully or not) for the current survey.
 // False right after switching survey, while the fetch is still pending: at that point
 // currentSurveyUserGroup being null is ambiguous (not yet fetched vs. genuinely no group).
-const selectCurrentSurveyUserGroupReady = (state: any): boolean =>
+const selectCurrentSurveyUserGroupReady = (state: RootState): boolean =>
   getSurveyState(state).currentSurveyUserGroupReady ?? false;
 
 export const SurveySelectors = {
@@ -78,20 +81,20 @@ export const SurveySelectors = {
   selectCurrentSurveyUserGroupReady,
   selectIsCurrentSurveyDemo,
 
-  useCurrentSurvey: () => useSelector(selectCurrentSurvey),
-  useIsCurrentSurveyDemo: () => useSelector(selectIsCurrentSurveyDemo),
-  useCurrentSurveyId: () => useSelector(selectCurrentSurveyId),
+  useCurrentSurvey: () => useAppSelector(selectCurrentSurvey),
+  useIsCurrentSurveyDemo: () => useAppSelector(selectIsCurrentSurveyDemo),
+  useCurrentSurveyId: () => useAppSelector(selectCurrentSurveyId),
   useCurrentSurveySrsIndex: () =>
-    useSelector(selectCurrentSurveySrsIndex, Objects.isEqual),
+    useAppSelector(selectCurrentSurveySrsIndex, Objects.isEqual),
   useCurrentSurveyPreferredLang: () =>
-    useSelector(selectCurrentSurveyPreferredLang),
-  useCurrentSurveyCycle: () => useSelector(selectCurrentSurveyCycle),
-  useCurrentSurveyUserGroup: () => useSelector(selectCurrentSurveyUserGroup),
+    useAppSelector(selectCurrentSurveyPreferredLang),
+  useCurrentSurveyCycle: () => useAppSelector(selectCurrentSurveyCycle),
+  useCurrentSurveyUserGroup: () => useAppSelector(selectCurrentSurveyUserGroup),
   useCurrentSurveyUserGroupReady: () =>
-    useSelector(selectCurrentSurveyUserGroupReady),
+    useAppSelector(selectCurrentSurveyUserGroupReady),
   useIsNodeDefEnumerator: (nodeDef: any) =>
-    useSelector(selectIsNodeDefEnumerator(nodeDef)),
+    useAppSelector(selectIsNodeDefEnumerator(nodeDef)),
   useIsNodeDefRootKey: (nodeDef: any) =>
-    useSelector(selectIsNodeDefRootKey(nodeDef)),
-  useSurveysLocal: () => useSelector(selectSurveysLocal),
+    useAppSelector(selectIsNodeDefRootKey(nodeDef)),
+  useSurveysLocal: () => useAppSelector(selectSurveysLocal),
 };

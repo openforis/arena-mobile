@@ -1,7 +1,10 @@
 import { JobStatus, ValidationFields } from "@openforis/arena-core";
 
 export type JobMonitorState = {
+  autoDismiss?: boolean;
   isOpen: boolean;
+  // set for remote-only jobs (no local job instance)
+  jobUuid?: string | null;
   titleKey: string;
   cancelButtonTextKey: string;
   // id of the callbacks (onCancel, onClose) registered outside of the store (see JobMonitorActions.start)

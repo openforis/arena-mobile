@@ -29,6 +29,7 @@ import { DataEntryActionTypes } from "./actionTypes";
 import { fetchRecordsFromServer } from "./actionsRecordsImport";
 import { DataEntrySelectors } from "./selectors";
 import { AreaOfInterestProviderDefault } from "service/areaOfInterestProvider";
+import type { AppDispatch, RootState } from "../store";
 
 const {
   PREVIOUS_CYCLE_PAGE_ENTITY_SET,
@@ -45,7 +46,7 @@ const updateCurrentRecordWithPrevCycleValues = async ({
   nodeDefUuidsUsingPrevCycleValueFunctions,
   prevCycleRecord,
 }: {
-  dispatch: any;
+  dispatch: AppDispatch;
   user: User;
   survey: Survey;
   currentCycleRecord: ArenaRecord;
@@ -83,7 +84,7 @@ const _fetchRecordFromPreviousCycleAndLinkItInternal = async ({
   currentCycleRecord,
   recordId,
 }: {
-  dispatch: any;
+  dispatch: AppDispatch;
   user: User;
   survey: Survey;
   currentCycleRecord: ArenaRecord;
@@ -139,7 +140,7 @@ const _fetchRecordFromPreviousCycleAndLinkIt = async ({
   prevCycle,
   lang,
 }: {
-  dispatch: any;
+  dispatch: AppDispatch;
   user: User;
   survey: Survey;
   record: ArenaRecord;
@@ -265,7 +266,7 @@ const _askPreviousCycleKey = async ({ dispatch, getState }: any) => {
 };
 
 const linkToRecordInPreviousCycle =
-  () => async (dispatch: any, getState: any) => {
+  () => async (dispatch: AppDispatch, getState: () => RootState) => {
     try {
       const state = getState();
       const selectedCycleKey = await _askPreviousCycleKey({
@@ -318,11 +319,14 @@ const linkToRecordInPreviousCycle =
     }
   };
 
-const unlinkFromRecordInPreviousCycle = () => (dispatch: any) => {
+const unlinkFromRecordInPreviousCycle = () => (dispatch: AppDispatch) => {
   dispatch({ type: RECORD_PREVIOUS_CYCLE_RESET });
 };
 
-const updatePreviousCyclePageEntity = (dispatch: any, getState: any) => {
+const updatePreviousCyclePageEntity = (
+  dispatch: AppDispatch,
+  getState: () => RootState,
+) => {
   const state = getState();
   const { parentEntityUuid, entityUuid } =
     DataEntrySelectors.selectCurrentPageEntity(state);

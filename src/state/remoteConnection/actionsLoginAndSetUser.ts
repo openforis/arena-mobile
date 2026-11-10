@@ -7,6 +7,7 @@ import { AutoSyncActions } from "../autoSync";
 import { DeviceInfoSelectors } from "../deviceInfo/selectors";
 import { RemoteConnectionActionTypes } from "./actionTypes";
 import { RemoteConnectionSelectors } from "./selectors";
+import type { AppDispatch, RootState } from "../store";
 
 const { USER_LOADING, USER_SET } = RemoteConnectionActionTypes;
 
@@ -27,7 +28,7 @@ const fetchUser = async () => {
 
 export const loginAndSetUser =
   ({ onlyIfNotSet = true } = {}) =>
-  async (dispatch: any, getState: any) => {
+  async (dispatch: AppDispatch, getState: () => RootState) => {
     const state = getState();
     if (onlyIfNotSet) {
       // if user is already set in store, do not try to fetch it again

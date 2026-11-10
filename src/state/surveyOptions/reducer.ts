@@ -1,37 +1,30 @@
 import { Objects } from "@openforis/arena-core";
 
-import { StoreUtils } from "../storeUtils";
+import { ActionHandlers, StoreUtils } from "../storeUtils";
 
 import { RecordEditViewMode } from "model";
 import { SurveyActionTypes } from "../survey/actionTypes";
 import { SurveyOptionsActions } from "./actions";
 import { SurveyOptionsState } from "./state";
 
-const initialState = {
-  [SurveyOptionsState.keys.recordEditViewMode]: RecordEditViewMode.form,
+const initialState: SurveyOptionsState = {
+  recordEditViewMode: RecordEditViewMode.form,
 };
 
-const actionHandlers = {
+const actionHandlers: ActionHandlers<SurveyOptionsState> = {
   [SurveyActionTypes.CURRENT_SURVEY_SET]: () => ({ ...initialState }),
 
-  [SurveyOptionsActions.RECORD_EDIT_VIEW_MODE_SET]: ({
-    state,
-    action,
-  }: any) => ({
+  [SurveyOptionsActions.RECORD_EDIT_VIEW_MODE_SET]: ({ state, action }) => ({
     ...state,
-    [SurveyOptionsState.keys.recordEditViewMode]: action.viewMode,
+    recordEditViewMode: action.viewMode,
   }),
 
-  [SurveyOptionsActions.ENTITY_LIST_COLUMNS_ALL_SET]: ({
-    state,
-    action,
-  }: any) => ({
+  [SurveyOptionsActions.ENTITY_LIST_COLUMNS_ALL_SET]: ({ state, action }) => ({
     ...state,
-    [SurveyOptionsState.keys.entityListColumnsByEntityDefUuid]:
-      action.columnsByEntityDefUuid,
+    entityListColumnsByEntityDefUuid: action.columnsByEntityDefUuid,
   }),
 
-  [SurveyOptionsActions.ENTITY_LIST_COLUMNS_SET]: ({ state, action }: any) => {
+  [SurveyOptionsActions.ENTITY_LIST_COLUMNS_SET]: ({ state, action }) => {
     const path = [
       SurveyOptionsState.keys.entityListColumnsByEntityDefUuid,
       action.entityDefUuid,

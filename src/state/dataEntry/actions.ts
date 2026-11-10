@@ -58,6 +58,7 @@ import { DataEntrySelectors } from "./selectors";
 import { serializeRecordUpdate } from "./recordUpdateQueue";
 import { selectRecordUpdaterParams } from "./recordUpdaterParams";
 import { ToastActions } from "state/toast";
+import type { AppDispatch, RootState } from "../store";
 
 const {
   DATA_ENTRY_RESET,
@@ -75,7 +76,7 @@ const {
 } = DataEntryActionsRecordPreviousCycle;
 
 const handleError = (
-  dispatch: any,
+  dispatch: AppDispatch,
   error: any,
   messageKey: string,
   messageParams = {},
@@ -95,7 +96,10 @@ const removeNodesFlags = (nodes: NodesMap) => {
 // the record open in the editor can't be modified while it's being merged with its server copy
 // (see lockOpenRecordForSync): the editor is read-only meanwhile, this stops an edit already on
 // its way (e.g. a debounced text update) from overwriting the merged version
-const _isRecordSyncInProgress = (dispatch: any, getState: any): boolean => {
+const _isRecordSyncInProgress = (
+  dispatch: AppDispatch,
+  getState: () => RootState,
+): boolean => {
   if (!DataEntrySelectors.selectRecordSyncInProgress(getState())) return false;
   dispatch(ToastActions.show("dataEntry:autoSync.recordSyncInProgress"));
   return true;
@@ -123,7 +127,7 @@ const prepareRecordForStorage = ({ record }: any) => {
 
 const createNewRecord =
   ({ navigator }: any) =>
-  async (dispatch: any, getState: any) => {
+  async (dispatch: AppDispatch, getState: () => RootState) => {
     try {
       let state = getState();
       const survey = SurveySelectors.selectCurrentSurvey(state)!;
@@ -258,7 +262,7 @@ const _performAddEntity = serializeRecordUpdate(async (dispatch, getState) => {
 
 const addNewEntity =
   (options = {} as any) =>
-  (dispatch: any) => {
+  (dispatch: AppDispatch) => {
     const { delay = null } = options;
     Keyboard.dismiss();
     if (delay) {
@@ -306,7 +310,8 @@ const deleteNodes = (nodeUuids: any) =>
   });
 
 const deleteRecords =
-  (recordUuids: any) => async (dispatch: any, getState: any) => {
+  (recordUuids: any) =>
+  async (dispatch: AppDispatch, getState: () => RootState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
 
@@ -334,7 +339,7 @@ const checkEntityPageIsValidAndNotRoot = ({
 
 const editRecord =
   ({ navigator, record, locked = true }: any) =>
-  async (dispatch: any, getState: any) => {
+  async (dispatch: AppDispatch, getState: () => RootState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const surveyId = SurveySelectors.selectCurrentSurveyId(state);
@@ -388,7 +393,7 @@ const _fetchAndEditRecordInternal = async ({
 
 const fetchAndEditRecord =
   ({ navigator, recordSummary }: any) =>
-  async (dispatch: any, getState: any) => {
+  async (dispatch: AppDispatch, getState: () => RootState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const {
@@ -589,7 +594,7 @@ const confirmClearNewlyInapplicableValues = async ({
   lang,
   clearedDefUuids,
 }: {
-  dispatch: any;
+  dispatch: AppDispatch;
   survey: Survey;
   lang: LanguageCode;
   clearedDefUuids: Set<string>;
@@ -747,7 +752,7 @@ const updateAttribute = ({
 
 const performCoordinateValueSrsConversion =
   ({ nodeUuid, srsTo }: any) =>
-  (dispatch: any, getState: any) => {
+  (dispatch: AppDispatch, getState: () => RootState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const record = DataEntrySelectors.selectRecord(state);
@@ -769,7 +774,7 @@ const performCoordinateValueSrsConversion =
 
 const updateCoordinateValueFromLatLong =
   ({ nodeUuid, latitude, longitude }: any) =>
-  (dispatch: any, getState: any) => {
+  (dispatch: AppDispatch, getState: () => RootState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const record = DataEntrySelectors.selectRecord(state);
@@ -795,7 +800,7 @@ const updateCoordinateValueFromLatLong =
 
 const updateCoordinateValueSrs =
   ({ nodeUuid, srsTo }: any) =>
-  (dispatch: any, getState: any) => {
+  (dispatch: AppDispatch, getState: () => RootState) => {
     const state = getState();
     const record = DataEntrySelectors.selectRecord(state);
 
@@ -864,7 +869,7 @@ const addNewAttribute = ({ nodeDef, parentNodeUuid, value = null }: any) =>
 
 const selectCurrentPageEntity =
   ({ parentEntityUuid, entityDefUuid, entityUuid = undefined }: any) =>
-  async (dispatch: any, getState: any) => {
+  async (dispatch: AppDispatch, getState: () => RootState) => {
     const state = getState();
     const surveyId = SurveySelectors.selectCurrentSurveyId(state);
     const record = DataEntrySelectors.selectRecord(state);
@@ -910,7 +915,7 @@ const selectCurrentPageEntity =
   };
 
 const selectCurrentPageEntityActiveChildIndex =
-  (index: any) => (dispatch: any, getState: any) => {
+  (index: any) => (dispatch: AppDispatch, getState: () => RootState) => {
     dispatch({ type: PAGE_ENTITY_ACTIVE_CHILD_INDEX_SET, index });
     const state = getState();
     const isPhone = DeviceInfoSelectors.selectIsPhone(state);
@@ -919,14 +924,20 @@ const selectCurrentPageEntityActiveChildIndex =
     }
   };
 
-const toggleRecordPageMenuOpen = (dispatch: any, getState: any) => {
+const toggleRecordPageMenuOpen = (
+  dispatch: AppDispatch,
+  getState: () => RootState,
+) => {
   Keyboard.dismiss();
   const state = getState();
   const open = DataEntrySelectors.selectRecordPageSelectorMenuOpen(state);
   dispatch({ type: PAGE_SELECTOR_MENU_OPEN_SET, open: !open });
 };
 
-const closeRecordPageMenu = (dispatch: any, getState: any) => {
+const closeRecordPageMenu = (
+  dispatch: AppDispatch,
+  getState: () => RootState,
+) => {
   const state = getState();
   const pageSelectorMenuOpen =
     DataEntrySelectors.selectRecordPageSelectorMenuOpen(state);
@@ -935,7 +946,10 @@ const closeRecordPageMenu = (dispatch: any, getState: any) => {
   }
 };
 
-const toggleRecordEditLock = (dispatch: any, getState: any) => {
+const toggleRecordEditLock = (
+  dispatch: AppDispatch,
+  getState: () => RootState,
+) => {
   Keyboard.dismiss();
   const state = getState();
   const locked = DataEntrySelectors.selectRecordEditLocked(state);
@@ -944,7 +958,7 @@ const toggleRecordEditLock = (dispatch: any, getState: any) => {
 
 const navigateToRecordsList =
   ({ navigator }: any) =>
-  (dispatch: any) =>
+  (dispatch: AppDispatch) =>
     dispatch(
       ConfirmActions.show({
         confirmButtonTextKey: "dataEntry:goToListOfRecords",

@@ -1,13 +1,15 @@
-import { StoreUtils } from "../storeUtils";
+import { ActionHandlers, StoreUtils } from "../storeUtils";
 import { DeviceInfoActions } from "./actions";
+import type { DeviceInfoState } from "./types";
 
-const initialState = {};
+// filled by AppInitializer before the app screens render
+const initialState = {} as DeviceInfoState;
 
-const actionHandlers = {
-  [DeviceInfoActions.DEVICE_INFO_SET]: ({ action }: any) => ({
+const actionHandlers: ActionHandlers<DeviceInfoState> = {
+  [DeviceInfoActions.DEVICE_INFO_SET]: ({ action }) => ({
     ...action.payload,
   }),
-  [DeviceInfoActions.DEVICE_INFO_UPDATE]: ({ state, action }: any) => ({
+  [DeviceInfoActions.DEVICE_INFO_UPDATE]: ({ state, action }) => ({
     ...state,
     ...action.payload,
   }),

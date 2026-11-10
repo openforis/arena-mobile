@@ -10,21 +10,22 @@ import {
 import { Permissions } from "utils";
 
 import { ToastActions } from "../toast";
+import type { AppDispatch } from "../store";
 
 const SETTINGS_SET = "SETTINGS_SET";
 
-const setSettings = (settings: any) => (dispatch: any) => {
+const setSettings = (settings: any) => (dispatch: AppDispatch) => {
   dispatch({ type: SETTINGS_SET, settings });
 };
 
-const initSettings = () => async (dispatch: any) => {
+const initSettings = () => async (dispatch: AppDispatch) => {
   const settings = await SettingsService.fetchSettings();
   dispatch(setSettings(settings));
 };
 
 const updateSetting =
   ({ key, value }: any) =>
-  async (dispatch: any) => {
+  async (dispatch: AppDispatch) => {
     let canPersist = true;
 
     if (key === SettingsModel.SettingKey.locationGpsLocked) {
@@ -45,16 +46,17 @@ const updateSetting =
     }
   };
 
-const updateSettings = (settings: SettingsObject) => async (dispatch: any) => {
-  const settingsUpdated = { ...settings };
-  delete settingsUpdated["password"];
-  await SettingsService.saveSettings(settingsUpdated);
-  dispatch(setSettings(settingsUpdated));
-};
+const updateSettings =
+  (settings: SettingsObject) => async (dispatch: AppDispatch) => {
+    const settingsUpdated = { ...settings };
+    delete settingsUpdated["password"];
+    await SettingsService.saveSettings(settingsUpdated);
+    dispatch(setSettings(settingsUpdated));
+  };
 
 const saveCustomMapLayer =
   ({ layer, apiKey }: { layer: CustomMapLayer; apiKey: string }) =>
-  async (dispatch: any) => {
+  async (dispatch: AppDispatch) => {
     const settingsUpdated = await CustomMapLayersService.saveLayer({
       layer,
       apiKey,
@@ -62,10 +64,11 @@ const saveCustomMapLayer =
     dispatch(setSettings(settingsUpdated));
   };
 
-const deleteCustomMapLayer = (layerId: string) => async (dispatch: any) => {
-  const settingsUpdated = await CustomMapLayersService.deleteLayer(layerId);
-  dispatch(setSettings(settingsUpdated));
-};
+const deleteCustomMapLayer =
+  (layerId: string) => async (dispatch: AppDispatch) => {
+    const settingsUpdated = await CustomMapLayersService.deleteLayer(layerId);
+    dispatch(setSettings(settingsUpdated));
+  };
 
 const updatePdfMap =
   ({
@@ -75,14 +78,14 @@ const updatePdfMap =
     mapId: string;
     changes: Partial<Pick<PdfMap, "name" | "visible" | "opacity">>;
   }) =>
-  async (dispatch: any) => {
+  async (dispatch: AppDispatch) => {
     const settingsUpdated = await PdfMapsService.updateMap(mapId, changes);
     if (settingsUpdated) {
       dispatch(setSettings(settingsUpdated));
     }
   };
 
-const deletePdfMap = (mapId: string) => async (dispatch: any) => {
+const deletePdfMap = (mapId: string) => async (dispatch: AppDispatch) => {
   const settingsUpdated = await PdfMapsService.deleteMap(mapId);
   dispatch(setSettings(settingsUpdated));
 };
@@ -103,7 +106,7 @@ const _startGpsLocking = async () => {
   return true;
 };
 
-const startGpsLocking = () => async (dispatch: any) => {
+const startGpsLocking = () => async (dispatch: AppDispatch) => {
   const started = await _startGpsLocking();
   if (!started) {
     dispatch(ToastActions.show("settings:locationGpsLocked.error"));

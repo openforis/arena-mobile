@@ -1,4 +1,4 @@
-import { StoreUtils } from "../storeUtils";
+import { ActionHandlers, StoreUtils } from "../storeUtils";
 
 import { AutoSyncActions } from "./actions";
 import { AutoSyncState, AutoSyncStatus } from "./types";
@@ -13,47 +13,44 @@ const initialState: AutoSyncState = {
   dialogOpen: false,
 };
 
-const actionHandlers = {
-  [AutoSyncActions.AUTO_SYNC_CHECK_START]: ({ state }: any) => ({
+const actionHandlers: ActionHandlers<AutoSyncState> = {
+  [AutoSyncActions.AUTO_SYNC_CHECK_START]: ({ state }) => ({
     ...state,
     checking: true,
     message: null,
   }),
-  [AutoSyncActions.AUTO_SYNC_CHECK_END]: ({ state, action }: any) => ({
+  [AutoSyncActions.AUTO_SYNC_CHECK_END]: ({ state, action }) => ({
     ...state,
     ...action.payload,
     checking: false,
   }),
-  [AutoSyncActions.AUTO_SYNC_CHECK_ABORTED]: ({ state }: any) => ({
+  [AutoSyncActions.AUTO_SYNC_CHECK_ABORTED]: ({ state }) => ({
     ...state,
     checking: false,
   }),
-  [AutoSyncActions.AUTO_SYNC_AUTH_ERROR]: ({ state, action }: any) => ({
-    ...state,
-    ...action.payload,
-    checking: false,
-  }),
-  [AutoSyncActions.AUTO_SYNC_CHECK_ERROR]: ({ state, action }: any) => ({
+  [AutoSyncActions.AUTO_SYNC_AUTH_ERROR]: ({ state, action }) => ({
     ...state,
     ...action.payload,
     checking: false,
   }),
-  [AutoSyncActions.AUTO_SYNC_RESET]: ({ state }: any) => ({
+  [AutoSyncActions.AUTO_SYNC_CHECK_ERROR]: ({ state, action }) => ({
+    ...state,
+    ...action.payload,
+    checking: false,
+  }),
+  [AutoSyncActions.AUTO_SYNC_RESET]: ({ state }) => ({
     ...initialState,
     dialogOpen: state.dialogOpen,
   }),
-  [AutoSyncActions.AUTO_SYNC_DIALOG_OPEN_SET]: ({ state, action }: any) => ({
+  [AutoSyncActions.AUTO_SYNC_DIALOG_OPEN_SET]: ({ state, action }) => ({
     ...state,
     ...action.payload,
   }),
-  [AutoSyncActions.AUTO_SYNC_STATUS_MESSAGE_SET]: ({ state, action }: any) => ({
+  [AutoSyncActions.AUTO_SYNC_STATUS_MESSAGE_SET]: ({ state, action }) => ({
     ...state,
     ...action.payload,
   }),
-  [AutoSyncActions.AUTO_SYNC_STATUS_MARKED_PENDING]: ({
-    state,
-    action,
-  }: any) => ({
+  [AutoSyncActions.AUTO_SYNC_STATUS_MARKED_PENDING]: ({ state, action }) => ({
     ...state,
     ...action.payload,
   }),

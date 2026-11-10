@@ -61,6 +61,19 @@ export default [
       "react/react-in-jsx-scope": "off",
       "react/prop-types": "off",
       "@typescript-eslint/no-explicit-any": "off",
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "react-redux",
+              importNames: ["useDispatch", "useSelector"],
+              message:
+                "Use the typed useAppDispatch / useAppSelector (state/storeHooks).",
+            },
+          ],
+        },
+      ],
       // require() is how React Native loads static assets
       "@typescript-eslint/no-require-imports": "off",
       "@typescript-eslint/no-unused-vars": [

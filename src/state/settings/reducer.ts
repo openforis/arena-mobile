@@ -1,8 +1,13 @@
-import { StoreUtils } from "../storeUtils";
+import { SettingsObject } from "model/SettingsModel";
+
+import { ActionHandlers, StoreUtils } from "../storeUtils";
 import { SettingsActions } from "./actions";
 
-const actionHandlers = {
-  [SettingsActions.SETTINGS_SET]: ({ state, action }: any) => ({
+// filled by AppInitializer before the app screens render
+const initialState = {} as SettingsObject;
+
+const actionHandlers: ActionHandlers<SettingsObject> = {
+  [SettingsActions.SETTINGS_SET]: ({ state, action }) => ({
     ...state,
     ...action.settings,
   }),
@@ -10,5 +15,5 @@ const actionHandlers = {
 
 export const SettingsReducer = StoreUtils.exportReducer({
   actionHandlers,
-  initialState: false,
+  initialState,
 });

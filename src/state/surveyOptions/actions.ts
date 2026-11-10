@@ -1,18 +1,19 @@
 import { PreferencesService } from "service/preferencesService";
 
 import { SurveySelectors } from "../survey/selectors";
+import type { AppDispatch, RootState } from "../store";
 
 const RECORD_EDIT_VIEW_MODE_SET = "RECORD_EDIT_VIEW_MODE_SET";
 const ENTITY_LIST_COLUMNS_ALL_SET = "ENTITY_LIST_COLUMNS_ALL_SET";
 const ENTITY_LIST_COLUMNS_SET = "ENTITY_LIST_COLUMNS_SET";
 
-const setRecordEditViewMode = (viewMode: any) => (dispatch: any) => {
+const setRecordEditViewMode = (viewMode: any) => (dispatch: AppDispatch) => {
   dispatch({ type: RECORD_EDIT_VIEW_MODE_SET, viewMode });
 };
 
 const fetchEntityListColumns =
   ({ surveyId }: { surveyId: number }) =>
-  async (dispatch: any) => {
+  async (dispatch: AppDispatch) => {
     const columnsByEntityDefUuid =
       await PreferencesService.getSurveyEntityListColumns(surveyId);
     dispatch({ type: ENTITY_LIST_COLUMNS_ALL_SET, columnsByEntityDefUuid });
@@ -27,7 +28,7 @@ const setEntityListColumns =
     entityDefUuid: string;
     columns: string[] | null;
   }) =>
-  async (dispatch: any, getState: any) => {
+  async (dispatch: AppDispatch, getState: () => RootState) => {
     dispatch({ type: ENTITY_LIST_COLUMNS_SET, entityDefUuid, columns });
     const surveyId = SurveySelectors.selectCurrentSurveyId(getState());
     await PreferencesService.setSurveyEntityListColumns(

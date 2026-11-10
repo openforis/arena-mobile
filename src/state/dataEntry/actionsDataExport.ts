@@ -31,7 +31,7 @@ import {
   AppCompatibilityActions,
   RemoteConnectionSelectors,
 } from "state/remoteConnection";
-import type { RootState } from "state/store";
+import type { AppDispatch, RootState } from "state/store";
 import { Files, Jobs, log } from "utils";
 
 import { fetchRecordsFromServer } from "./actionsRecordsImport";
@@ -93,7 +93,7 @@ const isAuthError = (error: any) =>
 
 const handleError =
   (error: any, silent = false) =>
-  (dispatch: any) => {
+  (dispatch: AppDispatch) => {
     if (silent) {
       // an unattended tick must never surface a blocking error dialog; shown through the sync
       // status icon instead, which also stops further automatic ticks until the user retries
@@ -122,7 +122,7 @@ const handleUploadJobError = async ({
   error,
 }: {
   error: any;
-  dispatch: any;
+  dispatch: AppDispatch;
 }): Promise<boolean> => {
   if (error instanceof JobCancelError) {
     // job canceled
@@ -173,7 +173,7 @@ const handleUploadAndProcessError = async ({
   error,
   silent,
 }: {
-  dispatch: any;
+  dispatch: AppDispatch;
   error: any;
   silent: boolean;
 }): Promise<boolean> => {
@@ -213,7 +213,7 @@ const startUploadDataToRemoteServer =
     // progress bar the zip-generation phase already started, instead of resetting it back to 0%
     chained = false,
   }: any) =>
-  async (dispatch: any, getState: any) => {
+  async (dispatch: AppDispatch, getState: () => RootState) => {
     const state = getState();
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
@@ -334,84 +334,87 @@ const selectedOptionsToDataExportOptions = ({
   return options;
 };
 
-export const startCsvDataExportJob = () => (dispatch: any, getState: any) => {
-  try {
-    const state = getState();
+export const startCsvDataExportJob =
+  () => (dispatch: AppDispatch, getState: () => RootState) => {
+    try {
+      const state = getState();
 
-    const availableDataExportOptions = determineAvailableDataExportOptions({
-      state,
-    });
-    const multipleChoiceOptions = availableDataExportOptions.map((option) => ({
-      value: option,
-      label: `dataEntry:dataExport.option.${option}`,
-    }));
-
-    const onConfirm = async ({
-      selectedMultipleChoiceValues,
-    }: OnConfirmParams) => {
-      log.debug(
-        `starting CSV data export with options:`,
-        selectedMultipleChoiceValues,
+      const availableDataExportOptions = determineAvailableDataExportOptions({
+        state,
+      });
+      const multipleChoiceOptions = availableDataExportOptions.map(
+        (option) => ({
+          value: option,
+          label: `dataEntry:dataExport.option.${option}`,
+        }),
       );
 
-      await dispatch(ConfirmActions.dismiss());
+      const onConfirm = async ({
+        selectedMultipleChoiceValues,
+      }: OnConfirmParams) => {
+        log.debug(
+          `starting CSV data export with options:`,
+          selectedMultipleChoiceValues,
+        );
 
-      const user = RemoteConnectionSelectors.selectLoggedUserSafe(state);
-      const survey = SurveySelectors.selectCurrentSurvey(state)!;
-      const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
+        await dispatch(ConfirmActions.dismiss());
 
-      const selectedDataExportOptions = {
-        ...FlatDataExportDefaultOptions,
-        ...selectedOptionsToDataExportOptions({
-          availableOptions: availableDataExportOptions,
-          selectedOptions: selectedMultipleChoiceValues,
-        }),
+        const user = RemoteConnectionSelectors.selectLoggedUserSafe(state);
+        const survey = SurveySelectors.selectCurrentSurvey(state)!;
+        const cycle = SurveySelectors.selectCurrentSurveyCycle(state)!;
+
+        const selectedDataExportOptions = {
+          ...FlatDataExportDefaultOptions,
+          ...selectedOptionsToDataExportOptions({
+            availableOptions: availableDataExportOptions,
+            selectedOptions: selectedMultipleChoiceValues,
+          }),
+        };
+
+        log.debug("Initializing FlatDataExportJob");
+
+        const dataExportJob = new FlatDataExportJob({
+          type: "FlatDataExportJob",
+          user,
+          survey,
+          surveyId: survey.id!,
+          cycle,
+          options: selectedDataExportOptions,
+        });
+
+        await JobMonitorActions.startAsync({
+          autoDismiss: true,
+          dispatch,
+          job: dataExportJob,
+          titleKey: "dataEntry:dataExport.exportingData",
+          onJobComplete: (
+            jobComplete: JobSerialized<FlatDataExportJobResult>,
+          ) => {
+            const { result } = jobComplete;
+            const { outputFileUri } = result || {};
+            if (outputFileUri) {
+              void Files.shareFile({
+                url: outputFileUri,
+                mimeType: Files.MIME_TYPES.zip,
+                dialogTitle: t("dataEntry:dataExport.shareExportedFile"),
+              });
+            }
+          },
+        });
       };
-
-      log.debug("Initializing FlatDataExportJob");
-
-      const dataExportJob = new FlatDataExportJob({
-        type: "FlatDataExportJob",
-        user,
-        survey,
-        surveyId: survey.id!,
-        cycle,
-        options: selectedDataExportOptions,
-      });
-
-      await JobMonitorActions.startAsync({
-        autoDismiss: true,
-        dispatch,
-        job: dataExportJob,
-        titleKey: "dataEntry:dataExport.exportingData",
-        onJobComplete: (
-          jobComplete: JobSerialized<FlatDataExportJobResult>,
-        ) => {
-          const { result } = jobComplete;
-          const { outputFileUri } = result || {};
-          if (outputFileUri) {
-            void Files.shareFile({
-              url: outputFileUri,
-              mimeType: Files.MIME_TYPES.zip,
-              dialogTitle: t("dataEntry:dataExport.shareExportedFile"),
-            });
-          }
-        },
-      });
-    };
-    dispatch(
-      ConfirmActions.show({
-        titleKey: "dataEntry:dataExport.confirm.title",
-        messageKey: "dataEntry:dataExport.confirm.selectOptions",
-        onConfirm,
-        multipleChoiceOptions,
-        confirmButtonTextKey: "common:export",
-      }),
-    );
-  } catch (error) {
-    dispatch(handleError(error));
-  }
-};
+      dispatch(
+        ConfirmActions.show({
+          titleKey: "dataEntry:dataExport.confirm.title",
+          messageKey: "dataEntry:dataExport.confirm.selectOptions",
+          onConfirm,
+          multipleChoiceOptions,
+          confirmButtonTextKey: "common:export",
+        }),
+      );
+    } catch (error) {
+      dispatch(handleError(error));
+    }
+  };
 
 const onExportConfirmed =
   ({
@@ -424,7 +427,7 @@ const onExportConfirmed =
     // see startUploadDataToRemoteServer's `chained` param
     chained = false,
   }: any) =>
-  async (dispatch: any) => {
+  async (dispatch: AppDispatch) => {
     try {
       if (selectedSingleChoiceValue === exportType.remote) {
         dispatch(
@@ -686,7 +689,7 @@ const fetchMergedSameRecordsSilently = async ({
 
 export const fetchRecordsChangedRemotely =
   ({ cycle, recordUuids }: any) =>
-  async (dispatch: any, getState: any) => {
+  async (dispatch: AppDispatch, getState: () => RootState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
@@ -711,7 +714,7 @@ export const exportRecords =
     onEnd = null,
     silent = false,
   }: any) =>
-  async (dispatch: any, getState: any) => {
+  async (dispatch: AppDispatch, getState: () => RootState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);

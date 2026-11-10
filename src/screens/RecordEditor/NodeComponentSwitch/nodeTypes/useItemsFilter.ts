@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 
 import {
   NodeDef,
@@ -16,6 +15,7 @@ import {
   SurveySelectors,
 } from "state";
 import { AreaOfInterestProviderDefault } from "service/areaOfInterestProvider";
+import { useAppSelector } from "state/storeHooks";
 
 export const useItemsFilter = ({
   nodeDef,
@@ -31,10 +31,10 @@ export const useItemsFilter = ({
   const [filteredItems, setFilteredItems] = useState([] as any[]);
 
   // selectLoggedUserSafe returns a new object on every call when not logged in
-  const loggedUser = useSelector(RemoteConnectionSelectors.selectLoggedUser);
-  const survey = useSelector(SurveySelectors.selectCurrentSurvey)!;
-  const record = useSelector(DataEntrySelectors.selectRecord);
-  const prevCycleRecord = useSelector(
+  const loggedUser = useAppSelector(RemoteConnectionSelectors.selectLoggedUser);
+  const survey = useAppSelector(SurveySelectors.selectCurrentSurvey)!;
+  const record = useAppSelector(DataEntrySelectors.selectRecord);
+  const prevCycleRecord = useAppSelector(
     DataEntrySelectors.selectPreviousCycleRecord,
   );
 

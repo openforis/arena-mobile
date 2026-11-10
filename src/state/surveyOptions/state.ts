@@ -5,11 +5,17 @@ const keys = {
   recordEditViewMode: "recordEditViewMode",
 };
 
-const getRecordEditViewMode = (state: any) => state[keys.recordEditViewMode];
+export type SurveyOptionsState = {
+  entityListColumnsByEntityDefUuid?: Record<string, string[]>;
+  recordEditViewMode: string;
+};
+
+const getRecordEditViewMode = (state: SurveyOptionsState) =>
+  state.recordEditViewMode;
 const getEntityListColumns =
   (entityDefUuid: string) =>
-  (state: any): string[] | undefined =>
-    state?.[keys.entityListColumnsByEntityDefUuid]?.[entityDefUuid];
+  (state: SurveyOptionsState): string[] | undefined =>
+    state?.entityListColumnsByEntityDefUuid?.[entityDefUuid];
 
 export const SurveyOptionsState = {
   stateKey,

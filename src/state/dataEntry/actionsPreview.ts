@@ -12,6 +12,7 @@ import { RemoteConnectionSelectors } from "../remoteConnection";
 import { SurveyActionTypes } from "../survey/actionTypes";
 import { DataEntryActionTypes } from "./actionTypes";
 import { selectRecordUpdaterParams } from "./recordUpdaterParams";
+import type { AppDispatch, RootState } from "../store";
 
 type StartPreviewParams = {
   survey: Survey;
@@ -22,7 +23,7 @@ type StartPreviewParams = {
 // sets the previewed survey and a new record kept in memory only (web preview, no local DB)
 const startPreview =
   ({ survey, lang = null, cycle = null }: StartPreviewParams) =>
-  async (dispatch: any, getState: any) => {
+  async (dispatch: AppDispatch, getState: () => RootState) => {
     dispatch({
       type: SurveyActionTypes.CURRENT_SURVEY_SET,
       survey,
