@@ -48,7 +48,7 @@ sleep 15
 echo "Installing APK..."
 # Use -r to replace if exists, -t for test packages (Expo debug builds need this)
 ensure_adb_device_ready
-adb install -r -t -g android/app/build/outputs/apk/debug/app-debug.apk
+adb install -r -t -g "${APK_PATH:-android/app/build/outputs/apk/debug/app-debug.apk}"
 
 echo "Running Maestro..."
 # Give the OS a short window after installation to settle
@@ -57,6 +57,7 @@ ensure_adb_device_ready
 
 maestro test e2e/maestro/allTests.yaml --format junit --output report.xml \
   -e APP_ID=org.openforis.arena_mobile \
+  -e DEV_BUNDLE="${DEV_BUNDLE:-true}" \
   -e ARENA_SERVER_URL="${ARENA_SERVER_URL}" \
   -e ARENA_SERVER_USERNAME="${ARENA_SERVER_USERNAME}" \
   -e ARENA_SERVER_PASSWORD="${ARENA_SERVER_PASSWORD}"
