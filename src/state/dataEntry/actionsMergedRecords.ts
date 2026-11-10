@@ -1,7 +1,7 @@
 import { RecordService } from "service";
 
 import { RecordUtils } from "model";
-import type { AppDispatch, RootState } from "state/store";
+import type { AppDispatch, AppGetState } from "state/store";
 
 import { fetchRecordsFromServer } from "./actionsRecordsImport";
 import { MessageActions } from "../message";
@@ -141,7 +141,7 @@ export const fetchMergedSameRecordsSilently = async ({
 
 export const fetchRecordsChangedRemotely =
   ({ cycle, recordUuids }: any) =>
-  async (dispatch: AppDispatch, getState: () => RootState) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);

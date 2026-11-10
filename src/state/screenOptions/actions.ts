@@ -1,6 +1,6 @@
 import { ScreenViewMode } from "model";
 import { ScreenOptionsSelectors } from "./selectors";
-import type { AppDispatch, RootState } from "../store";
+import type { AppDispatch, AppGetState } from "../store";
 
 const SCREEN_VIEW_MODE_SET = "SCREEN_VIEW_MODE_SET";
 
@@ -23,7 +23,7 @@ const toggleScreenViewMode =
     screenKey: string;
     viewModes?: ScreenViewMode[];
   }) =>
-  (dispatch: AppDispatch, getState: () => RootState) => {
+  (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
 
     const viewMode =

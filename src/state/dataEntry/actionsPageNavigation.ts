@@ -12,7 +12,7 @@ import { SurveySelectors } from "../survey";
 import { DataEntryActionsRecordPreviousCycle } from "./actionsRecordPreviousCycle";
 import { DataEntryActionTypes } from "./actionTypes";
 import { DataEntrySelectors } from "./selectors";
-import type { AppDispatch, RootState } from "../store";
+import type { AppDispatch, AppGetState } from "../store";
 
 const {
   DATA_ENTRY_RESET,
@@ -26,7 +26,7 @@ const { updatePreviousCyclePageEntity } = DataEntryActionsRecordPreviousCycle;
 
 export const selectCurrentPageEntity =
   ({ parentEntityUuid, entityDefUuid, entityUuid = undefined }: any) =>
-  async (dispatch: AppDispatch, getState: () => RootState) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const surveyId = SurveySelectors.selectCurrentSurveyId(state);
     const record = DataEntrySelectors.selectRecord(state);
@@ -72,7 +72,7 @@ export const selectCurrentPageEntity =
   };
 
 export const selectCurrentPageEntityActiveChildIndex =
-  (index: any) => (dispatch: AppDispatch, getState: () => RootState) => {
+  (index: any) => (dispatch: AppDispatch, getState: AppGetState) => {
     dispatch({ type: PAGE_ENTITY_ACTIVE_CHILD_INDEX_SET, index });
     const state = getState();
     const isPhone = DeviceInfoSelectors.selectIsPhone(state);
@@ -83,7 +83,7 @@ export const selectCurrentPageEntityActiveChildIndex =
 
 export const toggleRecordPageMenuOpen = (
   dispatch: AppDispatch,
-  getState: () => RootState,
+  getState: AppGetState,
 ) => {
   Keyboard.dismiss();
   const state = getState();
@@ -91,10 +91,7 @@ export const toggleRecordPageMenuOpen = (
   dispatch({ type: PAGE_SELECTOR_MENU_OPEN_SET, open: !open });
 };
 
-const closeRecordPageMenu = (
-  dispatch: AppDispatch,
-  getState: () => RootState,
-) => {
+const closeRecordPageMenu = (dispatch: AppDispatch, getState: AppGetState) => {
   const state = getState();
   const pageSelectorMenuOpen =
     DataEntrySelectors.selectRecordPageSelectorMenuOpen(state);
@@ -105,7 +102,7 @@ const closeRecordPageMenu = (
 
 export const toggleRecordEditLock = (
   dispatch: AppDispatch,
-  getState: () => RootState,
+  getState: AppGetState,
 ) => {
   Keyboard.dismiss();
   const state = getState();

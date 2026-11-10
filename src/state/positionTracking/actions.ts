@@ -19,7 +19,7 @@ import { ToastActions } from "../toast";
 import { POSITION_TRACKING_RESET, POSITION_TRACKING_UPDATE } from "./reducer";
 import { PositionTrackingSelectors } from "./selectors";
 import { PositionTrackingStatus } from "./types";
-import type { AppDispatch, RootState } from "../store";
+import type { AppDispatch, AppGetState, RootState } from "../store";
 
 // the attribute value is updated periodically, not on every location
 const FLUSH_INTERVAL_MS = 60000;
@@ -55,10 +55,7 @@ const stopListeningToServiceUpdates = () => {
   unsubscribeFromService = null;
 };
 
-const setKeepScreenAwake = async (
-  getState: () => RootState,
-  tracking: boolean,
-) => {
+const setKeepScreenAwake = async (getState: AppGetState, tracking: boolean) => {
   const { keepScreenAwake } = SettingsSelectors.selectSettings(getState());
   try {
     await SystemUtils.setKeepScreenAwake(tracking || keepScreenAwake);
@@ -86,7 +83,7 @@ const _discard = async (dispatch: AppDispatch) => {
 
 const _flush = async (
   dispatch: AppDispatch,
-  getState: () => RootState,
+  getState: AppGetState,
 ): Promise<boolean> => {
   const track = PositionTrackingService.getTrack();
   if (!track) return true;
@@ -114,7 +111,7 @@ const _flush = async (
 
 // writes the recorded track into the attribute value
 const flushTrack =
-  () => async (dispatch: AppDispatch, getState: () => RootState) => {
+  () => async (dispatch: AppDispatch, getState: AppGetState) => {
     if (flushInProgress) {
       await flushInProgress;
     }
@@ -138,7 +135,7 @@ const startFlushTimer = (dispatch: AppDispatch) => {
 
 const _startNew =
   ({ nodeUuid }: { nodeUuid: string }) =>
-  async (dispatch: AppDispatch, getState: () => RootState) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const record = DataEntrySelectors.selectRecord(state);
@@ -179,7 +176,7 @@ const _startNew =
   };
 
 const pauseTracking =
-  () => async (dispatch: AppDispatch, getState: () => RootState) => {
+  () => async (dispatch: AppDispatch, getState: AppGetState) => {
     const { status } =
       PositionTrackingSelectors.selectPositionTrackingState(getState());
     if (status !== PositionTrackingStatus.tracking) return;
@@ -192,7 +189,7 @@ const pauseTracking =
   };
 
 const resumeTracking =
-  () => async (dispatch: AppDispatch, getState: () => RootState) => {
+  () => async (dispatch: AppDispatch, getState: AppGetState) => {
     const { status } =
       PositionTrackingSelectors.selectPositionTrackingState(getState());
     if (status !== PositionTrackingStatus.paused) return;
@@ -214,7 +211,7 @@ const resumeTracking =
 // the attribute has been updated, otherwise it's kept to be recovered later
 const _stop = async (
   dispatch: AppDispatch,
-  getState: () => RootState,
+  getState: AppGetState,
 ): Promise<boolean> => {
   stopFlushTimer();
   if (PositionTrackingService.isWatching()) {
@@ -232,7 +229,7 @@ const _stop = async (
 
 const stopTracking =
   ({ confirm = true }: { confirm?: boolean } = {}) =>
-  async (dispatch: AppDispatch, getState: () => RootState) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     if (!PositionTrackingService.getTrack()) {
       dispatch({ type: POSITION_TRACKING_RESET });
       return true;
@@ -258,7 +255,7 @@ const stopTracking =
 
 const startTracking =
   ({ nodeUuid }: { nodeUuid: string }) =>
-  async (dispatch: AppDispatch, getState: () => RootState) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     if (!DataEntrySelectors.selectCanEditRecord(state)) return;
 
@@ -289,7 +286,7 @@ const startTracking =
 // deletes the track recorded in the attribute (after a strong confirmation) and starts a new one
 const restartTracking =
   ({ nodeUuid }: { nodeUuid: string }) =>
-  async (dispatch: AppDispatch, getState: () => RootState) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     if (!DataEntrySelectors.selectCanEditRecord(getState())) return;
     if (
       !(await ConfirmUtils.confirm({
@@ -322,7 +319,7 @@ const restartTracking =
 // deletes the whole stopped track (after a strong confirmation), e.g. when it was recorded by mistake
 const deleteTrack =
   ({ nodeUuid }: { nodeUuid: string }) =>
-  async (dispatch: AppDispatch, getState: () => RootState) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     if (!DataEntrySelectors.selectCanEditRecord(getState())) return;
     if (PositionTrackingService.getTrack()?.nodeUuid === nodeUuid) return;
     if (
@@ -343,7 +340,7 @@ const deleteTrack =
 
 // starts tracking in a new record, when it has a trackable attribute in the root entity
 const autoStartTracking =
-  () => async (dispatch: AppDispatch, getState: () => RootState) => {
+  () => async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const record = DataEntrySelectors.selectRecordUnsafe(state);
@@ -357,7 +354,7 @@ const autoStartTracking =
 
 // called before closing the record editor
 const closeTrack =
-  () => async (dispatch: AppDispatch, getState: () => RootState) => {
+  () => async (dispatch: AppDispatch, getState: AppGetState) => {
     if (!PositionTrackingService.getTrack()) {
       dispatch({ type: POSITION_TRACKING_RESET });
       return;
@@ -374,7 +371,7 @@ const closeTrack =
 
 // recovers a track not written into the record (e.g. the app was closed while tracking)
 const recoverTrackForOpenRecord =
-  () => async (dispatch: AppDispatch, getState: () => RootState) => {
+  () => async (dispatch: AppDispatch, getState: AppGetState) => {
     const record = DataEntrySelectors.selectRecordUnsafe(getState());
     if (!record) return;
     const currentTrack = PositionTrackingService.getTrack();

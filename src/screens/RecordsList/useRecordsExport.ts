@@ -23,7 +23,7 @@ import {
   noRecordsToExportTextKey,
 } from "./recordsListUtils";
 import { RecordsListState } from "./useRecordsList";
-import type { AppDispatch, RootState } from "state/store";
+import type { AppDispatch, AppGetState } from "state/store";
 
 export type UseRecordsExportParams = {
   cycle: any;
@@ -65,7 +65,7 @@ export const useRecordsExport = ({
   // callback's own call to loadRecordsWithSyncStatus() is what flips "checking" on and off
   const isAutoSyncRunningNow = useCallback(
     () =>
-      dispatch((_dispatch: AppDispatch, getState: () => RootState) =>
+      dispatch((_dispatch: AppDispatch, getState: AppGetState) =>
         AutoSyncSelectors.selectAutoSyncRunning(getState()),
       ),
     [dispatch],
