@@ -26,10 +26,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 8,
     borderWidth: 1,
-    flex: 1,
+    flexShrink: 1,
     height: 56,
     justifyContent: "center",
-    maxWidth: 48,
+    width: 48,
   },
   boxActive: { borderWidth: 2 },
   // almost transparent but not hidden: it still gets taps, paste and autofill
