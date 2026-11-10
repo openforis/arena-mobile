@@ -1,12 +1,17 @@
 appId: ${APP_ID}
 ---
 # dev builds only: close the LogBox notifications (warnings and errors), they cover the bottom of the screen
-- repeat:
-    times: 2
+# (skipped with DEV_BUNDLE=false: each visibility check waits a few seconds)
+- runFlow:
+    when:
+      true: ${typeof DEV_BUNDLE === 'undefined' || DEV_BUNDLE !== 'false'}
     commands:
-      - runFlow:
-          when:
-            visible: "Open debugger to view warnings\\.|A non-serializable value.*|.*Open debugger to view.*"
+      - repeat:
+          times: 2
           commands:
-            - tapOn:
-                point: "92%,91%"
+            - runFlow:
+                when:
+                  visible: "Open debugger to view warnings\\.|A non-serializable value.*|.*Open debugger to view.*"
+                commands:
+                  - tapOn:
+                      point: "92%,91%"
