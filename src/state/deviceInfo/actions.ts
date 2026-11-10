@@ -6,6 +6,7 @@ import { BatteryState } from "model";
 import { Files, SystemUtils } from "utils";
 
 import { DeviceInfoSelectors } from "./selectors";
+import type { AppDispatch, AppGetState } from "../store";
 
 const DEVICE_INFO_SET = "DEVICE_INFO_SET";
 const DEVICE_INFO_UPDATE = "DEVICE_INFO_UPDATE";
@@ -18,7 +19,7 @@ const batteryStatusFromExpoBatteryState = {
   [Battery.BatteryState.NOT_CHARGING]: BatteryState.full,
 };
 
-const setDeviceInfo = (deviceInfo: any) => (dispatch: any) => {
+const setDeviceInfo = (deviceInfo: any) => (dispatch: AppDispatch) => {
   dispatch({ type: DEVICE_INFO_SET, payload: deviceInfo });
 };
 
@@ -31,7 +32,7 @@ const _getPowerState = async () => {
   };
 };
 
-const initDeviceInfo = () => async (dispatch: any) => {
+const initDeviceInfo = () => async (dispatch: AppDispatch) => {
   const deviceType =
     (await Device.getDeviceTypeAsync()) || Device.DeviceType.PHONE;
 
@@ -105,52 +106,54 @@ const determineBatteryStateUpdateActionPayload = ({
   return payload;
 };
 
-const updatePowerState = () => async (dispatch: any, getState: any) => {
-  const state = getState();
-  const {
-    batteryLevel: batteryLevelPrev,
-    batteryState: batteryStatePrev,
-    batteryLevelMeasureStartTime,
-    batteryLevelAtStartTime,
-  } = DeviceInfoSelectors.selectDeviceInfo(state);
+const updatePowerState =
+  () => async (dispatch: AppDispatch, getState: AppGetState) => {
+    const state = getState();
+    const {
+      batteryLevel: batteryLevelPrev,
+      batteryState: batteryStatePrev,
+      batteryLevelMeasureStartTime,
+      batteryLevelAtStartTime,
+    } = DeviceInfoSelectors.selectDeviceInfo(state);
 
-  const { batteryLevel, batteryState } = await _getPowerState();
+    const { batteryLevel, batteryState } = await _getPowerState();
 
-  const batteryStateChanged = batteryState !== batteryStatePrev;
-  const batteryLevelChanged = batteryLevel !== batteryLevelPrev;
+    const batteryStateChanged = batteryState !== batteryStatePrev;
+    const batteryLevelChanged = batteryLevel !== batteryLevelPrev;
 
-  if (!batteryLevelChanged && !batteryStateChanged) {
-    // do not update state
-    return;
-  }
-  const payload = determineBatteryStateUpdateActionPayload({
-    batteryLevel,
-    batteryState,
-    batteryStateChanged,
-    batteryLevelMeasureStartTime,
-    batteryLevelAtStartTime,
-  });
+    if (!batteryLevelChanged && !batteryStateChanged) {
+      // do not update state
+      return;
+    }
+    const payload = determineBatteryStateUpdateActionPayload({
+      batteryLevel,
+      batteryState,
+      batteryStateChanged,
+      batteryLevelMeasureStartTime,
+      batteryLevelAtStartTime,
+    });
 
-  dispatch({ type: DEVICE_INFO_UPDATE, payload });
-};
+    dispatch({ type: DEVICE_INFO_UPDATE, payload });
+  };
 
-const updateFreeDiskStorage = () => async (dispatch: any, getState: any) => {
-  const state = getState();
-  const { freeDiskStorage: freeDiskStoragePrev } =
-    DeviceInfoSelectors.selectDeviceInfo(state);
+const updateFreeDiskStorage =
+  () => async (dispatch: AppDispatch, getState: AppGetState) => {
+    const state = getState();
+    const { freeDiskStorage: freeDiskStoragePrev } =
+      DeviceInfoSelectors.selectDeviceInfo(state);
 
-  const freeDiskStorage = await Files.getFreeDiskStorage();
-  if (freeDiskStorage === freeDiskStoragePrev) return;
+    const freeDiskStorage = await Files.getFreeDiskStorage();
+    if (freeDiskStorage === freeDiskStoragePrev) return;
 
-  dispatch({ type: DEVICE_INFO_UPDATE, payload: { freeDiskStorage } });
-};
+    dispatch({ type: DEVICE_INFO_UPDATE, payload: { freeDiskStorage } });
+  };
 
 const updateIsNetworkConnected =
-  (isNetworkConnected: any) => (dispatch: any) => {
+  (isNetworkConnected: any) => (dispatch: AppDispatch) => {
     dispatch({ type: DEVICE_INFO_UPDATE, payload: { isNetworkConnected } });
   };
 
-const updateOrientation = (orientation: any) => (dispatch: any) => {
+const updateOrientation = (orientation: any) => (dispatch: AppDispatch) => {
   dispatch({ type: DEVICE_INFO_UPDATE, payload: { orientation } });
 };
 

@@ -8,6 +8,7 @@ import {
 import { log } from "utils";
 
 import { ConfirmActions } from "../confirm";
+import type { AppDispatch } from "../store";
 
 const openAppStorePage = async () => {
   try {
@@ -22,7 +23,7 @@ const openAppStorePage = async () => {
 
 const showAppVersionNotSupportedDialog =
   ({ minVersion }: { minVersion?: string }) =>
-  (dispatch: any) =>
+  (dispatch: AppDispatch) =>
     dispatch(
       ConfirmActions.show({
         titleKey: "app:appVersionNotSupported.title",
@@ -44,7 +45,7 @@ const checkAppVersionSupported =
     operation: AppCompatibilityOperation;
     silent?: boolean;
   }) =>
-  async (dispatch: any): Promise<boolean> => {
+  async (dispatch: AppDispatch): Promise<boolean> => {
     const minVersion =
       await AppCompatibilityService.fetchMinAppVersionIfNotSupported({
         operation,
@@ -64,7 +65,7 @@ const checkAppVersionSupported =
 // shows the "app version not supported" dialog (returning true) if the error is the one returned by the server in that case
 const handleAppVersionNotSupportedError =
   ({ error, silent = false }: { error: any; silent?: boolean }) =>
-  (dispatch: any): boolean => {
+  (dispatch: AppDispatch): boolean => {
     // unattended operations handle it as any other error
     if (
       silent ||

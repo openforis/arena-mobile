@@ -24,12 +24,13 @@ import { RemoteConnectionSelectors } from "./selectors";
 import { AsyncStorageUtils } from "service/asyncStorage/AsyncStorageUtils";
 import { asyncStorageKeys } from "service/asyncStorage/asyncStorageKeys";
 import { invalidCredentialsError, LoginResponse } from "service/authService";
+import type { AppDispatch, AppGetState } from "../store";
 
 const { USER_SET, USER_PROFILE_ICON_INFO_SET } = RemoteConnectionActionTypes;
 
 const confirmGoToConnectionToRemoteServer =
   ({ navigator }: any) =>
-  (dispatch: any) => {
+  (dispatch: AppDispatch) => {
     dispatch(
       ConfirmActions.show({
         confirmButtonTextKey: "settings:connectionToServer",
@@ -52,7 +53,7 @@ const onLoginResponseSuccessful = async ({
   email: string | undefined;
   serverUrl: string;
   showBack: boolean | undefined;
-  dispatch: any;
+  dispatch: AppDispatch;
   navigator: Navigator;
 }) => {
   const userEmail = user.email ?? email;
@@ -94,7 +95,7 @@ const onLoginResponse = async ({
   twoFactorToken,
   showBack,
 }: {
-  dispatch: any;
+  dispatch: AppDispatch;
   navigator: Navigator;
   res: LoginResponse;
   serverUrl: string;
@@ -180,7 +181,7 @@ const login =
     showBack?: boolean;
     twoFactorToken?: string;
   }) =>
-  async (dispatch: any) => {
+  async (dispatch: AppDispatch) => {
     const res = await AuthService.login({
       serverUrl,
       email,
@@ -211,7 +212,7 @@ const loginWithTempAuthToken =
     token: string;
     showBack?: boolean;
   }) =>
-  async (dispatch: any) => {
+  async (dispatch: AppDispatch) => {
     const res = await AuthService.loginWithTempAuthToken({ serverUrl, token });
     await onLoginResponse({
       res,
@@ -222,7 +223,10 @@ const loginWithTempAuthToken =
     });
   };
 
-const fetchLoggedInUserProfileIcon = async (dispatch: any, getState: any) => {
+const fetchLoggedInUserProfileIcon = async (
+  dispatch: AppDispatch,
+  getState: AppGetState,
+) => {
   log.debug("fetching user profile icon");
   const state = getState();
   const user = RemoteConnectionSelectors.selectLoggedUser(state);
@@ -240,7 +244,7 @@ const fetchLoggedInUserProfileIcon = async (dispatch: any, getState: any) => {
 
 const _clearUserCredentialsInternal =
   ({ keepEmailAddress }: any = {}) =>
-  async (dispatch: any) => {
+  async (dispatch: AppDispatch) => {
     const settings = await SettingsService.fetchSettings();
     const emailNext = keepEmailAddress ? settings.email : undefined;
     const settingsUpdated = {
@@ -255,7 +259,7 @@ const _clearUserCredentialsInternal =
     dispatch({ type: USER_SET, user: null });
   };
 
-const clearUserCredentials = () => async (dispatch: any) => {
+const clearUserCredentials = () => async (dispatch: AppDispatch) => {
   const confirmButtonTextKey = "settingsRemoteConnection:clearCredentials";
   const confirmMessageKey = confirmButtonTextKey + "ConfirmMessage";
   if (
@@ -271,7 +275,7 @@ const clearUserCredentials = () => async (dispatch: any) => {
 
 const _doLogout =
   ({ keepEmailAddress }: any) =>
-  async (dispatch: any) => {
+  async (dispatch: AppDispatch) => {
     await AuthService.logout();
     await AsyncStorageUtils.removeItem(asyncStorageKeys.loggedInUser);
     // Clear locally cached user groups too, so a different user logging in on the same
@@ -286,7 +290,7 @@ const _doLogout =
     dispatch(_clearUserCredentialsInternal({ keepEmailAddress }));
   };
 
-const logout = () => (dispatch: any) => {
+const logout = () => (dispatch: AppDispatch) => {
   dispatch(
     ConfirmActions.show({
       confirmButtonTextKey: "authService:logout",

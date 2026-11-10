@@ -19,6 +19,7 @@ import { ToastActions } from "../toast";
 import { POSITION_TRACKING_RESET, POSITION_TRACKING_UPDATE } from "./reducer";
 import { PositionTrackingSelectors } from "./selectors";
 import { PositionTrackingStatus } from "./types";
+import type { AppDispatch, AppGetState, RootState } from "../store";
 
 // the attribute value is updated periodically, not on every location
 const FLUSH_INTERVAL_MS = 60000;
@@ -30,7 +31,7 @@ let flushInProgress: Promise<boolean> | null = null;
 
 const update = (payload: any) => ({ type: POSITION_TRACKING_UPDATE, payload });
 
-const getTrackingSettings = (state: any): PositionTrackingSettings => {
+const getTrackingSettings = (state: RootState): PositionTrackingSettings => {
   const settings = SettingsSelectors.selectSettings(state);
   return {
     accuracyThreshold: settings.positionTrackingAccuracyThreshold ?? 20,
@@ -43,7 +44,7 @@ const getTrackingSettings = (state: any): PositionTrackingSettings => {
 
 const statsUpdate = () => update(PositionTrackingService.getStats());
 
-const listenToServiceUpdates = (dispatch: any) => {
+const listenToServiceUpdates = (dispatch: AppDispatch) => {
   unsubscribeFromService ??= PositionTrackingService.subscribe(() =>
     dispatch(statsUpdate()),
   );
@@ -54,7 +55,7 @@ const stopListeningToServiceUpdates = () => {
   unsubscribeFromService = null;
 };
 
-const setKeepScreenAwake = async (getState: any, tracking: boolean) => {
+const setKeepScreenAwake = async (getState: AppGetState, tracking: boolean) => {
   const { keepScreenAwake } = SettingsSelectors.selectSettings(getState());
   try {
     await SystemUtils.setKeepScreenAwake(tracking || keepScreenAwake);
@@ -73,14 +74,17 @@ const stopFlushTimer = () => {
 const toErrorKey = (error: unknown) =>
   error instanceof LocationSourceError ? error.key : genericErrorKey;
 
-const _discard = async (dispatch: any) => {
+const _discard = async (dispatch: AppDispatch) => {
   stopFlushTimer();
   stopListeningToServiceUpdates();
   await PositionTrackingService.discard();
   dispatch({ type: POSITION_TRACKING_RESET });
 };
 
-const _flush = async (dispatch: any, getState: any): Promise<boolean> => {
+const _flush = async (
+  dispatch: AppDispatch,
+  getState: AppGetState,
+): Promise<boolean> => {
   const track = PositionTrackingService.getTrack();
   if (!track) return true;
 
@@ -106,22 +110,23 @@ const _flush = async (dispatch: any, getState: any): Promise<boolean> => {
 };
 
 // writes the recorded track into the attribute value
-const flushTrack = () => async (dispatch: any, getState: any) => {
-  if (flushInProgress) {
-    await flushInProgress;
-  }
-  flushInProgress = _flush(dispatch, getState);
-  try {
-    return await flushInProgress;
-  } catch (error) {
-    log.error("PositionTracking: error updating the attribute value", error);
-    return false;
-  } finally {
-    flushInProgress = null;
-  }
-};
+const flushTrack =
+  () => async (dispatch: AppDispatch, getState: AppGetState) => {
+    if (flushInProgress) {
+      await flushInProgress;
+    }
+    flushInProgress = _flush(dispatch, getState);
+    try {
+      return await flushInProgress;
+    } catch (error) {
+      log.error("PositionTracking: error updating the attribute value", error);
+      return false;
+    } finally {
+      flushInProgress = null;
+    }
+  };
 
-const startFlushTimer = (dispatch: any) => {
+const startFlushTimer = (dispatch: AppDispatch) => {
   stopFlushTimer();
   flushInterval = setInterval(() => {
     void dispatch(flushTrack());
@@ -130,7 +135,7 @@ const startFlushTimer = (dispatch: any) => {
 
 const _startNew =
   ({ nodeUuid }: { nodeUuid: string }) =>
-  async (dispatch: any, getState: any) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const record = DataEntrySelectors.selectRecord(state);
@@ -170,39 +175,44 @@ const _startNew =
     await setKeepScreenAwake(getState, true);
   };
 
-const pauseTracking = () => async (dispatch: any, getState: any) => {
-  const { status } =
-    PositionTrackingSelectors.selectPositionTrackingState(getState());
-  if (status !== PositionTrackingStatus.tracking) return;
-  stopFlushTimer();
-  await PositionTrackingService.pause();
-  dispatch(statsUpdate());
-  dispatch(update({ status: PositionTrackingStatus.paused }));
-  await setKeepScreenAwake(getState, false);
-  await dispatch(flushTrack());
-};
+const pauseTracking =
+  () => async (dispatch: AppDispatch, getState: AppGetState) => {
+    const { status } =
+      PositionTrackingSelectors.selectPositionTrackingState(getState());
+    if (status !== PositionTrackingStatus.tracking) return;
+    stopFlushTimer();
+    await PositionTrackingService.pause();
+    dispatch(statsUpdate());
+    dispatch(update({ status: PositionTrackingStatus.paused }));
+    await setKeepScreenAwake(getState, false);
+    await dispatch(flushTrack());
+  };
 
-const resumeTracking = () => async (dispatch: any, getState: any) => {
-  const { status } =
-    PositionTrackingSelectors.selectPositionTrackingState(getState());
-  if (status !== PositionTrackingStatus.paused) return;
-  dispatch(update({ errorKey: null }));
-  try {
-    await PositionTrackingService.resume(getTrackingSettings(getState()));
-  } catch (error) {
-    log.warn("PositionTracking: cannot resume tracking", error);
-    dispatch(update({ errorKey: toErrorKey(error) }));
-    return;
-  }
-  listenToServiceUpdates(dispatch);
-  dispatch(update({ status: PositionTrackingStatus.tracking }));
-  startFlushTimer(dispatch);
-  await setKeepScreenAwake(getState, true);
-};
+const resumeTracking =
+  () => async (dispatch: AppDispatch, getState: AppGetState) => {
+    const { status } =
+      PositionTrackingSelectors.selectPositionTrackingState(getState());
+    if (status !== PositionTrackingStatus.paused) return;
+    dispatch(update({ errorKey: null }));
+    try {
+      await PositionTrackingService.resume(getTrackingSettings(getState()));
+    } catch (error) {
+      log.warn("PositionTracking: cannot resume tracking", error);
+      dispatch(update({ errorKey: toErrorKey(error) }));
+      return;
+    }
+    listenToServiceUpdates(dispatch);
+    dispatch(update({ status: PositionTrackingStatus.tracking }));
+    startFlushTimer(dispatch);
+    await setKeepScreenAwake(getState, true);
+  };
 
 // stops tracking, writing the track into the attribute; the stored track is removed only if
 // the attribute has been updated, otherwise it's kept to be recovered later
-const _stop = async (dispatch: any, getState: any): Promise<boolean> => {
+const _stop = async (
+  dispatch: AppDispatch,
+  getState: AppGetState,
+): Promise<boolean> => {
   stopFlushTimer();
   if (PositionTrackingService.isWatching()) {
     await PositionTrackingService.pause();
@@ -219,7 +229,7 @@ const _stop = async (dispatch: any, getState: any): Promise<boolean> => {
 
 const stopTracking =
   ({ confirm = true }: { confirm?: boolean } = {}) =>
-  async (dispatch: any, getState: any) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     if (!PositionTrackingService.getTrack()) {
       dispatch({ type: POSITION_TRACKING_RESET });
       return true;
@@ -245,7 +255,7 @@ const stopTracking =
 
 const startTracking =
   ({ nodeUuid }: { nodeUuid: string }) =>
-  async (dispatch: any, getState: any) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     if (!DataEntrySelectors.selectCanEditRecord(state)) return;
 
@@ -276,7 +286,7 @@ const startTracking =
 // deletes the track recorded in the attribute (after a strong confirmation) and starts a new one
 const restartTracking =
   ({ nodeUuid }: { nodeUuid: string }) =>
-  async (dispatch: any, getState: any) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     if (!DataEntrySelectors.selectCanEditRecord(getState())) return;
     if (
       !(await ConfirmUtils.confirm({
@@ -309,7 +319,7 @@ const restartTracking =
 // deletes the whole stopped track (after a strong confirmation), e.g. when it was recorded by mistake
 const deleteTrack =
   ({ nodeUuid }: { nodeUuid: string }) =>
-  async (dispatch: any, getState: any) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     if (!DataEntrySelectors.selectCanEditRecord(getState())) return;
     if (PositionTrackingService.getTrack()?.nodeUuid === nodeUuid) return;
     if (
@@ -329,37 +339,39 @@ const deleteTrack =
   };
 
 // starts tracking in a new record, when it has a trackable attribute in the root entity
-const autoStartTracking = () => async (dispatch: any, getState: any) => {
-  const state = getState();
-  const survey = SurveySelectors.selectCurrentSurvey(state);
-  const record = DataEntrySelectors.selectRecordUnsafe(state);
-  if (!survey || !record) return;
-  const node = PositionTracks.findAutoStartNode({ survey, record });
-  if (node) {
-    log.info(`PositionTracking: auto-start in new record ${record.uuid}`);
-    await dispatch(startTracking({ nodeUuid: node.uuid }));
-  }
-};
+const autoStartTracking =
+  () => async (dispatch: AppDispatch, getState: AppGetState) => {
+    const state = getState();
+    const survey = SurveySelectors.selectCurrentSurvey(state);
+    const record = DataEntrySelectors.selectRecordUnsafe(state);
+    if (!survey || !record) return;
+    const node = PositionTracks.findAutoStartNode({ survey, record });
+    if (node) {
+      log.info(`PositionTracking: auto-start in new record ${record.uuid}`);
+      await dispatch(startTracking({ nodeUuid: node.uuid }));
+    }
+  };
 
 // called before closing the record editor
-const closeTrack = () => async (dispatch: any, getState: any) => {
-  if (!PositionTrackingService.getTrack()) {
-    dispatch({ type: POSITION_TRACKING_RESET });
-    return;
-  }
-  if (!(await _stop(dispatch, getState))) {
-    // kept in the DB, it will be recovered when the record is opened again
-    stopFlushTimer();
-    stopListeningToServiceUpdates();
-    await PositionTrackingService.unload();
-    dispatch({ type: POSITION_TRACKING_RESET });
-    await setKeepScreenAwake(getState, false);
-  }
-};
+const closeTrack =
+  () => async (dispatch: AppDispatch, getState: AppGetState) => {
+    if (!PositionTrackingService.getTrack()) {
+      dispatch({ type: POSITION_TRACKING_RESET });
+      return;
+    }
+    if (!(await _stop(dispatch, getState))) {
+      // kept in the DB, it will be recovered when the record is opened again
+      stopFlushTimer();
+      stopListeningToServiceUpdates();
+      await PositionTrackingService.unload();
+      dispatch({ type: POSITION_TRACKING_RESET });
+      await setKeepScreenAwake(getState, false);
+    }
+  };
 
 // recovers a track not written into the record (e.g. the app was closed while tracking)
 const recoverTrackForOpenRecord =
-  () => async (dispatch: any, getState: any) => {
+  () => async (dispatch: AppDispatch, getState: AppGetState) => {
     const record = DataEntrySelectors.selectRecordUnsafe(getState());
     if (!record) return;
     const currentTrack = PositionTrackingService.getTrack();
@@ -396,7 +408,7 @@ const recoverTrackForOpenRecord =
   };
 
 const deleteTracksOfRecords =
-  (recordUuids: string[]) => async (dispatch: any) => {
+  (recordUuids: string[]) => async (dispatch: AppDispatch) => {
     const track = PositionTrackingService.getTrack();
     if (track && recordUuids.includes(track.recordUuid)) {
       await _discard(dispatch);

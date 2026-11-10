@@ -1,10 +1,12 @@
+import type { RootState } from "../store";
 import { serializeRecordUpdate } from "./recordUpdateQueue";
 
 jest.mock("./selectors", () => ({
   DataEntrySelectors: { selectRecord: (state: any) => state.record },
 }));
 
-const getState = () => ({ record: { uuid: "record-1" } });
+const getState = () =>
+  ({ record: { uuid: "record-1" } }) as unknown as RootState;
 
 const run = (update: () => Promise<any>) =>
   serializeRecordUpdate(update)(jest.fn(), getState);

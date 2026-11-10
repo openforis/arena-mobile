@@ -1,15 +1,13 @@
 import React, { useCallback } from "react";
-import { useSelector } from "react-redux";
 
 import { MessageDialog } from "../components";
 import { MessageActions } from "../state/message";
-import { useAppDispatch } from "state/storeHooks";
+import { useAppDispatch, useAppSelector } from "state/storeHooks";
 
 export const AppMessageDialog = () => {
   const dispatch = useAppDispatch();
-  const { content, contentParams, details, detailsParams, title } = useSelector(
-    (state: any) => state.message,
-  );
+  const { content, contentParams, details, detailsParams, title } =
+    useAppSelector((state) => state.message);
 
   const onDismiss = useCallback(() => {
     dispatch(MessageActions.dismissMessage());
@@ -21,7 +19,7 @@ export const AppMessageDialog = () => {
     <MessageDialog
       content={content}
       contentParams={contentParams}
-      details={details}
+      details={details ?? undefined}
       detailsParams={detailsParams}
       doneButtonLabel="common:close"
       onDismiss={onDismiss}

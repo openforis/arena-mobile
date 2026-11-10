@@ -1,4 +1,4 @@
-import { createSlice, Dispatch } from "@reduxjs/toolkit";
+import { createSlice, Dispatch, PayloadAction } from "@reduxjs/toolkit";
 
 import { createCallbackRegistry } from "../callbackRegistry";
 
@@ -11,13 +11,22 @@ type MessageCallbacks = {
 export const MessageCallbacksRegistry =
   createCallbackRegistry<MessageCallbacks>();
 
-const initialState = {};
+export type MessageState = {
+  content?: string;
+  contentParams?: Record<string, any> | null;
+  details?: string | null;
+  detailsParams?: Record<string, any> | null;
+  onDismissId?: number | null;
+  title?: string;
+};
+
+const initialState: MessageState = {};
 
 const messageSlice = createSlice({
   name: "message",
   initialState,
   reducers: {
-    setMessage: (_state, action) => action.payload,
+    setMessage: (_state, action: PayloadAction<MessageState>) => action.payload,
     dismissMessage: () => initialState,
   },
 });

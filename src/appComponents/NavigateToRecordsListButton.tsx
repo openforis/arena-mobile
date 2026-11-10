@@ -20,9 +20,9 @@ export const NavigateToRecordsListButton = () => {
     <Button
       avoidMultiplePress={false}
       icon="format-list-bulleted"
-      onPress={() =>
-        dispatch(DataEntryActions.navigateToRecordsList({ navigator }))
-      }
+      onPress={() => {
+        dispatch(DataEntryActions.navigateToRecordsList({ navigator }));
+      }}
       style={styleByTextDirection[textDirection]}
       textKey="dataEntry:listOfRecords"
     />

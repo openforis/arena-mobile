@@ -3,10 +3,11 @@ import { AutoSyncActions, isAuthError } from "state/autoSync";
 import { RemoteConnectionUtils } from "state/remoteConnection/remoteConnectionUtils";
 import type { Navigator } from "navigation/navigator";
 import { log } from "utils";
+import type { AppDispatch } from "state/store";
 
 type FetchRecordsWithSyncStatusParams = {
   cycle: any;
-  dispatch: any;
+  dispatch: AppDispatch;
   navigator: Navigator;
   onlyLocal: boolean;
   survey: any;

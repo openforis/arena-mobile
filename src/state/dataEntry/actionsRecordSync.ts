@@ -8,6 +8,7 @@ import { log } from "utils";
 import { SurveySelectors } from "../survey/selectors";
 import { DataEntryActionTypes } from "./actionTypes";
 import { DataEntrySelectors } from "./selectors";
+import type { AppDispatch, AppGetState } from "../store";
 
 const { PAGE_ENTITY_SET, RECORD_SET, RECORD_SYNC_IN_PROGRESS_SET } =
   DataEntryActionTypes;
@@ -61,12 +62,13 @@ const stopSyncLockWatchdog = () => {
   }
 };
 
-const unlockOpenRecordAfterSync = () => (dispatch: any, getState: any) => {
-  stopSyncLockWatchdog();
-  if (DataEntrySelectors.selectRecordSyncInProgress(getState())) {
-    dispatch({ type: RECORD_SYNC_IN_PROGRESS_SET, inProgress: false });
-  }
-};
+const unlockOpenRecordAfterSync =
+  () => (dispatch: AppDispatch, getState: AppGetState) => {
+    stopSyncLockWatchdog();
+    if (DataEntrySelectors.selectRecordSyncInProgress(getState())) {
+      dispatch({ type: RECORD_SYNC_IN_PROGRESS_SET, inProgress: false });
+    }
+  };
 
 /**
  * Makes the record open in the editor read-only while it's being merged with its server copy:
@@ -77,7 +79,7 @@ const unlockOpenRecordAfterSync = () => (dispatch: any, getState: any) => {
  */
 const lockOpenRecordForSync =
   ({ isBusy }: { isBusy?: () => boolean } = {}) =>
-  (dispatch: any, getState: any) => {
+  (dispatch: AppDispatch, getState: AppGetState) => {
     Keyboard.dismiss();
     dispatch({ type: RECORD_SYNC_IN_PROGRESS_SET, inProgress: true });
 
@@ -110,32 +112,33 @@ const isPageEntityPointerValid = ({ survey, record, pointer }: any) => {
  * been replaced (by the version merged on the server). The current page is kept if it still
  * exists in the record, otherwise the editor goes back to the root entity page.
  */
-const reloadOpenRecord = () => async (dispatch: any, getState: any) => {
-  const state = getState();
-  const survey = SurveySelectors.selectCurrentSurvey(state);
-  const recordOpen = DataEntrySelectors.selectRecord(state);
-  if (!survey || !recordOpen) return;
+const reloadOpenRecord =
+  () => async (dispatch: AppDispatch, getState: AppGetState) => {
+    const state = getState();
+    const survey = SurveySelectors.selectCurrentSurvey(state);
+    const recordOpen = DataEntrySelectors.selectRecord(state);
+    if (!survey || !recordOpen) return;
 
-  const record = await RecordService.fetchRecord({
-    survey,
-    recordId: recordOpen.id,
-  });
+    const record = await RecordService.fetchRecord({
+      survey,
+      recordId: recordOpen.id,
+    });
 
-  const stateNext = getState();
-  if (DataEntrySelectors.selectRecord(stateNext)?.uuid !== record.uuid) {
-    // the editor has been closed, or another record opened, in the meantime
-    return;
-  }
-  const pointer = stateNext.dataEntry.recordCurrentPageEntity;
-  if (
-    pointer?.parentEntityUuid &&
-    !isPageEntityPointerValid({ survey, record, pointer })
-  ) {
-    dispatch({ type: PAGE_ENTITY_SET, payload: undefined });
-  }
-  dispatch({ type: RECORD_SET, record });
-  log.debug(`record ${record.uuid} reloaded in the editor`);
-};
+    const stateNext = getState();
+    if (DataEntrySelectors.selectRecord(stateNext)?.uuid !== record.uuid) {
+      // the editor has been closed, or another record opened, in the meantime
+      return;
+    }
+    const pointer = stateNext.dataEntry.recordCurrentPageEntity;
+    if (
+      pointer?.parentEntityUuid &&
+      !isPageEntityPointerValid({ survey, record, pointer })
+    ) {
+      dispatch({ type: PAGE_ENTITY_SET, payload: undefined });
+    }
+    dispatch({ type: RECORD_SET, record });
+    log.debug(`record ${record.uuid} reloaded in the editor`);
+  };
 
 export const DataEntryActionsRecordSync = {
   isPostUploadProcessingInProgress,

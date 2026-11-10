@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
 
 import { NodeDef, Objects, Records } from "@openforis/arena-core";
 
 import { RecordUtils } from "model/utils/RecordUtils";
 import { DataEntrySelectors, SurveySelectors } from "state";
+import { useAppSelector } from "state/storeHooks";
 
 export const useCoordinateDistanceTarget = ({
   nodeDef,
@@ -15,7 +15,7 @@ export const useCoordinateDistanceTarget = ({
 }) => {
   const survey = SurveySelectors.useCurrentSurvey()!;
   const [distanceTarget, setDistanceTarget] = useState(null);
-  useSelector((state) => {
+  useAppSelector((state) => {
     const record = DataEntrySelectors.selectRecord(state);
     const node = Records.getNodeByUuid(nodeUuid)(record);
     void RecordUtils.getCoordinateDistanceTarget({

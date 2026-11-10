@@ -36,7 +36,7 @@ export const NodeValuePreview = (props: NodeValuePreviewProps) => {
   log.debug(`rendering NodeValuePreview for ${NodeDefs.getName(nodeDef)}`);
 
   const survey = SurveySelectors.useCurrentSurvey();
-  const cycle = SurveySelectors.useCurrentSurveyCycle();
+  const cycle = SurveySelectors.useCurrentSurveyCycle()!;
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
 
   if (!survey || Objects.isEmpty(value)) {

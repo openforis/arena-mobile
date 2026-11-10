@@ -6,6 +6,7 @@ import {
   UserFactory,
 } from "@openforis/arena-core";
 
+import type { RootState } from "../store";
 import { RemoteConnectionSelectors } from "./selectors";
 
 // survey selectors dependencies (native modules)
@@ -32,7 +33,7 @@ describe("selectLoggedUserSafe", () => {
 
     const user = RemoteConnectionSelectors.selectLoggedUserSafe({
       remoteConnection: { user: null },
-    });
+    } as unknown as RootState);
     const record = RecordFactory.createInstance({
       surveyUuid: survey.uuid,
       user,
@@ -62,10 +63,11 @@ const userWithGroup = (name: string, groupSurveyUuid = surveyUuid) => ({
   ],
 });
 
-const createState = (user: any) => ({
-  survey: { currentSurvey: survey },
-  remoteConnection: { user },
-});
+const createState = (user: any) =>
+  ({
+    survey: { currentSurvey: survey },
+    remoteConnection: { user },
+  }) as unknown as RootState;
 
 const { selectLoggedUserCanCreateRecords } = RemoteConnectionSelectors;
 

@@ -1,23 +1,18 @@
-import { useSelector } from "react-redux";
-
+import type { RootState } from "../store";
 import { SurveyOptionsState } from "./state";
+import { useAppSelector } from "../storeHooks";
 
-const getSurveyOptionsState = (state: any) =>
-  state[SurveyOptionsState.stateKey];
+const selectRecordEditViewMode = (state: RootState) =>
+  SurveyOptionsState.getRecordEditViewMode(state.surveyOptions);
 
-const selectRecordEditViewMode = (state: any) =>
-  SurveyOptionsState.getRecordEditViewMode(getSurveyOptionsState(state));
-
-const selectEntityListColumns = (entityDefUuid: string) => (state: any) =>
-  SurveyOptionsState.getEntityListColumns(entityDefUuid)(
-    getSurveyOptionsState(state),
-  );
+const selectEntityListColumns = (entityDefUuid: string) => (state: RootState) =>
+  SurveyOptionsState.getEntityListColumns(entityDefUuid)(state.surveyOptions);
 
 export const SurveyOptionsSelectors = {
   selectRecordEditViewMode,
   selectEntityListColumns,
 
-  useRecordEditViewMode: () => useSelector(selectRecordEditViewMode),
+  useRecordEditViewMode: () => useAppSelector(selectRecordEditViewMode),
   useEntityListColumns: (entityDefUuid: string) =>
-    useSelector(selectEntityListColumns(entityDefUuid)),
+    useAppSelector(selectEntityListColumns(entityDefUuid)),
 };

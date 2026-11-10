@@ -288,7 +288,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
   const { t } = useTranslation();
 
   const survey = SurveySelectors.useCurrentSurvey()!;
-  const cycle = SurveySelectors.useCurrentSurveyCycle();
+  const cycle = SurveySelectors.useCurrentSurveyCycle()!;
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const defaultCycleKey = Surveys.getDefaultCycleKey(survey);
   const isPrevCycle = Cycles.isPreviousCycle({

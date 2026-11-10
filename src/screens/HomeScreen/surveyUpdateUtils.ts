@@ -4,6 +4,7 @@ import { SurveyStatus, UpdateStatus } from "model";
 import type { Navigator } from "navigation/navigator";
 import { SurveyService } from "service";
 import { SurveyActions } from "state";
+import type { AppDispatch } from "state/store";
 
 type DetermineSurveyUpdateStatusParams = {
   networkAvailable: boolean;
@@ -19,7 +20,7 @@ export type DetermineSurveyUpdateStatusResult = {
 
 type TriggerSurveyUpdateParams = {
   confirmMessageKey?: string;
-  dispatch: any;
+  dispatch: AppDispatch;
   navigator?: Navigator | null;
   onCancel?: (() => void) | null;
   onComplete?: (() => void) | null;

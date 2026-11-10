@@ -1,5 +1,3 @@
-import { useSelector } from "react-redux";
-
 import {
   ArenaRecord,
   ArenaRecordNode,
@@ -23,29 +21,32 @@ import { PreviewMode } from "utils/PreviewMode";
 import { SurveySelectors } from "../survey/selectors";
 import { ArenaMobileRecord } from "model/ArenaMobileRecord";
 import { DataEntryState, PreviousCycleRecordPageEntityPointer } from "./types";
+import type { RootState } from "../store";
+import { useAppSelector } from "../storeHooks";
 
 type ParentNodeUuidNodeDefParams = {
   parentNodeUuid: string | undefined;
   nodeDef: NodeDef<any>;
 };
 
-const getDataEntryState = (state: any): DataEntryState => state.dataEntry;
+const getDataEntryState = (state: RootState): DataEntryState => state.dataEntry;
 
-const selectRecordUnsafe = (state: any): ArenaRecord | undefined =>
+const selectRecordUnsafe = (state: RootState): ArenaRecord | undefined =>
   getDataEntryState(state).record;
 
-const selectRecord = (state: any): ArenaRecord => selectRecordUnsafe(state)!;
+const selectRecord = (state: RootState): ArenaRecord =>
+  selectRecordUnsafe(state)!;
 
-const selectIsEditingRecord = (state: any): boolean =>
+const selectIsEditingRecord = (state: RootState): boolean =>
   !!selectRecordUnsafe(state);
 
-const selectRecordEditLocked = (state: any): boolean =>
+const selectRecordEditLocked = (state: RootState): boolean =>
   !!getDataEntryState(state).recordEditLocked;
 
-const selectRecordSyncInProgress = (state: any): boolean =>
+const selectRecordSyncInProgress = (state: RootState): boolean =>
   !!getDataEntryState(state).recordSyncInProgress;
 
-const selectIsRecordInDefaultCycle = (state: any): boolean => {
+const selectIsRecordInDefaultCycle = (state: RootState): boolean => {
   const survey = SurveySelectors.selectCurrentSurvey(state);
   const defaultCycle = survey ? Surveys.getDefaultCycleKey(survey) : null;
   const record = selectRecordUnsafe(state);
@@ -53,16 +54,16 @@ const selectIsRecordInDefaultCycle = (state: any): boolean => {
 };
 
 // record of another user group (see ArenaMobileRecord.readOnly): it cannot be unlocked
-const selectIsRecordReadOnly = (state: any): boolean =>
+const selectIsRecordReadOnly = (state: RootState): boolean =>
   !!(selectRecordUnsafe(state) as ArenaMobileRecord | undefined)?.readOnly;
 
-const selectRecordEditLockAvailable = (state: any) =>
+const selectRecordEditLockAvailable = (state: RootState) =>
   !!getDataEntryState(state).recordEditLockAvailable &&
   selectIsEditingRecord(state) &&
   selectIsRecordInDefaultCycle(state) &&
   !selectIsRecordReadOnly(state);
 
-const selectCanEditRecord = (state: any) => {
+const selectCanEditRecord = (state: RootState) => {
   const editLocked = selectRecordEditLocked(state);
   // the web preview record is in the cycle selected in the Arena designer, also when not the default one
   const recordInEditableCycle =
@@ -75,7 +76,7 @@ const selectCanEditRecord = (state: any) => {
   );
 };
 
-const selectRecordCycle = (state: any): string => {
+const selectRecordCycle = (state: RootState): string => {
   const record = selectRecordUnsafe(state);
   return record ? Records.getCycle(record) : "0";
 };
@@ -88,7 +89,7 @@ const selectRecordSingleNodeUuid =
     parentNodeUuid: string | undefined;
     nodeDefUuid: string;
   }) =>
-  (state: any): string | undefined => {
+  (state: RootState): string | undefined => {
     const record = selectRecordUnsafe(state);
     if (!parentNodeUuid || !record) {
       return undefined;
@@ -106,7 +107,7 @@ const selectRecordEntitiesUuidsAndKeyValues =
     parentNodeUuid: string | undefined;
     nodeDefUuid: string;
   }) =>
-  (state: any): { uuid: string; keyValues: any }[] => {
+  (state: RootState): { uuid: string; keyValues: any }[] => {
     if (!parentNodeUuid) {
       return [];
     }
@@ -124,7 +125,7 @@ const selectRecordEntitiesUuidsAndKeyValues =
   };
 
 const selectRecordNodePointerValidation =
-  (state: any) =>
+  (state: RootState) =>
   ({
     parentNodeUuid,
     nodeDefUuid,
@@ -158,7 +159,7 @@ const selectRecordNodePointerValidationChildrenCount =
     parentNodeUuid: string | undefined;
     nodeDefUuid: string;
   }) =>
-  (state: any): Validation | undefined => {
+  (state: RootState): Validation | undefined => {
     if (!parentNodeUuid) {
       return undefined;
     }
@@ -182,7 +183,7 @@ const selectRecordNodePointerEditable =
     parentNodeUuid: string | undefined;
     nodeDefUuid: string;
   }) =>
-  (state: any): boolean => {
+  (state: RootState): boolean => {
     if (!parentNodeUuid) {
       return true;
     }
@@ -209,7 +210,7 @@ const selectRecordNodePointerVisibility =
     parentNodeUuid: string | undefined;
     nodeDefUuid: string;
   }) =>
-  (state: any): boolean => {
+  (state: RootState): boolean => {
     if (!parentNodeUuid) {
       return false;
     }
@@ -235,7 +236,7 @@ const selectRecordNodePointerVisibility =
 const selectRecordAttributeInfo =
   ({ nodeUuid }: { nodeUuid: string }) =>
   (
-    state: any,
+    state: RootState,
   ): { applicable: boolean; value: any; validation: Validation | null } => {
     const record = selectRecordUnsafe(state);
     const defaultAttributeState = {
@@ -260,7 +261,7 @@ const selectRecordAttributeInfo =
 
 const selectRecordChildNodes =
   ({ parentNodeUuid, nodeDef }: ParentNodeUuidNodeDefParams) =>
-  (state: any): { nodes: ArenaRecordNode[] } => {
+  (state: RootState): { nodes: ArenaRecordNode[] } => {
     const record = selectRecordUnsafe(state);
     if (!parentNodeUuid || !record) {
       return { nodes: [] };
@@ -272,7 +273,7 @@ const selectRecordChildNodes =
 
 const selectIsRecordAttributeFilled =
   ({ parentNodeUuid, nodeDef }: ParentNodeUuidNodeDefParams) =>
-  (state: any): boolean => {
+  (state: RootState): boolean => {
     const { nodes } = selectRecordChildNodes({ parentNodeUuid, nodeDef })(
       state,
     );
@@ -283,7 +284,7 @@ const selectIsRecordAttributeFilled =
 
 const selectChildDefs =
   ({ nodeDef }: { nodeDef: NodeDefEntity }) =>
-  (state: any): NodeDef<any>[] => {
+  (state: RootState): NodeDef<any>[] => {
     const cycle = selectRecordCycle(state);
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const childDefs = SurveyDefs.getChildrenDefs({
@@ -306,7 +307,7 @@ const selectRecordCodeParentItemUuid =
     nodeDef: NodeDefCode;
     parentNodeUuid: string | undefined;
   }) =>
-  (state: any): string | undefined => {
+  (state: RootState): string | undefined => {
     const parentCodeDefUuid = NodeDefs.getParentCodeDefUuid(nodeDef);
     if (!parentNodeUuid || !parentCodeDefUuid) {
       return undefined;
@@ -325,19 +326,19 @@ const selectRecordCodeParentItemUuid =
       : undefined;
   };
 
-const selectRecordIsNotValid = (state: any): boolean => {
+const selectRecordIsNotValid = (state: RootState): boolean => {
   const record = selectRecordUnsafe(state);
   const validation = record ? Validations.getValidation(record) : null;
   return !!validation && Validations.isNotValid(validation);
 };
 
-const selectRecordHasErrors = (state: any): boolean => {
+const selectRecordHasErrors = (state: RootState): boolean => {
   const record = selectRecordUnsafe(state);
   const validation = record ? Validations.getValidation(record) : null;
   return !!validation && Validations.getErrorsCount(validation) > 0;
 };
 
-const selectCurrentPageEntity = (state: any): RecordCurrentPageEntity => {
+const selectCurrentPageEntity = (state: RootState): RecordCurrentPageEntity => {
   const survey = SurveySelectors.selectCurrentSurvey(state)!;
   const record = selectRecordUnsafe(state);
   if (!record) {
@@ -381,7 +382,7 @@ const selectCurrentPageEntity = (state: any): RecordCurrentPageEntity => {
   };
 };
 
-const selectCurrentPageEntityRelevantChildDefs = (state: any) => {
+const selectCurrentPageEntityRelevantChildDefs = (state: RootState) => {
   const { parentEntityUuid, entityDef, entityUuid } =
     selectCurrentPageEntity(state);
   const childDefs = selectChildDefs({ nodeDef: entityDef })(state);
@@ -399,33 +400,35 @@ const selectCurrentPageEntityRelevantChildDefs = (state: any) => {
   );
 };
 
-const selectCurrentPageEntityActiveChildDefIndex = (state: any): number =>
+const selectCurrentPageEntityActiveChildDefIndex = (state: RootState): number =>
   getDataEntryState(state).activeChildDefIndex ?? 0;
 
 // record page
-const selectRecordPageSelectorMenuOpen = (state: any): boolean =>
+const selectRecordPageSelectorMenuOpen = (state: RootState): boolean =>
   getDataEntryState(state).recordPageSelectorMenuOpen;
 
 // record previous cycle
-const selectCanRecordBeLinkedToPreviousCycleRecord = (state: any): boolean => {
+const selectCanRecordBeLinkedToPreviousCycleRecord = (
+  state: RootState,
+): boolean => {
   const record = selectRecordUnsafe(state);
   return (record?.cycle ?? "0") > "0";
 };
 
-const selectPreviousCycleRecord = (state: any): ArenaRecord | undefined =>
+const selectPreviousCycleRecord = (state: RootState): ArenaRecord | undefined =>
   getDataEntryState(state).previousCycleRecord;
 
-const selectPreviousCycleKey = (state: any): string | undefined =>
+const selectPreviousCycleKey = (state: RootState): string | undefined =>
   selectPreviousCycleRecord(state)?.cycle;
 
-const selectPreviousCycleRecordLoading = (state: any): boolean =>
+const selectPreviousCycleRecordLoading = (state: RootState): boolean =>
   getDataEntryState(state).previousCycleRecordLoading;
 
-const selectIsLinkedToPreviousCycleRecord = (state: any): boolean =>
+const selectIsLinkedToPreviousCycleRecord = (state: RootState): boolean =>
   getDataEntryState(state).linkToPreviousCycleRecord;
 
 const selectPreviousCycleRecordPageEntity = (
-  state: any,
+  state: RootState,
 ): PreviousCycleRecordPageEntityPointer => {
   const { entityDef } = selectCurrentPageEntity(state);
   if (NodeDefs.isRoot(entityDef)) {
@@ -453,7 +456,7 @@ const extractAttibuteValue = ({ state, attribute }: any) => {
 
 const selectPreviousCycleRecordAttributeValues =
   ({ nodeDef, parentNodeUuid }: any) =>
-  (state: any): { uuid: string; value: any }[] | null => {
+  (state: RootState): { uuid: string; value: any }[] | null => {
     if (!parentNodeUuid) {
       return null;
     }
@@ -471,7 +474,7 @@ const selectPreviousCycleRecordAttributeValues =
 
 const selectPreviousCycleEntityWithSameKeys =
   ({ entityUuid }: any) =>
-  (state: any): any => {
+  (state: RootState): any => {
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const record = selectRecordUnsafe(state);
     const previousCycleRecord = selectPreviousCycleRecord(state);
@@ -487,7 +490,7 @@ const selectPreviousCycleEntityWithSameKeys =
   };
 
 const useIsNodeDefCurrentActiveChild = (nodeDef: NodeDef<any>): boolean =>
-  useSelector((state) => {
+  useAppSelector((state) => {
     const activeChildDefIndex =
       selectCurrentPageEntityActiveChildDefIndex(state);
     const childDefs = selectCurrentPageEntityRelevantChildDefs(state);
@@ -497,7 +500,7 @@ const useIsNodeDefCurrentActiveChild = (nodeDef: NodeDef<any>): boolean =>
 
 const selectIsMaxCountReached =
   ({ parentNodeUuid, nodeDef }: ParentNodeUuidNodeDefParams) =>
-  (state: any): boolean => {
+  (state: RootState): boolean => {
     const record = selectRecordUnsafe(state);
     if (!record) {
       return false;
@@ -521,7 +524,7 @@ const useIsNodeMaxCountReached = ({
   parentNodeUuid,
   nodeDef,
 }: ParentNodeUuidNodeDefParams): boolean =>
-  useSelector(selectIsMaxCountReached({ parentNodeUuid, nodeDef }));
+  useAppSelector(selectIsMaxCountReached({ parentNodeUuid, nodeDef }));
 
 export const DataEntrySelectors = {
   selectRecord,
@@ -534,28 +537,29 @@ export const DataEntrySelectors = {
   selectRecordSyncInProgress,
   selectRecordNodePointerEditable,
 
-  useRecord: () => useSelector(selectRecord),
+  useRecord: () => useAppSelector(selectRecord),
 
-  useRecordEditLockAvailable: () => useSelector(selectRecordEditLockAvailable),
+  useRecordEditLockAvailable: () =>
+    useAppSelector(selectRecordEditLockAvailable),
 
-  useRecordEditLocked: () => useSelector(selectRecordEditLocked),
+  useRecordEditLocked: () => useAppSelector(selectRecordEditLocked),
 
-  useCanEditRecord: () => useSelector(selectCanEditRecord),
-  useIsRecordReadOnly: () => useSelector(selectIsRecordReadOnly),
-  useRecordSyncInProgress: () => useSelector(selectRecordSyncInProgress),
+  useCanEditRecord: () => useAppSelector(selectCanEditRecord),
+  useIsRecordReadOnly: () => useAppSelector(selectIsRecordReadOnly),
+  useRecordSyncInProgress: () => useAppSelector(selectRecordSyncInProgress),
 
-  useIsEditingRecord: () => useSelector(selectIsEditingRecord),
+  useIsEditingRecord: () => useAppSelector(selectIsEditingRecord),
 
-  useRecordCycle: () => useSelector(selectRecordCycle),
+  useRecordCycle: () => useAppSelector(selectRecordCycle),
 
   useRecordSingleNodeUuid: ({ parentNodeUuid, nodeDefUuid }: any) =>
-    useSelector(selectRecordSingleNodeUuid({ parentNodeUuid, nodeDefUuid })),
+    useAppSelector(selectRecordSingleNodeUuid({ parentNodeUuid, nodeDefUuid })),
 
   useRecordEntityChildDefs: ({ nodeDef }: any) =>
-    useSelector(selectChildDefs({ nodeDef }), Objects.isEqual),
+    useAppSelector(selectChildDefs({ nodeDef }), Objects.isEqual),
 
   useRecordNodePointerValidation: ({ parentNodeUuid, nodeDefUuid }: any) =>
-    useSelector(
+    useAppSelector(
       (state) =>
         selectRecordNodePointerValidation(state)({
           parentNodeUuid,
@@ -568,7 +572,7 @@ export const DataEntrySelectors = {
     parentNodeUuid,
     nodeDefUuid,
   }: any) =>
-    useSelector(
+    useAppSelector(
       selectRecordNodePointerValidationChildrenCount({
         parentNodeUuid,
         nodeDefUuid,
@@ -583,7 +587,7 @@ export const DataEntrySelectors = {
     parentNodeUuid: string | undefined;
     nodeDefUuid: string;
   }) =>
-    useSelector(
+    useAppSelector(
       selectRecordNodePointerVisibility({ parentNodeUuid, nodeDefUuid }),
     ),
 
@@ -594,15 +598,15 @@ export const DataEntrySelectors = {
     parentNodeUuid: string | undefined;
     nodeDefUuid: string;
   }) =>
-    useSelector(
+    useAppSelector(
       selectRecordNodePointerEditable({ parentNodeUuid, nodeDefUuid }),
     ),
 
   useRecordAttributeInfo: ({ nodeUuid }: any) =>
-    useSelector(selectRecordAttributeInfo({ nodeUuid }), Objects.isEqual),
+    useAppSelector(selectRecordAttributeInfo({ nodeUuid }), Objects.isEqual),
 
   useRecordChildNodes: ({ parentEntityUuid, nodeDef }: any) =>
-    useSelector(
+    useAppSelector(
       selectRecordChildNodes({ parentNodeUuid: parentEntityUuid, nodeDef }),
       Objects.isEqual,
     ),
@@ -611,7 +615,7 @@ export const DataEntrySelectors = {
     parentNodeUuid,
     nodeDef,
   }: ParentNodeUuidNodeDefParams) =>
-    useSelector(selectIsRecordAttributeFilled({ parentNodeUuid, nodeDef })),
+    useAppSelector(selectIsRecordAttributeFilled({ parentNodeUuid, nodeDef })),
 
   useRecordEntitiesUuidsAndKeyValues: ({
     parentNodeUuid,
@@ -620,7 +624,7 @@ export const DataEntrySelectors = {
     parentNodeUuid: string | undefined;
     nodeDefUuid: string;
   }) =>
-    useSelector(
+    useAppSelector(
       selectRecordEntitiesUuidsAndKeyValues({ parentNodeUuid, nodeDefUuid }),
       Objects.isEqual,
     ),
@@ -632,19 +636,19 @@ export const DataEntrySelectors = {
     parentNodeUuid: string | undefined;
     nodeDef: NodeDefCode;
   }) =>
-    useSelector(selectRecordCodeParentItemUuid({ parentNodeUuid, nodeDef })),
+    useAppSelector(selectRecordCodeParentItemUuid({ parentNodeUuid, nodeDef })),
 
-  useRecordIsNotValid: () => useSelector(selectRecordIsNotValid),
-  useRecordHasErrors: () => useSelector(selectRecordHasErrors),
+  useRecordIsNotValid: () => useAppSelector(selectRecordIsNotValid),
+  useRecordHasErrors: () => useAppSelector(selectRecordHasErrors),
 
   useCurrentPageEntity: () =>
-    useSelector(selectCurrentPageEntity, Objects.isEqual),
+    useAppSelector(selectCurrentPageEntity, Objects.isEqual),
 
   useCurrentPageEntityRelevantChildDefs: () =>
-    useSelector(selectCurrentPageEntityRelevantChildDefs, Objects.isEqual),
+    useAppSelector(selectCurrentPageEntityRelevantChildDefs, Objects.isEqual),
 
   useCurrentPageEntityActiveChildIndex: () =>
-    useSelector(selectCurrentPageEntityActiveChildDefIndex),
+    useAppSelector(selectCurrentPageEntityActiveChildDefIndex),
 
   useIsNodeDefCurrentActiveChild,
 
@@ -654,23 +658,23 @@ export const DataEntrySelectors = {
   // page selector
   selectRecordPageSelectorMenuOpen,
   useIsRecordPageSelectorMenuOpen: () =>
-    useSelector(selectRecordPageSelectorMenuOpen),
+    useAppSelector(selectRecordPageSelectorMenuOpen),
 
   // record previous cycle
   usePreviousCycleRecordLoading: () =>
-    useSelector(selectPreviousCycleRecordLoading),
+    useAppSelector(selectPreviousCycleRecordLoading),
 
-  usePreviousCycleKey: () => useSelector(selectPreviousCycleKey),
+  usePreviousCycleKey: () => useAppSelector(selectPreviousCycleKey),
 
   usePreviousCycleRecordPageEntity: (): PreviousCycleRecordPageEntityPointer =>
-    useSelector(selectPreviousCycleRecordPageEntity, Objects.isEqual),
+    useAppSelector(selectPreviousCycleRecordPageEntity, Objects.isEqual),
 
   useCanRecordBeLinkedToPreviousCycle: () =>
-    useSelector(selectCanRecordBeLinkedToPreviousCycleRecord),
+    useAppSelector(selectCanRecordBeLinkedToPreviousCycleRecord),
 
   selectIsLinkedToPreviousCycleRecord,
   useIsLinkedToPreviousCycleRecord: () =>
-    useSelector(selectIsLinkedToPreviousCycleRecord),
+    useAppSelector(selectIsLinkedToPreviousCycleRecord),
 
   selectPreviousCycleRecord,
   selectPreviousCycleEntityWithSameKeys,
@@ -679,7 +683,7 @@ export const DataEntrySelectors = {
     nodeDef,
     parentNodeUuid,
   }: any): { uuid: string; value: any }[] | null =>
-    useSelector(
+    useAppSelector(
       selectPreviousCycleRecordAttributeValues({ nodeDef, parentNodeUuid }),
       Objects.isEqual,
     ),

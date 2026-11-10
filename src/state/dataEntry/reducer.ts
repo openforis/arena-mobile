@@ -1,6 +1,6 @@
 import { SurveyActionTypes } from "state/survey";
 
-import { StoreUtils } from "../storeUtils";
+import { ActionHandlers, StoreUtils } from "../storeUtils";
 
 import { DataEntryActionTypes } from "./actionTypes";
 import { DataEntryState } from "./types";
@@ -18,17 +18,11 @@ const initialState: DataEntryState = {
   previousCycleRecordPageEntity: {},
 };
 
-const actionHandlers = {
+const actionHandlers: ActionHandlers<DataEntryState> = {
   [SurveyActionTypes.CURRENT_SURVEY_SET]: () => ({ ...initialState }),
   [DataEntryActionTypes.DATA_ENTRY_RESET]: () => ({ ...initialState }),
 
-  [DataEntryActionTypes.RECORD_SET]: ({
-    state,
-    action,
-  }: {
-    state: DataEntryState;
-    action: any;
-  }) => ({
+  [DataEntryActionTypes.RECORD_SET]: ({ state, action }) => ({
     ...state,
     record: action.record,
     recordEditLockAvailable:
@@ -37,65 +31,31 @@ const actionHandlers = {
     recordPageSelectorMenuOpen:
       action.recordPageSelectorMenuOpen ?? state.recordPageSelectorMenuOpen,
   }),
-  [DataEntryActionTypes.RECORD_EDIT_LOCKED]: ({
-    state,
-    action,
-  }: {
-    state: DataEntryState;
-    action: any;
-  }) => ({
+  [DataEntryActionTypes.RECORD_EDIT_LOCKED]: ({ state, action }) => ({
     ...state,
     recordEditLocked: action.locked,
   }),
-  [DataEntryActionTypes.RECORD_SYNC_IN_PROGRESS_SET]: ({
-    state,
-    action,
-  }: {
-    state: DataEntryState;
-    action: any;
-  }) => ({
+  [DataEntryActionTypes.RECORD_SYNC_IN_PROGRESS_SET]: ({ state, action }) => ({
     ...state,
     recordSyncInProgress: action.inProgress,
   }),
-  [DataEntryActionTypes.RECORD_PREVIOUS_CYCLE_LOAD]: ({
-    state,
-    action,
-  }: {
-    state: DataEntryState;
-    action: any;
-  }) => ({
+  [DataEntryActionTypes.RECORD_PREVIOUS_CYCLE_LOAD]: ({ state, action }) => ({
     ...state,
     previousCycleRecordLoading: action.loading,
   }),
-  [DataEntryActionTypes.RECORD_PREVIOUS_CYCLE_SET]: ({
-    state,
-    action,
-  }: {
-    state: DataEntryState;
-    action: any;
-  }) => ({
+  [DataEntryActionTypes.RECORD_PREVIOUS_CYCLE_SET]: ({ state, action }) => ({
     ...state,
     linkToPreviousCycleRecord: true,
     previousCycleRecord: action.record,
     previousCycleRecordPageEntity: {},
   }),
-  [DataEntryActionTypes.RECORD_PREVIOUS_CYCLE_RESET]: ({
-    state,
-  }: {
-    state: DataEntryState;
-  }) => ({
+  [DataEntryActionTypes.RECORD_PREVIOUS_CYCLE_RESET]: ({ state }) => ({
     ...state,
     linkToPreviousCycleRecord: false,
     previousCycleRecord: undefined,
     previousCycleRecordPageEntity: {},
   }),
-  [DataEntryActionTypes.PAGE_ENTITY_SET]: ({
-    state,
-    action,
-  }: {
-    state: DataEntryState;
-    action: any;
-  }) => ({
+  [DataEntryActionTypes.PAGE_ENTITY_SET]: ({ state, action }) => ({
     ...state,
     recordCurrentPageEntity: action.payload,
     activeChildDefIndex: 0,
@@ -103,26 +63,14 @@ const actionHandlers = {
   [DataEntryActionTypes.PAGE_ENTITY_ACTIVE_CHILD_INDEX_SET]: ({
     state,
     action,
-  }: {
-    state: DataEntryState;
-    action: any;
   }) => ({ ...state, activeChildDefIndex: action.index }),
-  [DataEntryActionTypes.PAGE_SELECTOR_MENU_OPEN_SET]: ({
-    state,
-    action,
-  }: {
-    state: DataEntryState;
-    action: any;
-  }) => ({
+  [DataEntryActionTypes.PAGE_SELECTOR_MENU_OPEN_SET]: ({ state, action }) => ({
     ...state,
     recordPageSelectorMenuOpen: action.open,
   }),
   [DataEntryActionTypes.PREVIOUS_CYCLE_PAGE_ENTITY_SET]: ({
     state,
     action,
-  }: {
-    state: DataEntryState;
-    action: any;
   }) => ({
     ...state,
     previousCycleRecordPageEntity: action.payload,
