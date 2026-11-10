@@ -31,7 +31,7 @@ import {
   AppCompatibilityActions,
   RemoteConnectionSelectors,
 } from "state/remoteConnection";
-import type { AppDispatch, RootState } from "state/store";
+import type { AppDispatch, AppGetState, RootState } from "state/store";
 import { Files, Jobs, log } from "utils";
 
 import { fetchRecordsFromServer } from "./actionsRecordsImport";
@@ -213,7 +213,7 @@ const startUploadDataToRemoteServer =
     // progress bar the zip-generation phase already started, instead of resetting it back to 0%
     chained = false,
   }: any) =>
-  async (dispatch: AppDispatch, getState: () => RootState) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
@@ -335,7 +335,7 @@ const selectedOptionsToDataExportOptions = ({
 };
 
 export const startCsvDataExportJob =
-  () => (dispatch: AppDispatch, getState: () => RootState) => {
+  () => (dispatch: AppDispatch, getState: AppGetState) => {
     try {
       const state = getState();
 
@@ -689,7 +689,7 @@ const fetchMergedSameRecordsSilently = async ({
 
 export const fetchRecordsChangedRemotely =
   ({ cycle, recordUuids }: any) =>
-  async (dispatch: AppDispatch, getState: () => RootState) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
@@ -714,7 +714,7 @@ export const exportRecords =
     onEnd = null,
     silent = false,
   }: any) =>
-  async (dispatch: AppDispatch, getState: () => RootState) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);

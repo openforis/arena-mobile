@@ -29,7 +29,7 @@ import { DataEntryActionTypes } from "./actionTypes";
 import { fetchRecordsFromServer } from "./actionsRecordsImport";
 import { DataEntrySelectors } from "./selectors";
 import { AreaOfInterestProviderDefault } from "service/areaOfInterestProvider";
-import type { AppDispatch, RootState } from "../store";
+import type { AppDispatch, AppGetState } from "../store";
 
 const {
   PREVIOUS_CYCLE_PAGE_ENTITY_SET,
@@ -266,7 +266,7 @@ const _askPreviousCycleKey = async ({ dispatch, getState }: any) => {
 };
 
 const linkToRecordInPreviousCycle =
-  () => async (dispatch: AppDispatch, getState: () => RootState) => {
+  () => async (dispatch: AppDispatch, getState: AppGetState) => {
     try {
       const state = getState();
       const selectedCycleKey = await _askPreviousCycleKey({
@@ -325,7 +325,7 @@ const unlinkFromRecordInPreviousCycle = () => (dispatch: AppDispatch) => {
 
 const updatePreviousCyclePageEntity = (
   dispatch: AppDispatch,
-  getState: () => RootState,
+  getState: AppGetState,
 ) => {
   const state = getState();
   const { parentEntityUuid, entityUuid } =

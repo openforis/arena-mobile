@@ -6,7 +6,7 @@ import { BatteryState } from "model";
 import { Files, SystemUtils } from "utils";
 
 import { DeviceInfoSelectors } from "./selectors";
-import type { AppDispatch, RootState } from "../store";
+import type { AppDispatch, AppGetState } from "../store";
 
 const DEVICE_INFO_SET = "DEVICE_INFO_SET";
 const DEVICE_INFO_UPDATE = "DEVICE_INFO_UPDATE";
@@ -107,7 +107,7 @@ const determineBatteryStateUpdateActionPayload = ({
 };
 
 const updatePowerState =
-  () => async (dispatch: AppDispatch, getState: () => RootState) => {
+  () => async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const {
       batteryLevel: batteryLevelPrev,
@@ -137,7 +137,7 @@ const updatePowerState =
   };
 
 const updateFreeDiskStorage =
-  () => async (dispatch: AppDispatch, getState: () => RootState) => {
+  () => async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const { freeDiskStorage: freeDiskStoragePrev } =
       DeviceInfoSelectors.selectDeviceInfo(state);

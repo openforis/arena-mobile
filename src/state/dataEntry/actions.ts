@@ -58,7 +58,7 @@ import { DataEntrySelectors } from "./selectors";
 import { serializeRecordUpdate } from "./recordUpdateQueue";
 import { selectRecordUpdaterParams } from "./recordUpdaterParams";
 import { ToastActions } from "state/toast";
-import type { AppDispatch, RootState } from "../store";
+import type { AppDispatch, AppGetState } from "../store";
 
 const {
   DATA_ENTRY_RESET,
@@ -98,7 +98,7 @@ const removeNodesFlags = (nodes: NodesMap) => {
 // its way (e.g. a debounced text update) from overwriting the merged version
 const _isRecordSyncInProgress = (
   dispatch: AppDispatch,
-  getState: () => RootState,
+  getState: AppGetState,
 ): boolean => {
   if (!DataEntrySelectors.selectRecordSyncInProgress(getState())) return false;
   dispatch(ToastActions.show("dataEntry:autoSync.recordSyncInProgress"));
@@ -127,7 +127,7 @@ const prepareRecordForStorage = ({ record }: any) => {
 
 const createNewRecord =
   ({ navigator }: any) =>
-  async (dispatch: AppDispatch, getState: () => RootState) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     try {
       let state = getState();
       const survey = SurveySelectors.selectCurrentSurvey(state)!;
@@ -311,7 +311,7 @@ const deleteNodes = (nodeUuids: any) =>
 
 const deleteRecords =
   (recordUuids: any) =>
-  async (dispatch: AppDispatch, getState: () => RootState) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
 
@@ -339,7 +339,7 @@ const checkEntityPageIsValidAndNotRoot = ({
 
 const editRecord =
   ({ navigator, record, locked = true }: any) =>
-  async (dispatch: AppDispatch, getState: () => RootState) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const surveyId = SurveySelectors.selectCurrentSurveyId(state);
@@ -393,7 +393,7 @@ const _fetchAndEditRecordInternal = async ({
 
 const fetchAndEditRecord =
   ({ navigator, recordSummary }: any) =>
-  async (dispatch: AppDispatch, getState: () => RootState) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const {
@@ -752,7 +752,7 @@ const updateAttribute = ({
 
 const performCoordinateValueSrsConversion =
   ({ nodeUuid, srsTo }: any) =>
-  (dispatch: AppDispatch, getState: () => RootState) => {
+  (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const record = DataEntrySelectors.selectRecord(state);
@@ -774,7 +774,7 @@ const performCoordinateValueSrsConversion =
 
 const updateCoordinateValueFromLatLong =
   ({ nodeUuid, latitude, longitude }: any) =>
-  (dispatch: AppDispatch, getState: () => RootState) => {
+  (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const record = DataEntrySelectors.selectRecord(state);
@@ -800,7 +800,7 @@ const updateCoordinateValueFromLatLong =
 
 const updateCoordinateValueSrs =
   ({ nodeUuid, srsTo }: any) =>
-  (dispatch: AppDispatch, getState: () => RootState) => {
+  (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const record = DataEntrySelectors.selectRecord(state);
 
@@ -869,7 +869,7 @@ const addNewAttribute = ({ nodeDef, parentNodeUuid, value = null }: any) =>
 
 const selectCurrentPageEntity =
   ({ parentEntityUuid, entityDefUuid, entityUuid = undefined }: any) =>
-  async (dispatch: AppDispatch, getState: () => RootState) => {
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const surveyId = SurveySelectors.selectCurrentSurveyId(state);
     const record = DataEntrySelectors.selectRecord(state);
@@ -915,7 +915,7 @@ const selectCurrentPageEntity =
   };
 
 const selectCurrentPageEntityActiveChildIndex =
-  (index: any) => (dispatch: AppDispatch, getState: () => RootState) => {
+  (index: any) => (dispatch: AppDispatch, getState: AppGetState) => {
     dispatch({ type: PAGE_ENTITY_ACTIVE_CHILD_INDEX_SET, index });
     const state = getState();
     const isPhone = DeviceInfoSelectors.selectIsPhone(state);
@@ -926,7 +926,7 @@ const selectCurrentPageEntityActiveChildIndex =
 
 const toggleRecordPageMenuOpen = (
   dispatch: AppDispatch,
-  getState: () => RootState,
+  getState: AppGetState,
 ) => {
   Keyboard.dismiss();
   const state = getState();
@@ -934,10 +934,7 @@ const toggleRecordPageMenuOpen = (
   dispatch({ type: PAGE_SELECTOR_MENU_OPEN_SET, open: !open });
 };
 
-const closeRecordPageMenu = (
-  dispatch: AppDispatch,
-  getState: () => RootState,
-) => {
+const closeRecordPageMenu = (dispatch: AppDispatch, getState: AppGetState) => {
   const state = getState();
   const pageSelectorMenuOpen =
     DataEntrySelectors.selectRecordPageSelectorMenuOpen(state);
@@ -946,10 +943,7 @@ const closeRecordPageMenu = (
   }
 };
 
-const toggleRecordEditLock = (
-  dispatch: AppDispatch,
-  getState: () => RootState,
-) => {
+const toggleRecordEditLock = (dispatch: AppDispatch, getState: AppGetState) => {
   Keyboard.dismiss();
   const state = getState();
   const locked = DataEntrySelectors.selectRecordEditLocked(state);

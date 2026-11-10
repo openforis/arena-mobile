@@ -3,7 +3,7 @@ import {
   hasConflictingKeysWithMergeNotAllowed,
 } from "./autoSyncStatusUtils";
 import { AutoSyncStatus } from "./types";
-import type { AppDispatch, RootState } from "../store";
+import type { AppDispatch, AppGetState } from "../store";
 
 const AUTO_SYNC_CHECK_START = "AUTO_SYNC_CHECK_START";
 const AUTO_SYNC_CHECK_END = "AUTO_SYNC_CHECK_END";
@@ -26,7 +26,7 @@ const checkStart = () => ({ type: AUTO_SYNC_CHECK_START });
 // records modified on the server too get merged automatically (see computeAutoSyncStatus)
 const checkEnd =
   ({ records, survey }: { records: any[]; survey: any }) =>
-  (dispatch: AppDispatch, getState: () => RootState) => {
+  (dispatch: AppDispatch, getState: AppGetState) => {
     const autoSyncEnabled = !!getState().settings?.autoSyncEnabled;
     dispatch({
       type: AUTO_SYNC_CHECK_END,
@@ -92,23 +92,22 @@ const setStatusMessage = (
 // attributes may still be missing), only that it's no longer known to be in sync with the
 // server; the next real check (checkEnd) reconciles it either way. An existing error is left
 // alone since it still needs the user's attention and is more specific than "pending".
-const markPending =
-  () => (dispatch: AppDispatch, getState: () => RootState) => {
-    const { status } = getState().autoSync;
-    if (
-      status === AutoSyncStatus.authError ||
-      status === AutoSyncStatus.checkError
-    ) {
-      return;
-    }
-    dispatch({
-      type: AUTO_SYNC_STATUS_MARKED_PENDING,
-      payload: {
-        status: AutoSyncStatus.pending,
-        lastLocalChangeAt: new Date().toISOString(),
-      },
-    });
-  };
+const markPending = () => (dispatch: AppDispatch, getState: AppGetState) => {
+  const { status } = getState().autoSync;
+  if (
+    status === AutoSyncStatus.authError ||
+    status === AutoSyncStatus.checkError
+  ) {
+    return;
+  }
+  dispatch({
+    type: AUTO_SYNC_STATUS_MARKED_PENDING,
+    payload: {
+      status: AutoSyncStatus.pending,
+      lastLocalChangeAt: new Date().toISOString(),
+    },
+  });
+};
 
 const setDialogOpen = (dialogOpen: boolean) => ({
   type: AUTO_SYNC_DIALOG_OPEN_SET,
