@@ -29,6 +29,19 @@ beforeEach(() => {
   mockWrites.length = 0;
 });
 
+describe("Files.sanitizeFileName", () => {
+  it.each([
+    ["photo 1.jpg", "photo 1.jpg"],
+    ["../../files/SQLite/db.db", ".._.._files_SQLite_db.db"],
+    [String.raw`..\..\db.db`, ".._.._db.db"],
+    ["/abs/path.txt", "_abs_path.txt"],
+    ["..", "_"],
+    [".", "_"],
+  ])("%s => %s", (name, expected) => {
+    expect(Files.sanitizeFileName(name)).toBe(expected);
+  });
+});
+
 describe("Files.writeBytesToFile", () => {
   it("writes the bytes replacing the file content", async () => {
     const bytes = new Uint8Array([1]);

@@ -19,6 +19,7 @@ import {
   UniqueFileNamesGenerator,
 } from "@openforis/arena-core";
 import { ArenaMobileRecord } from "model/ArenaMobileRecord";
+import { Files } from "utils";
 
 type RowDataExtractorParams = {
   survey: Survey;
@@ -185,8 +186,9 @@ const rowDataExtractorByNodeDefType: Partial<
     const fileName = fileNameExpression
       ? NodeValues.getFileNameCalculated(node)
       : NodeValues.getFileName(node);
+    // the name becomes a file path in the export, and records can come from other devices or a server
     const uniqueFileName = uniqueFileNameGenerator.generateUniqueFileName(
-      fileName ?? fileUuid,
+      fileName ? Files.sanitizeFileName(fileName) : fileUuid,
       fileUuid,
     );
     return [fileUuid, uniqueFileName];

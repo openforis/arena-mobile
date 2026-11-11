@@ -26,6 +26,14 @@ const cacheDirectory = FileSystem.cacheDirectory!;
 const toSafeFileName = (name: string): string =>
   name.replaceAll(/[^\w\s-]/g, "_");
 
+// keeps the extension, but the name cannot point outside the folder it is written to
+const sanitizeFileName = (name: string): string => {
+  const nameWithoutSeparators = name.replaceAll(/[/\\]/g, "_");
+  return nameWithoutSeparators === "." || nameWithoutSeparators === ".."
+    ? "_"
+    : nameWithoutSeparators;
+};
+
 const path = (...parts: (string | null | undefined)[]): string => {
   const result: string[] = [];
   for (const part of parts) {
@@ -319,6 +327,7 @@ export const Files = {
   EncodingType: FileSystem.EncodingType,
   cacheDirectory,
   documentDirectory,
+  sanitizeFileName,
   path,
   getTempFolderParentUri,
   createTempFolder,
