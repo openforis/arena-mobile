@@ -22,7 +22,12 @@ const normalizeUrl = async (
   return normalized;
 };
 
+// survey links are opened only if http(s): other schemes, like javascript:, could run code in the web preview
+const toHttpUrlOrNull = (url: string | null | undefined): string | null =>
+  url && /^https?:\/\//i.test(url) ? url : null;
+
 export const URLs = {
   isValidUrl,
+  toHttpUrlOrNull,
   normalizeUrl,
 };

@@ -15,7 +15,7 @@ import {
   SurveySelectors,
   useAppDispatch,
 } from "state";
-import { Environment } from "utils";
+import { Environment, URLs } from "utils";
 
 import { UserSummary } from "./UserSummary";
 
@@ -37,7 +37,7 @@ export const OptionsMenu = (props: Props) => {
   const survey = SurveySelectors.useCurrentSurvey();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const fieldManualUrl = survey
-    ? Surveys.getFieldManualLink(lang)(survey)
+    ? URLs.toHttpUrlOrNull(Surveys.getFieldManualLink(lang)(survey))
     : null;
 
   const anchor = useMemo(

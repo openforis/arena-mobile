@@ -16,6 +16,7 @@ import { useIsNetworkConnected } from "hooks";
 import { useTranslation } from "localization";
 import { SurveyStatus, UpdateStatus } from "model";
 import { RemoteConnectionSelectors, SurveySelectors } from "state";
+import { URLs } from "utils";
 import { log } from "utils/Logger";
 
 import {
@@ -78,7 +79,9 @@ export const SelectedSurveyBanner = () => {
   const surveyName = Surveys.getName(survey);
   const surveyLabel = Surveys.getLabel(lang)(survey) || surveyName;
   const surveyDescription = Surveys.getDescription(lang)(survey);
-  const fieldManualUrl = Surveys.getFieldManualLink(lang)(survey);
+  const fieldManualUrl = URLs.toHttpUrlOrNull(
+    Surveys.getFieldManualLink(lang)(survey),
+  );
   const isDemoSurvey = SurveySelectors.useIsCurrentSurveyDemo();
 
   const hasQualifierDefs = Surveys.getQualifierDefs({ survey }).length > 0;
