@@ -57,6 +57,8 @@ type Props = {
   // when true, only the tile overlays (PDF maps) are shown, without the base map
   baseMapHidden?: boolean;
   children?: React.ReactNode;
+  // buttons shown below the map type and PDF maps buttons (in the same column, so they never overlap)
+  extraButtons?: React.ReactNode;
   // tile overlays shown in addition to the visible PDF maps
   extraTileOverlays?: MapTileOverlay[];
   fitToCoordinatesOnReady?: LatLng[];
@@ -122,6 +124,7 @@ export const MapView = forwardRef<RNMapView | null, Props>(
     {
       baseMapHidden = false,
       children,
+      extraButtons,
       extraTileOverlays,
       fitOnlyOnce = true,
       fitToCoordinatesOnReady,
@@ -187,6 +190,8 @@ export const MapView = forwardRef<RNMapView | null, Props>(
       [extraTileOverlays, visiblePdfMaps],
     );
     const hasPdfMaps = (settings.pdfMaps?.length ?? 0) > 0;
+    const mapTypeSelectorVisible =
+      showMapTypeSelector && (!layerIdProp || hasPdfMaps);
     const freeLayerVisible = useFreeLayers && !baseMapHidden;
     const [pdfMapsPanelVisible, setPdfMapsPanelVisible] = useState(false);
     const networkConnected = useIsNetworkConnected();
@@ -406,9 +411,9 @@ export const MapView = forwardRef<RNMapView | null, Props>(
             <Text style={styles.layerName}>{layerName}</Text>
           </View>
         )}
-        {showMapTypeSelector && (!layerIdProp || hasPdfMaps) && (
+        {(mapTypeSelectorVisible || !!extraButtons) && (
           <View style={styles.mapTypeSelector}>
-            {!layerIdProp && !baseMapHidden && (
+            {mapTypeSelectorVisible && !layerIdProp && !baseMapHidden && (
               <IconButton
                 icon="layers-outline"
                 mode="contained"
@@ -416,7 +421,7 @@ export const MapView = forwardRef<RNMapView | null, Props>(
                 size={18}
               />
             )}
-            {hasPdfMaps && (
+            {mapTypeSelectorVisible && hasPdfMaps && (
               <IconButton
                 icon="file-pdf-box"
                 mode="contained"
@@ -424,6 +429,7 @@ export const MapView = forwardRef<RNMapView | null, Props>(
                 size={18}
               />
             )}
+            {extraButtons}
           </View>
         )}
         {pdfMapsPanelVisible && (

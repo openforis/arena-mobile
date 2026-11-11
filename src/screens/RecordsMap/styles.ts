@@ -29,13 +29,6 @@ export default StyleSheet.create({
     borderWidth: 2,
     borderColor: "#ffffff",
   },
-  // below the map type selector of the MapView
-  mapButtons: {
-    position: "absolute",
-    top: 56,
-    right: 8,
-    gap: 4,
-  },
   bottomPanel: {
     maxHeight: "40%",
     padding: 8,

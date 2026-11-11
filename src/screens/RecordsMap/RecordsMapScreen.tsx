@@ -231,6 +231,31 @@ export const RecordsMapScreen = () => {
     <VView style={styles.container}>
       <MapView
         ref={mapRef}
+        extraButtons={
+          <>
+            <IconButton
+              icon="map-marker-multiple-outline"
+              mode="contained"
+              onPress={() => setLayersPanelVisible(true)}
+              size={18}
+              testID="records-map-layers-button"
+            />
+            <IconButton
+              disabled={visibleCoordinates.length === 0}
+              icon="fit-to-screen-outline"
+              mode="contained"
+              onPress={fitToVisiblePoints}
+              size={18}
+            />
+            <IconButton
+              disabled={!currentLocation}
+              icon="crosshairs-gps"
+              mode="contained"
+              onPress={onCurrentLocationPress}
+              size={18}
+            />
+          </>
+        }
         initialRegion={initialRegion}
         onMapReady={fitToVisiblePoints}
         onPress={onMapPress}
@@ -295,29 +320,6 @@ export const RecordsMapScreen = () => {
           />
         )}
       </MapView>
-      <VView style={styles.mapButtons}>
-        <IconButton
-          icon="map-marker-multiple-outline"
-          mode="contained"
-          onPress={() => setLayersPanelVisible(true)}
-          size={18}
-          testID="records-map-layers-button"
-        />
-        <IconButton
-          disabled={visibleCoordinates.length === 0}
-          icon="fit-to-screen-outline"
-          mode="contained"
-          onPress={fitToVisiblePoints}
-          size={18}
-        />
-        <IconButton
-          disabled={!currentLocation}
-          icon="crosshairs-gps"
-          mode="contained"
-          onPress={onCurrentLocationPress}
-          size={18}
-        />
-      </VView>
       {layers.length === 0 && (
         <Text style={styles.emptyMessage} textKey="recordsMap:noLayers" />
       )}
