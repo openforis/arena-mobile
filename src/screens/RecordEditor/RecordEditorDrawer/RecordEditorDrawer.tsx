@@ -7,7 +7,7 @@ import { CloseIconButton, HView, IconButton, Text, View } from "components";
 import { GpsLockingEnabledWarning } from "appComponents/GpsLockingEnabledWarning";
 import { NavigateToRecordsListButton } from "appComponents/NavigateToRecordsListButton";
 import { RecordEditViewMode } from "model";
-import { log, PreviewMode } from "utils";
+import { log, PreviewMode, URLs } from "utils";
 import {
   DataEntryActions,
   DataEntrySelectors,
@@ -33,7 +33,9 @@ export const RecordEditorDrawer = () => {
   const viewMode = SurveyOptionsSelectors.useRecordEditViewMode();
   const { showRecordCompletion } = SettingsSelectors.useSettings();
   const styles = useStyles();
-  const fieldManualUrl = Surveys.getFieldManualLink(lang)(survey);
+  const fieldManualUrl = URLs.toHttpUrlOrNull(
+    Surveys.getFieldManualLink(lang)(survey),
+  );
 
   if (!pageSelectorOpen) return null;
 
