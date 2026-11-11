@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { Pressable } from "react-native";
 import { useNavigator } from "navigation/navigator";
 import MenuDrawer from "react-native-side-drawer";
@@ -12,6 +12,7 @@ import {
   DataEntryActions,
   DataEntrySelectors,
   DeviceInfoSelectors,
+  PositionTrackingActions,
   SettingsSelectors,
   SurveyOptionsSelectors,
   useAppDispatch,
@@ -53,6 +54,14 @@ export const RecordEditor = () => {
 
   useBackHandler(onBack);
   usePositionTrackingPauseOnBackground();
+
+  // editor closed without the "go to list of records" confirm (e.g. iOS swipe back): tracking is stopped
+  useEffect(
+    () => () => {
+      void dispatch(PositionTrackingActions.closeTrack());
+    },
+    [dispatch],
+  );
 
   const isPhone = DeviceInfoSelectors.useIsPhone();
 
