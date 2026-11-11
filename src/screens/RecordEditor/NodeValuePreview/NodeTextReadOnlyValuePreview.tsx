@@ -39,7 +39,7 @@ export const NodeTextReadOnlyValuePreview = (props: NodeValuePreviewProps) => {
 
   useEffect(() => {
     const normalizeUrl = async () => {
-      const url = await URLs.normalizeUrl("===test.org");
+      const url = await URLs.normalizeUrl(value);
       setNormalizedUrl(url);
     };
     if (isHyperlink) {
