@@ -168,12 +168,13 @@ export const updateAttribute = ({
   value: any;
   fileUri?: string | null;
 }) =>
-  serializeRecordUpdate(async (dispatch, getState) => {
+  // resolves to true when the record has the value (applied or already set)
+  serializeRecordUpdate(async (dispatch, getState): Promise<boolean> => {
     try {
       const state = getState();
       const record = DataEntrySelectors.selectRecord(state);
       const node = Records.getNodeByUuid(uuid)(record);
-      if (!node) return;
+      if (!node) return false;
 
       const updaterParams = selectRecordUpdaterParams(state);
       const { survey } = updaterParams;
@@ -182,9 +183,9 @@ export const updateAttribute = ({
       // nothing actually changed (e.g. a field was focused and left as is): don't touch the
       // record, otherwise it would look modified and the auto-sync status would turn pending
       if (!fileUri && Objects.isEqual(node.value ?? null, value ?? null)) {
-        return;
+        return true;
       }
-      if (isRecordSyncInProgress(dispatch, getState)) return;
+      if (isRecordSyncInProgress(dispatch, getState)) return false;
 
       const nodeDef = Surveys.getNodeDefByUuid({
         survey,
@@ -199,7 +200,7 @@ export const updateAttribute = ({
           nodeDef,
         }))
       )
-        return;
+        return false;
 
       const {
         record: recordUpdated,
@@ -222,7 +223,7 @@ export const updateAttribute = ({
         }))
       ) {
         log.debug(`Newly inapplicable values not confirmed. Reverting update.`);
-        return;
+        return false;
       }
 
       removeNodesFlags(nodesUpdated);
@@ -233,9 +234,9 @@ export const updateAttribute = ({
       }
 
       // a sync started meanwhile would be overwritten
-      if (isRecordSyncInProgress(dispatch, getState)) return;
+      if (isRecordSyncInProgress(dispatch, getState)) return false;
 
-      await updateRecord({ dispatch, survey, record: recordUpdated });
+      await updateRecord({ dispatch, getState, survey, record: recordUpdated });
       if (isFileDef) {
         await deletePreviousRecordNodeFile({ survey, value, node, dispatch });
       }
@@ -248,8 +249,10 @@ export const updateAttribute = ({
         lang,
       });
       log.debug(`Node updated successfully.`);
+      return true;
     } catch (error) {
       handleError(dispatch, error, "dataEntry:updateAttributeError");
+      return false;
     }
   });
 
@@ -330,8 +333,11 @@ export const updateCoordinateValueSrs =
           cancelButtonTextKey: "dataEntry:coordinate.keepXAndY",
           onConfirm: () =>
             dispatch(performCoordinateValueSrsConversion({ nodeUuid, srsTo })),
-          onCancel: () =>
-            dispatch(updateAttribute({ uuid: nodeUuid, value: nextValue })),
+          onCancel: async () => {
+            await dispatch(
+              updateAttribute({ uuid: nodeUuid, value: nextValue }),
+            );
+          },
         }),
       );
     }
@@ -371,5 +377,5 @@ export const addNewAttribute = ({
       },
     );
 
-    await updateRecord({ dispatch, survey, record: recordUpdated2 });
+    await updateRecord({ dispatch, getState, survey, record: recordUpdated2 });
   });
