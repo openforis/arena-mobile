@@ -248,7 +248,7 @@ export const useNodeCoordinateComponent = (props: any) => {
     watchingLocation,
   } = useLocationWatch({ locationCallback });
 
-  const { preferredGpsSourceId } = SettingsSelectors.useSettings();
+  const preferredGpsSourceId = SettingsSelectors.usePreferredGpsSourceId();
   const {
     availableGpsSources,
     loading: gpsSourcesLoading,

@@ -24,7 +24,8 @@ export const HomeAccountItem = () => {
   const networkAvailable = useIsNetworkConnected();
   const user = RemoteConnectionSelectors.useLoggedInUser();
   const userIsLoading = RemoteConnectionSelectors.useLoggedInUserIsLoading();
-  const { email, password } = SettingsSelectors.useSettings();
+  const email = SettingsSelectors.useEmail();
+  const password = SettingsSelectors.usePassword();
 
   const onPress = useCallback(
     () => navigator.navigateToSettingsRemoteConnection(),

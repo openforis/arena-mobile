@@ -35,7 +35,7 @@ export const RecordEditor = () => {
   const dispatch = useAppDispatch();
   const pageSelectorOpen = DataEntrySelectors.useIsRecordPageSelectorMenuOpen();
   const viewMode = SurveyOptionsSelectors.useRecordEditViewMode();
-  const { showStatusBar } = SettingsSelectors.useSettings();
+  const showStatusBar = SettingsSelectors.useShowStatusBar();
   const navigator = useNavigator();
   const isNavigationFocused = useNavigationIsFocused();
   const isRtl = useIsTextDirectionRtl();

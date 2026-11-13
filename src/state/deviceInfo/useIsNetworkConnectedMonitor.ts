@@ -1,15 +1,23 @@
 import { useEffect } from "react";
+import NetInfo from "@react-native-community/netinfo";
 
-import { useIsNetworkConnected } from "hooks/useIsNetworkConnected";
 import { useAppDispatch } from "state/storeHooks";
 
 import { DeviceInfoActions } from "./actions";
 
+// mounted once for the whole app: the store keeps the network state for every component and action
 export const useIsNetworkConnectedMonitor = () => {
   const dispatch = useAppDispatch();
-  const isNetworkConnected = useIsNetworkConnected();
 
-  useEffect(() => {
-    dispatch(DeviceInfoActions.updateIsNetworkConnected(isNetworkConnected));
-  }, [dispatch, isNetworkConnected]);
+  useEffect(
+    () =>
+      NetInfo.addEventListener((netInfoState) => {
+        dispatch(
+          DeviceInfoActions.updateIsNetworkConnected(
+            netInfoState.isConnected ?? false,
+          ),
+        );
+      }),
+    [dispatch],
+  );
 };

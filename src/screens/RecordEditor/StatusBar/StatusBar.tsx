@@ -19,7 +19,6 @@ import {
   useBatteryStateListener,
   useFreeDiskStorageMonitor,
 } from "state";
-import { useIsNetworkConnectedMonitor } from "state/deviceInfo/useIsNetworkConnectedMonitor";
 import { Environment, Files, TimeUtils } from "utils";
 
 import { BatteryIcon } from "./BatteryIcon";
@@ -145,10 +144,8 @@ export const StatusBar = () => {
 
   useBatteryStateListener();
   useFreeDiskStorageMonitor();
-  useIsNetworkConnectedMonitor();
 
-  const settings = SettingsSelectors.useSettings();
-  const { locationGpsLocked } = settings;
+  const locationGpsLocked = SettingsSelectors.useLocationGpsLocked();
 
   const formatRemainingTimeCompact = (time: any) =>
     TimeUtils.formatRemainingTimeIfLessThan1Day({

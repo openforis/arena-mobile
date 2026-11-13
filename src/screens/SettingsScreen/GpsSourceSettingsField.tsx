@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
 export const GpsSourceSettingsField = () => {
   const dispatch = useAppDispatch();
   // read from the store: the value is updated there (not in the settings screen local state)
-  const { preferredGpsSourceId: value } = SettingsSelectors.useSettings();
+  const value = SettingsSelectors.usePreferredGpsSourceId();
   const { availableGpsSources, refreshAvailableGpsSources } =
     useAvailableGpsSources();
 

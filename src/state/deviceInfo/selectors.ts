@@ -17,12 +17,17 @@ const selectIsTablet = selectIsDeviceType(Device.DeviceType.TABLET);
 const selectOrientation = (state: RootState) =>
   selectDeviceInfo(state).orientation;
 
+const selectIsNetworkConnected = (state: RootState): boolean =>
+  !!selectDeviceInfo(state).isNetworkConnected;
+
 export const DeviceInfoSelectors = {
   selectDeviceInfo,
+  selectIsNetworkConnected,
   selectIsTablet,
   selectIsPhone,
 
   useDeviceInfo: () => useAppSelector(selectDeviceInfo),
+  useIsNetworkConnected: () => useAppSelector(selectIsNetworkConnected),
   useIsTablet: () => useAppSelector(selectIsTablet),
   useIsPhone: () => useAppSelector(selectIsPhone),
   useOrientation: () => useAppSelector(selectOrientation),

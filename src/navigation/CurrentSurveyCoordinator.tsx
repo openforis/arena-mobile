@@ -8,6 +8,7 @@ import React, {
 } from "react";
 
 import { useIsMountedRef, useIsNetworkConnected } from "hooks";
+import { useIsNetworkConnectedMonitor } from "state/deviceInfo/useIsNetworkConnectedMonitor";
 import {
   RemoteConnectionSelectors,
   SurveyActions,
@@ -42,6 +43,7 @@ export const CurrentSurveyCoordinator = ({ children }: Props) => {
 
   const surveySelected = !!survey;
 
+  useIsNetworkConnectedMonitor();
   useAutoSyncMonitor();
 
   useEffect(() => {

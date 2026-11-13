@@ -155,7 +155,10 @@ const updateFreeDiskStorage =
   };
 
 const updateIsNetworkConnected =
-  (isNetworkConnected: any) => (dispatch: AppDispatch) => {
+  (isNetworkConnected: boolean) =>
+  (dispatch: AppDispatch, getState: AppGetState) => {
+    // NetInfo notifies also other changes (e.g. wifi strength): skip no-op store updates
+    if (getState().deviceInfo.isNetworkConnected === isNetworkConnected) return;
     dispatch({ type: DEVICE_INFO_UPDATE, payload: { isNetworkConnected } });
   };
 

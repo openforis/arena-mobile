@@ -35,10 +35,9 @@ const scaleFonts = (fontScale: number) => (fonts: AppThemeFonts) =>
 export const useEffectiveTheme = (): AppTheme => {
   const colorScheme = useColorScheme();
 
-  const {
-    theme: themeSettingPref = ThemesSettings.auto,
-    fontScale: settingsFontScale = 1,
-  } = SettingsSelectors.useSettings();
+  const themeSettingPref = SettingsSelectors.useTheme() ?? ThemesSettings.auto;
+
+  const settingsFontScale = SettingsSelectors.useFontScale() ?? 1;
   let themeSetting = themeSettingPref;
 
   const fontScale = settingsFontScale <= 0 ? 1 : settingsFontScale;

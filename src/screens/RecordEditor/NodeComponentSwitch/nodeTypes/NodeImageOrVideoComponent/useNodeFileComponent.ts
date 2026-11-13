@@ -118,7 +118,8 @@ const resizeImage = async (
 export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
   const toaster = useToast();
   const confirm = useConfirm();
-  const settings = SettingsSelectors.useSettings();
+  const imageSizeLimit = SettingsSelectors.useImageSizeLimit();
+  const imageSizeUnlimited = SettingsSelectors.useImageSizeUnlimited();
   const surveyId = SurveySelectors.useCurrentSurveyId();
 
   const { request: requestCameraPermission } = useRequestCameraPermission();
@@ -127,7 +128,10 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
 
   const geotagInfoShown = NodeDefs.isGeotagInformationShown(nodeDef);
   const fileType = NodeDefs.getFileType(nodeDef) ?? NodeDefFileType.other;
-  const maxSizeMB = determineFileMaxSize({ nodeDef, settings });
+  const maxSizeMB = determineFileMaxSize({
+    nodeDef,
+    settings: { imageSizeLimit, imageSizeUnlimited },
+  });
   const maxSize = maxSizeMB ? maxSizeMB * Math.pow(1024, 2) : undefined;
 
   const mediaTypes = mediaTypeByFileType[fileType];

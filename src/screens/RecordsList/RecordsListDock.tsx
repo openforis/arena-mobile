@@ -46,7 +46,7 @@ export const RecordsListDock = (props: RecordsListDockProps) => {
   } = props;
 
   const dispatch = useAppDispatch();
-  const { autoSyncEnabled } = SettingsSelectors.useSettings();
+  const autoSyncEnabled = SettingsSelectors.useAutoSyncEnabled();
   // records of the demo survey can't be sent to any server (see useAutoSyncMonitor)
   const isDemoSurvey = SurveySelectors.useIsCurrentSurveyDemo();
 

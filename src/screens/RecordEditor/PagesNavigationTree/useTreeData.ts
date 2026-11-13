@@ -359,7 +359,7 @@ export const useTreeData = () => {
     entityUuid,
     parentEntityUuid,
   } = DataEntrySelectors.useCurrentPageEntity();
-  const { showRecordCompletion } = SettingsSelectors.useSettings();
+  const showRecordCompletion = SettingsSelectors.useShowRecordCompletion();
 
   return useMemo(
     () =>

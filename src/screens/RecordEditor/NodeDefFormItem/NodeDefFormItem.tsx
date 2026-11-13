@@ -36,7 +36,7 @@ export const NodeDefFormItem = (props: NodeDefFormItemProps) => {
   const { uuid: nodeDefUuid } = nodeDef;
 
   const styles = useStyles();
-  const settings = SettingsSelectors.useSettings();
+  const animationsEnabled = SettingsSelectors.useAnimationsEnabled();
 
   const viewMode = SurveyOptionsSelectors.useRecordEditViewMode();
   const cycle = DataEntrySelectors.useRecordCycle();
@@ -167,7 +167,7 @@ export const NodeDefFormItem = (props: NodeDefFormItemProps) => {
 
   if (
     canDisappear &&
-    settings.animationsEnabled &&
+    animationsEnabled &&
     viewMode !== RecordEditViewMode.oneNode
   ) {
     return <Fade visible={visible}>{formItemComponent}</Fade>;
