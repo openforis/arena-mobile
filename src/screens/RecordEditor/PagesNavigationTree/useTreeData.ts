@@ -1,4 +1,7 @@
+import { useMemo } from "react";
+
 import {
+  LanguageCode,
   NodeDef,
   NodeDefEntity,
   NodeDefs,
@@ -214,20 +217,23 @@ const isChildDefIncluded =
     // is child of current entity def
     childDef.parentUuid === currentEntityDef.uuid;
 
-export const useTreeData = () => {
-  const survey = SurveySelectors.useCurrentSurvey();
-  const lang = SurveySelectors.useCurrentSurveyPreferredLang();
-  const record = DataEntrySelectors.useRecord();
-  const currentPageEntity = DataEntrySelectors.useCurrentPageEntity();
-  const showRecordCompletion = SettingsSelectors.useShowRecordCompletion();
-  const {
-    entityDef: currentEntityDef,
-    entityUuid,
-    parentEntityUuid,
-  } = currentPageEntity;
-
-  if (!survey) return [];
-
+const buildTreeData = ({
+  survey,
+  lang,
+  record,
+  currentEntityDef,
+  entityUuid,
+  parentEntityUuid,
+  showRecordCompletion,
+}: {
+  survey: Survey;
+  lang: LanguageCode;
+  record: ArenaMobileRecord;
+  currentEntityDef: NodeDefEntity;
+  entityUuid?: string;
+  parentEntityUuid?: string;
+  showRecordCompletion: boolean;
+}): TreeItem[] => {
   const currentEntityUuid = (entityUuid ?? parentEntityUuid)!;
   const currentEntity = Records.getNodeByUuid(currentEntityUuid)(record);
   const { cycle } = record;
@@ -342,4 +348,40 @@ export const useTreeData = () => {
     }
   }
   return [rootTreeItem];
+};
+
+export const useTreeData = () => {
+  const survey = SurveySelectors.useCurrentSurvey();
+  const lang = SurveySelectors.useCurrentSurveyPreferredLang();
+  const record = DataEntrySelectors.useRecord();
+  const {
+    entityDef: currentEntityDef,
+    entityUuid,
+    parentEntityUuid,
+  } = DataEntrySelectors.useCurrentPageEntity();
+  const showRecordCompletion = SettingsSelectors.useShowRecordCompletion();
+
+  return useMemo(
+    () =>
+      survey
+        ? buildTreeData({
+            survey,
+            lang,
+            record,
+            currentEntityDef,
+            entityUuid,
+            parentEntityUuid,
+            showRecordCompletion,
+          })
+        : [],
+    [
+      survey,
+      lang,
+      record,
+      currentEntityDef,
+      entityUuid,
+      parentEntityUuid,
+      showRecordCompletion,
+    ],
+  );
 };

@@ -1,4 +1,4 @@
-import { i18n } from "./i18n";
+import { useTranslation } from "./i18n";
 
 export enum TextDirection {
   rtl = "rtl",
@@ -15,6 +15,8 @@ const getLanguageTextDirection = (lang: string) => {
 };
 
 export const useTextDirection = () => {
+  // from react-i18next: re-renders when the language changes
+  const { i18n } = useTranslation();
   const lang = i18n.language;
   const textDirection = getLanguageTextDirection(lang);
   return textDirection;
