@@ -26,8 +26,23 @@ const fetchUser = async () => {
   }
 };
 
+// concurrent calls (e.g. app startup and survey user group fetch) share the same request
+let loginInProgress: Promise<void> | null = null;
+
 export const loginAndSetUser =
   ({ onlyIfNotSet = true } = {}) =>
+  (dispatch: AppDispatch, getState: AppGetState): Promise<void> => {
+    loginInProgress ??= _loginAndSetUser({ onlyIfNotSet })(
+      dispatch,
+      getState,
+    ).finally(() => {
+      loginInProgress = null;
+    });
+    return loginInProgress;
+  };
+
+const _loginAndSetUser =
+  ({ onlyIfNotSet }: { onlyIfNotSet: boolean }) =>
   async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     if (onlyIfNotSet) {
@@ -45,7 +60,9 @@ export const loginAndSetUser =
         // missing information; user cannot be fetched;
         return;
       }
-      dispatch({ type: USER_LOADING });
+      // the last logged in user is used (e.g. for permissions) until the server answers
+      const userInAsyncStorage = await getUserInAsyncStorage();
+      dispatch({ type: USER_LOADING, user: userInAsyncStorage });
       const user = await fetchUser();
       dispatch({ type: USER_SET, user });
       if (user) {

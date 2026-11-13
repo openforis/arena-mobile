@@ -37,7 +37,6 @@ export default {
     updatingDemoSurvey: "Обновление демонстрационного опроса",
     fetchingAndSettingLocalSurveys: "Получение и установка локальных опросов",
     fetchingAndSettingSurvey: "Получение и установка опроса",
-    checkingLoggedIn: "Проверка авторизации",
     complete: "Завершено",
   },
   logs: {

@@ -39,7 +39,6 @@ export default {
     fetchingAndSettingLocalSurveys:
       "در حال دریافت و تنظیم اطلاعات فرم آماربرداری محلی",
     fetchingAndSettingSurvey: "در حال دریافت و تنظیم فرم آماربرداری",
-    checkingLoggedIn: "در حال بررسی ورود",
     complete: "تکمیل شد",
   },
   logs: {

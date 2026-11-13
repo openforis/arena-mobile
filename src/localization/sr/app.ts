@@ -39,7 +39,6 @@ Veličina će biti oko {{size}}.`,
     fetchingAndSettingLocalSurveys:
       "Preuzimanje i postavljanje lokalnih istraživanja",
     fetchingAndSettingSurvey: "Preuzimanje i postavljanje istraživanja",
-    checkingLoggedIn: "Provjera prijave",
     complete: "Završeno",
   },
   logs: {

@@ -40,7 +40,6 @@ export default {
     fetchingAndSettingLocalSurveys:
       "Récupération et configuration des enquêtes locales",
     fetchingAndSettingSurvey: "Récupération et configuration de l'enquête",
-    checkingLoggedIn: "Vérification de la connexion",
     complete: "Terminé",
   },
   logs: {
