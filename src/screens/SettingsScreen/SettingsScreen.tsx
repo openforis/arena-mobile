@@ -1,8 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { useNavigator } from "navigation/navigator";
 
-import { Objects } from "@openforis/arena-core";
-
 import { ConnectionToRemoteServerButton } from "appComponents/ConnectionToRemoteServerButton";
 import { FullBackupButton } from "appComponents/FullBackupButton";
 
@@ -57,19 +55,32 @@ export const SettingsScreen = () => {
 
   const settingsStored = SettingsSelectors.useSettings();
 
-  const [state, setState] = useState({ settings: settingsStored });
+  // values being saved, shown until the store is updated (or the change is rejected, e.g. GPS locking)
+  const [pendingValues, setPendingValues] = useState<Partial<SettingsObject>>(
+    {},
+  );
 
-  const { settings } = state;
+  const settings: SettingsObject = useMemo(
+    () => ({ ...settingsStored, ...pendingValues }),
+    [pendingValues, settingsStored],
+  );
 
   const onPropValueChange =
     ({ key }: { key: keyof SettingsObject }) =>
-    (value: any) => {
+    async (value: any) => {
       const oldValue = settings[key];
       if (value === oldValue) return;
-      dispatch(SettingsActions.updateSetting({ key, value }));
-      setState((statePrev) =>
-        Objects.assocPath({ obj: statePrev, path: ["settings", key], value }),
-      );
+      setPendingValues((prev) => ({ ...prev, [key]: value }));
+      try {
+        await dispatch(SettingsActions.updateSetting({ key, value }));
+      } finally {
+        setPendingValues((prev) => {
+          if (!Object.is(prev[key], value)) return prev;
+          const next = { ...prev };
+          delete next[key];
+          return next;
+        });
+      }
     };
 
   const onExportLogsPress = useCallback(async () => {
