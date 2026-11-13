@@ -34,7 +34,8 @@ export const useNodeComponentLocalState = ({
     nodeUuid,
   });
 
-  const [state, setState] = useState({
+  const createInitialState = () => ({
+    nodeUuid,
     // value being updated by the user: keep the UI value until the store is in sync with it
     dirty: false,
     invalidValue: false,
@@ -42,10 +43,14 @@ export const useNodeComponentLocalState = ({
     uiValue: nodeValueToUiValue(nodeValue),
     validation: nodeValidation,
   });
+  const [state, setState] = useState(createInitialState);
   const { dirty, invalidValue, value, uiValue, validation } = state;
 
-  // local state synced with the node value during render (not in an effect)
-  if (updateDelay) {
+  // same component reused for another node (e.g. another entity): don't show the previous node value
+  if (state.nodeUuid !== nodeUuid) {
+    setState(createInitialState());
+  } else if (updateDelay) {
+    // local state synced with the node value during render (not in an effect)
     const nodeValueFromUI = uiValueToNodeValue(uiValue);
 
     if (isNodeValueEqual(nodeValue, nodeValueFromUI)) {
@@ -131,8 +136,14 @@ export const useNodeComponentLocalState = ({
     [uiValueToNodeValue, updateDelay, nodeUuid, dispatch],
   );
 
-  // don't lose the last changes when leaving the node within the update delay
-  useEffect(() => () => debouncedUpdateRef.current?.flush(), []);
+  // don't lose the last changes when leaving the node (or switching to another one) within the update delay
+  useEffect(
+    () => () => {
+      debouncedUpdateRef.current?.flush();
+      debouncedUpdateRef.current = null;
+    },
+    [nodeUuid],
+  );
 
   const onClearPress = useCallback(async () => {
     if (

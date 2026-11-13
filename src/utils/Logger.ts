@@ -84,6 +84,8 @@ const argToString = (arg: any): string => {
 };
 
 const write = (level: LogLevel, ...args: any[]) => {
+  // skip the stringification of debug messages that would be discarded
+  if (level === LogLevel.Debug && !__DEV__) return;
   const msg = args.map(argToString).join(" ");
   const logFunc = _log?.[level];
   try {
