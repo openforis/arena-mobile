@@ -61,20 +61,34 @@ export const prepareRecordForStorage = ({ record }: any) => {
   return { ...record, validation: validationUpdated };
 };
 
-export const updateRecord = async ({ dispatch, survey, record }: any) => {
-  const recordUpdated = prepareRecordForStorage({ record });
-  if (PreviewMode.isActive) {
-    // record kept in memory only
-    await dispatch({ type: RECORD_SET, record: recordUpdated });
-    return recordUpdated;
+// the editor may have been closed (or another record opened) while the update was being prepared
+const isRecordStillOpen = (getState: AppGetState, record: any): boolean =>
+  DataEntrySelectors.selectRecordUnsafe(getState())?.uuid === record.uuid;
+
+export const updateRecord = async ({
+  dispatch,
+  getState,
+  survey,
+  record,
+}: {
+  dispatch: AppDispatch;
+  getState: AppGetState;
+  survey: any;
+  record: any;
+}) => {
+  let recordUpdated = prepareRecordForStorage({ record });
+  // in preview mode the record is kept in memory only
+  if (!PreviewMode.isActive) {
+    recordUpdated = await RecordService.updateRecord({
+      survey,
+      record: recordUpdated,
+    });
+    dispatch(AutoSyncActions.markPending());
   }
-  const recordStored = await RecordService.updateRecord({
-    survey,
-    record: recordUpdated,
-  });
-  dispatch(AutoSyncActions.markPending());
-  await dispatch({ type: RECORD_SET, record: recordStored });
-  return recordStored;
+  if (isRecordStillOpen(getState, record)) {
+    await dispatch({ type: RECORD_SET, record: recordUpdated });
+  }
+  return recordUpdated;
 };
 
 const findNewlyInapplicableNodeDefNames = ({

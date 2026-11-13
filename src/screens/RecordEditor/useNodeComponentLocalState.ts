@@ -2,6 +2,7 @@ import { Objects } from "@openforis/arena-core";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import {
+  type AppDispatch,
   DataEntryActions,
   DataEntrySelectors,
   StoreUtils,
@@ -24,6 +25,7 @@ export const useNodeComponentLocalState = ({
 }: any) => {
   const dispatch = useAppDispatch();
   const debouncedUpdateRef = useRef(null as any);
+  const updateIdRef = useRef(0);
   const confirm = useConfirm();
 
   const {
@@ -104,11 +106,25 @@ export const useNodeComponentLocalState = ({
         }));
         return Promise.resolve();
       }
-      const action = DataEntryActions.updateAttribute({
-        uuid: nodeUuid,
-        value: nodeValueUpdated,
-        fileUri,
-      });
+      updateIdRef.current += 1;
+      const updateId = updateIdRef.current;
+      const action = async (dispatch: AppDispatch) => {
+        const applied = await dispatch(
+          DataEntryActions.updateAttribute({
+            uuid: nodeUuid,
+            value: nodeValueUpdated,
+            fileUri,
+          }),
+        );
+        // rejected (e.g. sync in progress, not confirmed) and not superseded: show the node value again
+        if (!applied && updateIdRef.current === updateId) {
+          setState((statePrev) =>
+            statePrev.nodeUuid === nodeUuid
+              ? { ...statePrev, dirty: false, invalidValue: false }
+              : statePrev,
+          );
+        }
+      };
       if (updateDelay) {
         // a pending debounced update would overwrite this one
         debouncedUpdateRef.current?.cancel();
