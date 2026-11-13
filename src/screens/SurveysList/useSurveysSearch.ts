@@ -1,39 +1,23 @@
-import { useCallback, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { Objects } from "@openforis/arena-core";
 
+const prepareForSearch = (v: any) =>
+  Objects.isEmpty(v) ? "" : v.toLocaleLowerCase().trim().replaceAll("_", " ");
+
 export const useSurveysSearch = ({ surveys }: any) => {
-  const [state, setState] = useState({
-    surveysFiltered: surveys,
-    searchValue: "",
-  });
-  const { surveysFiltered, searchValue } = state;
+  const [searchValue, setSearchValue] = useState("");
 
-  const [prevSurveys, setPrevSurveys] = useState(surveys);
-  if (surveys !== prevSurveys) {
-    setPrevSurveys(surveys);
-    setState({ surveysFiltered: surveys, searchValue: "" });
-  }
+  // derived from surveys: the search value is kept when the surveys are refreshed
+  const surveysFiltered = useMemo(() => {
+    const preparedVal = prepareForSearch(searchValue);
+    if (!preparedVal) return surveys;
+    return surveys.filter(({ name, label, defaultLabel }: any) =>
+      [name, label, defaultLabel].some((v) =>
+        prepareForSearch(v).includes(preparedVal),
+      ),
+    );
+  }, [surveys, searchValue]);
 
-  const onSearchValueChange = useCallback(
-    (val: any) => {
-      const _surveysFiltered = surveys.filter((survey: any) => {
-        const { name, label, defaultLabel } = survey;
-        const prepareForSearch = (v: any) =>
-          Objects.isEmpty(v)
-            ? ""
-            : v.toLocaleLowerCase().trim().replaceAll("_", " ");
-        const preparedVal = prepareForSearch(val);
-        return (
-          prepareForSearch(name).includes(preparedVal) ||
-          prepareForSearch(label).includes(preparedVal) ||
-          prepareForSearch(defaultLabel).includes(preparedVal)
-        );
-      });
-      setState({ surveysFiltered: _surveysFiltered, searchValue: val });
-    },
-    [surveys],
-  );
-
-  return { onSearchValueChange, searchValue, surveysFiltered };
+  return { onSearchValueChange: setSearchValue, searchValue, surveysFiltered };
 };
