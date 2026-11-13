@@ -9,7 +9,7 @@ import {
 import { DbUtils, dbClient } from "db";
 import { RecordLoadStatus, RecordOrigin } from "model";
 import { ArenaMobileRecord } from "model/ArenaMobileRecord";
-import { SystemUtils } from "utils";
+import { log, SystemUtils } from "utils";
 import {
   extractKeyColumnsValues,
   extractKeyOrSummaryColValue,
@@ -17,9 +17,11 @@ import {
   extractRemoteRecordSummarySummaryColumnsValues,
   extractSummaryAttributesValues,
   fixDatetime,
+  getRecordFixKey,
   insertColumns,
   insertColumnsJoint,
   keyColumnNames,
+  isRowToBeFixed,
   keyColumnsSet,
   rowToRecord,
   summaryColumnsSet,
@@ -40,12 +42,32 @@ const fetchRecord = async ({
 }: any): Promise<ArenaMobileRecord> => {
   const { id: surveyId } = survey;
   const row = await dbClient.one(
-    `SELECT ${summarySelectFieldsJointWithValidation}${includeContent ? ", content" : ""}
+    `SELECT ${summarySelectFieldsJointWithValidation}${includeContent ? ", content, fixed_for" : ""}
     FROM record
     WHERE survey_id = ? AND id = ?`,
     [surveyId, recordId],
   );
-  return rowToRecord({ survey })(row);
+  const fixKey = getRecordFixKey(survey);
+  const toBeFixed = isRowToBeFixed({ row, fixKey });
+  const record = rowToRecord({ survey })(row);
+  if (toBeFixed && fixKey) {
+    await storeFixedRecordContent({ row, record, fixKey });
+  }
+  return record;
+};
+
+// stored once: the next fetches skip the fixes until the survey or the app are updated
+const storeFixedRecordContent = async ({ row, record, fixKey }: any) => {
+  try {
+    // only if the content hasn't changed since it was read
+    await dbClient.runSql(
+      `UPDATE record SET content = ?, fixed_for = ? WHERE id = ? AND content = ?`,
+      [JSON.stringify(record), fixKey, row.id, row.content],
+    );
+  } catch (error) {
+    // the record is fixed in memory anyway: it will be fixed again next time
+    log.warn(`error storing fixed record ${row.id}: ${error}`);
+  }
 };
 
 const fetchRecordSummary = async ({ survey, recordId }: any) =>
@@ -232,9 +254,10 @@ const insertRecordSummaries = async ({
   return insertedIds;
 };
 
-const updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely = async ({
+const updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely = ({
   survey,
   recordSummary,
+  client = dbClient,
 }: any) => {
   const { dateModified, ownerUuid, ownerName, uuid } = recordSummary;
   const keyColumnsValues = extractRemoteRecordSummaryKeyColumnsValues({
@@ -245,7 +268,7 @@ const updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely = async ({
     survey,
     recordSummary,
   });
-  return dbClient.runSql(
+  return client.runSql(
     `UPDATE record SET 
       owner_uuid = ?,
       owner_name = ?,
@@ -269,12 +292,35 @@ const updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely = async ({
   );
 };
 
+// one transaction: a commit per record is slow with many records
+const updateRecordsKeysAndDateModifiedWithSummariesFetchedRemotely = ({
+  survey,
+  recordSummaries,
+}: any): Promise<void> =>
+  dbClient.transaction(async (tx) => {
+    await Promises.each(recordSummaries, async (recordSummary: any) => {
+      try {
+        await updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely({
+          survey,
+          recordSummary,
+          client: tx,
+        });
+      } catch (error) {
+        throw new Error(
+          `error updating local record keys for record ${recordSummary.uuid}. Details: ${error}`,
+          { cause: error },
+        );
+      }
+    });
+  });
+
 const updateRecordKeysAndContent = async ({
   survey,
   record,
   updateOrigin = false,
   origin = RecordOrigin.local,
   updateDateSynced = false,
+  keepFixedFor = false,
   client = dbClient,
 }: any) => {
   const keyColumnsValues = extractKeyColumnsValues({ survey, record });
@@ -292,6 +338,7 @@ const updateRecordKeysAndContent = async ({
       load_status = ?, 
       ${updateOrigin ? "origin = ?," : ""}
       ${updateDateSynced ? "date_synced = ?," : ""}
+      ${keepFixedFor ? "" : "fixed_for = NULL,"}
       ${keyColumnsSet},
       ${summaryColumnsSet}
     WHERE survey_id = ? AND uuid = ?`,
@@ -320,6 +367,8 @@ const updateRecord = async ({ survey, record }: any) => {
     record: recordUpdated,
     updateOrigin: true,
     origin: RecordOrigin.local,
+    // edited in the editor: the record was fixed when fetched
+    keepFixedFor: true,
   });
   return recordUpdated;
 };
@@ -564,6 +613,7 @@ export const RecordRepository = {
   updateRecordWithContentFetchedRemotely,
   updateRecordWithContentMergedFromRemote,
   updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely,
+  updateRecordsKeysAndDateModifiedWithSummariesFetchedRemotely,
   updateRecordsDateSync,
   updateRecordsDateModifiedRemote,
   updateRecordsDateModifiedSynced,

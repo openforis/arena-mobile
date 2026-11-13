@@ -1,4 +1,5 @@
 import { DateFormats, Dates } from "@openforis/arena-core";
+import { dbClient } from "db";
 import { JobMobile, JobMobileContext } from "model";
 import { Files } from "utils";
 
@@ -43,7 +44,9 @@ export class BackupJob extends JobMobile<BackupJobContext> {
       ),
     );
     try {
-      await Files.zip(Files.documentDirectory, outputFileUri);
+      await dbClient.withConsistentDbFile(() =>
+        Files.zip(Files.documentDirectory, outputFileUri),
+      );
     } finally {
       await Promise.all(
         excludedDirs.map(({ uri, tempUri }) =>
