@@ -13,6 +13,7 @@ type LanguageBundle = Record<string, Record<string, any>>;
 
 // static requires (Metro can't resolve computed paths), evaluated only when the language is used
 const bundleLoaders: Record<string, () => LanguageBundle> = {
+  am: () => require("./am").default,
   de: () => require("./de").default,
   en: () => en,
   es: () => require("./es").default,
@@ -24,6 +25,7 @@ const bundleLoaders: Record<string, () => LanguageBundle> = {
   pt: () => require("./pt").default,
   ru: () => require("./ru").default,
   sr: () => require("./sr").default,
+  sv: () => require("./sv").default,
 };
 const supportedLngs = Object.keys(bundleLoaders);
 const fallbackLng = "en";
