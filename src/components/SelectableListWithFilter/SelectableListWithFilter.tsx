@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Chip } from "react-native-paper";
 
@@ -20,6 +20,10 @@ import { SelectableListProps } from "components/SelectableList/SelectableList";
 
 const noItems: any[] = [];
 
+const defaultItemKeyExtractor = (item: any) => item?.key;
+const defaultItemLabelExtractor = (item: any) => item?.label;
+const defaultItemDescriptionExtractor = (item: any) => item?.description;
+
 const _objToArray = (obj: any) => {
   if (!obj) return [];
   if (Array.isArray(obj)) return obj;
@@ -40,15 +44,15 @@ export const SelectableListWithFilter = (props: Props) => {
   const {
     editable = true,
     filterItems,
-    itemKeyExtractor = (item: any) => item?.key,
-    itemLabelExtractor = (item: any) => item?.label,
-    itemDescriptionExtractor = (item: any) => item?.description,
-    items = [],
+    itemKeyExtractor = defaultItemKeyExtractor,
+    itemLabelExtractor = defaultItemLabelExtractor,
+    itemDescriptionExtractor = defaultItemDescriptionExtractor,
+    items = noItems,
     itemsCountToShowFilter = 10,
     maxItemsToShow = 1000,
     multiple = false,
     onSelectedItemsChange,
-    selectedItems = [],
+    selectedItems = noItems,
   } = props;
 
   const filterVisible = items.length > itemsCountToShowFilter;
@@ -60,6 +64,10 @@ export const SelectableListWithFilter = (props: Props) => {
   const setFilterValueDebounced = useMemo(
     () => Functions.debounce(setFilterValue, 500),
     [],
+  );
+  useEffect(
+    () => () => setFilterValueDebounced.cancel(),
+    [setFilterValueDebounced],
   );
   const loading = debounceFiltering && filterInputValue !== filterValue;
 
@@ -78,12 +86,13 @@ export const SelectableListWithFilter = (props: Props) => {
     if (filterItems) {
       return filterItems({ items, filterInputValue: filterValue });
     }
+    const filterValueLowerCase = filterValue!.toLocaleLowerCase();
     return items.filter(
       (item: any) =>
         !selectedItems.includes(item) &&
         itemLabelExtractor(item)
           .toLocaleLowerCase()
-          .includes(filterValue!.toLocaleLowerCase()),
+          .includes(filterValueLowerCase),
     );
   }, [
     filterItems,

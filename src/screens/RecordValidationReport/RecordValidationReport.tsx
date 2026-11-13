@@ -21,13 +21,24 @@ import { DataEntryActions, DataEntrySelectors } from "state/dataEntry";
 import { ScreenOptionsSelectors } from "state/screenOptions";
 import { SurveySelectors } from "state/survey";
 
-import { DataVisualizer, Text, VView } from "components";
+import { DataVisualizer, DataVisualizerField, Text, VView } from "components";
 
 import { NodeEditDialog } from "screens/RecordEditor/NodeComponentSwitch/nodeTypes/NodeEditDialog";
 
 import styles from "./styles";
 
 const nodePathPartSeparator = " / ";
+
+const fields: DataVisualizerField[] = [
+  {
+    key: "path",
+    header: "common:path",
+  },
+  {
+    key: "error",
+    header: "common:error",
+  },
+];
 
 const getNodePath = ({ survey, record, nodeUuid, lang }: any) => {
   const parts: any = [];
@@ -212,6 +223,11 @@ export const RecordValidationReport = () => {
     [dispatch, navigator],
   );
 
+  const onEditDialogDismiss = useCallback(
+    () => setState({ editDialogOpen: false }),
+    [],
+  );
+
   return (
     <VView style={styles.container}>
       {items.length === 0 && (
@@ -222,16 +238,7 @@ export const RecordValidationReport = () => {
       )}
       {items.length > 0 && (
         <DataVisualizer
-          fields={[
-            {
-              key: "path",
-              header: "common:path",
-            },
-            {
-              key: "error",
-              header: "common:error",
-            },
-          ]}
+          fields={fields}
           items={items}
           mode={screenViewMode}
           onItemPress={onRowPress}
@@ -241,7 +248,7 @@ export const RecordValidationReport = () => {
         <NodeEditDialog
           nodeDef={dialogNodeDef}
           parentNodeUuid={dialogParentNodeUuid}
-          onDismiss={() => setState({ editDialogOpen: false })}
+          onDismiss={onEditDialogDismiss}
         />
       )}
     </VView>

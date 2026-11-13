@@ -1,12 +1,16 @@
-import { useCallback, useMemo } from "react";
+import { memo, useCallback, useMemo } from "react";
 import { FlatList, Pressable, useWindowDimensions } from "react-native";
 
+import { useStableCallback } from "hooks/useStableCallback";
 import { ScreenViewMode } from "model";
 
 import { Checkbox } from "../Checkbox";
 import { FieldRows } from "../DataCards/DataCardParts";
 import { getFieldRowsLayout } from "../DataCards/dataCardsUtils";
-import { DataVisualizerProps } from "../DataVisualizer/types";
+import {
+  DataVisualizerField,
+  DataVisualizerProps,
+} from "../DataVisualizer/types";
 import { HView } from "../HView";
 import { ItemSelectedBanner, useSelectableList } from "../SelectableList";
 import { VView } from "../VView";
@@ -14,6 +18,77 @@ import { useStyles } from "./styles";
 
 // item padding, accent bar and list padding
 const itemHorizontalPadding = 48;
+
+type DataListItemProps = {
+  fieldRowsLayout: { columns: number; labelWidth: number };
+  item: any;
+  onLongPress: (item: any) => void;
+  onPress: (item: any) => void;
+  onSelect: (item: any) => void;
+  otherFields: DataVisualizerField[];
+  selected: boolean;
+  selectionEnabled: boolean;
+  styles: ReturnType<typeof useStyles>;
+  titleFields: DataVisualizerField[];
+};
+
+const DataListItem = memo(function DataListItem(props: DataListItemProps) {
+  const {
+    fieldRowsLayout,
+    item,
+    onLongPress,
+    onPress,
+    onSelect,
+    otherFields,
+    selected,
+    selectionEnabled,
+    styles,
+    titleFields,
+  } = props;
+
+  return (
+    <Pressable
+      onPress={() => onPress(item)}
+      onLongPress={() => onLongPress(item)}
+      style={({ pressed }) => [
+        styles.item,
+        selected && styles.itemSelected,
+        pressed && styles.itemPressed,
+      ]}
+    >
+      <VView style={[styles.accent, selected && styles.accentSelected]} />
+      <HView style={styles.itemContent}>
+        <VView style={styles.fields}>
+          {titleFields.length > 0 && (
+            <>
+              <FieldRows
+                emphasized
+                fields={titleFields}
+                item={item}
+                labelWidth={fieldRowsLayout.labelWidth}
+                variant="titleMedium"
+                viewMode={ScreenViewMode.list}
+              />
+              {otherFields.length > 0 && <VView style={styles.divider} />}
+            </>
+          )}
+          <FieldRows
+            columns={fieldRowsLayout.columns}
+            fields={otherFields}
+            item={item}
+            labelWidth={fieldRowsLayout.labelWidth}
+            viewMode={ScreenViewMode.list}
+          />
+        </VView>
+        {selectionEnabled && (
+          <Checkbox checked={selected} onPress={() => onSelect(item)} />
+        )}
+      </HView>
+    </Pressable>
+  );
+});
+
+const itemKeyExtractor = (item: any) => String(item.key);
 
 export const DataList = (props: DataVisualizerProps) => {
   const {
@@ -31,7 +106,10 @@ export const DataList = (props: DataVisualizerProps) => {
 
   const styles = useStyles();
   const { width } = useWindowDimensions();
-  const fieldRowsLayout = getFieldRowsLayout(width - itemHorizontalPadding);
+  const fieldRowsLayout = useMemo(
+    () => getFieldRowsLayout(width - itemHorizontalPadding),
+    [width],
+  );
 
   // title fields (e.g. record keys) are emphasized at the top of each item
   const { titleFields, otherFields } = useMemo(
@@ -58,55 +136,31 @@ export const DataList = (props: DataVisualizerProps) => {
     selectedItemIds: selectedItemIdsProp,
   });
 
+  // stable handlers: rows re-render only when their own props change
+  const onPress = useStableCallback(onItemPress);
+  const onLongPress = useStableCallback(onItemLongPress);
+  const onSelect = useStableCallback(onItemSelect);
+
   const renderItem = useCallback(
-    ({ item }: any) => {
-      const selected = selectedItemIds.includes(item.key);
-      return (
-        <Pressable
-          onPress={() => onItemPress(item)}
-          onLongPress={() => onItemLongPress(item)}
-          style={({ pressed }) => [
-            styles.item,
-            selected && styles.itemSelected,
-            pressed && styles.itemPressed,
-          ]}
-        >
-          <VView style={[styles.accent, selected && styles.accentSelected]} />
-          <HView style={styles.itemContent}>
-            <VView style={styles.fields}>
-              {titleFields.length > 0 && (
-                <>
-                  <FieldRows
-                    emphasized
-                    fields={titleFields}
-                    item={item}
-                    labelWidth={fieldRowsLayout.labelWidth}
-                    variant="titleMedium"
-                    viewMode={ScreenViewMode.list}
-                  />
-                  {otherFields.length > 0 && <VView style={styles.divider} />}
-                </>
-              )}
-              <FieldRows
-                columns={fieldRowsLayout.columns}
-                fields={otherFields}
-                item={item}
-                labelWidth={fieldRowsLayout.labelWidth}
-                viewMode={ScreenViewMode.list}
-              />
-            </VView>
-            {selectionEnabled && (
-              <Checkbox checked={selected} onPress={() => onItemSelect(item)} />
-            )}
-          </HView>
-        </Pressable>
-      );
-    },
+    ({ item }: { item: any }) => (
+      <DataListItem
+        fieldRowsLayout={fieldRowsLayout}
+        item={item}
+        onLongPress={onLongPress}
+        onPress={onPress}
+        onSelect={onSelect}
+        otherFields={otherFields}
+        selected={selectedItemIds.includes(item.key)}
+        selectionEnabled={selectionEnabled}
+        styles={styles}
+        titleFields={titleFields}
+      />
+    ),
     [
       fieldRowsLayout,
-      onItemLongPress,
-      onItemPress,
-      onItemSelect,
+      onLongPress,
+      onPress,
+      onSelect,
       otherFields,
       selectedItemIds,
       selectionEnabled,
@@ -127,7 +181,7 @@ export const DataList = (props: DataVisualizerProps) => {
         contentContainerStyle={styles.listContent}
         data={items}
         extraData={selectedItemIds}
-        keyExtractor={(item) => String(item.key)}
+        keyExtractor={itemKeyExtractor}
         renderItem={renderItem}
         style={styles.list}
       />
