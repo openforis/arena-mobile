@@ -254,7 +254,7 @@ const insertRecordSummaries = async ({
   return insertedIds;
 };
 
-const updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely = async ({
+const updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely = ({
   survey,
   recordSummary,
   client = dbClient,
@@ -298,7 +298,7 @@ const updateRecordsKeysAndDateModifiedWithSummariesFetchedRemotely = ({
   recordSummaries,
 }: any): Promise<void> =>
   dbClient.transaction(async (tx) => {
-    for (const recordSummary of recordSummaries) {
+    await Promises.each(recordSummaries, async (recordSummary: any) => {
       try {
         await updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely({
           survey,
@@ -311,7 +311,7 @@ const updateRecordsKeysAndDateModifiedWithSummariesFetchedRemotely = ({
           { cause: error },
         );
       }
-    }
+    });
   });
 
 const updateRecordKeysAndContent = async ({
