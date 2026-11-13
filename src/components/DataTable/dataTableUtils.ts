@@ -2,5 +2,5 @@
 export const getItemKeysSignature = (items: { key: any }[]): string =>
   items
     .map((item) => String(item.key))
-    .sort()
+    .sort((keyA, keyB) => keyA.localeCompare(keyB))
     .join("\n");
