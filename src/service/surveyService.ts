@@ -14,17 +14,16 @@ import { SurveyFSRepository } from "./repository/surveyFSRepository";
 import { RecordFileService } from "./recordFileService";
 import { RemoteService } from "./remoteService";
 
+import { demoSurveyDatePublished, demoSurveyUuid } from "./demoSurveyInfo";
 const {
   fetchSurveySummaries: fetchSurveySummariesLocal,
   insertSurvey,
   updateSurvey,
 } = SurveyRepository;
 
-const demoSurveyUuid = "3a3550d2-97ac-4db2-a9b5-ed71ca0a02d3";
-
 type DemoSurveyJson = typeof import("./demoSurvey.json");
 
-// large: required lazily, only when the demo survey is imported or checked for updates
+// large: required lazily, only when the demo survey is imported or updated (it then stays in the module cache)
 const getDemoSurvey = (): DemoSurveyJson => require("./demoSurvey.json");
 
 const remoteSurveyFetchTimeout = 60000; // 1 min
@@ -158,9 +157,7 @@ const findOutdatedDemoSurveySummary = <
     (surveySummary) => surveySummary.uuid === demoSurveyUuid,
   );
   if (!demoSurveySummary) return undefined;
-  const demoSurvey = getDemoSurvey();
-  const demoSurveyDate = demoSurvey.datePublished ?? demoSurvey.dateModified;
-  return Dates.isAfter(demoSurveyDate, demoSurveySummary.dateModified)
+  return Dates.isAfter(demoSurveyDatePublished, demoSurveySummary.dateModified)
     ? demoSurveySummary
     : undefined;
 };
