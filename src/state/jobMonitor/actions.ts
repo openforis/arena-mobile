@@ -1,4 +1,4 @@
-import { JobSerialized, JobStatus } from "@openforis/arena-core";
+import { JobSerialized, JobStatus, Objects } from "@openforis/arena-core";
 
 import { JobCancelError, JobMobile } from "model";
 import { RemoteJobService, WebSocketService } from "service";
@@ -9,6 +9,9 @@ import type { AppDispatch, AppGetState, RootState } from "../store";
 
 // the websocket can miss the final update (e.g. a job ending before the handshake)
 const REMOTE_JOB_STATUS_POLL_INTERVAL_MS = 30_000;
+
+// progress updates can come for every processed item: every dispatch re-runs all the store subscribers
+const JOB_MONITOR_UPDATE_MIN_INTERVAL_MS = 250;
 
 const JOB_MONITOR_START = "JOB_MONITOR_START";
 const JOB_MONITOR_UPDATE = "JOB_MONITOR_UPDATE";
@@ -180,6 +183,8 @@ const createOnJobUpdateCallback = ({
     timestamp: number;
     speed: number;
   } | null = null;
+  let lastUpdatePayload: any = null;
+  let lastUpdateTime = 0;
 
   return (jobSummary: JobSerialized<any>) => {
     const { status, errors, processed, total } = jobSummary;
@@ -208,23 +213,31 @@ const createOnJobUpdateCallback = ({
     });
     previousSample = uploadStats.previousSample;
 
-    dispatch({
-      type: JOB_MONITOR_UPDATE,
-      payload: {
-        progressPercent,
-        status,
-        errors,
-        ...(innerJobUi
-          ? {
-              titleKey: innerJobUi.config.titleKey,
-              showTransferStats: currentShowTransferStats,
-            }
-          : {}),
-        transferTotalBytes: uploadStats.transferTotalBytes,
-        transferSpeedBytesPerSec: uploadStats.transferSpeedBytesPerSec,
-        etaSeconds: uploadStats.etaSeconds,
-      },
-    });
+    const payload = {
+      progressPercent,
+      status,
+      errors,
+      ...(innerJobUi
+        ? {
+            titleKey: innerJobUi.config.titleKey,
+            showTransferStats: currentShowTransferStats,
+          }
+        : {}),
+      transferTotalBytes: uploadStats.transferTotalBytes,
+      transferSpeedBytesPerSec: uploadStats.transferSpeedBytesPerSec,
+      etaSeconds: uploadStats.etaSeconds,
+    };
+    const now = Date.now();
+    // status changes are always dispatched, progress at most every JOB_MONITOR_UPDATE_MIN_INTERVAL_MS
+    const skipUpdate =
+      lastUpdatePayload?.status === status &&
+      (Objects.isEqual(lastUpdatePayload, payload) ||
+        now - lastUpdateTime < JOB_MONITOR_UPDATE_MIN_INTERVAL_MS);
+    if (!skipUpdate) {
+      lastUpdatePayload = payload;
+      lastUpdateTime = now;
+      dispatch({ type: JOB_MONITOR_UPDATE, payload });
+    }
     if (isJobStatusEnded(status)) {
       if (!job) {
         // remote job, no local job instance (see JobStartParams.jobUuid) - only this callback
