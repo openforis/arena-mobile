@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { memo, useCallback } from "react";
 import { StyleSheet } from "react-native";
 
 import { NodeDefs } from "@openforis/arena-core";
@@ -18,45 +18,48 @@ const styles = StyleSheet.create({
   editButton: { alignSelf: "center" },
 });
 
-export const NodeMultipleEntityPreviewComponent = (
-  props: NodeComponentProps,
-) => {
-  const { nodeDef, parentNodeUuid } = props;
+export const NodeMultipleEntityPreviewComponent = memo(
+  (props: NodeComponentProps) => {
+    const { nodeDef, parentNodeUuid } = props;
 
-  log.debug(
-    `rendering NodeMultipleEntityPreviewComponent for ${NodeDefs.getName(nodeDef)}`,
-  );
+    log.debug(
+      `rendering NodeMultipleEntityPreviewComponent for ${NodeDefs.getName(nodeDef)}`,
+    );
 
-  const entityDefUuid = nodeDef.uuid;
+    const entityDefUuid = nodeDef.uuid;
 
-  const dispatch = useAppDispatch();
-  const lang = SurveySelectors.useCurrentSurveyPreferredLang();
-  const nodeEditable = DataEntrySelectors.useRecordNodePointerEditable({
-    parentNodeUuid,
-    nodeDefUuid: entityDefUuid,
-  });
-  const canEditRecord = DataEntrySelectors.useCanEditRecord();
-  const editable = canEditRecord && nodeEditable;
+    const dispatch = useAppDispatch();
+    const lang = SurveySelectors.useCurrentSurveyPreferredLang();
+    const nodeEditable = DataEntrySelectors.useRecordNodePointerEditable({
+      parentNodeUuid,
+      nodeDefUuid: entityDefUuid,
+    });
+    const canEditRecord = DataEntrySelectors.useCanEditRecord();
+    const editable = canEditRecord && nodeEditable;
 
-  const onEditPress = useCallback(
-    () =>
-      dispatch(
-        DataEntryActions.selectCurrentPageEntity({
-          parentEntityUuid: parentNodeUuid,
-          entityDefUuid,
-        }),
-      ),
-    [dispatch, entityDefUuid, parentNodeUuid],
-  );
+    const onEditPress = useCallback(
+      () =>
+        dispatch(
+          DataEntryActions.selectCurrentPageEntity({
+            parentEntityUuid: parentNodeUuid,
+            entityDefUuid,
+          }),
+        ),
+      [dispatch, entityDefUuid, parentNodeUuid],
+    );
 
-  return (
-    <VView>
-      <Button
-        onPress={onEditPress}
-        style={styles.editButton}
-        textKey={editable ? "dataEntry:editNodeDef" : "dataEntry:viewNodeDef"}
-        textParams={{ nodeDef: NodeDefs.getLabelOrName(nodeDef, lang) }}
-      />
-    </VView>
-  );
-};
+    return (
+      <VView>
+        <Button
+          onPress={onEditPress}
+          style={styles.editButton}
+          textKey={editable ? "dataEntry:editNodeDef" : "dataEntry:viewNodeDef"}
+          textParams={{ nodeDef: NodeDefs.getLabelOrName(nodeDef, lang) }}
+        />
+      </VView>
+    );
+  },
+);
+
+NodeMultipleEntityPreviewComponent.displayName =
+  "NodeMultipleEntityPreviewComponent";

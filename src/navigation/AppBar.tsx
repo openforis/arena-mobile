@@ -2,18 +2,16 @@ import { useCallback, useMemo, useState } from "react";
 
 import { Surveys } from "@openforis/arena-core";
 
-import { AutoSyncStatusAppBarAction } from "appComponents/AutoSyncStatus";
 import {
   AppBarAction,
   AppBarBackAction,
   AppBarContent,
   AppBarHeader,
   HView,
-  Spacer,
   Text,
 } from "components";
 import { useScreenKey } from "hooks";
-import { MapProvider, RecordEditViewMode, ScreenViewMode } from "model";
+import { MapProvider, ScreenViewMode } from "model";
 import { useIsTextDirectionRtl, useTranslation } from "localization";
 import { log, PreviewMode } from "utils";
 import { screenKeys } from "screens";
@@ -27,8 +25,6 @@ import {
   ScreenOptionsActions,
   ScreenOptionsSelectors,
   SettingsSelectors,
-  SurveyOptionsActions,
-  SurveyOptionsSelectors,
   SurveySelectors,
   useAppDispatch,
   useConfirm,
@@ -37,6 +33,7 @@ import { BaseStyles } from "utils/BaseStyles";
 
 import { createNavigator } from "./navigator";
 import { OptionsMenu } from "./OptionsMenu";
+import { RecordEditorAppBarActions } from "./RecordEditorAppBarActions";
 import styles from "./styles";
 
 const iconByScreenViewMode: Record<ScreenViewMode, string> = {
@@ -51,9 +48,16 @@ type Props = {
   options: any;
 };
 
-export const AppBar = (props: Props) => {
+type AppBarInternalProps = Props & {
+  editingRecord: boolean;
+  isInTwoRows: boolean;
+  screenKey: string;
+};
+
+const AppBarInternal = (props: AppBarInternalProps) => {
   log.debug(`rendering AppBar`);
-  const { back, navigation, options } = props;
+  const { back, editingRecord, isInTwoRows, navigation, options, screenKey } =
+    props;
   const navigator = useMemo(() => createNavigator(navigation), [navigation]);
 
   const { t } = useTranslation();
@@ -69,7 +73,6 @@ export const AppBar = (props: Props) => {
     viewModes,
   } = options;
 
-  const screenKey = useScreenKey();
   const screenViewMode = ScreenOptionsSelectors.useScreenViewMode(screenKey);
 
   const dispatch = useAppDispatch();
@@ -82,27 +85,8 @@ export const AppBar = (props: Props) => {
       !!hasRecordsMap && !!survey && !!cycle && hasMapLayers({ survey, cycle }),
     [cycle, hasRecordsMap, survey],
   );
-  const isLandscape = DeviceInfoSelectors.useOrientationIsLandscape();
   const isTablet = DeviceInfoSelectors.useIsTablet();
-  const editingRecord =
-    DataEntrySelectors.useIsEditingRecord() &&
-    screenKey === screenKeys.recordEditor;
-  const recordEditLockAvailable =
-    DataEntrySelectors.useRecordEditLockAvailable();
-  const recordEditLocked =
-    DataEntrySelectors.useRecordEditLocked() && editingRecord;
-  const recordEditViewMode = SurveyOptionsSelectors.useRecordEditViewMode();
-  const recordIsNotValid = DataEntrySelectors.useRecordIsNotValid();
-  const recordHasErrors = DataEntrySelectors.useRecordHasErrors();
-  const canRecordBeLinkedToPreviousCycle =
-    DataEntrySelectors.useCanRecordBeLinkedToPreviousCycle();
-  const isLinkedToPreviousCycleRecord =
-    DataEntrySelectors.useIsLinkedToPreviousCycleRecord();
-  const isLoadingPreviousCycleRecord =
-    DataEntrySelectors.usePreviousCycleRecordLoading();
-  const isInTwoRows = editingRecord && !isLandscape;
   const mapProvider = SettingsSelectors.useMapProvider();
-  const showRecordCompletion = SettingsSelectors.useShowRecordCompletion();
   const confirm = useConfirm();
 
   const [state, setState] = useState({ menuVisible: false });
@@ -138,21 +122,6 @@ export const AppBar = (props: Props) => {
     [dispatch, screenKey, viewModes],
   );
 
-  const toggleRecordLock = useCallback(
-    () => dispatch(DataEntryActions.toggleRecordEditLock),
-    [dispatch],
-  );
-
-  const toggleRecordEditViewMode = useCallback(() => {
-    dispatch(
-      SurveyOptionsActions.setRecordEditViewMode(
-        recordEditViewMode === RecordEditViewMode.form
-          ? RecordEditViewMode.oneNode
-          : RecordEditViewMode.form,
-      ),
-    );
-  }, [dispatch, recordEditViewMode]);
-
   const onRecordsMapPress = useCallback(async () => {
     const confirmResult = await confirm({
       titleKey: "recordsMap:mapProviderChooser.title",
@@ -171,142 +140,119 @@ export const AppBar = (props: Props) => {
     });
   }, [confirm, mapProvider, navigator]);
 
-  const onValidationIconPress = useCallback(
-    () => navigator.navigateToRecordValidationReport(),
-    [navigator],
-  );
+  return (
+    <AppBarHeader elevated mode={isInTwoRows ? "medium" : "small"}>
+      <HView
+        style={
+          isTablet ? styles.topBarContainer : styles.topBarContainerCompact
+        }
+        fullWidth
+      >
+        {editingRecord && (
+          <AppBarAction
+            icon="menu"
+            onPress={onToggleDrawerPress}
+            size={36}
+            testID="app-bar-drawer-button"
+          />
+        )}
 
-  const onLinkToPreviousCyclePress = useCallback(() => {
-    dispatch(
-      isLinkedToPreviousCycleRecord
-        ? DataEntryActions.unlinkFromRecordInPreviousCycle()
-        : DataEntryActions.linkToRecordInPreviousCycle(),
-    );
-  }, [dispatch, isLinkedToPreviousCycleRecord]);
+        {hasBack && back && (
+          <AppBarBackAction
+            onPress={navigator.goBack}
+            size={36}
+            style={isRtl ? BaseStyles.mirrorX : undefined}
+          />
+        )}
+
+        {(!editingRecord || isTablet) && (
+          <Text
+            numberOfLines={editingRecord ? 1 : undefined}
+            style={styles.title}
+            variant="titleLarge"
+          >
+            {title}
+          </Text>
+        )}
+
+        {editingRecord && (
+          <RecordEditorAppBarActions
+            isInTwoRows={isInTwoRows}
+            isTablet={isTablet}
+            navigator={navigator}
+          />
+        )}
+
+        {!editingRecord && recordsMapAvailable && (
+          <AppBarAction
+            icon="map-outline"
+            onPress={onRecordsMapPress}
+            testID="app-bar-records-map-button"
+          />
+        )}
+
+        {!editingRecord && hasToggleScreenView && (
+          <AppBarAction
+            // icon of the view mode the button switches to
+            icon={
+              iconByScreenViewMode[
+                ScreenOptionsActions.getNextViewMode({
+                  viewMode: screenViewMode,
+                  viewModes,
+                })
+              ]
+            }
+            onPress={onToggleScreenViewModePress}
+            testID="app-bar-screen-view-mode-button"
+          />
+        )}
+
+        {hasOptionsMenuVisible && !PreviewMode.isActive && (
+          <OptionsMenu
+            onDismiss={onMenuDismiss}
+            toggleMenu={toggleMenu}
+            visible={menuVisible}
+          />
+        )}
+      </HView>
+      {isInTwoRows && (
+        <AppBarContent
+          style={styles.breadcrumbsContent}
+          title={<Breadcrumbs />}
+        />
+      )}
+    </AppBarHeader>
+  );
+};
+
+const RecordEditorAppBar = (props: Props) => {
+  const editingRecord = DataEntrySelectors.useIsEditingRecord();
+  const isLandscape = DeviceInfoSelectors.useOrientationIsLandscape();
+  const showRecordCompletion = SettingsSelectors.useShowRecordCompletion();
 
   return (
     <>
-      <AppBarHeader elevated mode={isInTwoRows ? "medium" : "small"}>
-        <HView
-          style={[
-            styles.topBarContainer,
-            !isTablet && styles.topBarContainerCompact,
-          ]}
-          fullWidth
-        >
-          {editingRecord && (
-            <AppBarAction
-              icon="menu"
-              onPress={onToggleDrawerPress}
-              size={36}
-              testID="app-bar-drawer-button"
-            />
-          )}
-
-          {hasBack && back && (
-            <AppBarBackAction
-              onPress={navigator.goBack}
-              size={36}
-              style={isRtl ? BaseStyles.mirrorX : undefined}
-            />
-          )}
-
-          {(!editingRecord || isTablet) && (
-            <Text
-              numberOfLines={editingRecord ? 1 : undefined}
-              style={styles.title}
-              variant="titleLarge"
-            >
-              {title}
-            </Text>
-          )}
-
-          {editingRecord && (
-            <>
-              {!isInTwoRows && <Breadcrumbs />}
-              {!isTablet && isInTwoRows && (
-                <Spacer fullFlex fullWidth={false} />
-              )}
-              {recordEditLockAvailable && (
-                <AppBarAction
-                  icon={
-                    recordEditLocked
-                      ? "lock-outline"
-                      : "lock-open-variant-outline"
-                  }
-                  onPress={toggleRecordLock}
-                  testID="app-bar-record-lock-button"
-                />
-              )}
-              {recordIsNotValid && (
-                <AppBarAction
-                  icon="alert"
-                  color={recordHasErrors ? "red" : "orange"}
-                  onPress={onValidationIconPress}
-                  testID="app-bar-validation-button"
-                />
-              )}
-              {canRecordBeLinkedToPreviousCycle && (
-                <AppBarAction
-                  icon={isLinkedToPreviousCycleRecord ? "link" : "link-off"}
-                  loading={isLoadingPreviousCycleRecord}
-                  onPress={onLinkToPreviousCyclePress}
-                  testID="app-bar-previous-cycle-link-button"
-                />
-              )}
-              <AppBarAction
-                icon={
-                  recordEditViewMode === RecordEditViewMode.form
-                    ? "numeric-1-box-outline"
-                    : "format-list-bulleted"
-                }
-                onPress={toggleRecordEditViewMode}
-                testID="app-bar-record-view-mode-button"
-              />
-              {!PreviewMode.isActive && <AutoSyncStatusAppBarAction />}
-            </>
-          )}
-
-          {!editingRecord && recordsMapAvailable && (
-            <AppBarAction
-              icon="map-outline"
-              onPress={onRecordsMapPress}
-              testID="app-bar-records-map-button"
-            />
-          )}
-
-          {!editingRecord && hasToggleScreenView && (
-            <AppBarAction
-              // icon of the view mode the button switches to
-              icon={
-                iconByScreenViewMode[
-                  ScreenOptionsActions.getNextViewMode({
-                    viewMode: screenViewMode,
-                    viewModes,
-                  })
-                ]
-              }
-              onPress={onToggleScreenViewModePress}
-              testID="app-bar-screen-view-mode-button"
-            />
-          )}
-
-          {hasOptionsMenuVisible && !PreviewMode.isActive && (
-            <OptionsMenu
-              onDismiss={onMenuDismiss}
-              toggleMenu={toggleMenu}
-              visible={menuVisible}
-            />
-          )}
-        </HView>
-        {isInTwoRows && (
-          <AppBarContent
-            style={styles.breadcrumbsContent}
-            title={<Breadcrumbs />}
-          />
-        )}
-      </AppBarHeader>
+      <AppBarInternal
+        {...props}
+        editingRecord={editingRecord}
+        isInTwoRows={editingRecord && !isLandscape}
+        screenKey={screenKeys.recordEditor}
+      />
       {editingRecord && showRecordCompletion && <RecordCompletionProgressBar />}
     </>
+  );
+};
+
+export const AppBar = (props: Props) => {
+  const screenKey = useScreenKey();
+  return screenKey === screenKeys.recordEditor ? (
+    <RecordEditorAppBar {...props} />
+  ) : (
+    <AppBarInternal
+      {...props}
+      editingRecord={false}
+      isInTwoRows={false}
+      screenKey={screenKey}
+    />
   );
 };

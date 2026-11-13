@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Tooltip as RNPTooltip } from "react-native-paper";
 
 import { useTranslation } from "localization";
@@ -15,16 +16,19 @@ export const Tooltip = (props: Props) => {
 
   const { t } = useTranslation();
 
-  const theme =
-    backgroundColor || textColor
-      ? {
-          isV3: true,
-          colors: {
-            onSurface: backgroundColor,
-            surface: textColor,
-          },
-        }
-      : undefined;
+  const theme = useMemo(
+    () =>
+      backgroundColor || textColor
+        ? {
+            isV3: true,
+            colors: {
+              onSurface: backgroundColor,
+              surface: textColor,
+            },
+          }
+        : undefined,
+    [backgroundColor, textColor],
+  );
 
   return (
     <RNPTooltip
