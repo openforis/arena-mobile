@@ -28,7 +28,7 @@ export const useHomeSync = ({ onSyncEnd, records }: Props) => {
   const survey = SurveySelectors.useCurrentSurvey();
   const cycle = SurveySelectors.useCurrentSurveyCycle();
   const isDemoSurvey = SurveySelectors.useIsCurrentSurveyDemo();
-  const autoSyncEnabled = SettingsSelectors.useSetting("autoSyncEnabled");
+  const autoSyncEnabled = SettingsSelectors.useAutoSyncEnabled();
   const { status: autoSyncStatus } = AutoSyncSelectors.useAutoSyncState();
 
   const [syncing, setSyncing] = useState(false);

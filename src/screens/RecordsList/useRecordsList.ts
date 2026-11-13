@@ -74,7 +74,7 @@ export const useRecordsList = () => {
   const defaultCycleKey = survey ? Surveys.getDefaultCycleKey(survey) : null;
   const isDemoSurvey = SurveySelectors.useIsCurrentSurveyDemo();
 
-  const autoSyncEnabled = SettingsSelectors.useSetting("autoSyncEnabled");
+  const autoSyncEnabled = SettingsSelectors.useAutoSyncEnabled();
   const loggedInUser = RemoteConnectionSelectors.useLoggedInUser();
   // the only job that runs silently in this app is the background auto-sync upload (see
   // actionsAutoSync.ts); used here just to know when to refresh this screen's own per-record

@@ -145,7 +145,7 @@ export const StatusBar = () => {
   useBatteryStateListener();
   useFreeDiskStorageMonitor();
 
-  const locationGpsLocked = SettingsSelectors.useSetting("locationGpsLocked");
+  const locationGpsLocked = SettingsSelectors.useLocationGpsLocked();
 
   const formatRemainingTimeCompact = (time: any) =>
     TimeUtils.formatRemainingTimeIfLessThan1Day({

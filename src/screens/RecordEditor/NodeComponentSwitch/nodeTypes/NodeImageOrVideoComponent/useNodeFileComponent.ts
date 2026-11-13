@@ -118,8 +118,8 @@ const resizeImage = async (
 export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
   const toaster = useToast();
   const confirm = useConfirm();
-  const imageSizeLimit = SettingsSelectors.useSetting("imageSizeLimit");
-  const imageSizeUnlimited = SettingsSelectors.useSetting("imageSizeUnlimited");
+  const imageSizeLimit = SettingsSelectors.useImageSizeLimit();
+  const imageSizeUnlimited = SettingsSelectors.useImageSizeUnlimited();
   const surveyId = SurveySelectors.useCurrentSurveyId();
 
   const { request: requestCameraPermission } = useRequestCameraPermission();

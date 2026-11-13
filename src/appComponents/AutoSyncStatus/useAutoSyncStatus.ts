@@ -92,7 +92,7 @@ const computeIconAndColor = ({
  */
 export const useAutoSyncStatus = () => {
   const dispatch = useAppDispatch();
-  const autoSyncEnabled = SettingsSelectors.useSetting("autoSyncEnabled");
+  const autoSyncEnabled = SettingsSelectors.useAutoSyncEnabled();
   const { checking, status, message, conflictingKeysWithMergeNotAllowed } =
     AutoSyncSelectors.useAutoSyncState();
   const {

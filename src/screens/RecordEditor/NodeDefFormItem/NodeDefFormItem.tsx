@@ -36,7 +36,7 @@ export const NodeDefFormItem = (props: NodeDefFormItemProps) => {
   const { uuid: nodeDefUuid } = nodeDef;
 
   const styles = useStyles();
-  const animationsEnabled = SettingsSelectors.useSetting("animationsEnabled");
+  const animationsEnabled = SettingsSelectors.useAnimationsEnabled();
 
   const viewMode = SurveyOptionsSelectors.useRecordEditViewMode();
   const cycle = DataEntrySelectors.useRecordCycle();

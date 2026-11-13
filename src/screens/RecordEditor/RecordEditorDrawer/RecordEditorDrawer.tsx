@@ -31,9 +31,7 @@ export const RecordEditorDrawer = () => {
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const pageSelectorOpen = DataEntrySelectors.useIsRecordPageSelectorMenuOpen();
   const viewMode = SurveyOptionsSelectors.useRecordEditViewMode();
-  const showRecordCompletion = SettingsSelectors.useSetting(
-    "showRecordCompletion",
-  );
+  const showRecordCompletion = SettingsSelectors.useShowRecordCompletion();
   const styles = useStyles();
   const fieldManualUrl = URLs.toHttpUrlOrNull(
     Surveys.getFieldManualLink(lang)(survey),

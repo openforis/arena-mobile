@@ -219,9 +219,7 @@ export const useTreeData = () => {
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const record = DataEntrySelectors.useRecord();
   const currentPageEntity = DataEntrySelectors.useCurrentPageEntity();
-  const showRecordCompletion = SettingsSelectors.useSetting(
-    "showRecordCompletion",
-  );
+  const showRecordCompletion = SettingsSelectors.useShowRecordCompletion();
   const {
     entityDef: currentEntityDef,
     entityUuid,

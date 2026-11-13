@@ -163,9 +163,8 @@ export const LocationNavigator = (props: LocationNavigatorProps) => {
   const isLandscape = DeviceInfoSelectors.useOrientationIsLandscape();
   const size = isLandscape ? minDimension - 110 : minDimension - 90;
 
-  const locationAccuracyThreshold = SettingsSelectors.useSetting(
-    "locationAccuracyThreshold",
-  );
+  const locationAccuracyThreshold =
+    SettingsSelectors.useLocationAccuracyThreshold();
 
   const [viewMode, setViewMode] = useState<"compass" | "radar">("compass");
   const [infoDialogVisible, setInfoDialogVisible] = useState(false);

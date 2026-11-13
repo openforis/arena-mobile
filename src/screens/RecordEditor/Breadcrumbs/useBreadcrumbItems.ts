@@ -22,9 +22,7 @@ export const useBreadcrumbItems = () => {
   const survey = SurveySelectors.useCurrentSurvey();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const currentPageEntity = DataEntrySelectors.useCurrentPageEntity();
-  const showRecordCompletion = SettingsSelectors.useSetting(
-    "showRecordCompletion",
-  );
+  const showRecordCompletion = SettingsSelectors.useShowRecordCompletion();
   const { entityUuid, parentEntityUuid, entityDef } = currentPageEntity;
   const actualEntityUuid = entityUuid ?? parentEntityUuid;
   const entityDefUuid = entityDef.uuid;
