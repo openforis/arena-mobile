@@ -17,12 +17,15 @@ import { AppMessageDialog } from "appComponents/AppMessageDialog";
 import { AppToast } from "appComponents/AppToast";
 import { ErrorFallbackComponent } from "appComponents/ErrorFallbackComponent";
 import { JobMonitorDialog } from "appComponents/JobMonitorDialog";
-import { useEffectiveTheme } from "hooks";
+import { useEffectiveTheme } from "hooks/useEffectiveTheme";
 import { AppStack } from "navigation/AppStack";
 import { store } from "state/store";
 import { AppThemeProvider } from "theme";
-import { BaseStyles, Environment, log, PreviewMode } from "utils";
+import { BaseStyles } from "utils/BaseStyles";
+import { Environment } from "utils/Environment";
 import { initializeGlobalErrorHandler } from "utils/GlobalErrorHandler";
+import { log } from "utils/Logger";
+import { PreviewMode } from "utils/PreviewMode";
 
 import { AppInitializer } from "./src/AppInitializer";
 import { PreviewInitializer } from "./src/preview";
