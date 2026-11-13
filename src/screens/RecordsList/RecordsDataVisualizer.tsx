@@ -45,6 +45,9 @@ import { RecordSyncStatusIcon } from "./RecordSyncStatusIcon";
 import { RecordValidationBadge } from "./RecordValidationBadge";
 import { RecordListConstants } from "./recordListConstants";
 
+// table view only: the list and cards views are virtualized
+const recordsPerPage = 50;
+
 const formatDateToDateTimeDisplay = (date: any) =>
   typeof date === "string"
     ? Dates.convertDate({
@@ -511,6 +514,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
       fields={fields}
       mode={screenViewMode}
       items={recordItems}
+      itemsPerPage={recordsPerPage}
       onItemPress={onItemPress}
       onDeleteSelectedItemIds={onDeleteSelectedRecordUuids}
       onSelectionChange={onSelectionChange}
@@ -518,6 +522,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
       selectable
       selectedItemIds={selectedRecordUuids}
       selectedItemsCustomActions={customActions}
+      showPagination={recordItems.length > recordsPerPage}
       sort={sort}
     />
   );

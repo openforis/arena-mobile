@@ -16,6 +16,7 @@ import {
   extractRemoteRecordSummaryKeyColumnsValues,
   extractRemoteRecordSummarySummaryColumnsValues,
   extractSummaryAttributesValues,
+  extractValidationCountsColumnsValues,
   fixDatetime,
   getRecordFixKey,
   insertColumns,
@@ -28,6 +29,7 @@ import {
   summarySelectFieldsJoint,
   summarySelectFieldsJointWithValidation,
   toKeyOrSummaryColValue,
+  validationCountsColumnsSet,
 } from "./recordRowMapper";
 
 const getPlaceholders = (count: any) =>
@@ -61,8 +63,15 @@ const storeFixedRecordContent = async ({ row, record, fixKey }: any) => {
   try {
     // only if the content hasn't changed since it was read
     await dbClient.runSql(
-      `UPDATE record SET content = ?, fixed_for = ? WHERE id = ? AND content = ?`,
-      [JSON.stringify(record), fixKey, row.id, row.content],
+      `UPDATE record SET content = ?, fixed_for = ?, ${validationCountsColumnsSet}
+      WHERE id = ? AND content = ?`,
+      [
+        JSON.stringify(record),
+        fixKey,
+        ...extractValidationCountsColumnsValues(record),
+        row.id,
+        row.content,
+      ],
     );
   } catch (error) {
     // the record is fixed in memory anyway: it will be fixed again next time
@@ -200,6 +209,7 @@ const insertRecord = async ({
       0,
       ...keyColumnsValues,
       ...summaryAttributesColumnValues,
+      ...extractValidationCountsColumnsValues(record),
     ],
   );
   record.id = insertId;
@@ -246,6 +256,7 @@ const insertRecordSummaries = async ({
           recordSummary.readOnly ? 1 : 0,
           ...keyColumnsValues,
           ...summaryAttributesColumnValues,
+          ...extractValidationCountsColumnsValues(null),
         ],
       );
       insertedIds.push(insertId);
@@ -340,7 +351,8 @@ const updateRecordKeysAndContent = async ({
       ${updateDateSynced ? "date_synced = ?," : ""}
       ${keepFixedFor ? "" : "fixed_for = NULL,"}
       ${keyColumnsSet},
-      ${summaryColumnsSet}
+      ${summaryColumnsSet},
+      ${validationCountsColumnsSet}
     WHERE survey_id = ? AND uuid = ?`,
     [
       JSON.stringify(record),
@@ -350,6 +362,7 @@ const updateRecordKeysAndContent = async ({
       ...(updateDateSynced ? [Dates.nowFormattedForStorage()] : []),
       ...keyColumnsValues,
       ...summaryAttributesValues,
+      ...extractValidationCountsColumnsValues(record),
       survey.id,
       record.uuid,
     ],
@@ -382,9 +395,14 @@ const updateRecordValidation = async ({
   validation,
 }: any) =>
   dbClient.runSql(
-    `UPDATE record SET content = json_set(content, '$.validation', json(?))
+    `UPDATE record SET content = json_set(content, '$.validation', json(?)), ${validationCountsColumnsSet}
      WHERE survey_id = ? AND uuid = ?`,
-    [JSON.stringify(validation), surveyId, recordUuid],
+    [
+      JSON.stringify(validation),
+      ...extractValidationCountsColumnsValues({ validation }),
+      surveyId,
+      recordUuid,
+    ],
   );
 
 const updateRecordWithContentFetchedRemotely = async ({
