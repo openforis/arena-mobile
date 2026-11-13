@@ -537,7 +537,8 @@ const updateRecordsMergedInto = async ({ surveyId, mergedRecordsMap }: any) => {
 
 const fixRecordCycle = async ({ survey, recordId }: any) => {
   const record = await fetchRecord({ survey, recordId });
-  const { cycle = Surveys.getDefaultCycleKey(survey) } = record;
+  // cycle is null (not undefined) in the records to fix: a destructuring default wouldn't apply
+  const cycle = record.cycle ?? Surveys.getDefaultCycleKey(survey);
   return dbClient.runSql(`UPDATE record SET cycle = ? WHERE id = ?`, [
     cycle,
     recordId,

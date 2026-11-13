@@ -65,14 +65,23 @@ export const RecordNodesCarousel = () => {
         ref={pagerViewRef}
         style={styles.pager}
       >
-        {childrenDefs.map((childDef) => (
+        {childrenDefs.map((childDef, index) => (
           <View key={childDef.uuid} style={styles.childContainer}>
-            <NodeDefFormItem nodeDef={childDef} parentNodeUuid={entityUuid} />
+            {/* only pages next to the active one are mounted: each form item subscribes to the store */}
+            {Math.abs(index - activeChildIndex) <= 1 && (
+              <NodeDefFormItem nodeDef={childDef} parentNodeUuid={entityUuid} />
+            )}
           </View>
         ))}
       </PagerView>
     );
-  }, [childrenDefs, entityUuid, onPageSelected, onPageScrollStateChanged]);
+  }, [
+    activeChildIndex,
+    childrenDefs,
+    entityUuid,
+    onPageSelected,
+    onPageScrollStateChanged,
+  ]);
 
   if (
     NodeDefs.isMultiple(entityDef) &&

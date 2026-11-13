@@ -32,7 +32,8 @@ const requestAccessMediaLocation = async () => {
   if (
     !Environment.isExpoGo &&
     Environment.isAndroid &&
-    Environment.androidApiLevel >= 10
+    // ACCESS_MEDIA_LOCATION exists since Android 10 (API level 29)
+    Environment.androidApiLevel >= 29
   ) {
     const permission = i18n.t("permissions:types.accessMediaLocation");
     const status = await PermissionsAndroid.request(
