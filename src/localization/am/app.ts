@@ -36,7 +36,6 @@ export default {
     updatingDemoSurvey: "የማሳያ ዳሰሳን በማዘመን ላይ",
     fetchingAndSettingLocalSurveys: "የአካባቢ ዳሰሳዎችን በመሰብሰብ እና በማዘጋጀት ላይ",
     fetchingAndSettingSurvey: "ዳሰሳን በመሰብሰብ እና በማዘጋጀት ላይ",
-    checkingLoggedIn: "የተጠቃሚውን መግቢያ በመፈተሽ ላይ",
     complete: "ተጠናቋል",
   },
   logs: {

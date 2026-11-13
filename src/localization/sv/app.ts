@@ -38,7 +38,6 @@ export default {
     updatingDemoSurvey: "Uppdaterar demoenkät",
     fetchingAndSettingLocalSurveys: "Hämtar och ställer in lokala enkäter",
     fetchingAndSettingSurvey: "Hämtar och ställer in enkät",
-    checkingLoggedIn: "Kontrollerar inloggad",
     complete: "Slutfört",
   },
   logs: {

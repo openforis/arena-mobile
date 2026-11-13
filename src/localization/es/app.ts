@@ -38,7 +38,6 @@ export default {
     fetchingAndSettingLocalSurveys:
       "Obteniendo y configurando encuestas locales",
     fetchingAndSettingSurvey: "Obteniendo y configurando encuesta",
-    checkingLoggedIn: "Comprobando inicio de sesión",
     complete: "Completo",
   },
   logs: {

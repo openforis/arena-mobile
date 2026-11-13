@@ -38,7 +38,6 @@ export default {
     updatingDemoSurvey: "デモ調査を更新中",
     fetchingAndSettingLocalSurveys: "ローカルの調査を取得・設定中",
     fetchingAndSettingSurvey: "調査を取得・設定中",
-    checkingLoggedIn: "ログイン状態を確認中",
     complete: "完了",
   },
   logs: {

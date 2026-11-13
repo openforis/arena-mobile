@@ -37,7 +37,6 @@ export default {
     updatingDemoSurvey: "A atualizar inquérito de demonstração",
     fetchingAndSettingLocalSurveys: "A obter e definir inquéritos locais",
     fetchingAndSettingSurvey: "A obter e definir inquérito",
-    checkingLoggedIn: "A verificar início de sessão",
     complete: "Completo",
   },
   logs: {
