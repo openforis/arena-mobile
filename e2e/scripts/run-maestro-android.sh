@@ -45,19 +45,50 @@ adb shell settings put global show_restart_in_crash_dialog 0 || true
 echo "Waiting for system services to stabilize..."
 sleep 15
 
-echo "Installing APK..."
-# Use -r to replace if exists, -t for test packages (Expo debug builds need this)
-ensure_adb_device_ready
-adb install -r -t -g "${APK_PATH:-android/app/build/outputs/apk/debug/app-debug.apk}"
+APP_ID=org.openforis.arena_mobile
+MAESTRO_TESTS_DIR="$HOME/.maestro/tests"
 
-echo "Running Maestro..."
-# Give the OS a short window after installation to settle
-sleep 10
-ensure_adb_device_ready
+install_app() {
+  echo "Installing APK..."
+  # Use -r to replace if exists, -t for test packages (Expo debug builds need this)
+  ensure_adb_device_ready
+  adb install -r -t -g "${APK_PATH:-android/app/build/outputs/apk/debug/app-debug.apk}"
+}
 
-maestro test e2e/maestro/allTests.yaml --format junit --output report.xml \
-  -e APP_ID=org.openforis.arena_mobile \
-  -e DEV_BUNDLE="${DEV_BUNDLE:-true}" \
-  -e ARENA_SERVER_URL="${ARENA_SERVER_URL}" \
-  -e ARENA_SERVER_USERNAME="${ARENA_SERVER_USERNAME}" \
-  -e ARENA_SERVER_PASSWORD="${ARENA_SERVER_PASSWORD}"
+run_maestro() {
+  echo "Running Maestro..."
+  # Give the OS a short window after installation to settle
+  sleep 10
+  ensure_adb_device_ready
+
+  maestro test e2e/maestro/allTests.yaml --format junit --output report.xml \
+    -e APP_ID="$APP_ID" \
+    -e DEV_BUNDLE="${DEV_BUNDLE:-true}" \
+    -e ARENA_SERVER_URL="${ARENA_SERVER_URL}" \
+    -e ARENA_SERVER_USERNAME="${ARENA_SERVER_USERNAME}" \
+    -e ARENA_SERVER_PASSWORD="${ARENA_SERVER_PASSWORD}"
+}
+
+# the emulator adb connection can drop during a run (Maestro: "device offline"); a test failure doesn't match this
+last_run_lost_device() {
+  local last_run_dir
+  last_run_dir="$(ls -1dt "$MAESTRO_TESTS_DIR"/*/ 2>/dev/null | head -n 1)"
+  [[ -n "$last_run_dir" ]] &&
+    grep -rqE "device offline|DeviceServerDiedException" "$last_run_dir" --include=maestro.log
+}
+
+install_app
+
+if run_maestro; then
+  exit 0
+fi
+
+if ! last_run_lost_device; then
+  exit 1
+fi
+
+echo "The emulator went offline during the run: running the tests again once on a clean install..."
+ensure_adb_device_ready
+adb uninstall "$APP_ID" || true
+install_app
+run_maestro
