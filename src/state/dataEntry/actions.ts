@@ -192,7 +192,7 @@ const _performAddEntity = serializeRecordUpdate(async (dispatch, getState) => {
     (nodeCreated) => nodeCreated.nodeDefUuid === nodeDef.uuid,
   )!;
 
-  await updateRecord({ dispatch, survey, record: recordUpdated });
+  await updateRecord({ dispatch, getState, survey, record: recordUpdated });
 
   dispatch(
     selectCurrentPageEntity({
@@ -249,7 +249,7 @@ const deleteNodes = (nodeUuids: any) =>
 
     removeNodesFlags(nodes);
 
-    await updateRecord({ dispatch, survey, record: recordUpdated });
+    await updateRecord({ dispatch, getState, survey, record: recordUpdated });
   });
 
 const deleteRecords =

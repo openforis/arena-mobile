@@ -37,8 +37,10 @@ const fetchCurrentSurveyUserGroup =
     const surveyId = survey?.id;
     // Avoid race conditions when the user switches surveys quickly: only apply the result
     // if the fetched survey is still the current one.
-    const currentSurveyId = SurveySelectors.selectCurrentSurveyId(getState());
-    if (surveyId && currentSurveyId !== surveyId) {
+    const isSurveyStillCurrent = () =>
+      !surveyId ||
+      SurveySelectors.selectCurrentSurveyId(getState()) === surveyId;
+    if (!isSurveyStillCurrent()) {
       return;
     }
     // The demo survey doesn't exist in the server: there's no user group to fetch (or to cache).
@@ -69,6 +71,10 @@ const fetchCurrentSurveyUserGroup =
       }
     } else {
       userGroup = await PreferencesService.getSurveyUserGroup(surveyId);
+    }
+    // the user may have switched survey while fetching
+    if (!isSurveyStillCurrent()) {
+      return;
     }
     dispatch({ type: CURRENT_SURVEY_USER_GROUP_SET, userGroup });
   };

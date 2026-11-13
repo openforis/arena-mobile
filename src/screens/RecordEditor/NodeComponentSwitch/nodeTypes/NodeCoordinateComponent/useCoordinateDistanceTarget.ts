@@ -1,10 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { NodeDef, Objects, Records } from "@openforis/arena-core";
 
 import { RecordUtils } from "model/utils/RecordUtils";
 import { DataEntrySelectors, SurveySelectors } from "state";
-import { useAppSelector } from "state/storeHooks";
 
 export const useCoordinateDistanceTarget = ({
   nodeDef,
@@ -14,20 +13,30 @@ export const useCoordinateDistanceTarget = ({
   nodeUuid: string;
 }) => {
   const survey = SurveySelectors.useCurrentSurvey()!;
+  const record = DataEntrySelectors.useRecord();
   const [distanceTarget, setDistanceTarget] = useState(null);
-  useAppSelector((state) => {
-    const record = DataEntrySelectors.selectRecord(state);
+
+  // evaluated in an effect (not in a selector): async, and only when the record changes
+  useEffect(() => {
+    let cancelled = false;
     const node = Records.getNodeByUuid(nodeUuid)(record);
     void RecordUtils.getCoordinateDistanceTarget({
       survey,
       nodeDef,
       record,
       node,
-    }).then((_distanceTarget) => {
-      if (!Objects.isEqual(_distanceTarget, distanceTarget)) {
-        setDistanceTarget(_distanceTarget);
-      }
+    }).then((distanceTargetNext) => {
+      if (cancelled) return;
+      setDistanceTarget((distanceTargetPrev) =>
+        Objects.isEqual(distanceTargetPrev, distanceTargetNext)
+          ? distanceTargetPrev
+          : distanceTargetNext,
+      );
     });
-  }, Objects.isEqual);
+    return () => {
+      cancelled = true;
+    };
+  }, [survey, nodeDef, record, nodeUuid]);
+
   return distanceTarget;
 };
