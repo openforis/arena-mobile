@@ -41,6 +41,8 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
   private dataExportModelByNodeDefUuid: Dictionary<FlatDataExportModel> = {};
   private readonly uniqueFileNameGenerator: UniqueFileNamesGenerator =
     new UniqueFileNamesGenerator();
+  // ancestor file attributes are repeated in every descendant row: copy each file once
+  private readonly exportedFileUuids = new Set<string>();
 
   constructor(context: FlatDataExportJobContext) {
     super({
@@ -95,11 +97,19 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     this.total = recordSummaries.length;
 
     this.logger.debug("Exporting records...");
-    await Promises.each(recordSummaries, async (recordSummary) => {
-      await this.exportRecord({ recordSummary });
-      this.incrementProcessedItems();
-    });
+    await Promises.each(
+      recordSummaries,
+      async (recordSummary) => {
+        await this.exportRecord({ recordSummary });
+        this.incrementProcessedItems();
+      },
+      () => this.isCancelRequestedOrNotRunning(),
+    );
 
+    if (this.isCancelRequestedOrNotRunning()) {
+      this.logger.debug("Flat data export canceled");
+      return;
+    }
     await this.generateOutputFile();
   }
 
@@ -172,6 +182,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
           await this.exportRecordFiles({ record, fileValues });
         }
       },
+      () => this.isCancelRequestedOrNotRunning(),
     );
   }
 
@@ -185,34 +196,43 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     const { survey } = this.context;
     const surveyId = survey.id!;
 
+    const fileUuidsToExport = [
+      ...new Set<string>(fileValues.map(({ fileUuid }) => fileUuid)),
+    ].filter((fileUuid) => !this.exportedFileUuids.has(fileUuid));
+    if (fileUuidsToExport.length === 0) return;
+
     this.logger.debug(
-      `Exporting ${fileValues.length} attached files for record ${record.uuid}`,
+      `Exporting ${fileUuidsToExport.length} attached files for record ${record.uuid}`,
     );
 
-    await Promises.each(fileValues, async (fileValue) => {
-      const { fileUuid } = fileValue;
-      const mappedFileName =
-        this.uniqueFileNameGenerator.fileNamesByKey[fileUuid] ?? fileUuid;
-      const exportedRecordFilePath = Files.path(
-        this.tempFolderUri,
-        FlatDataFiles.attachedFilesSubfolderName,
-        mappedFileName,
-      );
-      const sourceFileUri = RecordFileService.getRecordFileUri({
-        surveyId,
-        fileUuid,
-      });
-      if (await Files.exists(sourceFileUri)) {
-        await Files.copyFile({
-          from: sourceFileUri,
-          to: exportedRecordFilePath,
-        });
-      } else {
-        this.logger.error(
-          `File with uuid ${fileUuid} not found for record ${record.uuid} file export`,
+    await Promises.each(
+      fileUuidsToExport,
+      async (fileUuid) => {
+        this.exportedFileUuids.add(fileUuid);
+        const mappedFileName =
+          this.uniqueFileNameGenerator.fileNamesByKey[fileUuid] ?? fileUuid;
+        const exportedRecordFilePath = Files.path(
+          this.tempFolderUri,
+          FlatDataFiles.attachedFilesSubfolderName,
+          mappedFileName,
         );
-      }
-    });
+        const sourceFileUri = RecordFileService.getRecordFileUri({
+          surveyId,
+          fileUuid,
+        });
+        if (await Files.exists(sourceFileUri)) {
+          await Files.copyFile({
+            from: sourceFileUri,
+            to: exportedRecordFilePath,
+          });
+        } else {
+          this.logger.error(
+            `File with uuid ${fileUuid} not found for record ${record.uuid} file export`,
+          );
+        }
+      },
+      () => this.isCancelRequestedOrNotRunning(),
+    );
   }
 
   private async generateOutputFile() {
