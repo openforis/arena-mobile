@@ -231,13 +231,37 @@ const fixRowValidation = ({ result }: any) => {
   }
 };
 
+// the fixes depend on the survey structure and on the app code (including arena-core RecordFixer):
+// a record content is fixed again only when one of them changes (null: survey version unknown, always fix)
+export const getRecordFixKey = (survey: any): string | null => {
+  const surveyVersion = survey?.datePublished ?? survey?.dateModified;
+  if (!surveyVersion) return null;
+  const { version: appVersion } = SystemUtils.getRecordAppInfo();
+  return `${surveyVersion}|${appVersion}`;
+};
+
+const rowHasContent = (row: any): boolean =>
+  !Objects.isEmpty(row.content) && row.content !== "{}";
+
+// fixed_for is selected only together with the content
+export const isRowToBeFixed = ({
+  row,
+  fixKey,
+}: {
+  row: any;
+  fixKey: string | null;
+}): boolean => rowHasContent(row) && (!fixKey || row.fixed_for !== fixKey);
+
 export const rowToRecord =
   ({ survey }: any) =>
   (row: any): ArenaMobileRecord => {
     const sideEffect = true;
-    const hasToBeFixed = true;
-    const { cycle, content } = row;
-    const hasContent = !Objects.isEmpty(content) && content !== "{}";
+    const hasToBeFixed = isRowToBeFixed({
+      row,
+      fixKey: getRecordFixKey(survey),
+    });
+    const { cycle } = row;
+    const hasContent = rowHasContent(row);
     const result: ArenaMobileRecord = hasContent
       ? JSON.parse(row.content)
       : Objects.camelize(row, { skip: ["content"] });
