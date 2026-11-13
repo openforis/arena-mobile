@@ -1,4 +1,4 @@
-import { Validations } from "@openforis/arena-core";
+import { Promises, Validations } from "@openforis/arena-core";
 
 import SQLiteClient from "db/SQLiteClient";
 
@@ -19,23 +19,26 @@ export const migration_008_record_validation_counts = async (
         warnings_count = COALESCE(json_extract(content, '$.validation.counts.warnings'), 0)
       WHERE json_valid(content) AND json_type(content, '$.validation.counts') = 'object'`,
     );
-    // validations stored without counts: counted here
-    let rows: any[];
-    do {
-      rows = await tx.many(
+    // validations stored without counts: counted here, in batches
+    const backfillNextBatch = async (): Promise<void> => {
+      const rows: any[] = await tx.many(
         `SELECT id, json_extract(content, '$.validation') AS validation
         FROM record
         WHERE errors_count IS NULL AND json_valid(content)
           AND json_type(content, '$.validation') = 'object'
         LIMIT ${backfillBatchSize}`,
       );
-      for (const { id, validation } of rows) {
+      await Promises.each(rows, async ({ id, validation }: any) => {
         const counts = Validations.calculateCounts(JSON.parse(validation));
         await tx.runSql(
           `UPDATE record SET errors_count = ?, warnings_count = ? WHERE id = ?`,
           [counts.errors, counts.warnings, id],
         );
+      });
+      if (rows.length === backfillBatchSize) {
+        await backfillNextBatch();
       }
-    } while (rows.length === backfillBatchSize);
+    };
+    await backfillNextBatch();
   });
 };

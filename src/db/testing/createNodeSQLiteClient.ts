@@ -10,17 +10,20 @@ export const createNodeSQLiteClient = (migrations: any[] = []) => {
   const db = new DatabaseSync(":memory:");
   const client = new SQLiteClient("test", migrations);
   client.privateDb = {
-    runAsync: async (sql: string, params?: any[]) => {
+    runAsync: (sql: string, params?: any[]) => {
       const { lastInsertRowid, changes } = db
         .prepare(sql)
         .run(...toParams(params));
-      return { lastInsertRowId: Number(lastInsertRowid), changes };
+      return Promise.resolve({
+        lastInsertRowId: Number(lastInsertRowid),
+        changes,
+      });
     },
-    execAsync: async (sql: string) => db.exec(sql),
-    getFirstAsync: async (sql: string, params?: any[]) =>
-      db.prepare(sql).get(...toParams(params)) ?? null,
-    getAllAsync: async (sql: string, params?: any[]) =>
-      db.prepare(sql).all(...toParams(params)),
+    execAsync: (sql: string) => Promise.resolve(db.exec(sql)),
+    getFirstAsync: (sql: string, params?: any[]) =>
+      Promise.resolve(db.prepare(sql).get(...toParams(params)) ?? null),
+    getAllAsync: (sql: string, params?: any[]) =>
+      Promise.resolve(db.prepare(sql).all(...toParams(params))),
     withTransactionAsync: async (task: () => Promise<void>) => {
       db.exec("BEGIN");
       try {
