@@ -109,3 +109,26 @@ describe("SQLiteClient.runMigrationsIfNecessary", () => {
     expect(committed).toEqual(["migration 1", "PRAGMA user_version = 1"]);
   });
 });
+
+describe("SQLiteClient.withConsistentDbFile", () => {
+  it("checkpoints the WAL and holds the writes while the task runs", async () => {
+    const { client, committed } = createClient();
+    const steps: string[] = [];
+
+    const copy = client.withConsistentDbFile(async () => {
+      steps.push(`copy start: ${committed.join(", ")}`);
+      await Promise.resolve();
+      steps.push("copy end");
+    });
+    const write = client.runSql("UPDATE record").then(() => {
+      steps.push("write");
+    });
+    await Promise.all([copy, write]);
+
+    expect(steps).toEqual([
+      "copy start: PRAGMA wal_checkpoint(TRUNCATE)",
+      "copy end",
+      "write",
+    ]);
+  });
+});
