@@ -19,6 +19,9 @@ const batteryStatusFromExpoBatteryState = {
   [Battery.BatteryState.NOT_CHARGING]: BatteryState.full,
 };
 
+// initDeviceInfo can run more than once (e.g. app initialization retried): keep a single listener
+let orientationChangeSubscription: { remove: () => void } | null = null;
+
 const setDeviceInfo = (deviceInfo: any) => (dispatch: AppDispatch) => {
   dispatch({ type: DEVICE_INFO_SET, payload: deviceInfo });
 };
@@ -49,9 +52,12 @@ const initDeviceInfo = () => async (dispatch: AppDispatch) => {
   ]);
   const deviceType = deviceTypeFetched || Device.DeviceType.PHONE;
 
-  SystemUtils.addOrientationChangeListener((orientation: any) => {
-    dispatch(updateOrientation(orientation));
-  });
+  orientationChangeSubscription?.remove();
+  orientationChangeSubscription = SystemUtils.addOrientationChangeListener(
+    (orientation: any) => {
+      dispatch(updateOrientation(orientation));
+    },
+  );
 
   dispatch(
     setDeviceInfo({

@@ -8,12 +8,16 @@ import { log } from "utils/Logger";
 import { ScreenOrientation } from "model";
 import { DeviceInfoSelectors } from "state/deviceInfo/selectors";
 
-import { circularEma, EMA_ALPHA } from "./headingUtils";
+import {
+  circularEma,
+  EMA_ALPHA,
+  HEADING_UPDATE_INTERVAL_MS,
+  nextDisplayedHeading,
+} from "./headingUtils";
 
 type Vector3 = { x: number; y: number; z: number };
 
 const SENSOR_UPDATE_INTERVAL_MS = 50; // 20 Hz
-const THROTTLE_DELAY_MS = 50;
 
 // Some devices don't report LANDSCAPE_RIGHT (4) when rotating 180° within
 // landscape — the expo key stays at LANDSCAPE_LEFT (3). Use normalized acc.x
@@ -97,6 +101,7 @@ export const useMagnetometerHeading = ({
   const magRef = useRef<Vector3 | null>(null);
   const accRef = useRef<Vector3 | null>(null);
   const filteredHeadingRef = useRef<number | null>(null);
+  const displayedHeadingRef = useRef<number | null>(null);
 
   const [heading, setHeading] = useState(0);
   const [magnetometerAvailable, setMagnetometerAvailable] = useState(true);
@@ -117,7 +122,8 @@ export const useMagnetometerHeading = ({
     orientationRef.current = orientation;
   }, [orientation]);
 
-  const updateHeading = useCallback(() => {
+  // filter runs on every sample, the state is updated (throttled) by emitHeading
+  const updateFilteredHeading = useCallback(() => {
     const mag = magRef.current;
     const acc = accRef.current;
     if (!mag || !acc) return;
@@ -131,18 +137,27 @@ export const useMagnetometerHeading = ({
     const prev = filteredHeadingRef.current;
     const filtered = prev === null ? raw : circularEma(prev, raw, EMA_ALPHA);
     filteredHeadingRef.current = filtered;
-    setHeading(Numbers.roundToPrecision(filtered, 1));
+  }, []);
+
+  const emitHeading = useCallback(() => {
+    const filtered = filteredHeadingRef.current;
+    if (filtered === null) return;
+    const next = nextDisplayedHeading(displayedHeadingRef.current, filtered);
+    if (next === null) return;
+    displayedHeadingRef.current = next;
+    setHeading(next);
   }, []);
 
   useEffect(() => {
     if (!enabled) {
       filteredHeadingRef.current = null;
+      displayedHeadingRef.current = null;
       return;
     }
 
-    const throttledUpdateHeading = Functions.throttle(
-      updateHeading,
-      THROTTLE_DELAY_MS,
+    const throttledEmitHeading = Functions.throttle(
+      emitHeading,
+      HEADING_UPDATE_INTERVAL_MS,
     );
     let cancelled = false;
     let magSub: ReturnType<typeof Magnetometer.addListener> | undefined;
@@ -164,7 +179,8 @@ export const useMagnetometerHeading = ({
 
         magSub = Magnetometer.addListener((data) => {
           magRef.current = data;
-          throttledUpdateHeading();
+          updateFilteredHeading();
+          throttledEmitHeading();
         });
 
         accSub = Accelerometer.addListener((data) => {
@@ -181,9 +197,9 @@ export const useMagnetometerHeading = ({
       cancelled = true;
       magSub?.remove();
       accSub?.remove();
-      throttledUpdateHeading.cancel();
+      throttledEmitHeading.cancel();
     };
-  }, [enabled, updateHeading]);
+  }, [emitHeading, enabled, updateFilteredHeading]);
 
   return { magnetometerAvailable, heading };
 };
