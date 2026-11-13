@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 import { FieldSet } from "components";
 import { DataEntrySelectors } from "state";
 import { log } from "utils";
@@ -5,7 +7,7 @@ import { log } from "utils";
 import { NodeEntityFormComponent } from "./NodeEntityFormComponent";
 import { NodeComponentProps } from "./nodeComponentPropTypes";
 
-export const NodeSingleEntityComponent = (props: NodeComponentProps) => {
+export const NodeSingleEntityComponent = memo((props: NodeComponentProps) => {
   const { nodeDef, parentNodeUuid } = props;
 
   log.debug("rendering NodeSingleEntityComponent");
@@ -22,4 +24,6 @@ export const NodeSingleEntityComponent = (props: NodeComponentProps) => {
       <NodeEntityFormComponent nodeDef={nodeDef} parentNodeUuid={nodeUuid} />
     </FieldSet>
   );
-};
+});
+
+NodeSingleEntityComponent.displayName = "NodeSingleEntityComponent";

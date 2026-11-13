@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { memo, useCallback, useMemo } from "react";
 
 import { SegmentedButtons, View } from "components";
 import { log } from "utils";
@@ -16,7 +16,7 @@ const yesNoValueByBooleanValue: Record<string, string> = {
 const baseStyle = { width: 200 };
 const rtlStyle = { alignSelf: "flex-end" };
 
-export const NodeBooleanComponent = (props: NodeComponentProps) => {
+export const NodeBooleanComponent = memo((props: NodeComponentProps) => {
   const { nodeDef, nodeUuid } = props;
 
   log.debug(`rendering NodeBooleanComponent for ${nodeDef.props.name}`);
@@ -50,16 +50,20 @@ export const NodeBooleanComponent = (props: NodeComponentProps) => {
     return _style;
   }, [isRtl]);
 
+  const buttons = useMemo(
+    () =>
+      booleanValues.map((val) => ({
+        value: val,
+        label: `common:${getLabelKey(val)}`,
+      })),
+    [getLabelKey],
+  );
+
   return (
     <View style={style}>
-      <SegmentedButtons
-        buttons={booleanValues.map((val) => ({
-          value: val,
-          label: `common:${getLabelKey(val)}`,
-        }))}
-        onChange={onChange}
-        value={value}
-      />
+      <SegmentedButtons buttons={buttons} onChange={onChange} value={value} />
     </View>
   );
-};
+});
+
+NodeBooleanComponent.displayName = "NodeBooleanComponent";

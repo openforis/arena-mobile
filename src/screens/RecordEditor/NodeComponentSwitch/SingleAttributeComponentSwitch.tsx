@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 import { NodeDefType } from "@openforis/arena-core";
 
@@ -39,7 +39,7 @@ type Props = {
   wrapperStyle?: any;
 };
 
-export const SingleAttributeComponentSwitch = (props: Props) => {
+export const SingleAttributeComponentSwitch = memo((props: Props) => {
   const {
     nodeDef,
     nodeUuid: nodeUuidProp,
@@ -69,4 +69,6 @@ export const SingleAttributeComponentSwitch = (props: Props) => {
   };
   // keyed by node: the local state of a field must not survive moving to a sibling entity
   return React.createElement(component, { ...componentProps, key: nodeUuid });
-};
+});
+
+SingleAttributeComponentSwitch.displayName = "SingleAttributeComponentSwitch";

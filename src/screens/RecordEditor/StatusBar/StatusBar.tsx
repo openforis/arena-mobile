@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 
 import {
   CollapsiblePanel,
@@ -130,7 +130,7 @@ const StatusBarPanel = (props: StatusBarPanelProps) => {
   );
 };
 
-export const StatusBar = () => {
+export const StatusBar = memo(() => {
   const { t } = useTranslation();
 
   const {
@@ -223,4 +223,6 @@ export const StatusBar = () => {
       />
     </CollapsiblePanel>
   );
-};
+});
+
+StatusBar.displayName = "StatusBar";

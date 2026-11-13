@@ -13,10 +13,15 @@ type Props = {
 export const NodeEditDialog = (props: Props) => {
   const { nodeDef, onDismiss, parentNodeUuid } = props;
 
+  const closeButton = React.useMemo(
+    () => <CloseIconButton onPress={onDismiss} />,
+    [onDismiss],
+  );
+
   return (
     <Modal showCloseButton={false} onDismiss={onDismiss}>
       <NodeDefFormItem
-        headerEndAccessory={<CloseIconButton onPress={onDismiss} />}
+        headerEndAccessory={closeButton}
         nodeDef={nodeDef}
         parentNodeUuid={parentNodeUuid}
       />
