@@ -13,8 +13,8 @@ import { SurveyRepository } from "./repository/surveyRepository";
 import { SurveyFSRepository } from "./repository/surveyFSRepository";
 import { RecordFileService } from "./recordFileService";
 import { RemoteService } from "./remoteService";
-
 import { demoSurveyDatePublished, demoSurveyUuid } from "./demoSurveyInfo";
+
 const {
   fetchSurveySummaries: fetchSurveySummariesLocal,
   insertSurvey,
