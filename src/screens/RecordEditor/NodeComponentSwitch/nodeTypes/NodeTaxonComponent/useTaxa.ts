@@ -5,6 +5,8 @@ import { Taxon, VernacularName } from "@openforis/arena-core";
 import { Taxa } from "model/Taxa";
 import { LanguageUtils } from "utils/LanguageUtils";
 
+import { buildTaxonSearchKeys } from "./taxaSearch";
+
 const calculateVernacularNamesCount = (taxon: Taxon) =>
   Object.values(taxon.vernacularNames ?? {}).reduce(
     (acc, vernacularNamesArray) => acc + vernacularNamesArray.length,
@@ -16,12 +18,14 @@ const vernacularNameObjectToItem =
   (vernacularNameObj: any): any => {
     const { uuid: vernacularNameUuid, props } = vernacularNameObj;
     const { name: vernacularName, lang: vernacularNameLangCode } = props;
-    return {
+    const item: any = {
       ...taxonItem,
       vernacularName,
       vernacularNameLangCode,
       vernacularNameUuid,
     };
+    item.searchKeys = buildTaxonSearchKeys(item);
+    return item;
   };
 
 const getAllVernacularNameObjects = (
@@ -112,6 +116,7 @@ export const useTaxa = ({
           );
         }
       }
+      taxonItem.searchKeys = buildTaxonSearchKeys(taxonItem);
     }
     const _unlistedTaxon = taxaByCode[Taxa.unlistedCode];
     const _unknownTaxon = taxaByCode[Taxa.unknownCode];

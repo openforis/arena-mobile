@@ -22,4 +22,5 @@ export { useNavigationFocus } from "./useNavigationFocus";
 export { useNavigationIsFocused } from "./useNavigationIsFocused";
 export { useRequestCameraPermission } from "./useRequestCameraPermission";
 export { useScreenKey } from "./useScreenKey";
+export { useStableCallback } from "./useStableCallback";
 export { useToast } from "./useToast";

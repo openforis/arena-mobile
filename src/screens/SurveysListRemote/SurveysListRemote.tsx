@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useNavigator } from "navigation/navigator";
 
 import { DateFormats, Dates, Surveys } from "@openforis/arena-core";
@@ -25,6 +25,7 @@ import {
 } from "state";
 
 import { useSurveysSearch } from "../SurveysList/useSurveysSearch";
+import { getSurveyLoadStatusKey } from "./surveyLoadStatus";
 
 const INITIAL_STATE = {
   surveys: [],
@@ -54,21 +55,10 @@ const DatePublishedCellRenderer = ({ item }: DataVisualizerCellProps) => (
   </Text>
 );
 
-const StatusCell = ({ item }: DataVisualizerCellProps) => {
-  const surveysLocal = SurveySelectors.useSurveysLocal();
-  const localSurvey = surveysLocal.find(
-    (surveyLocal: any) => surveyLocal.uuid === item.uuid,
-  );
-  let messageKey: string;
-  if (!localSurvey) {
-    messageKey = "surveys:loadStatus.notInDevice";
-  } else if (Dates.isAfter(item.datePublished, localSurvey.datePublished)) {
-    messageKey = "surveys:loadStatus.updated";
-  } else {
-    messageKey = "surveys:loadStatus.upToDate";
-  }
-  return <Text textKey={messageKey} />;
-};
+// loadStatusKey is computed with the items
+const StatusCell = ({ item }: DataVisualizerCellProps) => (
+  <Text textKey={item.loadStatusKey} />
+);
 
 export const SurveysListRemote = () => {
   const navigator = useNavigator();
@@ -140,7 +130,15 @@ export const SurveysListRemote = () => {
   const [state, setState] = useState(INITIAL_STATE);
   const { surveys, loading, errorKey } = state;
 
-  const loadSurveys = async () => {
+  const surveysLocalByUuid = useMemo(
+    () =>
+      new Map<string, any>(
+        surveysLocal.map((surveyLocal: any) => [surveyLocal.uuid, surveyLocal]),
+      ),
+    [surveysLocal],
+  );
+
+  const loadSurveys = useCallback(async () => {
     setState(INITIAL_STATE);
 
     const data = await SurveyService.fetchSurveySummariesRemote();
@@ -163,7 +161,7 @@ export const SurveysListRemote = () => {
       loading: false,
       surveys: _surveys.filter(Surveys.isVisibleInMobile),
     }));
-  };
+  }, [dispatch, navigator]);
 
   useNavigationFocus(loadSurveys);
 
@@ -173,8 +171,8 @@ export const SurveysListRemote = () => {
   const onRowPress = useCallback(
     (surveySummary: any) => {
       const surveyName = surveySummary.props.name;
-      const localSurveyWithSameUuid = surveysLocal.find(
-        (surveyLocal: any) => surveyLocal.uuid === surveySummary.uuid,
+      const localSurveyWithSameUuid = surveysLocalByUuid.get(
+        surveySummary.uuid,
       );
 
       if (localSurveyWithSameUuid) {
@@ -206,7 +204,20 @@ export const SurveysListRemote = () => {
         );
       }
     },
-    [dispatch, navigator, surveysLocal],
+    [dispatch, navigator, surveysLocalByUuid],
+  );
+
+  const items = useMemo(
+    () =>
+      surveysFiltered.map((survey: any) => ({
+        key: survey.uuid,
+        ...survey,
+        loadStatusKey: getSurveyLoadStatusKey({
+          survey,
+          localSurvey: surveysLocalByUuid.get(survey.uuid),
+        }),
+      })),
+    [surveysFiltered, surveysLocalByUuid],
   );
 
   if (loading) return <Loader />;
@@ -237,10 +248,7 @@ export const SurveysListRemote = () => {
       {surveysFiltered.length > 0 && (
         <DataVisualizer
           fields={dataFields}
-          items={surveysFiltered.map((survey: any) => ({
-            key: survey.uuid,
-            ...survey,
-          }))}
+          items={items}
           mode={screenViewMode}
           onItemPress={onRowPress}
           showPagination={surveysFiltered.length > 20}
