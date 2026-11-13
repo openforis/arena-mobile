@@ -1,3 +1,4 @@
+import { createSelector } from "@reduxjs/toolkit";
 import {
   NodeDefs,
   Nodes,
@@ -51,10 +52,43 @@ const calculateHasCurrentEntityKeysSpecified = ({
   return !keyValues.some((keyValue) => Objects.isEmpty(keyValue));
 };
 
+// memoized: ancestor walks and key values evaluated only when the record or the current page change
+const selectEntityNavigationInfo = createSelector(
+  [
+    SurveySelectors.selectCurrentSurvey,
+    DataEntrySelectors.selectRecord,
+    DataEntrySelectors.selectCurrentPageEntity,
+  ],
+  (survey, record, currentEntityPointer) => {
+    const { entityDef, entityUuid, parentEntityUuid } = currentEntityPointer;
+    return {
+      prevEntityPointer: RecordPageNavigator.getPrevEntityPointer({
+        survey,
+        record,
+        currentEntityPointer,
+      }),
+      nextEntityPointer: RecordPageNavigator.getNextEntityPointer({
+        survey,
+        record,
+        currentEntityPointer,
+      }),
+      maxCountReached: calculateIsMaxCountReached({
+        entityDef,
+        parentEntityUuid,
+        record,
+      }),
+      hasCurrentEntityKeysSpecified: calculateHasCurrentEntityKeysSpecified({
+        survey,
+        entityDef,
+        record,
+        entityUuid,
+      }),
+    };
+  },
+);
+
 export const useBottomNavigationBar = () =>
   useAppSelector((state) => {
-    const survey = SurveySelectors.selectCurrentSurvey(state);
-    const record = DataEntrySelectors.selectRecord(state);
     const currentEntityPointer =
       DataEntrySelectors.selectCurrentPageEntity(state);
     const childDefs =
@@ -70,28 +104,12 @@ export const useBottomNavigationBar = () =>
       nodeDefUuid: entityDef.uuid,
     })(state);
 
-    const prevEntityPointer = RecordPageNavigator.getPrevEntityPointer({
-      survey,
-      record,
-      currentEntityPointer,
-    });
-    const nextEntityPointer = RecordPageNavigator.getNextEntityPointer({
-      survey,
-      record,
-      currentEntityPointer,
-    });
-    const maxCountReached = calculateIsMaxCountReached({
-      entityDef,
-      parentEntityUuid,
-      record,
-    });
-    const hasCurrentEntityKeysSpecified =
-      calculateHasCurrentEntityKeysSpecified({
-        survey,
-        entityDef,
-        record,
-        entityUuid,
-      });
+    const {
+      prevEntityPointer,
+      nextEntityPointer,
+      maxCountReached,
+      hasCurrentEntityKeysSpecified,
+    } = selectEntityNavigationInfo(state);
 
     const activeChildIsLastChild = activeChildIndex + 1 === childDefs.length;
 
