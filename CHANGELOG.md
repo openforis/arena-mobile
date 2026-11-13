@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.11.3] - to be released
+
+### Added
+
+- Amharic and Swedish languages;
+
+### Changed
+
+- Faster app startup and data entry;
+- Records list: table view split into pages;
+
+### Fixed
+
+- Value typed in a field sometimes lost when moving quickly to another entity;
+- Data export (CSV): cancel not working;
+- General improvements and bug fixing;
+
 ## [2.11.2] - 2026-11-11
 
 ### Fixed
