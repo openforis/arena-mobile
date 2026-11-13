@@ -235,6 +235,7 @@ const insertRecordSummaries = async ({
 const updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely = async ({
   survey,
   recordSummary,
+  client = dbClient,
 }: any) => {
   const { dateModified, ownerUuid, ownerName, uuid } = recordSummary;
   const keyColumnsValues = extractRemoteRecordSummaryKeyColumnsValues({
@@ -245,7 +246,7 @@ const updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely = async ({
     survey,
     recordSummary,
   });
-  return dbClient.runSql(
+  return client.runSql(
     `UPDATE record SET 
       owner_uuid = ?,
       owner_name = ?,
@@ -268,6 +269,28 @@ const updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely = async ({
     ],
   );
 };
+
+// one transaction: a commit per record is slow with many records
+const updateRecordsKeysAndDateModifiedWithSummariesFetchedRemotely = ({
+  survey,
+  recordSummaries,
+}: any): Promise<void> =>
+  dbClient.transaction(async (tx) => {
+    for (const recordSummary of recordSummaries) {
+      try {
+        await updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely({
+          survey,
+          recordSummary,
+          client: tx,
+        });
+      } catch (error) {
+        throw new Error(
+          `error updating local record keys for record ${recordSummary.uuid}. Details: ${error}`,
+          { cause: error },
+        );
+      }
+    }
+  });
 
 const updateRecordKeysAndContent = async ({
   survey,
@@ -563,6 +586,7 @@ export const RecordRepository = {
   updateRecordWithContentFetchedRemotely,
   updateRecordWithContentMergedFromRemote,
   updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely,
+  updateRecordsKeysAndDateModifiedWithSummariesFetchedRemotely,
   updateRecordsDateSync,
   updateRecordsDateModifiedRemote,
   updateRecordsDateModifiedSynced,
