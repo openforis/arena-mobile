@@ -27,10 +27,14 @@ ensure_adb_device_ready() {
 ensure_adb_device_ready
 adb reverse tcp:8081 tcp:8081
 
-echo "Waiting for emulator to boot completely..."
-adb wait-for-device
-adb shell 'while [[ "$(getprop sys.boot_completed | tr -d "\r")" != "1" ]]; do sleep 2; done'
-adb shell 'while [[ "$(getprop init.svc.bootanim | tr -d "\r")" != "stopped" ]]; do sleep 2; done'
+wait_for_boot() {
+  echo "Waiting for emulator to boot completely..."
+  adb wait-for-device
+  adb shell 'while [[ "$(getprop sys.boot_completed | tr -d "\r")" != "1" ]]; do sleep 2; done'
+  adb shell 'while [[ "$(getprop init.svc.bootanim | tr -d "\r")" != "stopped" ]]; do sleep 2; done'
+}
+
+wait_for_boot
 
 echo "Dismissing keyguard and opening Home once so the launcher can settle..."
 adb shell wm dismiss-keyguard || true
@@ -47,6 +51,9 @@ sleep 15
 
 APP_ID=org.openforis.arena_mobile
 MAESTRO_TESTS_DIR="$HOME/.maestro/tests"
+MAX_DEVICE_OFFLINE_RETRIES=2
+# the Maestro driver starts slowly on a loaded CI emulator (default timeout: 15 s)
+export MAESTRO_DRIVER_STARTUP_TIMEOUT=180000
 
 install_app() {
   echo "Installing APK..."
@@ -77,18 +84,34 @@ last_run_lost_device() {
     grep -rqE "device offline|DeviceServerDiedException" "$last_run_dir" --include=maestro.log
 }
 
+# a dropped adb connection doesn't recover by itself within seconds: restart the adb server and let the emulator settle
+recover_device() {
+  echo "Restarting the adb server..."
+  adb kill-server || true
+  adb start-server
+  ensure_adb_device_ready
+  wait_for_boot
+  adb reverse tcp:8081 tcp:8081 || true
+  echo "Waiting for system services to stabilize..."
+  sleep 30
+}
+
 install_app
 
-if run_maestro; then
-  exit 0
-fi
+for attempt in $(seq 0 "$MAX_DEVICE_OFFLINE_RETRIES"); do
+  if [[ "$attempt" -gt 0 ]]; then
+    echo "The emulator went offline during the run: retry $attempt of $MAX_DEVICE_OFFLINE_RETRIES on a clean install..."
+    recover_device
+    adb uninstall "$APP_ID" || true
+    install_app
+  fi
+  if run_maestro; then
+    exit 0
+  fi
+  if ! last_run_lost_device; then
+    exit 1
+  fi
+done
 
-if ! last_run_lost_device; then
-  exit 1
-fi
-
-echo "The emulator went offline during the run: running the tests again once on a clean install..."
-ensure_adb_device_ready
-adb uninstall "$APP_ID" || true
-install_app
-run_maestro
+echo "The emulator kept going offline: giving up after $MAX_DEVICE_OFFLINE_RETRIES retries"
+exit 1

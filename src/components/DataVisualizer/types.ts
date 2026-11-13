@@ -42,6 +42,8 @@ export type DataVisualizerProps = {
   fields: DataVisualizerField[];
   horizontalScroll?: boolean;
   items: any[];
+  // initial page size of the table view (with showPagination)
+  itemsPerPage?: number;
   onItemPress?: (item: any) => void;
   onItemLongPress?: (item: any) => void;
   onSelectionChange?: (selectedIds: string[]) => void;
