@@ -5,6 +5,7 @@ import { LanguageConstants } from "model/LanguageSettings";
 import { SettingsService } from "service/settingsService";
 import { SystemUtils } from "utils/SystemUtils";
 
+import am from "./am";
 import de from "./de";
 import en from "./en";
 import es from "./es";
@@ -16,10 +17,11 @@ import ja from "./ja";
 import pt from "./pt";
 import ru from "./ru";
 import sr from "./sr";
+import sv from "./sv";
 
 export { useTranslation } from "react-i18next";
 
-const resources = { de, en, es, fa, fi, fr, id, ja, pt, ru, sr };
+const resources = { am, de, en, es, fa, fi, fr, id, ja, pt, ru, sr, sv };
 const supportedLngs = Object.keys(resources);
 const fallbackLng = "en";
 const sysLng = SystemUtils.getLanguageCode();
