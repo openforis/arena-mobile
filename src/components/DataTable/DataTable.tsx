@@ -147,6 +147,7 @@ export const DataTable = (props: DataVisualizerProps) => {
     fields,
     horizontalScroll = false,
     items,
+    itemsPerPage: initialItemsPerPage,
     onItemPress: onItemPressProp,
     onItemLongPress: onItemLongPressProp,
     onSelectionChange,
@@ -187,7 +188,7 @@ export const DataTable = (props: DataVisualizerProps) => {
     visibleItems,
     onItemsPerPageChange,
     onPageChange,
-  } = usePagination({ items: items });
+  } = usePagination({ items, initialItemsPerPage });
 
   const rowsListRef = useRef<FlatList>(null);
 
