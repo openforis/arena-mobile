@@ -101,7 +101,10 @@ export const AppBar = (props: Props) => {
   const isLoadingPreviousCycleRecord =
     DataEntrySelectors.usePreviousCycleRecordLoading();
   const isInTwoRows = editingRecord && !isLandscape;
-  const { mapProvider, showRecordCompletion } = SettingsSelectors.useSettings();
+  const mapProvider = SettingsSelectors.useSetting("mapProvider");
+  const showRecordCompletion = SettingsSelectors.useSetting(
+    "showRecordCompletion",
+  );
   const confirm = useConfirm();
 
   const [state, setState] = useState({ menuVisible: false });

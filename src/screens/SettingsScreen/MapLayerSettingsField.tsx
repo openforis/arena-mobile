@@ -18,7 +18,7 @@ export const MapLayerSettingsField = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   // subscribed to the settings: the layers change when the custom layers change
-  const { mapLayer } = SettingsSelectors.useSettings();
+  const mapLayer = SettingsSelectors.useSetting("mapLayer");
   const layers = MapLayers.getLayers();
 
   const onValueChange = useCallback(

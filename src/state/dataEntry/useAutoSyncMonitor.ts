@@ -20,7 +20,7 @@ export const useAutoSyncMonitor = () => {
   const networkAvailable = useIsNetworkConnected();
   const survey = SurveySelectors.useCurrentSurvey();
   const user = RemoteConnectionSelectors.useLoggedInUser();
-  const { autoSyncEnabled } = SettingsSelectors.useSettings();
+  const autoSyncEnabled = SettingsSelectors.useSetting("autoSyncEnabled");
 
   const isDemoSurvey = SurveySelectors.useIsCurrentSurveyDemo();
 
