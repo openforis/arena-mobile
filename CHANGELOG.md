@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.11.3] - 2026-11-13
+
+### Changed
+
+- Faster startup on slow networks: the app no longer waits for the server to confirm the logged-in user;
+- Record editor: faster data entry and page navigation;
+
+### Fixed
+
+- Record editor: value typed in a field lost when moving to another entity right after typing;
+- Record editor: field showing a value not saved in the record (e.g. while the record is being synced);
+- Surveys list: search text cleared when the list was refreshed;
+- Full backup: database copied while it could still be written (e.g. during auto-sync);
+- Text direction not updated when changing the language;
+- General improvements and bug fixing;
+
 ## [2.11.2] - 2026-11-11
 
 ### Fixed
