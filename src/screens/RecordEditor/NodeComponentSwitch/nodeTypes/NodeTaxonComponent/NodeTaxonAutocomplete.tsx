@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 
 import { NodeDefs, NodeDefTaxon } from "@openforis/arena-core";
 
@@ -6,29 +6,25 @@ import { SelectableListWithFilter } from "components";
 import { Taxa } from "model";
 import { log } from "utils";
 
+import { buildTaxonLabel, filterTaxa } from "./taxaSearch";
 import { useTaxaFiltered } from "./useTaxaFiltered";
 
-const alwaysIncludeVernacularNames = false;
-const alwaysIncludeSingleVernacularName = true;
 const maxDisplayedItems = 50;
+const noTaxa: any[] = [];
 
 const itemKeyExtractor = (item: any) =>
   `${item?.uuid}_${item?.vernacularNameUuid}`;
 
-const itemLabelExtractor =
-  ({ nodeDef }: any) =>
-  (taxon: any) => {
-    const { props, scientificName } = taxon;
-    const { code, scientificName: scientificNameProp } = props;
-    const visibleFields = NodeDefs.getVisibleFields(nodeDef);
-    const codeVisible = !visibleFields || visibleFields.includes("code");
-    const parts = [];
-    if (codeVisible) {
-      parts.push(`(${code})`);
-    }
-    parts.push(scientificName ?? scientificNameProp);
-    return parts.join(" ");
-  };
+const itemLabelExtractorWithCode = (taxon: any) =>
+  buildTaxonLabel({ codeVisible: true, taxon });
+
+const itemLabelExtractorWithoutCode = (taxon: any) =>
+  buildTaxonLabel({ codeVisible: false, taxon });
+
+const isCodeVisible = (nodeDef: any): boolean => {
+  const visibleFields = NodeDefs.getVisibleFields(nodeDef);
+  return !visibleFields || visibleFields.includes("code");
+};
 
 const itemDescriptionExtractor = (taxon: any) => {
   const { vernacularNamesJoint, vernacularName, vernacularNameLangCode } =
@@ -73,68 +69,6 @@ const createTaxonValue = ({
   return value;
 };
 
-const preparePartForSearch = (part: any) => part.toLocaleLowerCase();
-
-const extractPartsForSearch = (value: any) =>
-  value?.trim()?.split(" ").map(preparePartForSearch) ?? [];
-
-const isTaxonMatchingFilter = ({ nodeDef, taxon, inputValueParts }: any) => {
-  const { vernacularName, vernacularNamesCount, vernacularNamesJoint } = taxon;
-  const singleVernacularName = vernacularNamesCount === 1;
-  const { code } = taxon.props;
-  const codeForSearch = preparePartForSearch(code);
-  const vernacularNameParts = extractPartsForSearch(vernacularName);
-  const vernacularNamesJointParts = extractPartsForSearch(vernacularNamesJoint);
-
-  const itemLabel = itemLabelExtractor({ nodeDef })(taxon);
-  const itemLabelParts = extractPartsForSearch(itemLabel);
-
-  const matchingCode = codeForSearch.startsWith(inputValueParts[0]);
-  const matchingLabel = inputValueParts.every((inputValuePart: any) =>
-    itemLabelParts.some((part: any) => part.startsWith(inputValuePart)),
-  );
-  const matchingVernacularName = inputValueParts.every(
-    (inputValuePart: any) =>
-      vernacularNameParts.some((part: any) =>
-        part.startsWith(inputValuePart),
-      ) ||
-      vernacularNamesJointParts.some((part: any) =>
-        part.startsWith(inputValuePart),
-      ),
-  );
-  return (
-    ((matchingCode || matchingLabel) &&
-      (alwaysIncludeVernacularNames ||
-        !vernacularName ||
-        (alwaysIncludeSingleVernacularName && singleVernacularName))) ||
-    matchingVernacularName
-  );
-};
-
-const filterItems =
-  ({ nodeDef, unlistedTaxon, unknownTaxon }: any) =>
-  ({ items: taxa, filterInputValue }: any) => {
-    if ((filterInputValue?.trim().length ?? 0) === 0) {
-      return [];
-    }
-    const inputValueParts = extractPartsForSearch(filterInputValue);
-    const taxaFiltered = [];
-    for (
-      let index = 0;
-      index < taxa.length && taxaFiltered.length < maxDisplayedItems;
-      index++
-    ) {
-      const taxon = taxa[index];
-      if (isTaxonMatchingFilter({ nodeDef, taxon, inputValueParts })) {
-        taxaFiltered.push(taxon);
-      }
-    }
-    if (taxaFiltered.length === 0) {
-      taxaFiltered.push(unlistedTaxon, unknownTaxon);
-    }
-    return taxaFiltered;
-  };
-
 type NodeTaxonAutocompleteProps = {
   nodeDef: any;
   parentNodeUuid?: string;
@@ -161,20 +95,37 @@ export const NodeTaxonAutocomplete = (props: NodeTaxonAutocompleteProps) => {
     [nodeDef, updateNodeValue],
   );
 
-  const filterItemsCallback = useMemo(
-    () => filterItems({ nodeDef, unknownTaxon, unlistedTaxon }),
-    [nodeDef, unknownTaxon, unlistedTaxon],
+  const codeVisible = isCodeVisible(nodeDef);
+
+  const filterItems = useCallback(
+    ({ items, filterInputValue }: any) =>
+      filterTaxa({
+        codeVisible,
+        filterInputValue,
+        maxItems: maxDisplayedItems,
+        taxa: items,
+        unknownTaxon,
+        unlistedTaxon,
+      }),
+    [codeVisible, unknownTaxon, unlistedTaxon],
+  );
+
+  const selectedItems = useMemo(
+    () => (selectedTaxon ? [selectedTaxon] : noTaxa),
+    [selectedTaxon],
   );
 
   return (
     <SelectableListWithFilter
-      filterItems={filterItemsCallback}
+      filterItems={filterItems}
       itemKeyExtractor={itemKeyExtractor}
-      itemLabelExtractor={itemLabelExtractor({ nodeDef })}
+      itemLabelExtractor={
+        codeVisible ? itemLabelExtractorWithCode : itemLabelExtractorWithoutCode
+      }
       itemDescriptionExtractor={itemDescriptionExtractor}
       items={taxa}
       onSelectedItemsChange={onSelectedItemsChange}
-      selectedItems={selectedTaxon ? [selectedTaxon] : []}
+      selectedItems={selectedItems}
     />
   );
 };
