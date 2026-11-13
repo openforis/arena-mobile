@@ -104,7 +104,7 @@ const { entity, attribute } = RecordNodeBuilders;
 const confirmMock = ConfirmUtils.confirm as jest.Mock;
 const updateRecordMock = RecordService.updateRecord as jest.Mock;
 const selectCurrentPageEntityMock =
-  DataEntrySelectors.selectCurrentPageEntity as jest.Mock;
+  DataEntrySelectors.selectCurrentPageEntity as unknown as jest.Mock;
 
 const user: User = UserFactory.createInstance({
   email: "test@openforis-arena.org",
