@@ -42,7 +42,6 @@ const steps = {
   updatingDemoSurvey: "updatingDemoSurvey",
   fetchingAndSettingLocalSurveys: "fetchingAndSettingLocalSurveys",
   fetchingAndSettingSurvey: "fetchingAndSettingSurvey",
-  checkingLoggedIn: "checkingLoggedIn",
   complete: "complete",
 };
 
@@ -133,8 +132,10 @@ export const AppInitializer = (props: Props) => {
         }),
       );
     }
-    setStep(steps.checkingLoggedIn);
-    await dispatch(RemoteConnectionActions.loginAndSetUser());
+    // not awaited: on slow networks the user request can take long (the account item shows it's loading)
+    dispatch(RemoteConnectionActions.loginAndSetUser()).catch((error) =>
+      log.error("Error logging in at startup", error),
+    );
 
     setStep(steps.complete);
   }, [dispatch]);

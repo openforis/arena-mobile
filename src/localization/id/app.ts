@@ -38,7 +38,6 @@ export default {
     updatingDemoSurvey: "Memperbarui survei Demo",
     fetchingAndSettingLocalSurveys: "Mengambil dan mengatur survei lokal",
     fetchingAndSettingSurvey: "Mengambil dan mengatur survei",
-    checkingLoggedIn: "Memeriksa status login",
     complete: "Selesai",
   },
   logs: {
