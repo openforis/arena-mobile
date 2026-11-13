@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { memo, useCallback } from "react";
 
 import { NodeDefs } from "@openforis/arena-core";
 
@@ -45,7 +45,7 @@ const nextButtonIconPositionByTextDirection: Record<
 // Delay the dispatch to allow current attribute update to complete)
 const entityCreationDelay = 500;
 
-export const BottomNavigationBar = () => {
+export const BottomNavigationBar = memo(() => {
   const styles = useStyles();
   const dispatch = useAppDispatch();
   const textDirection = useTextDirection();
@@ -139,4 +139,6 @@ export const BottomNavigationBar = () => {
       </View>
     </HView>
   );
-};
+});
+
+BottomNavigationBar.displayName = "BottomNavigationBar";

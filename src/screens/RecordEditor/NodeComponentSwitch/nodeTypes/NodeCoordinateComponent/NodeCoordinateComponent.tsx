@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { memo, useCallback } from "react";
 
 import { Objects } from "@openforis/arena-core";
 
@@ -24,7 +24,7 @@ import styles from "./styles";
 
 const buttonSize = 24;
 
-export const NodeCoordinateComponent = (props: NodeComponentProps) => {
+export const NodeCoordinateComponent = memo((props: NodeComponentProps) => {
   const { nodeDef, nodeUuid } = props;
 
   log.debug(`rendering NodeCoordinateComponent for ${nodeDef.props.name}`);
@@ -186,4 +186,6 @@ export const NodeCoordinateComponent = (props: NodeComponentProps) => {
       )}
     </VView>
   );
-};
+});
+
+NodeCoordinateComponent.displayName = "NodeCoordinateComponent";

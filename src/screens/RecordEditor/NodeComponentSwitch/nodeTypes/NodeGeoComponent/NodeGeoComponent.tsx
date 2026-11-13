@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 
 import { NodeDefs } from "@openforis/arena-core";
 
@@ -19,12 +19,13 @@ import { NodeGeoTrackComponent } from "./NodeGeoTrackComponent";
 import { useNodeGeoComponent } from "./useNodeGeoComponent";
 import styles from "./styles";
 
-export const NodeGeoComponent = (props: NodeComponentProps) =>
+export const NodeGeoComponent = memo((props: NodeComponentProps) =>
   PositionTracks.isPositionTrackingNodeDef(props.nodeDef) ? (
     <NodeGeoTrackComponent {...props} />
   ) : (
     <NodeGeoPolygonComponent {...props} />
-  );
+  ),
+);
 
 const NodeGeoPolygonComponent = (props: NodeComponentProps) => {
   const { nodeDef } = props;
@@ -100,3 +101,5 @@ const NodeGeoPolygonComponent = (props: NodeComponentProps) => {
     </VView>
   );
 };
+
+NodeGeoComponent.displayName = "NodeGeoComponent";

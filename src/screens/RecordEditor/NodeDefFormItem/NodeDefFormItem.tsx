@@ -1,4 +1,4 @@
-import React, { ReactNode, useMemo } from "react";
+import React, { memo, ReactNode, useMemo } from "react";
 
 import { NodeDefs, Objects } from "@openforis/arena-core";
 
@@ -28,7 +28,7 @@ type NodeDefFormItemProps = NodeComponentProps & {
   headerEndAccessory?: ReactNode;
 };
 
-export const NodeDefFormItem = (props: NodeDefFormItemProps) => {
+export const NodeDefFormItem = memo((props: NodeDefFormItemProps) => {
   const { headerEndAccessory, nodeDef, parentNodeUuid } = props;
 
   log.debug(`rendering NodeDefFormItem for ${NodeDefs.getName(nodeDef)}`);
@@ -174,4 +174,6 @@ export const NodeDefFormItem = (props: NodeDefFormItemProps) => {
   }
 
   return formItemComponent;
-};
+});
+
+NodeDefFormItem.displayName = "NodeDefFormItem";

@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 import { useNavigator } from "navigation/navigator";
 import * as WebBrowser from "expo-web-browser";
 
@@ -23,7 +25,7 @@ import { RecordCompletionProgressBar } from "../RecordCompletionProgressBar";
 
 import { useStyles } from "./styles";
 
-export const RecordEditorDrawer = () => {
+export const RecordEditorDrawer = memo(() => {
   log.debug(`rendering RecordEditorDrawer`);
   const dispatch = useAppDispatch();
   const navigator = useNavigator();
@@ -88,4 +90,6 @@ export const RecordEditorDrawer = () => {
       </HView>
     </View>
   );
-};
+});
+
+RecordEditorDrawer.displayName = "RecordEditorDrawer";

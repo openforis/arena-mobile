@@ -28,6 +28,7 @@ import { ArrayUtils, log } from "utils";
 
 import { NewNodeButton } from "../NewNodeButton";
 import { EntityListColumnsDialog } from "./EntityListColumnsDialog";
+import { EntityRowsCache } from "./entityRowsCache";
 import { NodeValidationIcon } from "../NodeValidationIcon";
 
 import styles from "./styles";
@@ -185,32 +186,32 @@ export const NodeMultipleEntityListComponent = (
     setSort(sortNext);
   }, []);
 
-  const entityToRow = useCallback(
-    (entity: any) => ({
-      key: entity.uuid,
-      uuid: entity.uuid,
-
-      ...RecordUtils.getEntitySummaryValuesByNameFormatted({
+  const rows = useMemo(() => {
+    const entities = Records.getChildren(parentEntity, entityDefUuid)(record);
+    const _rows = entities.map((entity) =>
+      EntityRowsCache.getEntityRow({
         survey,
         record,
         entity,
-        onlyKeys: false,
         lang,
         summaryDefs: visibleNodeDefs,
         t,
       }),
-    }),
-    [survey, record, lang, t, visibleNodeDefs],
-  );
-
-  const rows = useMemo(() => {
-    const entities = Records.getChildren(parentEntity, entityDefUuid)(record);
-    const _rows = entities.map(entityToRow);
+    );
     if (Objects.isNotEmpty(sort)) {
       ArrayUtils.sortByProps(sort!)(_rows);
     }
     return _rows;
-  }, [entityDefUuid, entityToRow, parentEntity, record, sort]);
+  }, [
+    entityDefUuid,
+    lang,
+    parentEntity,
+    record,
+    sort,
+    survey,
+    t,
+    visibleNodeDefs,
+  ]);
 
   const editable = DataEntrySelectors.useRecordNodePointerEditable({
     parentNodeUuid: parentEntityUuid,

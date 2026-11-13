@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from "react";
-import { VirtualizedList } from "react-native";
+import React, { memo, useCallback, useEffect, useRef } from "react";
+import { ListRenderItemInfo, VirtualizedList } from "react-native";
 
 import { NodeDef, NodeDefs } from "@openforis/arena-core";
 
@@ -11,7 +11,13 @@ import { NodeComponentProps } from "../nodeComponentPropTypes";
 
 import styles from "./styles";
 
-export const NodeEntityFormComponent = (props: NodeComponentProps) => {
+const keyExtractor = (childDef: NodeDef<any>) => childDef.uuid;
+
+const getItem = (data: NodeDef<any>[], index: number) => data[index]!;
+
+const getItemCount = (data: NodeDef<any>[]) => data.length;
+
+export const NodeEntityFormComponent = memo((props: NodeComponentProps) => {
   const { nodeDef, parentNodeUuid } = props;
 
   log.debug(`rendering NodeDefEntityForm for ${NodeDefs.getName(nodeDef)}`);
@@ -25,22 +31,26 @@ export const NodeEntityFormComponent = (props: NodeComponentProps) => {
     listEl?.scrollToOffset?.({ offset: 0, animated: false });
   }, [nodeDef, parentNodeUuid]);
 
+  const renderItem = useCallback(
+    ({ item: childDef }: ListRenderItemInfo<NodeDef<any>>) => (
+      <NodeDefFormItem nodeDef={childDef} parentNodeUuid={parentNodeUuid} />
+    ),
+    [parentNodeUuid],
+  );
+
   return (
     <VirtualizedList
       ref={listRef}
-      getItemCount={() => childrenDefs.length}
-      getItem={(_data, index) => childrenDefs[index]!}
+      data={childrenDefs}
+      getItemCount={getItemCount}
+      getItem={getItem}
       initialNumToRender={10}
-      keyExtractor={(childDef: NodeDef<any>) => childDef.uuid}
+      keyExtractor={keyExtractor}
       persistentScrollbar
-      renderItem={({ item: childDef }) => (
-        <NodeDefFormItem
-          key={childDef.uuid}
-          nodeDef={childDef}
-          parentNodeUuid={parentNodeUuid}
-        />
-      )}
+      renderItem={renderItem}
       style={styles.container}
     />
   );
-};
+});
+
+NodeEntityFormComponent.displayName = "NodeEntityFormComponent";

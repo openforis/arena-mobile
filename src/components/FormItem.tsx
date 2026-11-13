@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { StyleProp, StyleSheet, TextStyle, View } from "react-native";
 
 import { useTranslation } from "localization";
@@ -17,6 +18,7 @@ type Props = {
 };
 
 const styles = StyleSheet.create({
+  container: { alignItems: "baseline" },
   labelIconWrapper: { alignSelf: "center", marginRight: 4 },
 });
 
@@ -32,11 +34,15 @@ export const FormItem = ({
 }: Props) => {
   const { t } = useTranslation();
   const label = `${t(labelKey)}:`;
+  const containerStyle = useMemo(
+    () => (style ? [styles.container, style] : styles.container),
+    [style],
+  );
   const hasTextContent =
     typeof children === "string" || typeof children === "number";
 
   return (
-    <HView style={[{ alignItems: "baseline" }, style]}>
+    <HView style={containerStyle}>
       {labelIcon && <View style={styles.labelIconWrapper}>{labelIcon}</View>}
       <Text
         numberOfLines={labelNumberOfLines}
