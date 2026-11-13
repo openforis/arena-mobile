@@ -7,17 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.11.3] - 2026-11-13
 
+### Added
+
+- Languages: Amharic and Swedish;
+
 ### Changed
 
-- Faster startup on slow networks: the app no longer waits for the server to confirm the logged-in user;
-- Record editor: faster data entry and page navigation;
+- Faster startup, also on slow networks: the app no longer waits for the server to confirm the logged-in user;
+- Record editor: faster data entry, page navigation and entity tables;
+- Faster lists: records list, remote surveys list, taxon search;
+- Records list (table view): records shown in pages of 50 when there are more than 50;
+- Location navigator: smoother compass heading;
 
 ### Fixed
 
 - Record editor: value typed in a field lost when moving to another entity right after typing;
 - Record editor: field showing a value not saved in the record (e.g. while the record is being synced);
 - Surveys list: search text cleared when the list was refreshed;
+- Tables: empty page shown when a search or a deletion reduced the number of items while on a later page;
 - Full backup: database copied while it could still be written (e.g. during auto-sync);
+- Data export (CSV): export not stopped when cancelled;
+- Settings: a refused change (e.g. GPS locking without location permission) shown as applied;
 - Text direction not updated when changing the language;
 - General improvements and bug fixing;
 
