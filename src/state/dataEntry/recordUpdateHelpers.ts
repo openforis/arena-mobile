@@ -76,23 +76,19 @@ export const updateRecord = async ({
   survey: any;
   record: any;
 }) => {
-  const recordUpdated = prepareRecordForStorage({ record });
-  if (PreviewMode.isActive) {
-    // record kept in memory only
-    if (isRecordStillOpen(getState, record)) {
-      await dispatch({ type: RECORD_SET, record: recordUpdated });
-    }
-    return recordUpdated;
+  let recordUpdated = prepareRecordForStorage({ record });
+  // in preview mode the record is kept in memory only
+  if (!PreviewMode.isActive) {
+    recordUpdated = await RecordService.updateRecord({
+      survey,
+      record: recordUpdated,
+    });
+    dispatch(AutoSyncActions.markPending());
   }
-  const recordStored = await RecordService.updateRecord({
-    survey,
-    record: recordUpdated,
-  });
-  dispatch(AutoSyncActions.markPending());
   if (isRecordStillOpen(getState, record)) {
-    await dispatch({ type: RECORD_SET, record: recordStored });
+    await dispatch({ type: RECORD_SET, record: recordUpdated });
   }
-  return recordStored;
+  return recordUpdated;
 };
 
 const findNewlyInapplicableNodeDefNames = ({
