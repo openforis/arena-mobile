@@ -7,6 +7,17 @@ const config = getDefaultConfig(__dirname);
 // expo-sqlite web (wa-sqlite) loads a wasm module
 config.resolver.assetExts.push("wasm");
 
+// Expo's default sets inlineRequires: false; inline them to defer module evaluation to first use (faster startup)
+const defaultGetTransformOptions = config.transformer.getTransformOptions;
+
+config.transformer.getTransformOptions = async (...args) => {
+  const options = (await defaultGetTransformOptions?.(...args)) ?? {};
+  return {
+    ...options,
+    transform: { ...options.transform, inlineRequires: true },
+  };
+};
+
 const webShimsDir = path.resolve(__dirname, "src/web/shims");
 
 // native-only modules replaced on web (preview build) by the shims in src/web/shims
