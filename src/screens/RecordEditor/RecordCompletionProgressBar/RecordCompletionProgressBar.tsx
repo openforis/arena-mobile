@@ -1,10 +1,5 @@
-import { useMemo } from "react";
-
-import { Records } from "@openforis/arena-core";
-
 import { getCompletionColor, ProgressBar, Text, VView } from "components";
-import { RecordUtils } from "model";
-import { DataEntrySelectors, SurveySelectors } from "state";
+import { DataEntrySelectors } from "state";
 import { useAppTheme } from "theme";
 
 import styles from "./styles";
@@ -16,20 +11,7 @@ type Props = {
 export const RecordCompletionProgressBar = (props: Props) => {
   const { compact = false } = props;
   const theme = useAppTheme();
-  const survey = SurveySelectors.useCurrentSurvey();
-  const record = DataEntrySelectors.useRecord();
-
-  const completionPercent = useMemo(() => {
-    if (!survey || !record) return 0;
-    const rootEntity = Records.getRoot(record);
-    if (!rootEntity) return 0;
-    const completionStats = Records.getEntityCompletionStats({
-      survey,
-      record,
-      entity: rootEntity,
-    });
-    return RecordUtils.toCompletionPercent(completionStats);
-  }, [survey, record]);
+  const completionPercent = DataEntrySelectors.useRecordCompletionPercent();
 
   const color = getCompletionColor(completionPercent);
 

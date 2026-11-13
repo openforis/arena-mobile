@@ -1,11 +1,10 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
 import { NodeDefs, Objects, Records, Surveys } from "@openforis/arena-core";
 
 import { useTranslation } from "localization";
 import { RecordUtils } from "model";
 import { DataEntrySelectors, SettingsSelectors, SurveySelectors } from "state";
-import { useAppSelector } from "state/storeHooks";
 
 export type BreadcrumbItemData = {
   parentEntityUuid?: string;
@@ -57,11 +56,11 @@ export const useBreadcrumbItems = () => {
     [lang, survey, t],
   );
 
-  return useAppSelector((state) => {
-    if (!actualEntityUuid) return [];
+  const record = DataEntrySelectors.useRecord();
 
-    const record = DataEntrySelectors.selectRecord(state);
-    const survey = SurveySelectors.selectCurrentSurvey(state)!;
+  // computed when the record or the page change, not on every store update
+  return useMemo(() => {
+    if (!actualEntityUuid || !survey) return [];
 
     const _items: BreadcrumbItemData[] = [];
 
@@ -132,5 +131,15 @@ export const useBreadcrumbItems = () => {
     }
 
     return _items;
-  }, Objects.isEqual);
+  }, [
+    actualEntityUuid,
+    entityDef,
+    entityDefUuid,
+    entityUuid,
+    itemLabelFunction,
+    parentEntityUuid,
+    record,
+    showRecordCompletion,
+    survey,
+  ]);
 };

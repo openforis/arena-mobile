@@ -15,6 +15,8 @@ import {
   Validations,
 } from "@openforis/arena-core";
 
+import { createSelector } from "@reduxjs/toolkit";
+
 import { RecordCurrentPageEntity, RecordUtils, SurveyDefs } from "model";
 import { PreviewMode } from "utils/PreviewMode";
 
@@ -282,22 +284,49 @@ const selectIsRecordAttributeFilled =
     );
   };
 
+// child defs depend only on survey, cycle and entity def: cached per survey (selected by every form field)
+const childDefsCacheBySurvey = new WeakMap<
+  object,
+  Map<string, NodeDef<any>[]>
+>();
+
+const getChildDefs = ({
+  survey,
+  cycle,
+  nodeDef,
+}: {
+  survey: any;
+  cycle: string;
+  nodeDef: NodeDefEntity;
+}): NodeDef<any>[] => {
+  let cache = childDefsCacheBySurvey.get(survey);
+  if (!cache) {
+    cache = new Map();
+    childDefsCacheBySurvey.set(survey, cache);
+  }
+  const cacheKey = `${cycle}_${nodeDef.uuid}`;
+  let childDefs = cache.get(cacheKey);
+  if (!childDefs) {
+    childDefs = SurveyDefs.getChildrenDefs({ survey, nodeDef, cycle }).filter(
+      (childDef) => {
+        // only child defs not hidden in mobile and in same page
+        const layoutProps = NodeDefs.getLayoutProps(cycle)(childDef);
+        return !layoutProps.pageUuid;
+      },
+    );
+    cache.set(cacheKey, childDefs);
+  }
+  return childDefs;
+};
+
 const selectChildDefs =
   ({ nodeDef }: { nodeDef: NodeDefEntity }) =>
-  (state: RootState): NodeDef<any>[] => {
-    const cycle = selectRecordCycle(state);
-    const survey = SurveySelectors.selectCurrentSurvey(state)!;
-    const childDefs = SurveyDefs.getChildrenDefs({
-      survey,
+  (state: RootState): NodeDef<any>[] =>
+    getChildDefs({
+      survey: SurveySelectors.selectCurrentSurvey(state)!,
+      cycle: selectRecordCycle(state),
       nodeDef,
-      cycle,
-    }).filter((childDef) => {
-      // only child defs not hidden in mobile and in same page
-      const layoutProps = NodeDefs.getLayoutProps(cycle)(childDef);
-      return !layoutProps.pageUuid;
     });
-    return childDefs;
-  };
 
 const selectRecordCodeParentItemUuid =
   ({
@@ -338,67 +367,85 @@ const selectRecordHasErrors = (state: RootState): boolean => {
   return !!validation && Validations.getErrorsCount(validation) > 0;
 };
 
-const selectCurrentPageEntity = (state: RootState): RecordCurrentPageEntity => {
-  const survey = SurveySelectors.selectCurrentSurvey(state)!;
-  const record = selectRecordUnsafe(state);
-  if (!record) {
-    throw new Error("Record not found");
-  }
+const selectCurrentPageEntityPointer = (state: RootState) =>
+  getDataEntryState(state).recordCurrentPageEntity;
 
-  const {
-    parentEntityUuid,
-    entityDefUuid,
-    entityUuid,
-    previousCycleParentEntityUuid,
-    previousCycleEntityUuid,
-  } = getDataEntryState(state).recordCurrentPageEntity ?? {};
+// memoized: selected by many components on every dispatch
+const selectCurrentPageEntity = createSelector(
+  [
+    SurveySelectors.selectCurrentSurvey,
+    selectRecordUnsafe,
+    selectCurrentPageEntityPointer,
+  ],
+  (survey, record, pointer): RecordCurrentPageEntity => {
+    if (!record) {
+      throw new Error("Record not found");
+    }
+    const {
+      parentEntityUuid,
+      entityDefUuid,
+      entityUuid,
+      previousCycleParentEntityUuid,
+      previousCycleEntityUuid,
+    } = pointer ?? ({} as any);
 
-  if (!parentEntityUuid) {
-    const rootDef = Surveys.getNodeDefRoot({ survey });
+    if (!parentEntityUuid) {
+      const rootDef = Surveys.getNodeDefRoot({ survey: survey! });
+      return {
+        parentEntityUuid: undefined,
+        entityDef: rootDef,
+        entityDefUuid: rootDef.uuid,
+        entityUuid: Records.getRoot(record)!.uuid,
+      };
+    }
+    if (!entityDefUuid) {
+      throw new Error(
+        "Invalid current page entity pointer: missing entityDefUuid",
+      );
+    }
+    const entityDef = Surveys.getNodeDefByUuid({
+      survey: survey!,
+      uuid: entityDefUuid,
+    })! as NodeDefEntity;
+
     return {
-      parentEntityUuid: undefined,
-      entityDef: rootDef,
-      entityDefUuid: rootDef.uuid,
-      entityUuid: Records.getRoot(record)!.uuid,
+      parentEntityUuid,
+      entityDef,
+      entityDefUuid: entityDefUuid,
+      entityUuid,
+      previousCycleParentEntityUuid,
+      previousCycleEntityUuid,
     };
-  }
-  if (!entityDefUuid) {
-    throw new Error(
-      "Invalid current page entity pointer: missing entityDefUuid",
+  },
+);
+
+// memoized: recomputed only when the record or the current page change, not for each field on every dispatch
+const selectCurrentPageEntityRelevantChildDefs = createSelector(
+  [
+    SurveySelectors.selectCurrentSurvey,
+    selectRecordUnsafe,
+    selectCurrentPageEntity,
+  ],
+  (survey, record, currentPageEntity): NodeDef<any>[] => {
+    const { parentEntityUuid, entityDef, entityUuid } = currentPageEntity;
+    const actualEntityUuid = entityUuid ?? parentEntityUuid;
+    if (!actualEntityUuid || !record) {
+      return [];
+    }
+    const parentEntity = Records.getNodeByUuid(actualEntityUuid)(record);
+    if (!parentEntity) return [];
+    const childDefs = getChildDefs({
+      survey,
+      cycle: Records.getCycle(record),
+      nodeDef: entityDef,
+    });
+    return childDefs.filter(
+      (childDef) =>
+        Nodes.isChildApplicable(parentEntity, childDef.uuid) &&
+        Nodes.isChildVisible(parentEntity, childDef.uuid),
     );
-  }
-  const entityDef = Surveys.getNodeDefByUuid({
-    survey,
-    uuid: entityDefUuid,
-  })! as NodeDefEntity;
-
-  return {
-    parentEntityUuid,
-    entityDef,
-    entityDefUuid: entityDefUuid,
-    entityUuid,
-    previousCycleParentEntityUuid,
-    previousCycleEntityUuid,
-  };
-};
-
-const selectCurrentPageEntityRelevantChildDefs = (state: RootState) => {
-  const { parentEntityUuid, entityDef, entityUuid } =
-    selectCurrentPageEntity(state);
-  const childDefs = selectChildDefs({ nodeDef: entityDef })(state);
-  const record = selectRecordUnsafe(state);
-  const actualEntityUuid = entityUuid ?? parentEntityUuid;
-  if (!actualEntityUuid || !record) {
-    return [];
-  }
-  const parentEntity = Records.getNodeByUuid(actualEntityUuid)(record);
-  if (!parentEntity) return [];
-  return childDefs.filter(
-    (childDef) =>
-      Nodes.isChildApplicable(parentEntity, childDef.uuid) &&
-      Nodes.isChildVisible(parentEntity, childDef.uuid),
-  );
-};
+  },
+);
 
 const selectCurrentPageEntityActiveChildDefIndex = (state: RootState): number =>
   getDataEntryState(state).activeChildDefIndex ?? 0;
@@ -489,14 +536,38 @@ const selectPreviousCycleEntityWithSameKeys =
     )(record);
   };
 
+// shared by the progress bars (app bar and drawer): computed once per record change
+const selectRecordCompletionPercent = createSelector(
+  [SurveySelectors.selectCurrentSurvey, selectRecordUnsafe],
+  (survey, record): number => {
+    if (!survey || !record) return 0;
+    const rootEntity = Records.getRoot(record);
+    if (!rootEntity) return 0;
+    const completionStats = Records.getEntityCompletionStats({
+      survey,
+      record,
+      entity: rootEntity,
+    });
+    return RecordUtils.toCompletionPercent(completionStats);
+  },
+);
+
+const selectCurrentPageEntityActiveChildDefUuid = createSelector(
+  [
+    selectCurrentPageEntityRelevantChildDefs,
+    selectCurrentPageEntityActiveChildDefIndex,
+  ],
+  (childDefs, activeChildDefIndex): string | undefined =>
+    childDefs[activeChildDefIndex]?.uuid,
+);
+
 const useIsNodeDefCurrentActiveChild = (nodeDef: NodeDef<any>): boolean =>
-  useAppSelector((state) => {
-    const activeChildDefIndex =
-      selectCurrentPageEntityActiveChildDefIndex(state);
-    const childDefs = selectCurrentPageEntityRelevantChildDefs(state);
-    const nodeDefIndex = childDefs.indexOf(nodeDef);
-    return nodeDefIndex === activeChildDefIndex;
-  });
+  useAppSelector(
+    (state) =>
+      // the record may be closed while the editor is being unmounted
+      !!selectRecordUnsafe(state) &&
+      selectCurrentPageEntityActiveChildDefUuid(state) === nodeDef.uuid,
+  );
 
 const selectIsMaxCountReached =
   ({ parentNodeUuid, nodeDef }: ParentNodeUuidNodeDefParams) =>
@@ -640,6 +711,8 @@ export const DataEntrySelectors = {
 
   useRecordIsNotValid: () => useAppSelector(selectRecordIsNotValid),
   useRecordHasErrors: () => useAppSelector(selectRecordHasErrors),
+  useRecordCompletionPercent: () =>
+    useAppSelector(selectRecordCompletionPercent),
 
   useCurrentPageEntity: () =>
     useAppSelector(selectCurrentPageEntity, Objects.isEqual),
