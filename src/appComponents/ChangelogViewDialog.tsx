@@ -8,11 +8,33 @@ import { ScrollView } from "components/ScrollView";
 import { VView } from "components/VView";
 import { API } from "service/api";
 import { useAppTheme } from "theme";
+import { log } from "utils/Logger";
 import { VersionNumberInfoText } from "./VersionNumberInfoText";
 
 const changelogUrl =
   "https://raw.githubusercontent.com/openforis/arena-mobile/master/";
 const changelogUri = "CHANGELOG.md";
+
+// fetched once per app session (on success)
+let changelogContent: string | null = null;
+let changelogFetchPromise: Promise<string> | null = null;
+
+const fetchChangelog = (): Promise<string> => {
+  changelogFetchPromise ??= API.getFileAsText({
+    serverUrl: changelogUrl,
+    uri: changelogUri,
+  }).then(
+    (text) => {
+      changelogContent = text;
+      return text;
+    },
+    (error) => {
+      changelogFetchPromise = null;
+      throw error;
+    },
+  );
+  return changelogFetchPromise;
+};
 
 type ChangelogViewDialogProps = {
   onClose: () => void;
@@ -30,7 +52,7 @@ export const ChangelogViewDialog = (props: ChangelogViewDialogProps) => {
   } = props;
 
   const theme = useAppTheme();
-  const [content, setContent] = useState(null);
+  const [content, setContent] = useState(changelogContent);
 
   const styles: any = useMemo(
     () =>
@@ -48,11 +70,16 @@ export const ChangelogViewDialog = (props: ChangelogViewDialogProps) => {
   );
 
   useEffect(() => {
-    void API.getFileAsText({ serverUrl: changelogUrl, uri: changelogUri }).then(
-      (text) => {
-        setContent(text);
-      },
-    );
+    if (changelogContent) return;
+    let cancelled = false;
+    fetchChangelog()
+      .then((text) => {
+        if (!cancelled) setContent(text);
+      })
+      .catch((error) => log.error("Error fetching the changelog", error));
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (

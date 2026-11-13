@@ -22,6 +22,9 @@ export const SettingsSelectors = {
   useImageSizeLimit: () => useSetting("imageSizeLimit"),
   useImageSizeUnlimited: () => useSetting("imageSizeUnlimited"),
   useLocationAccuracyThreshold: () => useSetting("locationAccuracyThreshold"),
+  useLocationAccuracyWatchTimeout: () =>
+    useSetting("locationAccuracyWatchTimeout"),
+  useLocationAveragingEnabled: () => useSetting("locationAveragingEnabled"),
   useLocationGpsLocked: () => useSetting("locationGpsLocked"),
   useMapLayer: () => useSetting("mapLayer"),
   useMapProvider: () => useSetting("mapProvider"),

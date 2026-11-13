@@ -90,19 +90,31 @@ const deletePdfMap = (mapId: string) => async (dispatch: AppDispatch) => {
   dispatch(setSettings(settingsUpdated));
 };
 
-let gpsLockingSubscription: any = null;
+// one fix per second (GPS receivers' usual rate) is enough to keep the GPS locked
+const gpsLockingTimeInterval = 1000;
+
+let gpsLockingSubscription: Location.LocationSubscription | null = null;
+// incremented on every start/stop: a start superseded while awaiting drops its watch
+let gpsLockingRequestId = 0;
 
 const _startGpsLocking = async () => {
+  const requestId = ++gpsLockingRequestId;
   if (!(await Permissions.requestLocationForegroundPermission())) return false;
 
-  gpsLockingSubscription = await Location.watchPositionAsync(
+  const subscription = await Location.watchPositionAsync(
     {
       accuracy: Location.Accuracy.BestForNavigation,
       distanceInterval: 0,
-      timeInterval: 10,
+      timeInterval: gpsLockingTimeInterval,
     },
     (_location) => {},
   );
+  if (requestId !== gpsLockingRequestId) {
+    subscription.remove();
+    return true;
+  }
+  gpsLockingSubscription?.remove();
+  gpsLockingSubscription = subscription;
   return true;
 };
 
@@ -115,7 +127,9 @@ const startGpsLocking = () => async (dispatch: AppDispatch) => {
 };
 
 const _stopGpsLocking = () => {
+  gpsLockingRequestId++;
   gpsLockingSubscription?.remove();
+  gpsLockingSubscription = null;
 };
 
 export const SettingsActions = {
