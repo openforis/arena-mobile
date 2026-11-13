@@ -13,7 +13,6 @@ import { SurveyRepository } from "./repository/surveyRepository";
 import { SurveyFSRepository } from "./repository/surveyFSRepository";
 import { RecordFileService } from "./recordFileService";
 import { RemoteService } from "./remoteService";
-import demoSurvey from "./demoSurvey.json";
 
 const {
   fetchSurveySummaries: fetchSurveySummariesLocal,
@@ -22,6 +21,11 @@ const {
 } = SurveyRepository;
 
 const demoSurveyUuid = "3a3550d2-97ac-4db2-a9b5-ed71ca0a02d3";
+
+type DemoSurveyJson = typeof import("./demoSurvey.json");
+
+// large: required lazily, only when the demo survey is imported or checked for updates
+const getDemoSurvey = (): DemoSurveyJson => require("./demoSurvey.json");
 
 const remoteSurveyFetchTimeout = 60000; // 1 min
 
@@ -136,7 +140,7 @@ const fetchCurrentUserGroupRemote = async ({
 // insert/update and dependency graph building set top-level props (id, remoteId, dependencyGraph)
 // of the survey object: always pass a (shallow) copy of the bundled one
 const cloneDemoSurvey = (): Survey => ({
-  ...(demoSurvey as unknown as Survey),
+  ...(getDemoSurvey() as unknown as Survey),
 });
 
 const importDemoSurvey = async () => _insertSurvey(cloneDemoSurvey());
@@ -154,6 +158,7 @@ const findOutdatedDemoSurveySummary = <
     (surveySummary) => surveySummary.uuid === demoSurveyUuid,
   );
   if (!demoSurveySummary) return undefined;
+  const demoSurvey = getDemoSurvey();
   const demoSurveyDate = demoSurvey.datePublished ?? demoSurvey.dateModified;
   return Dates.isAfter(demoSurveyDate, demoSurveySummary.dateModified)
     ? demoSurveySummary
