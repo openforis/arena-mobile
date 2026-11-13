@@ -1,15 +1,5 @@
-import { useEffect, useState } from "react";
-import NetInfo from "@react-native-community/netinfo";
+import { DeviceInfoSelectors } from "state/deviceInfo/selectors";
 
-export const useIsNetworkConnected = () => {
-  const [connected, setConnected] = useState(false);
-
-  useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener((netInfoState) => {
-      setConnected(netInfoState.isConnected ?? false);
-    });
-    return unsubscribe;
-  }, []);
-
-  return connected;
-};
+// kept up to date by useIsNetworkConnectedMonitor (a single NetInfo listener for the whole app)
+export const useIsNetworkConnected = (): boolean =>
+  DeviceInfoSelectors.useIsNetworkConnected();
