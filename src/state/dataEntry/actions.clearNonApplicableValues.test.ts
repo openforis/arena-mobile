@@ -87,6 +87,7 @@ jest.mock("./actionsRecordSync", () => ({ DataEntryActionsRecordSync: {} }));
 jest.mock("./selectors", () => ({
   DataEntrySelectors: {
     selectRecord: (state: any) => state.record,
+    selectRecordUnsafe: (state: any) => state.record,
     selectPreviousCycleRecord: () => null,
     selectRecordSyncInProgress: () => false,
     selectIsMaxCountReached: () => () => false,
@@ -236,6 +237,31 @@ describe("DataEntryActions: clear values of attributes becoming non-applicable",
       // the record in the store is untouched
       expect(getNodesByName(survey, record, "individual")).toHaveLength(5);
       expect(getDistanceValue(survey, record)).toBe(3.2);
+    });
+
+    it("stores the change without reopening the record when the editor is closed meanwhile", async () => {
+      const survey = await buildSurvey("count(individual) >= 5");
+      const record = buildRecord(survey, 5);
+      const individualToDelete = getNodesByName(
+        survey,
+        record,
+        "individual",
+      ).pop()!;
+      const state: any = { survey, record, user };
+      const dispatch = createDispatch(state);
+      // the editor is closed while the confirm dialog is open
+      confirmMock.mockImplementation(async () => {
+        state.record = null;
+        return true;
+      });
+
+      await dispatch(DataEntryActions.deleteNodes([individualToDelete.uuid]));
+
+      expect(updateRecordMock).toHaveBeenCalledTimes(1);
+      const recordSetDispatched = dispatch.mock.calls.some(
+        ([action]: any[]) => action?.type === "RECORD_SET",
+      );
+      expect(recordSetDispatched).toBe(false);
     });
 
     it("keeps the values when the survey is configured to keep non-applicable values", async () => {
