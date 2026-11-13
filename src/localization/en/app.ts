@@ -38,7 +38,6 @@ The size will be around {{size}}.`,
     updatingDemoSurvey: "Updating Demo survey",
     fetchingAndSettingLocalSurveys: "Fetching and setting local surveys",
     fetchingAndSettingSurvey: "Fetching and setting survey",
-    checkingLoggedIn: "Checking logged in",
     complete: "Complete",
   },
   logs: {

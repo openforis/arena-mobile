@@ -9,9 +9,10 @@ const initialState: RemoteConnectionState = {
 };
 
 const actionHandlers: ActionHandlers<RemoteConnectionState> = {
-  [RemoteConnectionActions.USER_LOADING]: ({ state }) => ({
+  [RemoteConnectionActions.USER_LOADING]: ({ state, action }) => ({
     ...state,
-    user: null,
+    // last logged in user (if any) kept while it's fetched again
+    user: action.user ?? null,
     userLoading: true,
   }),
   [RemoteConnectionActions.USER_SET]: ({ state, action }) => ({

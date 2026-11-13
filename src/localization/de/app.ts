@@ -38,7 +38,6 @@ export default {
     updatingDemoSurvey: "Demo-Umfrage aktualisieren",
     fetchingAndSettingLocalSurveys: "Lokale Umfragen abrufen und einstellen",
     fetchingAndSettingSurvey: "Umfrage abrufen und einstellen",
-    checkingLoggedIn: "Angemeldet prüfen",
     complete: "Abgeschlossen",
   },
   logs: {

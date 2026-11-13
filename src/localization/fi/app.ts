@@ -38,7 +38,6 @@ export default {
     updatingDemoSurvey: "Demo-kyselyn päivitys",
     fetchingAndSettingLocalSurveys: "Laitteen kyselylomakkeiden haku ja asetus",
     fetchingAndSettingSurvey: "Kyselylomakkeen haku ja asetus",
-    checkingLoggedIn: "Kirjautumisen tarkistus",
     complete: "Valmis",
   },
   logs: {

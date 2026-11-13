@@ -33,15 +33,21 @@ const _getPowerState = async () => {
 };
 
 const initDeviceInfo = () => async (dispatch: AppDispatch) => {
-  const deviceType =
-    (await Device.getDeviceTypeAsync()) || Device.DeviceType.PHONE;
-
-  const { batteryLevel, batteryState } = await _getPowerState();
-
-  const freeDiskStorage = await Files.getFreeDiskStorage();
-  const { isConnected: isNetworkConnected } = await NetInfo.fetch();
-
-  const orientation = await SystemUtils.getOrientation();
+  // independent native calls: run in parallel (this is part of the app startup)
+  const [
+    deviceTypeFetched,
+    { batteryLevel, batteryState },
+    freeDiskStorage,
+    { isConnected: isNetworkConnected },
+    orientation,
+  ] = await Promise.all([
+    Device.getDeviceTypeAsync(),
+    _getPowerState(),
+    Files.getFreeDiskStorage(),
+    NetInfo.fetch(),
+    SystemUtils.getOrientation(),
+  ]);
+  const deviceType = deviceTypeFetched || Device.DeviceType.PHONE;
 
   SystemUtils.addOrientationChangeListener((orientation: any) => {
     dispatch(updateOrientation(orientation));
