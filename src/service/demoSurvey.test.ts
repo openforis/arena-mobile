@@ -18,8 +18,7 @@ import { PositionTracks } from "model/utils/PositionTracks";
 import { RecordUtils } from "model/utils/RecordUtils";
 
 import demoSurveyJson from "./demoSurvey.json";
-
-const demoSurveyUuid = "3a3550d2-97ac-4db2-a9b5-ed71ca0a02d3";
+import { demoSurveyDatePublished, demoSurveyUuid } from "./demoSurveyInfo";
 
 // root key attributes are stored in dedicated columns of the record table:
 // changing them would break the records already collected with the demo survey
@@ -146,6 +145,13 @@ describe("Demo survey", () => {
   });
 
   describe("structure", () => {
+    // the update check at startup compares this constant, without loading the survey JSON
+    test("publication date matches demoSurveyDatePublished (update it when the survey JSON changes)", () => {
+      expect(demoSurveyJson.datePublished ?? demoSurveyJson.dateModified).toBe(
+        demoSurveyDatePublished,
+      );
+    });
+
     test("keeps the same UUID and root keys", () => {
       expect(survey.uuid).toBe(demoSurveyUuid);
       const rootDef = Surveys.getNodeDefRoot({ survey });
