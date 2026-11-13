@@ -1,4 +1,6 @@
-import { useTranslation } from "./i18n";
+import { useSyncExternalStore } from "react";
+
+import { i18n } from "./i18n";
 
 export enum TextDirection {
   rtl = "rtl",
@@ -14,13 +16,16 @@ const getLanguageTextDirection = (lang: string) => {
   return isRtl ? TextDirection.rtl : TextDirection.ltr;
 };
 
-export const useTextDirection = () => {
-  // from react-i18next: re-renders when the language changes
-  const { i18n } = useTranslation();
-  const lang = i18n.language;
-  const textDirection = getLanguageTextDirection(lang);
-  return textDirection;
+const subscribeToLanguageChange = (onChange: () => void) => {
+  i18n.on("languageChanged", onChange);
+  return () => i18n.off("languageChanged", onChange);
 };
+
+const getTextDirectionSnapshot = () => getLanguageTextDirection(i18n.language);
+
+// lighter than react-i18next useTranslation (used by every Text): re-renders only when the direction changes
+export const useTextDirection = () =>
+  useSyncExternalStore(subscribeToLanguageChange, getTextDirectionSnapshot);
 
 export const useIsTextDirectionRtl = () => {
   const textDirection = useTextDirection();

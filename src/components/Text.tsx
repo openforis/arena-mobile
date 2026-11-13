@@ -26,6 +26,18 @@ type TextVariant =
   | "bodyMedium"
   | "bodySmall";
 
+// only texts with a textKey subscribe to translation changes
+const TranslatedText = ({
+  textKey,
+  textParams,
+}: {
+  textKey: string;
+  textParams?: any;
+}) => {
+  const { t } = useTranslation();
+  return t(textKey, textParams);
+};
+
 type Props = {
   children?: React.ReactNode;
   numberOfLines?: number;
@@ -52,7 +64,6 @@ export const Text = (props: Props) => {
   } = props;
 
   const isRtl = useIsTextDirectionRtl();
-  const { t } = useTranslation();
 
   const style = useMemo(() => {
     if (!isRtl) {
@@ -72,7 +83,9 @@ export const Text = (props: Props) => {
       style={style}
       variant={variant}
     >
-      {textKey ? t(textKey, textParams) : null}
+      {textKey ? (
+        <TranslatedText textKey={textKey} textParams={textParams} />
+      ) : null}
       {children}
     </RNText>
   );
