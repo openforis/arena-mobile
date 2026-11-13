@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { StyleSheet } from "react-native";
 
 import { Numbers, Objects, PointFactory } from "@openforis/arena-core";
@@ -35,7 +35,7 @@ type ImageInfoState = {
 } | null;
 
 type ImageInfoProps = {
-  imageUri: string;
+  imageUri: string | null;
   showGeotagInfo?: boolean;
 };
 
@@ -57,11 +57,9 @@ const fetchImageInfo = async (imageUri: string): Promise<ImageInfoState> => {
 };
 
 const ImageInfo = (props: ImageInfoProps) => {
-  const { imageUri: imageUriProp, showGeotagInfo = false } = props;
+  const { imageUri, showGeotagInfo = false } = props;
 
   const [info, setInfo] = useState(null as ImageInfoState);
-
-  const imageUri = useImageFile(imageUriProp);
 
   const { width, height, size, latitude, longitude } = (info ?? {}) as any;
 
@@ -126,6 +124,13 @@ type ImagePreviewDialogProps = {
 export const ImagePreviewDialog = (props: ImagePreviewDialogProps) => {
   const { fileName, imageUri, onClose, showGeotagInfo = false } = props;
 
+  // resolved once for the image and its info (on iOS it's a temp copy with extension)
+  const previewUri = useImageFile(imageUri);
+  const previewSource = useMemo(
+    () => (previewUri ? { uri: previewUri } : null),
+    [previewUri],
+  );
+
   const onSharePress = useCallback(async () => {
     const mimeType = Files.getMimeTypeFromName(fileName);
     await Files.shareFile({ url: imageUri, mimeType });
@@ -138,7 +143,7 @@ export const ImagePreviewDialog = (props: ImagePreviewDialogProps) => {
       title="dataEntry:fileAttributeImage.imagePreview"
     >
       <VView style={styles.content}>
-        <Image source={{ uri: imageUri }} style={styles.image} />
+        <Image source={previewSource} style={styles.image} />
 
         <Button
           icon="share"
@@ -152,7 +157,7 @@ export const ImagePreviewDialog = (props: ImagePreviewDialogProps) => {
             containerStyle={styles.details}
             headerKey="common:details"
           >
-            <ImageInfo imageUri={imageUri} showGeotagInfo={showGeotagInfo} />
+            <ImageInfo imageUri={previewUri} showGeotagInfo={showGeotagInfo} />
           </CollapsiblePanel>
         </HView>
       </VView>
