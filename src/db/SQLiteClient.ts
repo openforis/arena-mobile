@@ -55,6 +55,14 @@ export default class SQLiteClient {
     return this.enqueue(() => this.privateDb!.execAsync(sql));
   }
 
+  // the database file is complete (WAL merged) and not written while the task runs (e.g. to copy it)
+  withConsistentDbFile<T>(task: () => Promise<T>): Promise<T> {
+    return this.enqueue(async () => {
+      await this.privateDb!.execAsync("PRAGMA wal_checkpoint(TRUNCATE)");
+      return task();
+    });
+  }
+
   // inside the callback use only the given tx client: calls on this client wait for the transaction to end
   transaction(callback: (tx: SQLiteClient) => Promise<void>): Promise<void> {
     if (this.inTransaction) return callback(this);

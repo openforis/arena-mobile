@@ -30,8 +30,6 @@ const {
   fetchRecordSummary,
   fetchRecords,
   fetchRecordsWithEmptyCycle,
-  updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely:
-    updateRecordFromRemoteSummary,
   insertRecord,
   insertRecordSummaries,
   updateRecord,
@@ -249,16 +247,9 @@ const updateLocalRecordsWithRemoteInfo = async ({
     )
     .map(({ uuid }) => recordsSummariesRemoteByUuid[uuid])
     .filter(Boolean);
-  for (const recordSummary of recordSummaries) {
-    try {
-      await updateRecordFromRemoteSummary({ survey, recordSummary }); // NOSONAR
-    } catch (error) {
-      throw new Error(
-        `error updating local record keys for record ${recordSummary.uuid}. Details: ${error}`,
-        { cause: error },
-      );
-    }
-  }
+  await RecordRepository.updateRecordsKeysAndDateModifiedWithSummariesFetchedRemotely(
+    { survey, recordSummaries },
+  );
   await updateLocalRecordsReadOnly({
     survey,
     allRecordsSummariesInDevice,
