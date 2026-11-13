@@ -5,22 +5,29 @@ import { LanguageConstants } from "model/LanguageSettings";
 import { SettingsService } from "service/settingsService";
 import { SystemUtils } from "utils/SystemUtils";
 
-import de from "./de";
 import en from "./en";
-import es from "./es";
-import fa from "./fa";
-import fi from "./fi";
-import fr from "./fr";
-import id from "./id";
-import ja from "./ja";
-import pt from "./pt";
-import ru from "./ru";
-import sr from "./sr";
 
 export { useTranslation } from "react-i18next";
 
-const resources = { de, en, es, fa, fi, fr, id, ja, pt, ru, sr };
-const supportedLngs = Object.keys(resources);
+type LanguageBundle = Record<string, Record<string, any>>;
+
+// static requires (Metro can't resolve computed paths), evaluated only when the language is used
+const bundleLoaders: Record<string, () => LanguageBundle> = {
+  am: () => require("./am").default,
+  de: () => require("./de").default,
+  en: () => en,
+  es: () => require("./es").default,
+  fa: () => require("./fa").default,
+  fi: () => require("./fi").default,
+  fr: () => require("./fr").default,
+  id: () => require("./id").default,
+  ja: () => require("./ja").default,
+  pt: () => require("./pt").default,
+  ru: () => require("./ru").default,
+  sr: () => require("./sr").default,
+  sv: () => require("./sv").default,
+};
+const supportedLngs = Object.keys(bundleLoaders);
 const fallbackLng = "en";
 const sysLng = SystemUtils.getLanguageCode();
 
@@ -34,18 +41,33 @@ const toFinalSuppotedLang = (lang: any) =>
     ? systemLanguageOrDefault
     : toSupportedLanguage(lang);
 
+const loadedLngs = new Set<string>([fallbackLng]);
+
+const ensureLanguageLoaded = (lang: string) => {
+  if (loadedLngs.has(lang)) return;
+  const bundle = bundleLoaders[lang]?.();
+  if (!bundle) return;
+  for (const [ns, resources] of Object.entries(bundle)) {
+    i18n.addResourceBundle(lang, ns, resources, true, true);
+  }
+  loadedLngs.add(lang);
+};
+
 const languageDetector = {
   type: "languageDetector",
   async: true,
   detect: (callback: any) => {
+    const onDetected = (lang: string) => {
+      ensureLanguageLoaded(lang);
+      callback(lang);
+    };
     SettingsService.fetchSettings()
       .then((settings) => {
         const { language: langInSettings } = settings;
-        const targetLanguage = toFinalSuppotedLang(langInSettings);
-        callback(targetLanguage);
+        onDetected(toFinalSuppotedLang(langInSettings));
       })
       .catch(() => {
-        callback(systemLanguageOrDefault);
+        onDetected(systemLanguageOrDefault);
       });
   },
 } as any;
@@ -55,7 +77,7 @@ i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
     compatibilityJSON: "v3", // to make it work for Android devices
-    resources,
+    resources: { en },
     fallbackLng,
     interpolation: {
       escapeValue: false,
@@ -68,6 +90,7 @@ i18n
 
 const changeLanguage = (lang: any) => {
   const supportedLang = toFinalSuppotedLang(lang);
+  ensureLanguageLoaded(supportedLang);
   i18n.changeLanguage(supportedLang);
 };
 

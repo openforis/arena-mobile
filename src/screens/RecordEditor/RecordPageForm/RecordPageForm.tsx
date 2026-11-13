@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 import { NodeDefs } from "@openforis/arena-core";
 
 import { DataEntrySelectors } from "state";
@@ -5,7 +7,7 @@ import { log } from "utils";
 import { NodeEntityFormComponent } from "../NodeComponentSwitch/nodeTypes/NodeEntityFormComponent";
 import { NodeMultipleEntityComponent } from "../NodeMultipleEntityComponent";
 
-export const RecordPageForm = () => {
+export const RecordPageForm = memo(() => {
   const { entityDef, entityUuid, parentEntityUuid } =
     DataEntrySelectors.useCurrentPageEntity();
 
@@ -20,4 +22,6 @@ export const RecordPageForm = () => {
       entityUuid={entityUuid}
     />
   );
-};
+});
+
+RecordPageForm.displayName = "RecordPageForm";

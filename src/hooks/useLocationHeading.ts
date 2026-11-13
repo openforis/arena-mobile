@@ -1,14 +1,20 @@
 import { useEffect, useRef, useState } from "react";
 import * as Location from "expo-location";
 
-import { Numbers } from "@openforis/arena-core";
+import { Functions } from "utils/Functions";
 
-import { circularEma, EMA_ALPHA } from "./headingUtils";
+import {
+  circularEma,
+  EMA_ALPHA,
+  HEADING_UPDATE_INTERVAL_MS,
+  nextDisplayedHeading,
+} from "./headingUtils";
 
 export const useLocationHeading = ({
   enabled = true,
 }: { enabled?: boolean } = {}) => {
   const filteredHeadingRef = useRef<number | null>(null);
+  const displayedHeadingRef = useRef<number | null>(null);
   const [heading, setHeading] = useState(0);
   const [locationHeadingAvailable, setLocationHeadingAvailable] =
     useState(true);
@@ -26,8 +32,18 @@ export const useLocationHeading = ({
   useEffect(() => {
     if (!enabled) {
       filteredHeadingRef.current = null;
+      displayedHeadingRef.current = null;
       return;
     }
+
+    const throttledEmitHeading = Functions.throttle(() => {
+      const filtered = filteredHeadingRef.current;
+      if (filtered === null) return;
+      const next = nextDisplayedHeading(displayedHeadingRef.current, filtered);
+      if (next === null) return;
+      displayedHeadingRef.current = next;
+      setHeading(next);
+    }, HEADING_UPDATE_INTERVAL_MS);
 
     // cancelled flag guards the race where the component unmounts before the
     // async watchHeadingAsync promise resolves
@@ -43,7 +59,7 @@ export const useLocationHeading = ({
       const prev = filteredHeadingRef.current;
       const filtered = prev === null ? raw : circularEma(prev, raw, EMA_ALPHA);
       filteredHeadingRef.current = filtered;
-      setHeading(Numbers.roundToPrecision(filtered, 1));
+      throttledEmitHeading();
     })
       .then((sub) => {
         if (cancelled) {
@@ -61,6 +77,7 @@ export const useLocationHeading = ({
     return () => {
       cancelled = true;
       subscription?.remove();
+      throttledEmitHeading.cancel();
     };
   }, [enabled]);
 

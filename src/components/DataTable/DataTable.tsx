@@ -1,9 +1,16 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Pressable, useWindowDimensions } from "react-native";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  FlatList,
+  Pressable,
+  StyleProp,
+  useWindowDimensions,
+  ViewStyle,
+} from "react-native";
 import { DataTable as RNPDataTable, useTheme } from "react-native-paper";
 
 import { Arrays, Dictionary, Objects } from "@openforis/arena-core";
 
+import { useStableCallback } from "hooks/useStableCallback";
 import { useTranslation } from "localization";
 import { ScreenViewMode, Sort, SortUtils } from "model";
 import { DeviceInfoSelectors } from "state/deviceInfo";
@@ -20,6 +27,7 @@ import { ScrollView } from "../ScrollView";
 import { ItemSelectedBanner, useSelectableList } from "../SelectableList";
 import { Tooltip } from "../Tooltip";
 import { VView } from "../VView";
+import { getItemKeysSignature } from "./dataTableUtils";
 import { usePagination } from "./usePagination";
 import styles from "./styles";
 
@@ -41,12 +49,105 @@ const ExpandToggle = ({
   </Pressable>
 );
 
+type DataTableRowProps = {
+  detailFields: DataVisualizerField[];
+  expandable: boolean;
+  expanded: boolean;
+  expandedRowLayout: { columns: number; labelWidth: number };
+  expandedRowStyle: StyleProp<ViewStyle>;
+  item: any;
+  onLongPress: (item: any) => void;
+  onPress: (item: any) => void;
+  onSelect: (item: any) => void;
+  onToggleExpanded: (key: any) => void;
+  selected: boolean;
+  selectionEnabled: boolean;
+  toggleColor: string;
+  visibleFields: DataVisualizerField[];
+};
+
+const DataTableRow = memo(function DataTableRow(props: DataTableRowProps) {
+  const {
+    detailFields,
+    expandable,
+    expanded,
+    expandedRowLayout,
+    expandedRowStyle,
+    item,
+    onLongPress,
+    onPress,
+    onSelect,
+    onToggleExpanded,
+    selected,
+    selectionEnabled,
+    toggleColor,
+    visibleFields,
+  } = props;
+
+  return (
+    <>
+      <RNPDataTable.Row
+        onPress={() => onPress(item)}
+        onLongPress={() => onLongPress(item)}
+      >
+        {visibleFields.map(
+          ({
+            key: fKey,
+            style,
+            cellRenderer: CellRenderer,
+          }: DataVisualizerField) => (
+            <RNPDataTable.Cell
+              key={fKey}
+              style={style}
+              textStyle={styles.tableTitleCellText}
+            >
+              {CellRenderer ? (
+                <CellRenderer item={item} viewMode={ScreenViewMode.table} />
+              ) : (
+                String(Objects.path(fKey.split("."))(item) ?? "")
+              )}
+            </RNPDataTable.Cell>
+          ),
+        )}
+        {expandable && (
+          <RNPDataTable.Cell style={styles.expandColumn}>
+            <ExpandToggle
+              color={toggleColor}
+              icon={expanded ? "chevron-up" : "chevron-down"}
+              onPress={() => onToggleExpanded(item.key)}
+            />
+          </RNPDataTable.Cell>
+        )}
+        {selectionEnabled && (
+          <RNPDataTable.Cell style={styles.tableTitleTextSelected}>
+            <Checkbox checked={selected} onPress={() => onSelect(item)} />
+          </RNPDataTable.Cell>
+        )}
+      </RNPDataTable.Row>
+      {expanded && (
+        <VView style={expandedRowStyle}>
+          <FieldRows
+            columns={expandedRowLayout.columns}
+            fields={detailFields}
+            item={item}
+            labelWidth={expandedRowLayout.labelWidth}
+            viewMode={ScreenViewMode.list}
+          />
+        </VView>
+      )}
+    </>
+  );
+});
+
+const rowKeyExtractor = (item: any) => String(item.key);
+
 export const DataTable = (props: DataVisualizerProps) => {
   const {
     canDelete = true,
     fields,
     horizontalScroll = false,
     items,
+    itemsPerPage: initialItemsPerPage,
     onItemPress: onItemPressProp,
     onItemLongPress: onItemLongPressProp,
     onSelectionChange,
@@ -87,24 +188,42 @@ export const DataTable = (props: DataVisualizerProps) => {
     visibleItems,
     onItemsPerPageChange,
     onPageChange,
-  } = usePagination({ items: items });
+  } = usePagination({ items, initialItemsPerPage });
 
-  const rowsScrollViewRef = useRef(null);
+  const rowsListRef = useRef<FlatList>(null);
 
   const isTablet = DeviceInfoSelectors.useIsTablet();
   const isLandscape = DeviceInfoSelectors.useOrientationIsLandscape();
 
   const { colors } = useTheme();
   const { width } = useWindowDimensions();
-  const expandedRowLayout = getFieldRowsLayout(width - 32);
-
-  const columnFields = fields.filter(({ tableDetail }) => !tableDetail);
-  const visibleFields = columnFields.filter(
-    ({ optional = false }) =>
-      !optional || columnFields.length <= 3 || isTablet || isLandscape,
+  const expandedRowLayout = useMemo(
+    () => getFieldRowsLayout(width - 32),
+    [width],
   );
-  // fields that don't fit as columns are shown in the expanded row instead
-  const detailFields = fields.filter((field) => !visibleFields.includes(field));
+  const expandedRowStyle = useMemo(
+    () => [
+      styles.expandedRow,
+      {
+        backgroundColor: colors.elevation.level1,
+        borderBottomColor: colors.outlineVariant,
+      },
+    ],
+    [colors],
+  );
+
+  const { visibleFields, detailFields } = useMemo(() => {
+    const columnFields = fields.filter(({ tableDetail }) => !tableDetail);
+    const _visibleFields = columnFields.filter(
+      ({ optional = false }) =>
+        !optional || columnFields.length <= 3 || isTablet || isLandscape,
+    );
+    // fields that don't fit as columns are shown in the expanded row instead
+    const _detailFields = fields.filter(
+      (field) => !_visibleFields.includes(field),
+    );
+    return { visibleFields: _visibleFields, detailFields: _detailFields };
+  }, [fields, isLandscape, isTablet]);
   const expandable = detailFields.length > 0;
 
   const [expandedKeys, setExpandedKeys] = useState<any[]>([]);
@@ -138,10 +257,56 @@ export const DataTable = (props: DataVisualizerProps) => {
     onSortChange?.(sortNext);
   };
 
+  // scroll to top only when the sort or the set of rows changes
+  const sortSignature = JSON.stringify(sort ?? null);
+  const rowKeysSignature = useMemo(
+    () => getItemKeysSignature(visibleRows),
+    [visibleRows],
+  );
   useEffect(() => {
-    const rowsScrollViewEl: any = rowsScrollViewRef.current;
-    rowsScrollViewEl?.scrollTo({ x: 0, y: 0, animated: false });
-  }, [visibleRows]);
+    rowsListRef.current?.scrollToOffset({ offset: 0, animated: false });
+  }, [rowKeysSignature, sortSignature]);
+
+  // stable handlers: rows re-render only when their own props change
+  const onRowPress = useStableCallback(onItemPress);
+  const onRowLongPress = useStableCallback(onItemLongPress);
+  const onRowSelect = useStableCallback(onItemSelect);
+
+  const renderRow = useCallback(
+    ({ item }: { item: any }) => (
+      <DataTableRow
+        detailFields={detailFields}
+        expandable={expandable}
+        expanded={expandedKeys.includes(item.key)}
+        expandedRowLayout={expandedRowLayout}
+        expandedRowStyle={expandedRowStyle}
+        item={item}
+        onLongPress={onRowLongPress}
+        onPress={onRowPress}
+        onSelect={onRowSelect}
+        onToggleExpanded={toggleExpanded}
+        selected={selectedItemIds.includes(item.key)}
+        selectionEnabled={selectionEnabled}
+        toggleColor={colors.onSurfaceVariant}
+        visibleFields={visibleFields}
+      />
+    ),
+    [
+      colors.onSurfaceVariant,
+      detailFields,
+      expandable,
+      expandedKeys,
+      expandedRowLayout,
+      expandedRowStyle,
+      onRowLongPress,
+      onRowPress,
+      onRowSelect,
+      selectedItemIds,
+      selectionEnabled,
+      toggleExpanded,
+      visibleFields,
+    ],
+  );
 
   const table = (
     <RNPDataTable style={styles.table}>
@@ -184,79 +349,13 @@ export const DataTable = (props: DataVisualizerProps) => {
           </RNPDataTable.Title>
         )}
       </RNPDataTable.Header>
-      <ScrollView persistentScrollbar ref={rowsScrollViewRef}>
-        {visibleRows.map((item: any) => (
-          <React.Fragment key={item.key}>
-            <RNPDataTable.Row
-              onPress={() => onItemPress(item)}
-              onLongPress={() => onItemLongPress(item)}
-            >
-              {visibleFields.map(
-                ({
-                  key: fKey,
-                  style,
-                  cellRenderer: CellRenderer,
-                }: DataVisualizerField) => (
-                  <RNPDataTable.Cell
-                    key={fKey}
-                    style={style}
-                    textStyle={styles.tableTitleCellText}
-                  >
-                    {CellRenderer ? (
-                      <CellRenderer
-                        item={item}
-                        viewMode={ScreenViewMode.table}
-                      />
-                    ) : (
-                      String(Objects.path(fKey.split("."))(item) ?? "")
-                    )}
-                  </RNPDataTable.Cell>
-                ),
-              )}
-              {expandable && (
-                <RNPDataTable.Cell style={styles.expandColumn}>
-                  <ExpandToggle
-                    color={colors.onSurfaceVariant}
-                    icon={
-                      expandedKeys.includes(item.key)
-                        ? "chevron-up"
-                        : "chevron-down"
-                    }
-                    onPress={() => toggleExpanded(item.key)}
-                  />
-                </RNPDataTable.Cell>
-              )}
-              {selectionEnabled && (
-                <RNPDataTable.Cell style={styles.tableTitleTextSelected}>
-                  <Checkbox
-                    checked={selectedItemIds.includes(item.key)}
-                    onPress={() => onItemSelect(item)}
-                  />
-                </RNPDataTable.Cell>
-              )}
-            </RNPDataTable.Row>
-            {expandedKeys.includes(item.key) && (
-              <VView
-                style={[
-                  styles.expandedRow,
-                  {
-                    backgroundColor: colors.elevation.level1,
-                    borderBottomColor: colors.outlineVariant,
-                  },
-                ]}
-              >
-                <FieldRows
-                  columns={expandedRowLayout.columns}
-                  fields={detailFields}
-                  item={item}
-                  labelWidth={expandedRowLayout.labelWidth}
-                  viewMode={ScreenViewMode.list}
-                />
-              </VView>
-            )}
-          </React.Fragment>
-        ))}
-      </ScrollView>
+      <FlatList
+        data={visibleRows}
+        keyExtractor={rowKeyExtractor}
+        persistentScrollbar
+        ref={rowsListRef}
+        renderItem={renderRow}
+      />
       {showPagination && (
         <RNPDataTable.Pagination
           page={page}

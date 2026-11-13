@@ -1,9 +1,10 @@
-import React, { useCallback } from "react";
+import { memo, useCallback } from "react";
 import { FlatList, StyleProp, ViewStyle } from "react-native";
 import { List as RNPList } from "react-native-paper";
 
 import { Arrays } from "@openforis/arena-core";
 
+import { useStableCallback } from "hooks/useStableCallback";
 import { log } from "utils";
 import { Checkbox } from "../Checkbox";
 import { RadioButton } from "../RadioButton";
@@ -35,7 +36,9 @@ type SelectableListItemProps = ListItemIconProps & {
   title: string | null;
 };
 
-const SelectableListItem = (props: SelectableListItemProps) => {
+const SelectableListItem = memo(function SelectableListItem(
+  props: SelectableListItemProps,
+) {
   const {
     checked,
     description,
@@ -72,7 +75,10 @@ const SelectableListItem = (props: SelectableListItemProps) => {
       style={styles.item}
     />
   );
-};
+});
+
+const nullExtractor = () => null;
+const noSelectedItems: any[] = [];
 
 export type SelectableListProps = {
   editable?: boolean;
@@ -90,34 +96,32 @@ export const SelectableList = (props: SelectableListProps) => {
   const {
     editable = true,
     itemKeyExtractor,
-    itemLabelExtractor = () => null,
-    itemDescriptionExtractor = () => null,
+    itemLabelExtractor = nullExtractor,
+    itemDescriptionExtractor = nullExtractor,
     items,
     multiple = false,
     onChange,
-    selectedItems = [],
+    selectedItems = noSelectedItems,
     style,
   } = props;
 
   log.debug(`rendering SelectableList`);
 
-  const onItemSelect = useCallback(
-    (item: any) => {
-      if (!onChange) return;
+  // stable: items re-render only when their own props change
+  const onItemSelect = useStableCallback((item: any) => {
+    if (!onChange) return;
 
-      const wasSelected = selectedItems.includes(item);
-      let selectedItemsNext;
-      if (multiple) {
-        selectedItemsNext = wasSelected
-          ? Arrays.removeItem(item)(selectedItems)
-          : Arrays.addItem(item)(selectedItems);
-      } else {
-        selectedItemsNext = wasSelected ? [] : [item];
-      }
-      onChange(selectedItemsNext);
-    },
-    [multiple, onChange, selectedItems],
-  );
+    const wasSelected = selectedItems.includes(item);
+    let selectedItemsNext;
+    if (multiple) {
+      selectedItemsNext = wasSelected
+        ? Arrays.removeItem(item)(selectedItems)
+        : Arrays.addItem(item)(selectedItems);
+    } else {
+      selectedItemsNext = wasSelected ? [] : [item];
+    }
+    onChange(selectedItemsNext);
+  });
 
   const renderItem = useCallback(
     ({ item }: any) => (

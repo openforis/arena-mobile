@@ -39,15 +39,13 @@ const locationToLocationPoint = (
   return { ...coords, accuracy: coords.accuracy };
 };
 
-const getLocationWatchTimeout = ({ settings }: any) => {
-  const {
-    locationAccuracyWatchTimeout: locationAccuracyWatchTimeoutSetting, // in seconds
-  } = settings;
-
-  return locationAccuracyWatchTimeoutSetting
+// setting in seconds, result in ms
+const getLocationWatchTimeout = (
+  locationAccuracyWatchTimeoutSetting: number | undefined,
+) =>
+  locationAccuracyWatchTimeoutSetting
     ? locationAccuracyWatchTimeoutSetting * 1000
-    : defaultLocationAccuracyWatchTimeout; // in ms
-};
+    : defaultLocationAccuracyWatchTimeout;
 
 export const useLocationWatch = ({
   accuracy = Location.Accuracy.Highest,
@@ -91,14 +89,37 @@ export const useLocationWatch = ({
   );
   const toaster = useToast();
 
-  const settings = SettingsSelectors.useSettings();
-  const {
-    locationAccuracyThreshold = defaultLocationAccuracyThreshold,
-    locationAveragingEnabled,
-    preferredGpsSourceId = GpsSourceSetting.auto,
-  } = settings;
+  const locationAccuracyThreshold =
+    SettingsSelectors.useLocationAccuracyThreshold() ??
+    defaultLocationAccuracyThreshold;
+  const locationAveragingEnabled =
+    SettingsSelectors.useLocationAveragingEnabled();
+  const locationWatchTimeout = getLocationWatchTimeout(
+    SettingsSelectors.useLocationAccuracyWatchTimeout(),
+  );
+  const preferredGpsSourceId =
+    SettingsSelectors.usePreferredGpsSourceId() ?? GpsSourceSetting.auto;
 
-  const locationWatchTimeout = getLocationWatchTimeout({ settings });
+  // read through a ref: changing a setting must not restart or stop an ongoing watch
+  const settingsRef = useRef({
+    locationAccuracyThreshold,
+    locationAveragingEnabled,
+    locationWatchTimeout,
+    preferredGpsSourceId,
+  });
+  useEffect(() => {
+    settingsRef.current = {
+      locationAccuracyThreshold,
+      locationAveragingEnabled,
+      locationWatchTimeout,
+      preferredGpsSourceId,
+    };
+  }, [
+    locationAccuracyThreshold,
+    locationAveragingEnabled,
+    locationWatchTimeout,
+    preferredGpsSourceId,
+  ]);
 
   const [state, setState] = useState({
     status: "idle" as LocationWatchStatus,
@@ -161,6 +182,8 @@ export const useLocationWatch = ({
         lastLocationRef.current = locationPointParam; // location could be null when watch timeout is reached
         return;
       }
+      const { locationAccuracyThreshold, locationAveragingEnabled } =
+        settingsRef.current;
 
       // the last location is passed again to this callback when the watch is stopped:
       // count (and log) only the readings coming from the location source
@@ -226,9 +249,7 @@ export const useLocationWatch = ({
       });
     },
     [
-      locationAveragingEnabled,
       stopOnAccuracyThreshold,
-      locationAccuracyThreshold,
       stopOnTimeout,
       locationCallbackProp,
       _stopLocationWatch,
@@ -335,6 +356,11 @@ export const useLocationWatch = ({
       sourceUnavailable: boolean;
     }) => {
       locationReadingsCountRef.current = 0;
+      const {
+        locationAccuracyThreshold,
+        locationAveragingEnabled,
+        locationWatchTimeout,
+      } = settingsRef.current;
       const timeoutDescription = stopOnTimeout
         ? `${locationWatchTimeout / 1000}s`
         : "none";
@@ -373,14 +399,7 @@ export const useLocationWatch = ({
         locationSourceUnavailable: sourceUnavailable,
       }));
     },
-    [
-      locationAccuracyThreshold,
-      locationAveragingEnabled,
-      locationWatchTimeout,
-      stopLocationWatch,
-      stopOnAccuracyThreshold,
-      stopOnTimeout,
-    ],
+    [stopLocationWatch, stopOnAccuracyThreshold, stopOnTimeout],
   );
 
   const requestGpsPermissions = useCallback(
@@ -525,6 +544,7 @@ export const useLocationWatch = ({
   const startLocationWatch = useCallback(async () => {
     log.debug("Starting location watch");
     const isAttemptCurrent = beginStartAttempt();
+    const { preferredGpsSourceId } = settingsRef.current;
 
     // "auto" resolves to the first recognized connected external GPS device if one
     // is available, else internal GPS - so a paired Bad Elf (or similar) is used
@@ -578,7 +598,6 @@ export const useLocationWatch = ({
     activateWatchingState,
     _stopLocationWatch,
     beginStartAttempt,
-    preferredGpsSourceId,
     requestGpsPermissions,
     setIdleLocationWatchStatus,
     startWatchForResolvedSource,

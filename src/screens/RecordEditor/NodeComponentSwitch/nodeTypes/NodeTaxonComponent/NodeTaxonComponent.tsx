@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 
 import { NodeDefs } from "@openforis/arena-core";
 
@@ -16,7 +16,7 @@ import { useDynamicStyles } from "./useDynamicStyles";
 import { NodeComponentProps } from "../nodeComponentPropTypes";
 import styles from "./styles";
 
-export const NodeTaxonComponent = (props: NodeComponentProps) => {
+export const NodeTaxonComponent = memo((props: NodeComponentProps) => {
   const { nodeDef, nodeUuid, parentNodeUuid } = props;
 
   log.debug(`rendering NodeTaxonComponent for ${NodeDefs.getName(nodeDef)}`);
@@ -77,4 +77,6 @@ export const NodeTaxonComponent = (props: NodeComponentProps) => {
       )}
     </VView>
   );
-};
+});
+
+NodeTaxonComponent.displayName = "NodeTaxonComponent";

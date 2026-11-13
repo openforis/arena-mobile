@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 
 import { AppLogo } from "appComponents/AppLogo";
 import { Text, VView } from "components";
-import demoSurvey from "service/demoSurvey.json";
 import { DataEntryActions, SurveyActionTypes, useAppDispatch } from "state";
 import { log, PreviewMode, WebMessageEvent, WebWindow } from "utils";
 
@@ -42,7 +41,10 @@ export const PreviewInitializer = ({ children }: Props) => {
   const [error, setError] = useState<string | null>(null);
   // survey to load: children are unmounted first, their selectors would fail while the record is replaced
   const [pendingPreview, setPendingPreview] = useState<PreviewParams | null>(
-    PreviewMode.isDemo ? { survey: demoSurvey as any } : null,
+    () =>
+      PreviewMode.isDemo
+        ? { survey: require("../service/demoSurvey.json") }
+        : null,
   );
 
   const startPreview = useCallback(

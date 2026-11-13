@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import { TouchableOpacity } from "react-native";
 
 import { NodeDefs, Records } from "@openforis/arena-core";
@@ -381,7 +381,7 @@ const StoppedTrackingBar = ({
   );
 };
 
-export const PositionTrackingBar = () => {
+export const PositionTrackingBar = memo(() => {
   const dispatch = useAppDispatch();
 
   const survey = SurveySelectors.useCurrentSurvey();
@@ -465,4 +465,6 @@ export const PositionTrackingBar = () => {
       starting={starting}
     />
   );
-};
+});
+
+PositionTrackingBar.displayName = "PositionTrackingBar";

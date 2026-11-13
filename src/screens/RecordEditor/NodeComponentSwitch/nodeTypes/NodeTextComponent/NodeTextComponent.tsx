@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef } from "react";
 
 import {
   NodeDefTextInputType,
@@ -23,7 +23,7 @@ const isNumericByType: Record<string, boolean> = {
 const nodeValueToUiValue = (value: any) =>
   Objects.isEmpty(value) ? "" : String(value);
 
-export const NodeTextComponent = (props: NodeComponentProps) => {
+export const NodeTextComponent = memo((props: NodeComponentProps) => {
   const { nodeDef, nodeUuid, style: styleProp } = props;
 
   const nodeDefName = NodeDefs.getName(nodeDef);
@@ -135,4 +135,6 @@ export const NodeTextComponent = (props: NodeComponentProps) => {
     );
   }
   return textInput;
-};
+});
+
+NodeTextComponent.displayName = "NodeTextComponent";

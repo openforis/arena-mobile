@@ -1,7 +1,8 @@
-import { useCallback, useMemo } from "react";
+import { memo, useCallback, useMemo } from "react";
 import { FlatList } from "react-native";
 
 import {
+  LanguageCode,
   NodeDefType,
   NodeDefs,
   Records,
@@ -38,6 +39,44 @@ const iconByNodeDefType: Record<string, any> = {
 
 const getNodeDefIcon = (nodeDef: any) =>
   iconByNodeDefType[nodeDef.type]?.({ nodeDef });
+
+type ValidationStatus = { hasErrors: boolean; hasWarnings: boolean };
+
+type PageNodesListItemProps = {
+  active: boolean;
+  hasErrors: boolean;
+  hasWarnings: boolean;
+  index: number;
+  lang: LanguageCode;
+  nodeDef: any;
+  onPress: (index: number) => void;
+};
+
+const PageNodesListItem = memo((props: PageNodesListItemProps) => {
+  const { active, hasErrors, hasWarnings, index, lang, nodeDef, onPress } =
+    props;
+
+  const onItemPress = useCallback(() => onPress(index), [index, onPress]);
+
+  const right = useMemo(
+    () =>
+      hasErrors || hasWarnings ? (
+        <AlertIcon hasErrors={hasErrors} hasWarnings={hasWarnings} />
+      ) : null,
+    [hasErrors, hasWarnings],
+  );
+
+  return (
+    <ListItem
+      title={NodeDefs.getLabelOrName(nodeDef, lang)}
+      onPress={onItemPress}
+      leftIcon={getNodeDefIcon(nodeDef)}
+      right={right}
+      style={active ? styles.activeItem : undefined}
+      titleStyle={active ? styles.activeItemText : undefined}
+    />
+  );
+});
 
 export const PageNodesList = () => {
   const dispatch = useAppDispatch();
@@ -78,46 +117,45 @@ export const PageNodesList = () => {
   );
 
   const onItemPress = useCallback(
-    (index: any) => () =>
+    (index: number) =>
       dispatch(DataEntryActions.selectCurrentPageEntityActiveChildIndex(index)),
     [dispatch],
   );
 
-  const renderItemRightIcon = useCallback(
-    (item: any) => {
-      if (!parentEntity) return null;
-
-      const nodeDefUuid = item.uuid;
-      const nodes = Records.getChildren(parentEntity, nodeDefUuid)(record);
+  // computed once per record: rows only re-render when their own status changes
+  const validationStatusByDefUuid = useMemo(() => {
+    const result = new Map<string, ValidationStatus>();
+    if (!parentEntity) return result;
+    for (const childDef of childDefs) {
+      const nodes = Records.getChildren(parentEntity, childDef.uuid)(record);
       const fieldValidations = nodes.map((node) =>
         Validations.getFieldValidation(node.uuid)(validation),
       );
-      if (fieldValidations.every(Validations.isValid)) return null;
+      if (fieldValidations.every(Validations.isValid)) continue;
       const hasErrors = fieldValidations.some(
         Validations.calculateHasNestedErrors,
       );
-      const hasWarnings = !hasErrors;
-      return <AlertIcon hasErrors={hasErrors} hasWarnings={hasWarnings} />;
-    },
-    [parentEntity, record, validation],
-  );
+      result.set(childDef.uuid, { hasErrors, hasWarnings: !hasErrors });
+    }
+    return result;
+  }, [childDefs, parentEntity, record, validation]);
 
   const renderItem = useCallback(
-    ({ index, item }: any) => {
-      const isActiveItem = index === activeChildIndex;
-
+    ({ index, item }: { index: number; item: any }) => {
+      const validationStatus = validationStatusByDefUuid.get(item.uuid);
       return (
-        <ListItem
-          title={NodeDefs.getLabelOrName(item, lang)}
-          onPress={onItemPress(index)}
-          leftIcon={getNodeDefIcon(item)}
-          right={renderItemRightIcon(item)}
-          style={isActiveItem ? styles.activeItem : undefined}
-          titleStyle={isActiveItem ? styles.activeItemText : undefined}
+        <PageNodesListItem
+          active={index === activeChildIndex}
+          hasErrors={!!validationStatus?.hasErrors}
+          hasWarnings={!!validationStatus?.hasWarnings}
+          index={index}
+          lang={lang}
+          nodeDef={item}
+          onPress={onItemPress}
         />
       );
     },
-    [activeChildIndex, lang, onItemPress, renderItemRightIcon],
+    [activeChildIndex, lang, onItemPress, validationStatusByDefUuid],
   );
 
   return (
@@ -135,7 +173,7 @@ export const PageNodesList = () => {
           renderItem={renderItem}
           scrollEnabled
           persistentScrollbar
-          style={{ flex: 1 }}
+          style={styles.list}
         />
       )}
       {nextEntityPointer && (
@@ -147,3 +185,5 @@ export const PageNodesList = () => {
     </VView>
   );
 };
+
+PageNodesListItem.displayName = "PageNodesListItem";

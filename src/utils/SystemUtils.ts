@@ -95,12 +95,11 @@ const getOrientation = async () => {
   return ScreenOrientation.fromExpoOrientation(orientationExpo);
 };
 
-const addOrientationChangeListener = (handler: any) => {
+const addOrientationChangeListener = (handler: any) =>
   ExpoScreenOrientation.addOrientationChangeListener((event) => {
     const orientationNext = event?.orientationInfo?.orientation;
     handler(ScreenOrientation.fromExpoOrientation(orientationNext));
   });
-};
 
 const lockOrientationToPortrait = async () => {
   await ExpoScreenOrientation.lockAsync(

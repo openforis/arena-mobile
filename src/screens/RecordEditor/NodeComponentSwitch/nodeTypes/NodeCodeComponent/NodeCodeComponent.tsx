@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 import { NodeDefs } from "@openforis/arena-core";
 
 import {
@@ -21,7 +23,7 @@ import { NodeComponentProps } from "../nodeComponentPropTypes";
 
 const MAX_VISIBLE_ITEMS = 10;
 
-export const NodeCodeComponent = (props: NodeComponentProps) => {
+export const NodeCodeComponent = memo((props: NodeComponentProps) => {
   const { parentNodeUuid, nodeDef } = props;
 
   log.debug(`rendering NodeCodeComponent for ${NodeDefs.getName(nodeDef)}`);
@@ -139,4 +141,6 @@ export const NodeCodeComponent = (props: NodeComponentProps) => {
       value={selectedItemUuid}
     />
   );
-};
+});
+
+NodeCodeComponent.displayName = "NodeCodeComponent";

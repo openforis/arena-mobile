@@ -49,6 +49,8 @@ export const insertColumns = [
   "read_only",
   ...keyColumnNames,
   ...summaryAttributesColumnNames,
+  "errors_count",
+  "warnings_count",
 ];
 export const insertColumnsJoint = insertColumns.join(", ");
 const keyColumnNamesJoint = keyColumnNames.join(", ");
@@ -57,7 +59,29 @@ const summaryAttributesColumnNamesJoint =
   summaryAttributesColumnNames.join(", ");
 export const summaryColumnsSet = toColumnsSet(summaryAttributesColumnNames);
 export const summarySelectFieldsJoint = `id, uuid, date_created, date_modified, date_modified_remote, date_modified_synced, date_synced, cycle, owner_uuid, owner_name, load_status, origin, read_only, ${keyColumnNamesJoint}, ${summaryAttributesColumnNamesJoint}`;
-export const summarySelectFieldsJointWithValidation = `${summarySelectFieldsJoint}, json(content) ->> 'validation' AS validation`;
+export const summarySelectFieldsJointWithValidation = `${summarySelectFieldsJoint}, errors_count, warnings_count`;
+export const validationCountsColumnsSet =
+  "errors_count = ?, warnings_count = ?";
+
+// values of the errors_count and warnings_count columns (null without validation)
+export const extractValidationCountsColumnsValues = (
+  record: any,
+): [number | null, number | null] => {
+  const validation = record?.validation;
+  if (!validation) return [null, null];
+  const counts =
+    Validations.getCounts(validation) ??
+    Validations.calculateCounts(validation);
+  return [counts.errors ?? 0, counts.warnings ?? 0];
+};
+
+// summaries get only the validation counts, not the whole validation
+export const validationFromCountsColumns = (row: any) => {
+  const { errors_count: errors, warnings_count: warnings } = row;
+  if (Objects.isNil(errors) && Objects.isNil(warnings)) return null;
+  const counts = { errors: errors ?? 0, warnings: warnings ?? 0 };
+  return { valid: counts.errors + counts.warnings === 0, counts };
+};
 
 export const toKeyOrSummaryColValue = (value: any) => {
   if (Objects.isEmpty(value)) return null;
@@ -218,7 +242,13 @@ const fixRowSummaryAttributesColumns = ({
   });
 };
 
-const fixRowValidation = ({ result }: any) => {
+const fixRowValidation = ({ result, row, hasContent }: any) => {
+  if (!hasContent) {
+    delete result.errorsCount;
+    delete result.warningsCount;
+    result.validation = validationFromCountsColumns(row);
+    return;
+  }
   let validation = result.validation;
   if (validation) {
     if (typeof validation === "string") {
@@ -295,7 +325,7 @@ export const rowToRecord =
     if (!result.info?.createdWith) {
       result.info = { createdWith: SystemUtils.getRecordAppInfo() };
     }
-    fixRowValidation({ result });
+    fixRowValidation({ result, row, hasContent });
 
     return result;
   };

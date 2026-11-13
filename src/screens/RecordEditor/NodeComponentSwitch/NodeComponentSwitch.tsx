@@ -1,4 +1,4 @@
-import { createElement } from "react";
+import { createElement, memo } from "react";
 
 import { NodeDefType, NodeDefs } from "@openforis/arena-core";
 
@@ -26,7 +26,7 @@ const getNodeMultipleEntityComponent = () =>
     require("../NodeMultipleEntityComponent") as typeof import("../NodeMultipleEntityComponent")
   ).NodeMultipleEntityComponent;
 
-export const NodeComponentSwitch = (props: NodeComponentProps) => {
+export const NodeComponentSwitch = memo((props: NodeComponentProps) => {
   const { nodeDef, parentNodeUuid } = props;
 
   log.debug(`rendering NodeComponentSwitch for ${nodeDef.props.name}`);
@@ -75,4 +75,6 @@ export const NodeComponentSwitch = (props: NodeComponentProps) => {
       parentNodeUuid={parentNodeUuid}
     />
   );
-};
+});
+
+NodeComponentSwitch.displayName = "NodeComponentSwitch";

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef } from "react";
 import PagerView from "react-native-pager-view";
 import Dots from "react-native-dots-pagination";
 
@@ -14,7 +14,7 @@ import { NodeDefFormItem } from "../NodeDefFormItem";
 
 import styles from "./styles";
 
-export const RecordNodesCarousel = () => {
+export const RecordNodesCarousel = memo(() => {
   const dispatch = useAppDispatch();
   const { entityDef, entityUuid, parentEntityUuid } =
     DataEntrySelectors.useCurrentPageEntity();
@@ -99,4 +99,6 @@ export const RecordNodesCarousel = () => {
       <Dots length={childrenDefs.length} active={activeChildIndex} />
     </VView>
   );
-};
+});
+
+RecordNodesCarousel.displayName = "RecordNodesCarousel";
