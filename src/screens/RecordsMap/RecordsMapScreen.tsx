@@ -234,7 +234,7 @@ export const RecordsMapScreen = () => {
         extraButtons={
           <>
             <IconButton
-              icon="map-marker-multiple-outline"
+              icon="vector-polygon"
               mode="contained"
               onPress={() => setLayersPanelVisible(true)}
               size={18}
