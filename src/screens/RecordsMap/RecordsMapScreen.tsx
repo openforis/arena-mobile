@@ -262,6 +262,8 @@ export const RecordsMapScreen = () => {
         onRegionChangeComplete={setRegion}
         provider={mapProvider}
         style={styles.map}
+        // areas of interest and preloaded map layers are in the layers panel of this screen
+        surveyLayersHidden
         toolbarEnabled={false}
       >
         {/* areas first: below tracks and markers */}

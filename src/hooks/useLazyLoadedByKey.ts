@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-import { useToast } from "hooks";
+import { useToast } from "./useToast";
 
 type Load<T> = (key: string) => Promise<T | null | undefined>;
 

@@ -1,6 +1,6 @@
 import { loadNotRequestedValues } from "./useLazyLoadedByKey";
 
-jest.mock("hooks", () => ({}));
+jest.mock("./useToast", () => ({}));
 
 describe("loadNotRequestedValues", () => {
   it("loads only the keys not requested yet, null when not available", async () => {

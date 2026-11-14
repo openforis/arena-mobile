@@ -23,4 +23,5 @@ export { useNavigationIsFocused } from "./useNavigationIsFocused";
 export { useRequestCameraPermission } from "./useRequestCameraPermission";
 export { useScreenKey } from "./useScreenKey";
 export { useStableCallback } from "./useStableCallback";
+export { useSurveyMapLayersGeometries } from "./useSurveyMapLayersGeometries";
 export { useToast } from "./useToast";

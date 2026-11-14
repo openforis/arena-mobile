@@ -1,12 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 
-import { useToast } from "hooks";
+import { useSurveyMapLayersGeometries, useToast } from "hooks";
 import { useTranslation } from "localization";
-import { LatLng, RecordUtils, SurveyDefs } from "model";
+import { LatLng, RecordUtils } from "model";
 import { RecordService } from "service";
-import { AreaOfInterestProviderDefault } from "service/areaOfInterestProvider";
-import { PreloadedMapLayerService } from "service/preloadedMapLayerService";
 import { SurveySelectors } from "state";
 
 import {
@@ -26,7 +24,6 @@ import {
   RecordsMapPreloadedLayerShapes,
   RecordsMapTrackFeature,
 } from "./recordsMapLayers";
-import { useLazyLoadedByKey } from "./useLazyLoadedByKey";
 
 type NodeValue = { recordUuid: string; nodeDefUuid: string; value: any };
 
@@ -189,28 +186,6 @@ export const useRecordsMapData = () => {
     [layers, visibleLayerKeys],
   );
 
-  const loadAreaOfInterest = useCallback(
-    (name: string) =>
-      AreaOfInterestProviderDefault.getAreaOfInterest({ survey, name }),
-    [survey],
-  );
-
-  const onAreasOfInterestNotAvailable = useCallback(
-    (names: string[]) => {
-      toaster("recordsMap:areaOfInterestNotAvailable", {
-        names: names.join(", "),
-      });
-    },
-    [toaster],
-  );
-
-  // areas are loaded only when their layer is visible, once (survey files never change)
-  const areaOfInterestByName = useLazyLoadedByKey({
-    keys: visibleAreaNames,
-    load: loadAreaOfInterest,
-    onNotAvailable: onAreasOfInterestNotAvailable,
-  });
-
   const visiblePreloadedFileUuids = useMemo(
     () =>
       getVisibleLayersOfType({
@@ -221,36 +196,14 @@ export const useRecordsMapData = () => {
     [layers, visibleLayerKeys],
   );
 
-  const loadPreloadedMapLayer = useCallback(
-    async (fileUuid: string) => {
-      const file = SurveyDefs.getPreloadedMapLayers(survey).find(
-        ({ uuid }) => uuid === fileUuid,
-      );
-      return file
-        ? PreloadedMapLayerService.readPreloadedMapLayer({ survey, file })
-        : undefined;
-    },
-    [survey],
-  );
-
-  const onPreloadedMapLayersNotAvailable = useCallback(
-    (fileUuids: string[]) => {
-      const names = SurveyDefs.getPreloadedMapLayers(survey)
-        .filter(({ uuid }) => fileUuids.includes(uuid))
-        .map(({ props }) => props.labels?.[lang] || props.name);
-      toaster("recordsMap:preloadedMapLayerNotAvailable", {
-        names: names.join(", "),
-      });
-    },
-    [lang, survey, toaster],
-  );
-
-  // preloaded layers are loaded only when visible, once (survey files never change)
-  const preloadedGeometriesByFileUuid = useLazyLoadedByKey({
-    keys: visiblePreloadedFileUuids,
-    load: loadPreloadedMapLayer,
-    onNotAvailable: onPreloadedMapLayersNotAvailable,
-  });
+  // areas and preloaded layers are loaded only when their layer is visible, once (survey files never change)
+  const { areaOfInterestByName, preloadedGeometriesByFileUuid } =
+    useSurveyMapLayersGeometries({
+      survey,
+      lang,
+      areaNames: visibleAreaNames,
+      preloadedFileUuids: visiblePreloadedFileUuids,
+    });
 
   const preloadedShapesByLayerKey = useMemo(
     () =>

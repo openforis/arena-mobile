@@ -30,6 +30,9 @@ import { IconButton } from "../IconButton";
 import { Text } from "../Text";
 import { PdfMapsPanel } from "./PdfMapsPanel";
 import styles from "./styles";
+import { SurveyMapLayersOverlays } from "./SurveyMapLayersOverlays";
+import { SurveyMapLayersPanel } from "./SurveyMapLayersPanel";
+import { useSurveyMapLayers } from "./useSurveyMapLayers";
 
 type EdgePadding = {
   top: number;
@@ -83,6 +86,8 @@ type Props = {
   showMapTypeSelector?: boolean;
   showsUserLocation?: boolean;
   style?: StyleProp<ViewStyle>;
+  // when true, the areas of interest and preloaded map layers of the survey can't be shown (e.g. the screen shows them itself)
+  surveyLayersHidden?: boolean;
   toolbarEnabled?: boolean;
 };
 
@@ -137,6 +142,7 @@ export const MapView = forwardRef<RNMapView | null, Props>(
       provider: providerProp,
       showMapTypeSelector = true,
       style,
+      surveyLayersHidden = false,
       initialRegion,
       onPress,
       onPanDrag,
@@ -194,6 +200,16 @@ export const MapView = forwardRef<RNMapView | null, Props>(
       showMapTypeSelector && (!layerIdProp || hasPdfMaps);
     const freeLayerVisible = useFreeLayers && !baseMapHidden;
     const [pdfMapsPanelVisible, setPdfMapsPanelVisible] = useState(false);
+    const {
+      layers: surveyLayers,
+      visibleLayerKeys: visibleSurveyLayerKeys,
+      toggleLayer: toggleSurveyLayer,
+      visibleLayersWithGeometries: visibleSurveyLayers,
+    } = useSurveyMapLayers();
+    const surveyLayersButtonVisible =
+      showMapTypeSelector && !surveyLayersHidden && surveyLayers.length > 0;
+    const [surveyLayersPanelVisible, setSurveyLayersPanelVisible] =
+      useState(false);
     const networkConnected = useIsNetworkConnected();
     const offlineMode = !networkConnected;
 
@@ -287,6 +303,14 @@ export const MapView = forwardRef<RNMapView | null, Props>(
     );
     const closePdfMapsPanel = useCallback(
       () => setPdfMapsPanelVisible(false),
+      [],
+    );
+    const openSurveyLayersPanel = useCallback(
+      () => setSurveyLayersPanelVisible(true),
+      [],
+    );
+    const closeSurveyLayersPanel = useCallback(
+      () => setSurveyLayersPanelVisible(false),
       [],
     );
     const onZoomToPdfMap = useCallback((pdfMap: PdfMap) => {
@@ -385,6 +409,8 @@ export const MapView = forwardRef<RNMapView | null, Props>(
               zIndex={PDF_MAP_Z_INDEX}
             />
           ))}
+          {/* before the children: below the overlays of the screen */}
+          <SurveyMapLayersOverlays items={visibleSurveyLayers} />
           {children}
         </RNMapView>
         {freeLayerVisible && hasAttribution && (
@@ -411,7 +437,9 @@ export const MapView = forwardRef<RNMapView | null, Props>(
             <Text style={styles.layerName}>{layerName}</Text>
           </View>
         )}
-        {(mapTypeSelectorVisible || !!extraButtons) && (
+        {(mapTypeSelectorVisible ||
+          surveyLayersButtonVisible ||
+          !!extraButtons) && (
           <View style={styles.mapTypeSelector}>
             {mapTypeSelectorVisible && !layerIdProp && !baseMapHidden && (
               <IconButton
@@ -429,6 +457,15 @@ export const MapView = forwardRef<RNMapView | null, Props>(
                 size={18}
               />
             )}
+            {surveyLayersButtonVisible && (
+              <IconButton
+                icon="vector-polygon"
+                mode="contained"
+                onPress={openSurveyLayersPanel}
+                size={18}
+                testID="map-survey-layers-button"
+              />
+            )}
             {extraButtons}
           </View>
         )}
@@ -436,6 +473,14 @@ export const MapView = forwardRef<RNMapView | null, Props>(
           <PdfMapsPanel
             onDismiss={closePdfMapsPanel}
             onZoomToMap={onZoomToPdfMap}
+          />
+        )}
+        {surveyLayersPanelVisible && (
+          <SurveyMapLayersPanel
+            layers={surveyLayers}
+            onDismiss={closeSurveyLayersPanel}
+            onLayerToggle={toggleSurveyLayer}
+            visibleLayerKeys={visibleSurveyLayerKeys}
           />
         )}
       </View>
