@@ -29,10 +29,10 @@ export const useSurveyMapLayersGeometries = ({
   const toaster = useToast();
 
   const loadAreaOfInterest = useCallback(
-    async (name: string) =>
+    (name: string) =>
       survey
         ? AreaOfInterestProviderDefault.getAreaOfInterest({ survey, name })
-        : undefined,
+        : Promise.resolve(undefined),
     [survey],
   );
 
@@ -52,14 +52,15 @@ export const useSurveyMapLayersGeometries = ({
   });
 
   const loadPreloadedMapLayer = useCallback(
-    async (fileUuid: string) => {
-      if (!survey) return undefined;
-      const file = SurveyDefs.getPreloadedMapLayers(survey).find(
-        ({ uuid }) => uuid === fileUuid,
-      );
-      return file
-        ? PreloadedMapLayerService.readPreloadedMapLayer({ survey, file })
+    (fileUuid: string) => {
+      const file = survey
+        ? SurveyDefs.getPreloadedMapLayers(survey).find(
+            ({ uuid }) => uuid === fileUuid,
+          )
         : undefined;
+      return survey && file
+        ? PreloadedMapLayerService.readPreloadedMapLayer({ survey, file })
+        : Promise.resolve(undefined);
     },
     [survey],
   );
