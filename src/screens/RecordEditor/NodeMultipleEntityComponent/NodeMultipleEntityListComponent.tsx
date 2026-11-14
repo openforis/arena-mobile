@@ -97,7 +97,13 @@ export const NodeMultipleEntityListComponent = (
     [entityDef, parentEntity, record, survey],
   );
 
+  // all columns fit on screen: there is nothing to choose
+  const allColumnsFit = availableNodeDefs.length <= maxSummaryDefs;
+
   const visibleNodeDefs = useMemo(() => {
+    if (allColumnsFit) {
+      return availableNodeDefs;
+    }
     const selectedDefs = selectedColumns
       ? availableNodeDefs.filter((def) => selectedColumns.includes(def.uuid))
       : [];
@@ -116,6 +122,7 @@ export const NodeMultipleEntityListComponent = (
       maxSummaryDefs,
     });
   }, [
+    allColumnsFit,
     availableNodeDefs,
     entityDef,
     isLandscape,
@@ -248,7 +255,7 @@ export const NodeMultipleEntityListComponent = (
   );
 
   // in portrait there is no room for it next to the new button
-  const columnsButton = rows.length > 0 && availableNodeDefs.length > 1 && (
+  const columnsButton = rows.length > 0 && !allColumnsFit && (
     <Button
       compact
       icon="table-column"
