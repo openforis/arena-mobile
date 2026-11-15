@@ -1,6 +1,7 @@
 import { CanceledError } from "axios";
 
 import { Files, Functions, log, RNFileProcessor } from "utils";
+import { HttpErrors } from "utils/HttpErrors";
 import { RemoteService } from "./remoteService";
 import { SurveyMobile } from "model/SurveyMobile";
 
@@ -49,8 +50,7 @@ const fetchFileUuidsByRecordUuid = async ({
     );
     return data?.fileUuidsByRecordUuid ?? {};
   } catch (error: any) {
-    const status = Number(error?.response?.status);
-    if (status === 404 || status === 501) {
+    if (HttpErrors.isEndpointNotSupported(error)) {
       // expected with older servers - not worth a warning on every (auto-)sync
       log.debug(
         "file uuids by record uuid endpoint not supported by the server",

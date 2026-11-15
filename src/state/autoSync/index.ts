@@ -4,7 +4,6 @@ export {
   isAutoMergeAllowed,
   sameRecordMergeableStatuses,
   computeAutoSyncStatus,
-  isAuthError,
   wasRecentlyCheckedWithNoNewLocalChanges,
 } from "./autoSyncStatusUtils";
 export { AutoSyncReducer } from "./reducer";
