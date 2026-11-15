@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 
 import { useSurveyMapLayersGeometries } from "hooks/useSurveyMapLayersGeometries";
 import { SurveySelectors } from "state/survey/selectors";
+import { ArrayUtils } from "utils/ArrayUtils";
 import {
   MapLayerFileGeometries,
   MapLayerFileParser,
@@ -38,9 +39,7 @@ export const useSurveyMapLayers = () => {
 
   const toggleLayer = useCallback((layerKey: string) => {
     setVisibleLayerKeys((keysPrev) =>
-      keysPrev.includes(layerKey)
-        ? keysPrev.filter((key) => key !== layerKey)
-        : [...keysPrev, layerKey],
+      ArrayUtils.toggleItem(keysPrev, layerKey),
     );
   }, []);
 

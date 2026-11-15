@@ -12,6 +12,8 @@ const esModules = [
 module.exports = {
   testEnvironment: "node",
   modulePaths: ["<rootDir>/src"],
+  setupFiles: ["<rootDir>/jest/setup.js"],
+  clearMocks: true,
   moduleNameMapper: {
     [String.raw`\.(jpg|png)$`]: "<rootDir>/jest/fileStub.js",
   },

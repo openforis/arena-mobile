@@ -27,8 +27,6 @@ const postMock = API.postCancelableMultipartData as jest.Mock;
 const refreshMock = AuthService.refreshAuthTokens as jest.Mock;
 
 describe("RemoteService.postCancelableMultipartData", () => {
-  beforeEach(() => jest.clearAllMocks());
-
   it("refreshes the token and sends the request again after a 401", async () => {
     const cancelSecond = jest.fn();
     postMock
@@ -89,8 +87,6 @@ describe("RemoteService.postCancelableMultipartData", () => {
 });
 
 describe("RemoteService.getFileOrThrow", () => {
-  beforeEach(() => jest.clearAllMocks());
-
   it("refreshes the token and downloads the file again after a 401", async () => {
     const getFileMock = API.getFileOrThrow as jest.Mock;
     getFileMock

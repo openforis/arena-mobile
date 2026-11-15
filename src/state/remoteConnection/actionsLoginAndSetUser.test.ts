@@ -6,7 +6,7 @@ jest.mock("service", () => ({
   SecureStoreService: { getAuthRefreshToken: jest.fn() },
   UserService: { fetchUser: jest.fn(), fetchLastLoggedInUser: jest.fn() },
 }));
-jest.mock("utils/Logger", () => ({ log: { error: jest.fn() } }));
+jest.mock("utils/Logger");
 jest.mock("../autoSync", () => ({
   AutoSyncActions: { reset: () => ({ type: "autoSyncReset" }) },
 }));
@@ -27,7 +27,6 @@ const getState = () => ({
 
 describe("loginAndSetUser", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
     (SecureStoreService.getAuthRefreshToken as jest.Mock).mockResolvedValue(
       "token",
     );

@@ -1,6 +1,5 @@
 import SQLiteClient from "./SQLiteClient";
 
-jest.mock("expo-sqlite", () => ({}));
 jest.mock("utils", () => ({ log: { debug: jest.fn() } }));
 
 // single connection: statements run while a transaction is open belong to it
