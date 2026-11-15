@@ -1,7 +1,10 @@
 import { JobStatus, Objects } from "@openforis/arena-core";
 
 import { RecordService, UserService } from "service";
-import { RecordsExportFileGenerationJob } from "service/recordsExportFileGenerationJob";
+import {
+  RecordsExportFileGenerationJob,
+  RecordsExportFileGenerationJobResult,
+} from "service/recordsExportFileGenerationJob";
 
 import { i18n } from "localization";
 import { JobCancelError, ValidationUtils } from "model";
@@ -333,16 +336,19 @@ export const exportRecords =
       // wired through the job monitor (rather than a plain job.start()) so the zip
       // preparation phase is observable and cancelable, same as the upload phase below
       // a job is always passed in, so this always resolves with a real result (or rejects)
-      const jobComplete = (await JobMonitorActions.startAsync({
-        dispatch,
-        job,
-        titleKey: "dataEntry:dataExport.exportingData",
-        autoDismiss: true,
-        silent,
-        ...(onlyRemote
-          ? REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES.zipGeneration
-          : {}),
-      }))!;
+      const jobComplete =
+        (await JobMonitorActions.startAsync<RecordsExportFileGenerationJobResult>(
+          {
+            dispatch,
+            job,
+            titleKey: "dataEntry:dataExport.exportingData",
+            autoDismiss: true,
+            silent,
+            ...(onlyRemote
+              ? REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES.zipGeneration
+              : {}),
+          },
+        ))!;
 
       log.debug(
         `exportRecords: zip preparation succeeded, outputFileUri=${jobComplete.result?.outputFileUri}`,
