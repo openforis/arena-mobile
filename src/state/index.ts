@@ -57,8 +57,6 @@ export {
   SettingsSelectors,
 } from "./settings";
 
-export { StoreUtils } from "./storeUtils";
-
 export {
   SurveyActions,
   SurveyReducer,
