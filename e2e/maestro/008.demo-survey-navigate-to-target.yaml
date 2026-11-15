@@ -10,10 +10,7 @@ appId: ${APP_ID}
     env:
       PAGE: "Site Details"
 
-# device location ~106 m north of the provided location of Test Point 1
-- setLocation:
-    latitude: 3.9768
-    longitude: 42.10738
+- runFlow: common/set-location-near-test-point-1.yaml
 
 - scrollUntilVisible:
     element:
