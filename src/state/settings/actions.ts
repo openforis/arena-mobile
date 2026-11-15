@@ -11,12 +11,12 @@ import { Permissions } from "utils";
 
 import { ToastActions } from "../toast";
 import type { AppDispatch } from "../store";
+import { SettingsSliceActions } from "./reducer";
 
-const SETTINGS_SET = "SETTINGS_SET";
-
-const setSettings = (settings: any) => (dispatch: AppDispatch) => {
-  dispatch({ type: SETTINGS_SET, settings });
-};
+const setSettings =
+  (settings: Partial<SettingsObject>) => (dispatch: AppDispatch) => {
+    dispatch(SettingsSliceActions.set(settings));
+  };
 
 const initSettings = () => async (dispatch: AppDispatch) => {
   const settings = await SettingsService.fetchSettings();
@@ -133,8 +133,6 @@ const _stopGpsLocking = () => {
 };
 
 export const SettingsActions = {
-  SETTINGS_SET,
-
   initSettings,
   updateSetting,
   updateSettings,
