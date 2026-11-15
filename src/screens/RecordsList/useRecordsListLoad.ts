@@ -94,9 +94,15 @@ export const useRecordsListLoad = ({
   const fetchRecords = useCallback(() => {
     const requestId = ++loadRequestIdRef.current;
     if (!survey) {
-      // no survey selected (yet): nothing to load
-      setState((statePrev) => ({ ...statePrev, records: [], loading: false }));
-      return Promise.resolve();
+      // no survey selected (yet): nothing to load; state set in the promise callback, like the fetch
+      return Promise.resolve().then(() => {
+        if (requestId !== loadRequestIdRef.current) return;
+        setState((statePrev) => ({
+          ...statePrev,
+          records: [],
+          loading: false,
+        }));
+      });
     }
     return RecordService.fetchRecords({ survey, cycle, onlyLocal }).then(
       (_records) => {
