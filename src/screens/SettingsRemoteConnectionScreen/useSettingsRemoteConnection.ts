@@ -64,7 +64,7 @@ export const useSettingsRemoteConnection = () => {
   );
 
   const loginWithToken = useCallback(
-    async (twoFactorToken?: string) => {
+    (twoFactorToken?: string) => {
       const emailNormalized = normalizeEmail(email);
       setCredentials((credentialsPrev) => ({
         ...credentialsPrev,
