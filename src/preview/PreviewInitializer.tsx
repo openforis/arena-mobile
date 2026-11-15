@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 
+import { LanguageCode } from "@openforis/arena-core";
+
 import { AppLogo } from "appComponents/AppLogo";
 import { Text, VView } from "components";
-import { DataEntryActions, SurveyActionTypes, useAppDispatch } from "state";
+import { DataEntryActions, SurveySliceActions, useAppDispatch } from "state";
 import { log, PreviewMode, WebMessageEvent, WebWindow } from "utils";
 
 import {
@@ -79,10 +81,11 @@ export const PreviewInitializer = ({ children }: Props) => {
         setReady(false);
         setPendingPreview({ survey, lang, cycle });
       } else if (PreviewProtocol.isPreviewLangMessage(data)) {
-        dispatch({
-          type: SurveyActionTypes.CURRENT_SURVEY_PREFERRED_LANG_SET,
-          lang: data.lang,
-        });
+        dispatch(
+          SurveySliceActions.currentSurveyPreferredLanguageSet(
+            data.lang as LanguageCode,
+          ),
+        );
       }
     };
     webWindow.addEventListener("message", onMessage);

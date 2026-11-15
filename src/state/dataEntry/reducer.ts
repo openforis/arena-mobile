@@ -1,4 +1,4 @@
-import { SurveyActionTypes } from "state/survey";
+import { SurveySliceActions } from "../survey/reducer";
 
 import { ActionHandlers, StoreUtils } from "../storeUtils";
 
@@ -19,7 +19,7 @@ const initialState: DataEntryState = {
 };
 
 const actionHandlers: ActionHandlers<DataEntryState> = {
-  [SurveyActionTypes.CURRENT_SURVEY_SET]: () => ({ ...initialState }),
+  [SurveySliceActions.currentSurveySet.type]: () => ({ ...initialState }),
   [DataEntryActionTypes.DATA_ENTRY_RESET]: () => ({ ...initialState }),
 
   [DataEntryActionTypes.RECORD_SET]: ({ state, action }) => ({

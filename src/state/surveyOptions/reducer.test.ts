@@ -1,7 +1,9 @@
 import { RecordEditViewMode } from "model/RecordEditViewMode";
 
-import { SurveyActionTypes } from "../survey/actionTypes";
+import { SurveySliceActions } from "../survey/reducer";
 import { SurveyOptionsReducer, SurveyOptionsSliceActions } from "./reducer";
+
+jest.mock("localization", () => ({ i18n: { language: "en" } }));
 
 const { setAllEntityListColumns, setEntityListColumns, setRecordEditViewMode } =
   SurveyOptionsSliceActions;
@@ -49,7 +51,7 @@ describe("SurveyOptionsReducer", () => {
   it("resets when the current survey changes", () => {
     const state = SurveyOptionsReducer(
       { recordEditViewMode: "oneNode", entityListColumnsByEntityDefUuid: {} },
-      { type: SurveyActionTypes.CURRENT_SURVEY_SET, survey: null },
+      SurveySliceActions.currentSurveySet({ survey: null }),
     );
     expect(state).toEqual(init());
   });

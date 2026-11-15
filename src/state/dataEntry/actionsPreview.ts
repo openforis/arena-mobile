@@ -1,4 +1,5 @@
 import {
+  LanguageCode,
   Nodes,
   RecordFactory,
   RecordUpdater,
@@ -9,7 +10,7 @@ import {
 import { SystemUtils } from "utils";
 
 import { RemoteConnectionSelectors } from "../remoteConnection";
-import { SurveyActionTypes } from "../survey/actionTypes";
+import { SurveySliceActions } from "../survey/reducer";
 import { DataEntryActionTypes } from "./actionTypes";
 import { selectRecordUpdaterParams } from "./recordUpdaterParams";
 import type { AppDispatch, AppGetState } from "../store";
@@ -24,13 +25,14 @@ type StartPreviewParams = {
 const startPreview =
   ({ survey, lang = null, cycle = null }: StartPreviewParams) =>
   async (dispatch: AppDispatch, getState: AppGetState) => {
-    dispatch({
-      type: SurveyActionTypes.CURRENT_SURVEY_SET,
-      survey,
-      preferredLanguage: lang,
-    });
+    dispatch(
+      SurveySliceActions.currentSurveySet({
+        survey,
+        preferredLanguage: lang as LanguageCode | null,
+      }),
+    );
     const cycleKey = cycle ?? Surveys.getDefaultCycleKey(survey);
-    dispatch({ type: SurveyActionTypes.CURRENT_SURVEY_CYCLE_SET, cycleKey });
+    dispatch(SurveySliceActions.currentSurveyCycleSet(cycleKey));
     dispatch({ type: DataEntryActionTypes.DATA_ENTRY_RESET });
 
     const user = RemoteConnectionSelectors.selectLoggedUserSafe(getState());
