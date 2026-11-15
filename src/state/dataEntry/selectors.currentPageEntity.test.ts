@@ -62,10 +62,6 @@ describe("current page entity selectors", () => {
     ).build();
   });
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   test("relevant child defs are computed once for the same record and page", () => {
     const state = createState({ survey, record });
     const childDefs1 =

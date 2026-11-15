@@ -208,7 +208,6 @@ const getTrackedNodeValue = (store: any, nodeUuid = "track-node") =>
 
 describe("PositionTrackingActions", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
     jest.useFakeTimers();
     mockService.track = null;
     mockService.watching = false;

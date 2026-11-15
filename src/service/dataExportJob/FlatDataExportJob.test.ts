@@ -8,9 +8,7 @@ import { FlatDataExportJob } from "./FlatDataExportJob";
 
 jest.mock("model", () => jest.requireActual("model/JobMobile"));
 
-jest.mock("utils/Logger", () => ({
-  log: { debug: jest.fn(), error: jest.fn(), info: jest.fn() },
-}));
+jest.mock("utils/Logger");
 
 jest.mock("service", () => ({
   RecordFileService: { getRecordFileUri: jest.fn() },
@@ -48,7 +46,6 @@ const emptyRecord = { uuid: "record-uuid", nodes: {} };
 
 describe("FlatDataExportJob", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
     fetchRecordsMock.mockResolvedValue([{ id: 1 }, { id: 2 }, { id: 3 }]);
   });
 
