@@ -14,7 +14,6 @@ import {
 import { useRequestCameraPermission, useToast } from "hooks";
 import { useNodeComponentLocalState } from "screens/RecordEditor/useNodeComponentLocalState";
 import { RecordFileService } from "service/recordFileService";
-import { useConfirm } from "state/confirm";
 import { SettingsSelectors } from "state/settings";
 import { SurveySelectors } from "state/survey/selectors";
 import { ExifUtils, Files, ImageUtils, log, Permissions } from "utils";
@@ -130,7 +129,6 @@ export const useNodeFileComponent = ({
   nodeUuid,
 }: Pick<NodeComponentProps<NodeDefFile>, "nodeDef" | "nodeUuid">) => {
   const toaster = useToast();
-  const confirm = useConfirm();
   const imageSizeLimit = SettingsSelectors.useImageSizeLimit();
   const imageSizeUnlimited = SettingsSelectors.useImageSizeUnlimited();
   const surveyId = SurveySelectors.useCurrentSurveyId();
@@ -160,8 +158,13 @@ export const useNodeFileComponent = ({
     [mediaTypes],
   );
 
-  const { value, updateNodeValue } = useNodeComponentLocalState({
+  const {
+    value,
+    updateNodeValue,
+    onClearPress: onDeletePress,
+  } = useNodeComponentLocalState({
     nodeUuid,
+    clearConfirmMessageKey: "dataEntry:fileAttribute.deleteConfirmMessage",
   });
   const [resizing, setResizing] = useState(false);
   const [rotating, setRotating] = useState(false);
@@ -354,16 +357,6 @@ export const useNodeFileComponent = ({
       setRotating(false);
     }
   }, [surveyId, toaster, updateNodeValue, fileUuid, value, rotating]);
-
-  const onDeletePress = useCallback(async () => {
-    if (
-      await confirm({
-        messageKey: "dataEntry:fileAttribute.deleteConfirmMessage",
-      })
-    ) {
-      updateNodeValue({ value: null });
-    }
-  }, [confirm, updateNodeValue]);
 
   return {
     nodeValue: value,

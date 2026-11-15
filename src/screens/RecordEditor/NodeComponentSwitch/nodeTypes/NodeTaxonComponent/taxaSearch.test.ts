@@ -4,16 +4,17 @@ import {
   extractPartsForSearch,
   filterTaxa,
   isTaxonMatchingFilter,
+  TaxonSearchItem,
 } from "./taxaSearch";
 
 const taxon = (
   code: string,
   scientificName: string,
-  other: Record<string, any> = {},
-) => {
-  const item: any = {
+  other: Partial<TaxonSearchItem> = {},
+): TaxonSearchItem => {
+  const item: TaxonSearchItem = {
     uuid: code,
-    props: { code, scientificName },
+    props: { code, scientificName, family: "", genus: "" },
     vernacularNamesCount: 0,
     ...other,
   };

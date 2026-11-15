@@ -25,7 +25,7 @@ type OpenDropdownButtonProps = {
   onPress: () => void;
   textIsI18nKey?: boolean;
   textKey?: string;
-  textParams?: any;
+  textParams?: Record<string, unknown>;
 };
 
 const OpenDropdownButton = (props: OpenDropdownButtonProps) => {

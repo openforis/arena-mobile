@@ -16,7 +16,7 @@ export const useTaxaFiltered = ({
   nodeDef: NodeDefTaxon;
   parentNodeUuid?: string;
 }) => {
-  const survey = SurveySelectors.useCurrentSurvey();
+  const survey = SurveySelectors.useCurrentSurvey()!;
   const taxonomyUuid = NodeDefs.getTaxonomyUuid(nodeDef);
   const joinVernacularNames = !NodeDefs.isVernacularNameSelectionKept(nodeDef);
   const { taxa, unknownTaxon, unlistedTaxon } = useTaxa({
