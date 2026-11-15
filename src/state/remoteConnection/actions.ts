@@ -21,8 +21,6 @@ import { SurveyActions } from "../survey";
 import { RemoteConnectionActionTypes } from "./actionTypes";
 import { loginAndSetUser } from "./actionsLoginAndSetUser";
 import { RemoteConnectionSelectors } from "./selectors";
-import { AsyncStorageUtils } from "service/asyncStorage/AsyncStorageUtils";
-import { asyncStorageKeys } from "service/asyncStorage/asyncStorageKeys";
 import { invalidTwoFactorCodeError, LoginResponse } from "service/authService";
 import type { AppDispatch, AppGetState } from "../store";
 
@@ -57,7 +55,7 @@ const onLoginResponseSuccessful = async ({
   navigator: Navigator;
 }) => {
   const userEmail = user.email ?? email;
-  await AsyncStorageUtils.setItem(asyncStorageKeys.loggedInUser, user);
+  await UserService.saveLastLoggedInUser(user);
   const settings = await SettingsService.fetchSettings();
   const settingsUpdated = { ...settings, serverUrl, email: userEmail };
   await dispatch(SettingsActions.updateSettings(settingsUpdated));
@@ -245,7 +243,7 @@ const _doLogout =
   ({ keepEmailAddress }: any) =>
   async (dispatch: AppDispatch) => {
     await AuthService.logout();
-    await AsyncStorageUtils.removeItem(asyncStorageKeys.loggedInUser);
+    await UserService.clearLastLoggedInUser();
     // Clear locally cached user groups too, so a different user logging in on the same
     // device doesn't get the previous user's group/qualifiers as an offline fallback.
     const surveySummaries = await SurveyService.fetchSurveySummariesLocal();
