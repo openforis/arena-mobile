@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 
-import { Objects, Points } from "@openforis/arena-core";
+import { CategoryItem, Objects, Points } from "@openforis/arena-core";
 
 import {
   Button,
@@ -16,8 +16,8 @@ import { useLocation } from "hooks";
 import { SurveySelectors } from "state";
 
 type NodeCodeFindClosestSamplingPointDialogProps = {
-  itemLabelFunction: (item: any) => string;
-  items: any[];
+  itemLabelFunction: (item: CategoryItem) => string;
+  items: CategoryItem[];
   onDismiss: () => void;
   onItemSelected: (item: any) => void;
 };
@@ -47,7 +47,7 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
     useState<any>(null);
 
   const findItemsWithMinDistance = useCallback(() => {
-    let minDistanceItems: any = [];
+    let minDistanceItems: CategoryItem[] = [];
     let minDistance: any = null;
 
     for (const item of items) {
@@ -79,7 +79,7 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
   }, [items, pointLatLong, srsIndex]);
 
   const { minDistance, minDistanceItems } = useMemo(
-    (): { minDistance: number; minDistanceItems: any[] | null } =>
+    (): { minDistance: number; minDistanceItems: CategoryItem[] | null } =>
       items && locationFetched && pointLatLong
         ? findItemsWithMinDistance()
         : { minDistance: Number.NaN, minDistanceItems: null },
@@ -135,10 +135,10 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
             }}
           />
           <SelectableList
-            itemKeyExtractor={(item: any) => item.uuid}
+            itemKeyExtractor={(item: CategoryItem) => item.uuid}
             itemLabelExtractor={itemLabelFunction}
             items={minDistanceItems}
-            onChange={(selectedItems: any) => {
+            onChange={(selectedItems: CategoryItem[]) => {
               setSelectedMinDistanceItem(selectedItems[0]);
             }}
             selectedItems={

@@ -1,9 +1,12 @@
 import { memo, useCallback, useEffect, useMemo, useRef } from "react";
 
 import {
+  NodeDefDecimal,
+  NodeDefInteger,
+  NodeDefs,
+  NodeDefText,
   NodeDefTextInputType,
   NodeDefType,
-  NodeDefs,
   Objects,
 } from "@openforis/arena-core";
 
@@ -23,7 +26,9 @@ const isNumericByType: Record<string, boolean> = {
 const nodeValueToUiValue = (value: any) =>
   Objects.isEmpty(value) ? "" : String(value);
 
-export const NodeTextComponent = memo((props: NodeComponentProps) => {
+type Props = NodeComponentProps<NodeDefText | NodeDefDecimal | NodeDefInteger>;
+
+export const NodeTextComponent = memo((props: Props) => {
   const { nodeDef, nodeUuid, style: styleProp } = props;
 
   const nodeDefName = NodeDefs.getName(nodeDef);
@@ -41,7 +46,7 @@ export const NodeTextComponent = memo((props: NodeComponentProps) => {
   const isReadOnly = NodeDefs.isReadOnly(nodeDef);
   const editable = !isReadOnly;
   const multiline =
-    NodeDefs.getType(nodeDef) === NodeDefType.text &&
+    NodeDefs.isText(nodeDef) &&
     NodeDefs.getTextInputType(nodeDef) === NodeDefTextInputType.multiLine;
 
   const uiValueToNodeValue = useCallback(

@@ -1,6 +1,13 @@
 import { useCallback } from "react";
 
-import { DateFormats, Dates, NodeDefs, Objects } from "@openforis/arena-core";
+import {
+  DateFormats,
+  Dates,
+  NodeDefDate,
+  NodeDefs,
+  NodeDefTime,
+  Objects,
+} from "@openforis/arena-core";
 
 import { DateTimePicker } from "components";
 import { log } from "utils";
@@ -8,7 +15,9 @@ import { log } from "utils";
 import { useNodeComponentLocalState } from "../../useNodeComponentLocalState";
 import { NodeComponentProps } from "./nodeComponentPropTypes";
 
-type NodeDateTimeComponentProps = NodeComponentProps & {
+type NodeDateTimeComponentProps = NodeComponentProps<
+  NodeDefDate | NodeDefTime
+> & {
   mode?: "date" | "time";
 };
 

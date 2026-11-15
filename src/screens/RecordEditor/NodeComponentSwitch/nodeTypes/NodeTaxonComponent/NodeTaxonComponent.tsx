@@ -1,6 +1,6 @@
 import { memo, useState } from "react";
 
-import { NodeDefs } from "@openforis/arena-core";
+import { NodeDefs, NodeDefTaxon } from "@openforis/arena-core";
 
 import { Button, CloseIconButton, HView, Text, VView, View } from "components";
 import { RecordEditViewMode } from "model";
@@ -16,7 +16,9 @@ import { useDynamicStyles } from "./useDynamicStyles";
 import { NodeComponentProps } from "../nodeComponentPropTypes";
 import styles from "./styles";
 
-export const NodeTaxonComponent = memo((props: NodeComponentProps) => {
+type Props = NodeComponentProps<NodeDefTaxon>;
+
+export const NodeTaxonComponent = memo((props: Props) => {
   const { nodeDef, nodeUuid, parentNodeUuid } = props;
 
   log.debug(`rendering NodeTaxonComponent for ${NodeDefs.getName(nodeDef)}`);

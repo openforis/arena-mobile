@@ -1,6 +1,6 @@
-import React, { memo } from "react";
+import React, { ComponentType, memo } from "react";
 
-import { NodeDefType } from "@openforis/arena-core";
+import { NodeDefType, NodeDefs } from "@openforis/arena-core";
 
 import { DataEntrySelectors } from "state";
 
@@ -17,7 +17,10 @@ import { NodeTextComponent } from "./nodeTypes/NodeTextComponent";
 import { NodeTimeComponent } from "./nodeTypes/NodeTimeComponent";
 import { NodeComponentProps } from "./nodeTypes/nodeComponentPropTypes";
 
-const nodeDefComponentByType: Record<string, any> = {
+// keyed by type: each component accepts only its own node def type
+const nodeDefComponentByType: Partial<
+  Record<NodeDefType, ComponentType<NodeComponentProps<never>>>
+> = {
   [NodeDefType.boolean]: NodeBooleanComponent,
   [NodeDefType.code]: NodeCodeComponent,
   [NodeDefType.coordinate]: NodeCoordinateComponent,
@@ -31,13 +34,7 @@ const nodeDefComponentByType: Record<string, any> = {
   [NodeDefType.time]: NodeTimeComponent,
 };
 
-type Props = {
-  nodeDef: any;
-  nodeUuid?: string;
-  parentNodeUuid?: string;
-  style?: any;
-  wrapperStyle?: any;
-};
+type Props = NodeComponentProps;
 
 export const SingleAttributeComponentSwitch = memo((props: Props) => {
   const {
@@ -48,7 +45,7 @@ export const SingleAttributeComponentSwitch = memo((props: Props) => {
     wrapperStyle,
   } = props;
 
-  const component = nodeDefComponentByType[nodeDef.type];
+  const component = nodeDefComponentByType[NodeDefs.getType(nodeDef)];
 
   const { nodes } = DataEntrySelectors.useRecordChildNodes({
     parentEntityUuid: parentNodeUuid,
@@ -68,7 +65,11 @@ export const SingleAttributeComponentSwitch = memo((props: Props) => {
     wrapperStyle,
   };
   // keyed by node: the local state of a field must not survive moving to a sibling entity
-  return React.createElement(component, { ...componentProps, key: nodeUuid });
+  return React.createElement(component, {
+    // nodeDef type matches the component, looked up by nodeDef.type
+    ...(componentProps as NodeComponentProps<never>),
+    key: nodeUuid,
+  });
 });
 
 SingleAttributeComponentSwitch.displayName = "SingleAttributeComponentSwitch";

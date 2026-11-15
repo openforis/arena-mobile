@@ -1,5 +1,7 @@
 import { memo } from "react";
 
+import { NodeDefEntity } from "@openforis/arena-core";
+
 import { FieldSet } from "components";
 import { DataEntrySelectors } from "state";
 import { log } from "utils";
@@ -7,7 +9,9 @@ import { log } from "utils";
 import { NodeEntityFormComponent } from "./NodeEntityFormComponent";
 import { NodeComponentProps } from "./nodeComponentPropTypes";
 
-export const NodeSingleEntityComponent = memo((props: NodeComponentProps) => {
+type Props = NodeComponentProps<NodeDefEntity>;
+
+export const NodeSingleEntityComponent = memo((props: Props) => {
   const { nodeDef, parentNodeUuid } = props;
 
   log.debug("rendering NodeSingleEntityComponent");

@@ -1,6 +1,6 @@
 import { memo } from "react";
 
-import { NodeDefs } from "@openforis/arena-core";
+import { NodeDefCode, NodeDefs } from "@openforis/arena-core";
 
 import {
   DataEntrySelectors,
@@ -23,7 +23,9 @@ import { NodeComponentProps } from "../nodeComponentPropTypes";
 
 const MAX_VISIBLE_ITEMS = 10;
 
-export const NodeCodeComponent = memo((props: NodeComponentProps) => {
+type Props = NodeComponentProps<NodeDefCode>;
+
+export const NodeCodeComponent = memo((props: Props) => {
   const { parentNodeUuid, nodeDef } = props;
 
   log.debug(`rendering NodeCodeComponent for ${NodeDefs.getName(nodeDef)}`);
@@ -138,7 +140,7 @@ export const NodeCodeComponent = memo((props: NodeComponentProps) => {
       itemLabelFunction={itemLabelFunction}
       items={items}
       onChange={onSingleValueChange}
-      value={selectedItemUuid}
+      value={selectedItemUuid ?? undefined}
     />
   );
 });

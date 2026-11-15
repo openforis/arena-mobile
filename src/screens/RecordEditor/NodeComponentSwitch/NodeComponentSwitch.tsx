@@ -1,6 +1,6 @@
 import { createElement, memo } from "react";
 
-import { NodeDefType, NodeDefs } from "@openforis/arena-core";
+import { NodeDefs } from "@openforis/arena-core";
 
 import { RecordEditViewMode } from "model";
 import { SurveyOptionsSelectors } from "state";
@@ -63,7 +63,7 @@ export const NodeComponentSwitch = memo((props: NodeComponentProps) => {
     );
   }
 
-  if (nodeDef.type === NodeDefType.code) {
+  if (NodeDefs.isCode(nodeDef)) {
     return (
       <NodeCodeComponent nodeDef={nodeDef} parentNodeUuid={parentNodeUuid} />
     );

@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useEffect, useRef } from "react";
 import { ListRenderItemInfo, VirtualizedList } from "react-native";
 
-import { NodeDef, NodeDefs } from "@openforis/arena-core";
+import { NodeDef, NodeDefEntity, NodeDefs } from "@openforis/arena-core";
 
 import { DataEntrySelectors } from "state";
 import { log } from "utils";
@@ -17,14 +17,18 @@ const getItem = (data: NodeDef<any>[], index: number) => data[index]!;
 
 const getItemCount = (data: NodeDef<any>[]) => data.length;
 
-export const NodeEntityFormComponent = memo((props: NodeComponentProps) => {
+type Props = NodeComponentProps<NodeDefEntity>;
+
+export const NodeEntityFormComponent = memo((props: Props) => {
   const { nodeDef, parentNodeUuid } = props;
 
   log.debug(`rendering NodeDefEntityForm for ${NodeDefs.getName(nodeDef)}`);
 
   const listRef = useRef(null);
 
-  const childrenDefs = DataEntrySelectors.useRecordEntityChildDefs({ nodeDef });
+  const childrenDefs = DataEntrySelectors.useRecordEntityChildDefs({
+    nodeDef,
+  });
 
   useEffect(() => {
     const listEl: any = listRef.current;
