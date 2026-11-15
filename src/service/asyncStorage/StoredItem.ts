@@ -19,11 +19,9 @@ export class StoredItem<T> {
   }
 
   async fetch(): Promise<T> {
-    if (this.cached === undefined) {
-      this.cached = this.fromStored(
-        await AsyncStorageUtils.getItem<T>(this.key),
-      );
-    }
+    this.cached ??= this.fromStored(
+      await AsyncStorageUtils.getItem<T>(this.key),
+    );
     return this.cached;
   }
 
