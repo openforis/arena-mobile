@@ -32,11 +32,6 @@ import {
   validationCountsColumnsSet,
 } from "./recordRowMapper";
 
-const getPlaceholders = (count: any) =>
-  Array.from(new Array(count).keys())
-    .map(() => "?")
-    .join(", ");
-
 const fetchRecord = async ({
   survey,
   recordId,
@@ -193,7 +188,7 @@ const insertRecord = async ({
 
   const { insertId } = await dbClient.runSql(
     `INSERT INTO record (${insertColumnsJoint})
-    VALUES (${getPlaceholders(insertColumns.length)})`,
+    VALUES (${DbUtils.placeholders(insertColumns)})`,
     [
       uuid,
       surveyId,
@@ -240,7 +235,7 @@ const insertRecordSummaries = async ({
         });
       const { insertId } = await tx.runSql(
         `INSERT INTO record (${insertColumnsJoint})
-        VALUES (${getPlaceholders(insertColumns.length)})`,
+        VALUES (${DbUtils.placeholders(insertColumns)})`,
         [
           uuid,
           surveyId,
@@ -467,8 +462,8 @@ const updateRecordsReadOnly = async ({
   const sql = `UPDATE record
   SET read_only = ?
   WHERE survey_id = ?
-    AND uuid IN (${DbUtils.quoteValues(recordUuids)})`;
-  return dbClient.runSql(sql, [readOnly ? 1 : 0, surveyId]);
+    AND uuid IN (${DbUtils.placeholders(recordUuids)})`;
+  return dbClient.runSql(sql, [readOnly ? 1 : 0, surveyId, ...recordUuids]);
 };
 
 const updateRecordsDateSync = async ({ surveyId, recordUuids }: any) => {
@@ -476,8 +471,12 @@ const updateRecordsDateSync = async ({ surveyId, recordUuids }: any) => {
   const sql = `UPDATE record
   SET date_synced = ?
   WHERE survey_id = ?
-    AND uuid IN (${DbUtils.quoteValues(recordUuids)})`;
-  return dbClient.runSql(sql, [Dates.nowFormattedForStorage(), surveyId]);
+    AND uuid IN (${DbUtils.placeholders(recordUuids)})`;
+  return dbClient.runSql(sql, [
+    Dates.nowFormattedForStorage(),
+    surveyId,
+    ...recordUuids,
+  ]);
 };
 
 /**
@@ -508,10 +507,11 @@ const fetchRecordsDateModifiedByUuid = async ({
   surveyId,
   recordUuids,
 }: any): Promise<Record<string, any>> => {
+  if (recordUuids.length === 0) return {};
   const rows: any[] = await dbClient.many(
     `SELECT uuid, date_modified FROM record
-     WHERE survey_id = ? AND uuid IN (${DbUtils.quoteValues(recordUuids)})`,
-    [surveyId],
+     WHERE survey_id = ? AND uuid IN (${DbUtils.placeholders(recordUuids)})`,
+    [surveyId, ...recordUuids],
   );
   return Object.fromEntries(rows.map((row) => [row.uuid, row.date_modified]));
 };
@@ -540,8 +540,9 @@ const fetchRecordsFileUuids = async ({
   surveyId,
   recordUuids,
 }: any): Promise<string[]> => {
+  if (recordUuids?.length === 0) return [];
   const recordsCondition = recordUuids
-    ? `AND record.uuid IN (${DbUtils.quoteValues(recordUuids)})`
+    ? `AND record.uuid IN (${DbUtils.placeholders(recordUuids)})`
     : "";
   const rows = await dbClient.many(
     `SELECT DISTINCT json_extract(node.value, '$.value.fileUuid') AS file_uuid
@@ -550,7 +551,7 @@ const fetchRecordsFileUuids = async ({
        ${recordsCondition}
        AND json_valid(record.content)
        AND json_extract(node.value, '$.value.fileUuid') IS NOT NULL`,
-    [surveyId],
+    [surveyId, ...(recordUuids ?? [])],
   );
   return rows.map((row: any) => row.file_uuid);
 };
@@ -575,7 +576,7 @@ const fetchNodeValuesByDefUuids = async ({
        AND record.cycle = ?
        AND record.merged_into_record_uuid IS NULL
        AND json_valid(record.content)
-       AND json_extract(node.value, '$.nodeDefUuid') IN (${getPlaceholders(nodeDefUuids.length)})
+       AND json_extract(node.value, '$.nodeDefUuid') IN (${DbUtils.placeholders(nodeDefUuids)})
        AND json_extract(node.value, '$.value') IS NOT NULL`,
     [surveyId, cycle, ...nodeDefUuids],
   );
@@ -614,9 +615,10 @@ const fixRecordCycle = async ({ survey, recordId }: any) => {
 };
 
 const deleteRecords = async ({ surveyId, recordUuids }: any) => {
+  if (recordUuids.length === 0) return;
   const sql = `DELETE FROM record 
-    WHERE survey_id = ? AND uuid IN (${DbUtils.quoteValues(recordUuids)})`;
-  return dbClient.runSql(sql, [surveyId]);
+    WHERE survey_id = ? AND uuid IN (${DbUtils.placeholders(recordUuids)})`;
+  return dbClient.runSql(sql, [surveyId, ...recordUuids]);
 };
 
 export const RecordRepository = {

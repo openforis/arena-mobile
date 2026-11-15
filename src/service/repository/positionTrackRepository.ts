@@ -1,6 +1,6 @@
 import { Dates } from "@openforis/arena-core";
 
-import { dbClient } from "db";
+import { DbUtils, dbClient } from "db";
 import { TrackPoint, TrackSegment } from "model";
 
 export enum PositionTrackStatus {
@@ -127,12 +127,16 @@ const fetchSegments = async (trackId: number): Promise<TrackSegment[]> => {
 
 const deleteTracksByIds = async (ids: number[]) => {
   if (ids.length === 0) return;
-  const idsJoint = ids.join(", ");
+  const idsPlaceholders = DbUtils.placeholders(ids);
   await dbClient.transaction(async (tx) => {
     await tx.runSql(
-      `DELETE FROM position_track_point WHERE track_id IN (${idsJoint})`,
+      `DELETE FROM position_track_point WHERE track_id IN (${idsPlaceholders})`,
+      ids,
     );
-    await tx.runSql(`DELETE FROM position_track WHERE id IN (${idsJoint})`);
+    await tx.runSql(
+      `DELETE FROM position_track WHERE id IN (${idsPlaceholders})`,
+      ids,
+    );
   });
 };
 
@@ -141,7 +145,7 @@ const deleteTrack = (id: number) => deleteTracksByIds([id]);
 const deleteTracksByRecordUuids = async (recordUuids: string[]) => {
   if (recordUuids.length === 0) return;
   const rows: any[] = await dbClient.many(
-    `SELECT id FROM position_track WHERE record_uuid IN (${recordUuids.map(() => "?").join(", ")})`,
+    `SELECT id FROM position_track WHERE record_uuid IN (${DbUtils.placeholders(recordUuids)})`,
     recordUuids,
   );
   await deleteTracksByIds(rows.map((row) => row.id));
