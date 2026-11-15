@@ -5,11 +5,10 @@ import NetInfo from "@react-native-community/netinfo";
 import { BatteryState } from "model";
 import { Files, SystemUtils } from "utils";
 
+import { DeviceInfoSliceActions } from "./reducer";
 import { DeviceInfoSelectors } from "./selectors";
+import type { DeviceInfoState } from "./types";
 import type { AppDispatch, AppGetState } from "../store";
-
-const DEVICE_INFO_SET = "DEVICE_INFO_SET";
-const DEVICE_INFO_UPDATE = "DEVICE_INFO_UPDATE";
 
 const batteryStatusFromExpoBatteryState = {
   [Battery.BatteryState.CHARGING]: BatteryState.charging,
@@ -22,9 +21,10 @@ const batteryStatusFromExpoBatteryState = {
 // initDeviceInfo can run more than once (e.g. app initialization retried): keep a single listener
 let orientationChangeSubscription: { remove: () => void } | null = null;
 
-const setDeviceInfo = (deviceInfo: any) => (dispatch: AppDispatch) => {
-  dispatch({ type: DEVICE_INFO_SET, payload: deviceInfo });
-};
+const setDeviceInfo =
+  (deviceInfo: DeviceInfoState) => (dispatch: AppDispatch) => {
+    dispatch(DeviceInfoSliceActions.set(deviceInfo));
+  };
 
 const _getPowerState = async () => {
   const { batteryLevel, batteryState: expoBatteryState } =
@@ -79,8 +79,8 @@ const determineBatteryStateUpdateActionPayload = ({
   batteryStateChanged,
   batteryLevelMeasureStartTime,
   batteryLevelAtStartTime,
-}: any) => {
-  const payload: any = {};
+}: any): Partial<DeviceInfoState> => {
+  const payload: Partial<DeviceInfoState> = {};
   Object.assign(payload, {
     batteryLevel,
     batteryState,
@@ -145,7 +145,7 @@ const updatePowerState =
       batteryLevelAtStartTime,
     });
 
-    dispatch({ type: DEVICE_INFO_UPDATE, payload });
+    dispatch(DeviceInfoSliceActions.update(payload));
   };
 
 const updateFreeDiskStorage =
@@ -157,7 +157,7 @@ const updateFreeDiskStorage =
     const freeDiskStorage = await Files.getFreeDiskStorage();
     if (freeDiskStorage === freeDiskStoragePrev) return;
 
-    dispatch({ type: DEVICE_INFO_UPDATE, payload: { freeDiskStorage } });
+    dispatch(DeviceInfoSliceActions.update({ freeDiskStorage }));
   };
 
 const updateIsNetworkConnected =
@@ -165,17 +165,14 @@ const updateIsNetworkConnected =
   (dispatch: AppDispatch, getState: AppGetState) => {
     // NetInfo notifies also other changes (e.g. wifi strength): skip no-op store updates
     if (getState().deviceInfo.isNetworkConnected === isNetworkConnected) return;
-    dispatch({ type: DEVICE_INFO_UPDATE, payload: { isNetworkConnected } });
+    dispatch(DeviceInfoSliceActions.update({ isNetworkConnected }));
   };
 
 const updateOrientation = (orientation: any) => (dispatch: AppDispatch) => {
-  dispatch({ type: DEVICE_INFO_UPDATE, payload: { orientation } });
+  dispatch(DeviceInfoSliceActions.update({ orientation }));
 };
 
 export const DeviceInfoActions = {
-  DEVICE_INFO_SET,
-  DEVICE_INFO_UPDATE,
-
   setDeviceInfo,
   initDeviceInfo,
   updatePowerState,

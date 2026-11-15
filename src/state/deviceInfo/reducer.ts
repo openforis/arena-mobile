@@ -1,21 +1,22 @@
-import { ActionHandlers, StoreUtils } from "../storeUtils";
-import { DeviceInfoActions } from "./actions";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
 import type { DeviceInfoState } from "./types";
 
 // filled by AppInitializer before the app screens render
 const initialState = {} as DeviceInfoState;
 
-const actionHandlers: ActionHandlers<DeviceInfoState> = {
-  [DeviceInfoActions.DEVICE_INFO_SET]: ({ action }) => ({
-    ...action.payload,
-  }),
-  [DeviceInfoActions.DEVICE_INFO_UPDATE]: ({ state, action }) => ({
-    ...state,
-    ...action.payload,
-  }),
-};
-
-export const DeviceInfoReducer = StoreUtils.exportReducer({
-  actionHandlers,
+const deviceInfoSlice = createSlice({
+  name: "deviceInfo",
   initialState,
+  reducers: {
+    set: (_state, action: PayloadAction<DeviceInfoState>) => ({
+      ...action.payload,
+    }),
+    update: (state, action: PayloadAction<Partial<DeviceInfoState>>) => {
+      Object.assign(state, action.payload);
+    },
+  },
 });
+
+export const DeviceInfoSliceActions = deviceInfoSlice.actions;
+export const DeviceInfoReducer = deviceInfoSlice.reducer;
