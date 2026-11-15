@@ -6,13 +6,14 @@ import { RecordsAndFilesImportJobContext } from "./RecordsAndFilesImportJobConte
 import { RecordsImportJob } from "./recordsImportJob";
 
 export class RecordsAndFilesImportJob extends JobMobile<RecordsAndFilesImportJobContext> {
-  constructor({
-    survey,
-    user,
-    fileUri,
-    overwriteExistingRecords = true,
-    mergeKeepLocalOriginRecordUuids,
-  }: any) {
+  constructor(context: RecordsAndFilesImportJobContext) {
+    const {
+      survey,
+      user,
+      fileUri,
+      overwriteExistingRecords = true,
+      mergeKeepLocalOriginRecordUuids,
+    } = context;
     super(
       {
         survey,
@@ -37,7 +38,7 @@ export class RecordsAndFilesImportJob extends JobMobile<RecordsAndFilesImportJob
     await super.onStart();
     const { fileUri } = this.context;
 
-    const unzippedFolderUri = await Files.createTempFolder();
+    const unzippedFolderUri = await this.createTempFolder();
 
     await Files.unzip(fileUri, unzippedFolderUri, "UTF-8");
 
@@ -48,13 +49,5 @@ export class RecordsAndFilesImportJob extends JobMobile<RecordsAndFilesImportJob
     const recordsImportJob = this.innerJobs?.[0];
     const { result = {}, processed = 0 } = recordsImportJob ?? {};
     return Promise.resolve({ ...result, processedRecords: processed });
-  }
-
-  override async onEnd() {
-    await super.onEnd();
-    const { unzippedFolderUri } = this.context;
-    if (unzippedFolderUri) {
-      await Files.del(unzippedFolderUri, true);
-    }
   }
 }

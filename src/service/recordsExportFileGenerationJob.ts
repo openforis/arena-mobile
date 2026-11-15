@@ -40,31 +40,19 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
   outputFileUri: any;
   recordsWithMissingFiles: { uuid: string; keysText: string }[] = [];
 
-  constructor({ survey, cycle, recordUuids, user, onlyRemote = false }: any) {
-    super({ survey, cycle, recordUuids, user, onlyRemote });
+  constructor(context: RecordsExportFileGenerationJobContext) {
+    super({ ...context, onlyRemote: context.onlyRemote ?? false });
   }
 
   override async execute() {
-    const {
-      survey,
-      cycle,
-      recordUuids,
-      user,
-      onlyRemote,
-    }: {
-      survey: Survey;
-      cycle: string;
-      recordUuids: string[];
-      user: any;
-      onlyRemote?: boolean;
-    } = this.context;
+    const { survey, cycle, recordUuids, user, onlyRemote } = this.context;
     const recordUuidsSet = new Set(recordUuids);
 
     this.logger.debug(
       `RecordsExportFileGenerationJob: starting (recordUuids=${recordUuids.length}, onlyRemote=${onlyRemote})`,
     );
 
-    const tempFolderUri = await Files.createTempFolder();
+    const tempFolderUri = await this.createTempFolder();
     this.logger.debug(
       `RecordsExportFileGenerationJob: temp folder created at ${tempFolderUri}`,
     );
@@ -205,8 +193,6 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
     } catch (error) {
       this.logger.error(`RecordsExportFileGenerationJob: failed: ${error}`);
       throw error;
-    } finally {
-      await Files.del(tempFolderUri);
     }
   }
 
