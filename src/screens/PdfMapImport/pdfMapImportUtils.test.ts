@@ -43,6 +43,9 @@ describe("extractErrorDetails", () => {
     expect(extractErrorDetails({ errors: { a: { other: 1 } } })).toBe(
       '{"other":1}',
     );
+    expect(
+      extractErrorDetails({ errors: { a: { error: { valid: false } } } }),
+    ).toBe('{"valid":false}');
   });
 
   it("falls back to the error itself when there are no job errors", () => {

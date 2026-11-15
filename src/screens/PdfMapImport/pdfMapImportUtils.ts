@@ -19,7 +19,8 @@ export const extractErrorDetails = (error: unknown): string => {
         error?: unknown;
         key?: unknown;
       };
-      return String(errorMessage ?? key ?? JSON.stringify(firstError));
+      const details = errorMessage ?? key ?? firstError;
+      return typeof details === "string" ? details : JSON.stringify(details);
     }
   }
   return error instanceof Error ? error.message : String(error);
