@@ -312,10 +312,12 @@ const linkToRecordInPreviousCycle =
         await fetchRecordFromPreviousCycleInternal();
       }
     } catch (error: any) {
-      const details = `${error.toString()} - ${error.stack}`;
-      ToastActions.show("dataEntry:recordInPreviousCycleFetchError", {
-        details,
-      });
+      log.error(`${error} - ${error?.stack}`);
+      dispatch(
+        ToastActions.show("dataEntry:recordInPreviousCycle.fetchError", {
+          details: String(error),
+        }),
+      );
     }
   };
 
