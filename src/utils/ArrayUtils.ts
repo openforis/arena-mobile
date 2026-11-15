@@ -2,9 +2,9 @@ import { DateFormats, Dates, Objects } from "@openforis/arena-core";
 
 import { Sort, SortObject } from "model/Sort";
 
-// length of the values written in the format: text in [...] is a literal, without the brackets
+// length of the values written in the format: text in [...] is a literal, written without the brackets
 const formattedValueLength = (format: string): number =>
-  format.replaceAll(/\[([^\]]*)\]/g, "$1").length;
+  format.replaceAll("[", "").replaceAll("]", "").length;
 
 const determineDateFormat = (
   value: any,
