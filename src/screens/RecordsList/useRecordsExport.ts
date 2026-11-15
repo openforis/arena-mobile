@@ -6,6 +6,7 @@ import { useToast } from "hooks";
 import { useTranslation } from "localization";
 import {
   RecordOrigin,
+  RecordSummaries,
   RecordSyncStatus,
   RecordUpdateConflictResolutionStrategy as ConflictResolutionStrategy,
 } from "model";
@@ -135,7 +136,7 @@ export const useRecordsExport = ({
           : [];
 
       const recordsWithErrorsCount = records.filter(
-        (r: any) => r.errors > 0,
+        RecordSummaries.hasErrors,
       ).length;
 
       const recordsCountSummary = {
@@ -315,7 +316,7 @@ export const useRecordsExport = ({
         };
       } else if (
         filterRecordsByUuids(records, selectedRecordUuids).some(
-          (r) => r.errors,
+          RecordSummaries.hasErrors,
         ) &&
         !Surveys.isRecordsWithErrorsUploadFromMobileAllowed(survey)
       ) {
