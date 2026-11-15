@@ -58,7 +58,7 @@ export const importRecordsFromFile =
     const survey = SurveySelectors.selectCurrentSurvey(state);
 
     const importJob = new RecordsAndFilesImportJob({
-      survey,
+      survey: survey!,
       user,
       fileUri,
       overwriteExistingRecords,

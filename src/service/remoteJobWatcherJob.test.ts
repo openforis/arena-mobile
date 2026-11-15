@@ -38,7 +38,7 @@ const startJob = async () => {
       emitJobUpdate = handler;
     },
   });
-  const job: any = new RemoteJobWatcherJob({});
+  const job: any = new RemoteJobWatcherJob({} as any);
   job.context.remoteJobUuid = remoteJobUuid;
   let ended = false;
   const execution = job.execute().finally(() => {

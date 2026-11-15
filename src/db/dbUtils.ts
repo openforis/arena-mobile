@@ -1,8 +1,7 @@
-const quoteValue = (val: any) => `'${String(val).replaceAll("'", "''")}'`;
-
-// values can come from imported files: a double quoted value would be read as a column name
-const quoteValues = (values: any) => values.map(quoteValue).toString();
+// "?, ?, ?" for a SQL IN list or VALUES clause; bind the values as params
+const placeholders = (values: readonly unknown[]): string =>
+  values.map(() => "?").join(", ");
 
 export const DbUtils = {
-  quoteValues,
+  placeholders,
 };

@@ -16,38 +16,16 @@ import { RemoteJobWatcherJob } from "./remoteJobWatcherJob";
 // progress bar for free from JobBase's own inner-job progress weighting, instead of needing to
 // fake it the way the zip-preparation -> this bridge still does.
 export class RecordsUploadAndProcessJob extends JobMobile<RecordsUploadAndProcessJobContext> {
-  constructor({
-    user,
-    survey,
-    cycle,
-    fileUri,
-    conflictResolutionStrategy,
-    skipMissingFiles = false,
-    uploadState,
-  }: any) {
-    super(
-      {
-        user,
-        survey,
-        cycle,
-        fileUri,
-        conflictResolutionStrategy,
-        skipMissingFiles,
-        uploadState,
-      },
-      [
-        new RecordsUploadJob({
-          user,
-          survey,
-          cycle,
-          fileUri,
-          conflictResolutionStrategy,
-          skipMissingFiles,
-          uploadState,
-        }),
-        new RemoteJobWatcherJob({ user, survey }),
-      ],
-    );
+  constructor(context: RecordsUploadAndProcessJobContext) {
+    const { user, survey } = context;
+    const contextWithDefaults = {
+      ...context,
+      skipMissingFiles: context.skipMissingFiles ?? false,
+    };
+    super(contextWithDefaults, [
+      new RecordsUploadJob(contextWithDefaults),
+      new RemoteJobWatcherJob({ user, survey }),
+    ]);
   }
 
   override onInnerJobEvent(event: JobEvent): Promise<void> {
