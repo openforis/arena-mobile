@@ -1,5 +1,7 @@
 import { memo, useCallback, useMemo } from "react";
 
+import { NodeDefBoolean } from "@openforis/arena-core";
+
 import { SegmentedButtons, View } from "components";
 import { log } from "utils";
 
@@ -16,7 +18,9 @@ const yesNoValueByBooleanValue: Record<string, string> = {
 const baseStyle = { width: 200 };
 const rtlStyle = { alignSelf: "flex-end" };
 
-export const NodeBooleanComponent = memo((props: NodeComponentProps) => {
+type Props = NodeComponentProps<NodeDefBoolean>;
+
+export const NodeBooleanComponent = memo((props: Props) => {
   const { nodeDef, nodeUuid } = props;
 
   log.debug(`rendering NodeBooleanComponent for ${nodeDef.props.name}`);

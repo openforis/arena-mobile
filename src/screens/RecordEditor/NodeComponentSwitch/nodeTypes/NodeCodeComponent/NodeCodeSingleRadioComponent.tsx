@@ -1,14 +1,16 @@
 import React from "react";
 
+import { CategoryItem } from "@openforis/arena-core";
+
 import { HView, RadioButton, RadioButtonGroup } from "components";
 import styles from "./styles";
 
 type NodeCodeSingleRadioComponentProps = {
   editable?: boolean;
-  itemLabelFunction: (item: any) => string;
-  items: any[];
-  onChange: (value: any) => void;
-  value?: any;
+  itemLabelFunction: (item: CategoryItem) => string;
+  items: CategoryItem[];
+  onChange: (value: string) => void;
+  value?: string;
 };
 
 export const NodeCodeSingleRadioComponent = (
@@ -19,7 +21,7 @@ export const NodeCodeSingleRadioComponent = (
   return (
     <RadioButtonGroup onValueChange={onChange} value={value}>
       <HView style={styles.container}>
-        {items.map((item: any) => (
+        {items.map((item) => (
           <RadioButton
             key={item.uuid}
             disabled={!editable}

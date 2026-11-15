@@ -21,7 +21,7 @@ const itemLabelExtractorWithCode = (taxon: any) =>
 const itemLabelExtractorWithoutCode = (taxon: any) =>
   buildTaxonLabel({ codeVisible: false, taxon });
 
-const isCodeVisible = (nodeDef: any): boolean => {
+const isCodeVisible = (nodeDef: NodeDefTaxon): boolean => {
   const visibleFields = NodeDefs.getVisibleFields(nodeDef);
   return !visibleFields || visibleFields.includes("code");
 };
@@ -70,7 +70,7 @@ const createTaxonValue = ({
 };
 
 type NodeTaxonAutocompleteProps = {
-  nodeDef: any;
+  nodeDef: NodeDefTaxon;
   parentNodeUuid?: string;
   selectedTaxon?: any;
   updateNodeValue: (params: { value: any }) => void;

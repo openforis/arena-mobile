@@ -1,5 +1,7 @@
 import * as React from "react";
 
+import { NodeDef } from "@openforis/arena-core";
+
 import { Modal } from "components";
 
 import { NodeDefFormItemHeader } from "screens/RecordEditor/NodeDefFormItem/NodeDefFormItemHeader";
@@ -7,7 +9,7 @@ import { Functions } from "utils/Functions";
 
 type Props = {
   children?: React.ReactNode;
-  nodeDef: any;
+  nodeDef: NodeDef<any>;
   onDismiss?: () => void;
   parentNodeUuid?: string;
 };

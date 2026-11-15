@@ -6,7 +6,7 @@ import {
 } from "components/GeoPolygonEditor/polygonEditorUtils";
 import MapView from "react-native-maps";
 
-import { Records } from "@openforis/arena-core";
+import { NodeDefGeo, Records } from "@openforis/arena-core";
 
 import { useTranslation } from "localization";
 import { LatLng, PositionTracks, RecordUtils } from "model";
@@ -61,7 +61,7 @@ const nodeValueToPolygon = (nodeValue: any): MapPolygonExtendedProps | null => {
 export const useNodeGeoComponent = ({
   nodeDef,
   nodeUuid,
-}: NodeComponentProps) => {
+}: NodeComponentProps<NodeDefGeo>) => {
   const dispatch = useAppDispatch();
   const confirm = useConfirm();
   const { t } = useTranslation();

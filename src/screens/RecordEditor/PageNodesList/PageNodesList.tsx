@@ -3,8 +3,9 @@ import { FlatList } from "react-native";
 
 import {
   LanguageCode,
-  NodeDefType,
+  NodeDef,
   NodeDefs,
+  NodeDefType,
   Records,
   Validations,
 } from "@openforis/arena-core";
@@ -22,13 +23,15 @@ import { NodePageNavigationButton } from "../BottomNavigationBar/NodePageNavigat
 
 import styles from "./styles";
 
-const iconByNodeDefType: Record<string, any> = {
+const iconByNodeDefType: Partial<
+  Record<NodeDefType, (params: { nodeDef: NodeDef<any> }) => string>
+> = {
   [NodeDefType.boolean]: () => "checkbox-marked-outline",
   [NodeDefType.code]: () => "format-list-numbered",
   [NodeDefType.coordinate]: () => "map-marker-outline",
   [NodeDefType.date]: () => "calendar-range",
   [NodeDefType.decimal]: () => "decimal",
-  [NodeDefType.entity]: ({ nodeDef }: any) =>
+  [NodeDefType.entity]: ({ nodeDef }) =>
     NodeDefs.isSingle(nodeDef) ? "window-maximize" : "table",
   [NodeDefType.file]: () => "file-outline",
   [NodeDefType.integer]: () => "numeric",
@@ -37,8 +40,8 @@ const iconByNodeDefType: Record<string, any> = {
   [NodeDefType.time]: () => "clock-time-three-outline",
 };
 
-const getNodeDefIcon = (nodeDef: any) =>
-  iconByNodeDefType[nodeDef.type]?.({ nodeDef });
+const getNodeDefIcon = (nodeDef: NodeDef<any>) =>
+  iconByNodeDefType[NodeDefs.getType(nodeDef)]?.({ nodeDef });
 
 type ValidationStatus = { hasErrors: boolean; hasWarnings: boolean };
 
@@ -48,7 +51,7 @@ type PageNodesListItemProps = {
   hasWarnings: boolean;
   index: number;
   lang: LanguageCode;
-  nodeDef: any;
+  nodeDef: NodeDef<any>;
   onPress: (index: number) => void;
 };
 

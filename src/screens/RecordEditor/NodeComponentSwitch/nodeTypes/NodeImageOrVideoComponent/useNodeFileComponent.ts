@@ -4,6 +4,7 @@ import * as Location from "expo-location";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
+  NodeDefFile,
   NodeDefFileType,
   NodeDefs,
   Objects,
@@ -19,6 +20,7 @@ import { SurveySelectors } from "state/survey/selectors";
 import { ExifUtils, Files, ImageUtils, log, Permissions } from "utils";
 
 import { useCheckCanAccessMediaLibrary } from "./useCheckCanAccessMediaLibrary";
+import { NodeComponentProps } from "../nodeComponentPropTypes";
 
 const logPrefix = "NodeFileComponent:";
 
@@ -31,13 +33,21 @@ const mediaTypeByFileType: Record<string, ImagePicker.MediaType> = {
   [NodeDefFileType.video]: "videos",
 };
 
-const determineFileMaxSize = ({ nodeDef, settings }: any) => {
+const determineFileMaxSize = ({
+  nodeDef,
+  settings,
+}: {
+  nodeDef: NodeDefFile;
+  settings: { imageSizeLimit?: number; imageSizeUnlimited?: boolean };
+}) => {
   const { imageSizeLimit, imageSizeUnlimited } = settings;
   const nodeDefFileMaxSize = NodeDefs.getFileMaxSize(nodeDef);
   if (imageSizeUnlimited) {
     return nodeDefFileMaxSize;
   }
-  const limits = [nodeDefFileMaxSize, imageSizeLimit].filter(Boolean);
+  const limits = [nodeDefFileMaxSize, imageSizeLimit].filter(
+    (limit): limit is number => !!limit,
+  );
   return limits.length > 0 ? Math.min(...limits) : undefined;
 };
 
@@ -115,7 +125,10 @@ const resizeImage = async (
   }
 };
 
-export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
+export const useNodeFileComponent = ({
+  nodeDef,
+  nodeUuid,
+}: Pick<NodeComponentProps<NodeDefFile>, "nodeDef" | "nodeUuid">) => {
   const toaster = useToast();
   const confirm = useConfirm();
   const imageSizeLimit = SettingsSelectors.useImageSizeLimit();

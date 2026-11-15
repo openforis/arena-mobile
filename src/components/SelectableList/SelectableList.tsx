@@ -32,7 +32,7 @@ const ListItemIcon = (props: ListItemIconProps) => {
 };
 
 type SelectableListItemProps = ListItemIconProps & {
-  description: string | null;
+  description?: string | null;
   title: string | null;
 };
 
@@ -84,7 +84,7 @@ export type SelectableListProps = {
   editable?: boolean;
   itemKeyExtractor?: (item: any) => string;
   itemLabelExtractor?: (item: any) => string;
-  itemDescriptionExtractor?: (item: any) => string;
+  itemDescriptionExtractor?: (item: any) => string | null | undefined;
   items: any[];
   multiple?: boolean;
   onChange?: (items: any[]) => void;

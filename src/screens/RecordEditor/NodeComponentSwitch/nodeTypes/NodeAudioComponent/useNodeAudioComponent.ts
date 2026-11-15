@@ -22,7 +22,7 @@ const extractFileNameFromAsset = (
   return asset.name ?? Files.getNameFromUri(asset.uri);
 };
 
-export const useNodeAudioComponent = ({ nodeUuid }: any) => {
+export const useNodeAudioComponent = ({ nodeUuid }: { nodeUuid?: string }) => {
   const { t } = useTranslation();
   const toaster = useToast();
   const confirm = useConfirm();
