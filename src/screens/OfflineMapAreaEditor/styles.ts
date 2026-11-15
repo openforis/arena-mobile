@@ -63,7 +63,4 @@ export default StyleSheet.create({
   zoomSlider: {
     flex: 1,
   },
-  estimateTextError: {
-    color: "#d32f2f",
-  },
 });
