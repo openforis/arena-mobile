@@ -18,21 +18,16 @@ import {
 } from "components";
 import { useToast } from "hooks";
 import { JobCancelError, PdfMap } from "model";
-import {
-  OfflineMapsService,
-  PdfMapFileAnalysis,
-  PdfMapPreview,
-  PdfMapsService,
-} from "service";
+import { PdfMapFileAnalysis, PdfMapPreview, PdfMapsService } from "service";
 import {
   JobMonitorActions,
   SettingsActions,
   SettingsSelectors,
   useAppDispatch,
-  useConfirm,
 } from "state";
 import { Files, GeoUtils, log } from "utils";
 
+import { useStorageEstimateCheck } from "../OfflineMaps/useStorageEstimateCheck";
 import styles from "./styles";
 
 const neatlineStrokeColor = "rgba(21, 101, 192, 0.95)";
@@ -65,7 +60,6 @@ export const PdfMapImportScreen = () => {
   const navigator = useNavigator();
   const { fileUri, fileName = "" } = useScreenParams<screenKeys.pdfMapImport>();
   const dispatch = useAppDispatch();
-  const confirm = useConfirm();
   const toaster = useToast();
   const settings = SettingsSelectors.useSettings();
   const pdfMaps = settings.pdfMaps;
@@ -232,14 +226,11 @@ export const PdfMapImportScreen = () => {
     name,
     pdfMaps: pdfMaps ?? [],
   });
-  const exceedsFreeSpace =
-    !!estimate &&
-    freeDiskStorage !== null &&
-    estimate.estimatedSizeBytes > freeDiskStorage;
-  const freeSpaceUsageRatio =
-    estimate && freeDiskStorage
-      ? estimate.estimatedSizeBytes / freeDiskStorage
-      : null;
+  const { confirmLowSpace, exceedsFreeSpace, freeSpaceText } =
+    useStorageEstimateCheck({
+      estimatedSizeBytes: estimate?.estimatedSizeBytes,
+      freeDiskStorage,
+    });
 
   const neatline = candidate?.georeference.neatline;
   const initialRegion = useMemo(
@@ -271,16 +262,9 @@ export const PdfMapImportScreen = () => {
       return;
     }
     if (
-      (freeSpaceUsageRatio ?? 0) >=
-        OfflineMapsService.FREE_SPACE_WARNING_RATIO &&
-      !(await confirm({
+      !(await confirmLowSpace({
         titleKey: "pdfMaps:import.lowSpaceConfirm.title",
         messageKey: "pdfMaps:import.lowSpaceConfirm.message",
-        messageParams: {
-          size: Files.toHumanReadableFileSize(estimate.estimatedSizeBytes),
-          freeSpace: Files.toHumanReadableFileSize(freeDiskStorage ?? 0),
-          percent: Math.floor((freeSpaceUsageRatio ?? 0) * 100),
-        },
         confirmButtonTextKey: "pdfMaps:import.importButton",
       }))
     ) {
@@ -320,14 +304,12 @@ export const PdfMapImportScreen = () => {
     }
   }, [
     candidate,
-    confirm,
+    confirmLowSpace,
     dispatch,
     estimate,
     exceedsFreeSpace,
     fileName,
     fileUri,
-    freeDiskStorage,
-    freeSpaceUsageRatio,
     maxZoom,
     name,
     nameErrorKey,
@@ -427,10 +409,7 @@ export const PdfMapImportScreen = () => {
             tiles: estimate.tilesCount,
             maxTiles: PdfMapsService.MAX_TILES_PER_MAP,
             size: Files.toHumanReadableFileSize(estimate.estimatedSizeBytes),
-            freeSpace:
-              freeDiskStorage === null
-                ? "-"
-                : Files.toHumanReadableFileSize(freeDiskStorage),
+            freeSpace: freeSpaceText,
           }}
         />
         <HView style={styles.previewRow}>

@@ -22,6 +22,7 @@ import { SettingsSelectors, useConfirm } from "state";
 import { Files, GeoUtils, log } from "utils";
 
 import { useOfflineMapAreaDownload } from "../OfflineMaps/useOfflineMapAreaDownload";
+import { useStorageEstimateCheck } from "../OfflineMaps/useStorageEstimateCheck";
 import { AreaEditorStep } from "./AreaEditorStep";
 import styles from "./styles";
 
@@ -134,16 +135,11 @@ export const OfflineMapAreaEditorScreen = () => {
     areas: existingAreas ?? [],
   });
 
-  const exceedsFreeSpace =
-    freeDiskStorage !== null && estimate.estimatedSizeBytes > freeDiskStorage;
-  const freeSpaceUsageRatio =
-    freeDiskStorage !== null && freeDiskStorage > 0
-      ? estimate.estimatedSizeBytes / freeDiskStorage
-      : null;
-  const freeSpaceLow =
-    !exceedsFreeSpace &&
-    freeSpaceUsageRatio !== null &&
-    freeSpaceUsageRatio >= OfflineMapsService.FREE_SPACE_WARNING_RATIO;
+  const { confirmLowSpace, exceedsFreeSpace, freeSpaceText } =
+    useStorageEstimateCheck({
+      estimatedSizeBytes: estimate.estimatedSizeBytes,
+      freeDiskStorage,
+    });
 
   const initialRegion = useMemo(() => {
     const lastArea = existingAreas?.at(-1);
@@ -210,15 +206,9 @@ export const OfflineMapAreaEditorScreen = () => {
         return;
       }
       if (
-        freeSpaceLow &&
-        !(await confirm({
+        !(await confirmLowSpace({
           titleKey: "offlineMaps:areaEditor.lowSpaceConfirm.title",
           messageKey: "offlineMaps:areaEditor.lowSpaceConfirm.message",
-          messageParams: {
-            size: Files.toHumanReadableFileSize(estimate.estimatedSizeBytes),
-            freeSpace: Files.toHumanReadableFileSize(freeDiskStorage ?? 0),
-            percent: Math.floor((freeSpaceUsageRatio ?? 0) * 100),
-          },
           confirmButtonTextKey: "offlineMaps:download.label",
         }))
       ) {
@@ -235,16 +225,13 @@ export const OfflineMapAreaEditorScreen = () => {
     },
     [
       confirm,
+      confirmLowSpace,
       downloadArea,
       effectiveMaxZoom,
       effectiveName,
-      estimate.estimatedSizeBytes,
       estimate.exceedsMaxTiles,
       estimate.tilesCount,
       exceedsFreeSpace,
-      freeDiskStorage,
-      freeSpaceLow,
-      freeSpaceUsageRatio,
       layer,
       layerId,
       nameErrorKey,
@@ -277,10 +264,7 @@ export const OfflineMapAreaEditorScreen = () => {
       tiles: estimate.tilesCount,
       maxTiles: OfflineMapsService.MAX_TILES_PER_AREA,
       size: Files.toHumanReadableFileSize(estimate.estimatedSizeBytes),
-      freeSpace:
-        freeDiskStorage === null
-          ? "-"
-          : Files.toHumanReadableFileSize(freeDiskStorage),
+      freeSpace: freeSpaceText,
     };
     return estimate.exceedsMaxTiles
       ? t("offlineMaps:areaEditor.steps.drawSummaryTooManyTiles", params)
