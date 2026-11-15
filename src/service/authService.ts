@@ -95,7 +95,7 @@ const storeCredentials = async ({
   password: string;
 }) => {
   try {
-    await SettingsService.setCredentials(serverUrl, email, password);
+    await SecureStoreService.setServerCredentials(serverUrl, email, password);
   } catch (error) {
     log.warn(`error storing credentials: ${error}`);
   }
@@ -103,7 +103,9 @@ const storeCredentials = async ({
 
 const clearStoredCredentials = async (serverUrl?: string) => {
   try {
-    await SettingsService.resetCredentials(serverUrl ?? (await getServerUrl()));
+    await SecureStoreService.resetServerCredentials(
+      serverUrl ?? (await getServerUrl()),
+    );
   } catch (error) {
     log.warn(`error clearing stored credentials: ${error}`);
   }
@@ -195,7 +197,7 @@ const isRefreshTokenRejected = (error: any): boolean =>
 // returns true if the user has been logged in again with the credentials stored in the keychain
 const loginWithStoredCredentials = async (): Promise<boolean> => {
   const serverUrl = await getServerUrl();
-  const credentials = await SettingsService.getCredentials(serverUrl);
+  const credentials = await SecureStoreService.getServerCredentials(serverUrl);
   if (!credentials) return false;
   const { username: email, password } = credentials;
   const res = await login({ serverUrl, email, password });

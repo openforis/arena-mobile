@@ -5,7 +5,6 @@ import {
   invalidTwoFactorCodeError,
 } from "./authService";
 import { SecureStoreService } from "./SecureStoreService";
-import { SettingsService } from "./settingsService";
 
 jest.mock("./api", () => ({ API: { post: jest.fn() } }));
 
@@ -13,15 +12,15 @@ jest.mock("./SecureStoreService", () => ({
   SecureStoreService: {
     getAuthRefreshToken: jest.fn(),
     setAuthRefreshToken: jest.fn(),
+    getServerCredentials: jest.fn(),
+    setServerCredentials: jest.fn(),
+    resetServerCredentials: jest.fn(),
   },
 }));
 
 jest.mock("./settingsService", () => ({
   SettingsService: {
     fetchSettings: async () => ({ serverUrl: "https://arena.test" }),
-    getCredentials: jest.fn(),
-    setCredentials: jest.fn(),
-    resetCredentials: jest.fn(),
   },
 }));
 
@@ -34,9 +33,10 @@ jest.mock("utils/SystemUtils", () => ({
 const postMock = API.post as jest.Mock;
 const setAuthRefreshTokenMock =
   SecureStoreService.setAuthRefreshToken as jest.Mock;
-const getCredentialsMock = SettingsService.getCredentials as jest.Mock;
-const setCredentialsMock = SettingsService.setCredentials as jest.Mock;
-const resetCredentialsMock = SettingsService.resetCredentials as jest.Mock;
+const getCredentialsMock = SecureStoreService.getServerCredentials as jest.Mock;
+const setCredentialsMock = SecureStoreService.setServerCredentials as jest.Mock;
+const resetCredentialsMock =
+  SecureStoreService.resetServerCredentials as jest.Mock;
 
 const user = { uuid: "user-uuid" };
 

@@ -1,17 +1,10 @@
 import { SecureStoreService, UserService } from "service";
-import { AsyncStorageUtils } from "service/asyncStorage/AsyncStorageUtils";
 
 import { loginAndSetUser } from "./actionsLoginAndSetUser";
 
 jest.mock("service", () => ({
   SecureStoreService: { getAuthRefreshToken: jest.fn() },
-  UserService: { fetchUser: jest.fn() },
-}));
-jest.mock("service/asyncStorage/AsyncStorageUtils", () => ({
-  AsyncStorageUtils: { getItem: jest.fn() },
-}));
-jest.mock("service/asyncStorage/asyncStorageKeys", () => ({
-  asyncStorageKeys: { loggedInUser: "loggedInUser" },
+  UserService: { fetchUser: jest.fn(), fetchLastLoggedInUser: jest.fn() },
 }));
 jest.mock("utils/Logger");
 jest.mock("../autoSync", () => ({
@@ -37,7 +30,9 @@ describe("loginAndSetUser", () => {
     (SecureStoreService.getAuthRefreshToken as jest.Mock).mockResolvedValue(
       "token",
     );
-    (AsyncStorageUtils.getItem as jest.Mock).mockResolvedValue(cachedUser);
+    (UserService.fetchLastLoggedInUser as jest.Mock).mockResolvedValue(
+      cachedUser,
+    );
     (UserService.fetchUser as jest.Mock).mockResolvedValue(remoteUser);
   });
 
