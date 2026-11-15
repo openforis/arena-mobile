@@ -1,0 +1,12 @@
+appId: ${APP_ID}
+---
+# Confirms the open confirm dialog that requires swiping the thumb before the confirm button is enabled
+- swipe:
+    direction: RIGHT
+    from:
+      id: "SwipeThumb"
+    duration: 1000
+- tapOn:
+    id: "confirm-dialog-confirm-button"
+- assertNotVisible:
+    id: "confirm-dialog-title"

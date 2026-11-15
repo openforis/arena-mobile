@@ -72,15 +72,7 @@ appId: ${APP_ID}
     visible:
       id: "confirm-dialog-title"
     timeout: 10000
-- swipe:
-    direction: RIGHT
-    from:
-      id: "SwipeThumb"
-    duration: 1000
-- tapOn:
-    id: "confirm-dialog-confirm-button"
-- assertNotVisible:
-    id: "confirm-dialog-title"
+- runFlow: common/confirm-with-swipe.yaml
 - assertNotVisible:
     id: "root_relevant_if_bool"
 - tapOn:
