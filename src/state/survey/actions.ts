@@ -10,21 +10,11 @@ import { DeviceInfoSelectors } from "../deviceInfo";
 import { loginAndSetUser } from "../remoteConnection/actionsLoginAndSetUser";
 import { RemoteConnectionSelectors } from "../remoteConnection/selectors";
 import { SurveyOptionsActions } from "../surveyOptions/actions";
-import { SurveyActionTypes } from "./actionTypes";
+import { SurveySliceActions } from "./reducer";
 import { SurveySelectors } from "./selectors";
 import { log } from "utils/Logger";
 import { SurveyUtils } from "model/index";
 import type { AppDispatch, AppGetState } from "../store";
-
-const {
-  CURRENT_SURVEY_SET,
-  CURRENT_SURVEY_PREFERRED_LANG_SET,
-  CURRENT_SURVEY_CYCLE_SET,
-  CURRENT_SURVEY_USER_GROUP_SET,
-  CURRENT_SURVEY_USER_GROUP_LOADING,
-  CURRENT_SURVEY_USER_GROUP_RESET,
-  SURVEYS_LOCAL_SET,
-} = SurveyActionTypes;
 
 // Best-effort: fetches the current user's UserGroup for the given survey (if any) and stores it;
 // mirrors the offline handling of RemoteConnectionActions.loginAndSetUser: when the fetch isn't
@@ -45,7 +35,7 @@ const fetchCurrentSurveyUserGroup =
     }
     // The demo survey doesn't exist in the server: there's no user group to fetch (or to cache).
     if (survey?.uuid === SurveyService.demoSurveyUuid) {
-      dispatch({ type: CURRENT_SURVEY_USER_GROUP_SET, userGroup: null });
+      dispatch(SurveySliceActions.currentSurveyUserGroupSet(null));
       return;
     }
     // Make sure the logged in user is fetched first (e.g. this can be called before
@@ -53,7 +43,7 @@ const fetchCurrentSurveyUserGroup =
     // otherwise the current-user-group request may be attempted without a valid session.
     await dispatch(loginAndSetUser({ onlyIfNotSet: true }));
 
-    dispatch({ type: CURRENT_SURVEY_USER_GROUP_LOADING });
+    dispatch(SurveySliceActions.currentSurveyUserGroupLoading());
 
     const { isNetworkConnected } =
       DeviceInfoSelectors.selectDeviceInfo(getState());
@@ -76,7 +66,7 @@ const fetchCurrentSurveyUserGroup =
     if (!isSurveyStillCurrent()) {
       return;
     }
-    dispatch({ type: CURRENT_SURVEY_USER_GROUP_SET, userGroup });
+    dispatch(SurveySliceActions.currentSurveyUserGroupSet(userGroup));
   };
 
 // Refetches the current survey user group, if a survey is currently selected.
@@ -91,18 +81,15 @@ const fetchCurrentSurveyUserGroupIfSurveySelected =
 
 // Clears the current survey user group, so a stale value from the previous session
 // isn't shown until it's refetched after the next login.
-const resetCurrentSurveyUserGroup = () => ({
-  type: CURRENT_SURVEY_USER_GROUP_RESET,
-});
+const resetCurrentSurveyUserGroup =
+  SurveySliceActions.currentSurveyUserGroupReset;
 
 const setCurrentSurvey =
   ({ survey, preferredLanguage = null, navigator = null }: any) =>
   async (dispatch: AppDispatch) => {
-    dispatch({
-      type: CURRENT_SURVEY_SET,
-      survey,
-      preferredLanguage,
-    });
+    dispatch(
+      SurveySliceActions.currentSurveySet({ survey, preferredLanguage }),
+    );
     await PreferencesService.setCurrentSurveyId(survey.id);
     await dispatch(
       SurveyOptionsActions.fetchEntityListColumns({ surveyId: survey.id }),
@@ -114,7 +101,7 @@ const setCurrentSurvey =
 const setCurrentSurveyPreferredLanguage =
   ({ lang }: any) =>
   async (dispatch: AppDispatch, getState: AppGetState) => {
-    dispatch({ type: CURRENT_SURVEY_PREFERRED_LANG_SET, lang });
+    dispatch(SurveySliceActions.currentSurveyPreferredLanguageSet(lang));
     const state = getState();
     const surveyId = SurveySelectors.selectCurrentSurveyId(state);
     await PreferencesService.setSurveyPreferredLanguage(surveyId, lang);
@@ -123,7 +110,7 @@ const setCurrentSurveyPreferredLanguage =
 const setCurrentSurveyCycle =
   ({ cycleKey }: any) =>
   (dispatch: AppDispatch) => {
-    dispatch({ type: CURRENT_SURVEY_CYCLE_SET, cycleKey });
+    dispatch(SurveySliceActions.currentSurveyCycleSet(cycleKey));
   };
 
 const fetchAndSetCurrentSurvey =
@@ -157,7 +144,7 @@ const fetchAndSetCurrentSurvey =
 
 const fetchAndSetLocalSurveys = () => async (dispatch: AppDispatch) => {
   const surveys = await SurveyService.fetchSurveySummariesLocal();
-  dispatch({ type: SURVEYS_LOCAL_SET, surveys });
+  dispatch(SurveySliceActions.surveysLocalSet(surveys));
 };
 
 const fetchAndSetRemoteSurveyIfOnlyOne =
@@ -296,7 +283,7 @@ const deleteSurveys =
 
     // reset current survey if among deleted ones
     if (surveyIds.includes(currentSurveyId)) {
-      dispatch({ type: CURRENT_SURVEY_SET, survey: null });
+      dispatch(SurveySliceActions.currentSurveySet({ survey: null }));
       await PreferencesService.clearCurrentSurveyId();
     }
   };

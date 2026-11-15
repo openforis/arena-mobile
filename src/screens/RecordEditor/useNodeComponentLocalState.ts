@@ -5,7 +5,6 @@ import {
   type AppDispatch,
   DataEntryActions,
   DataEntrySelectors,
-  StoreUtils,
   useAppDispatch,
   useConfirm,
 } from "state";
@@ -142,10 +141,7 @@ export const useNodeComponentLocalState = ({
         }));
       }
       if (!ignoreDelay && updateDelay) {
-        debouncedUpdateRef.current = StoreUtils.debounceAction(
-          action,
-          updateDelay,
-        );
+        debouncedUpdateRef.current = Functions.debounce(action, updateDelay);
         dispatch(debouncedUpdateRef.current);
         return Promise.resolve();
       }

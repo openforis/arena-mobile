@@ -1,7 +1,6 @@
-import { ActionHandlers, StoreUtils } from "../storeUtils";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { AutoSyncActions } from "./actions";
-import { AutoSyncState, AutoSyncStatus } from "./types";
+import { AutoSyncMessage, AutoSyncState, AutoSyncStatus } from "./types";
 
 const initialState: AutoSyncState = {
   checking: false,
@@ -13,50 +12,53 @@ const initialState: AutoSyncState = {
   dialogOpen: false,
 };
 
-const actionHandlers: ActionHandlers<AutoSyncState> = {
-  [AutoSyncActions.AUTO_SYNC_CHECK_START]: ({ state }) => ({
-    ...state,
-    checking: true,
-    message: null,
-  }),
-  [AutoSyncActions.AUTO_SYNC_CHECK_END]: ({ state, action }) => ({
-    ...state,
-    ...action.payload,
-    checking: false,
-  }),
-  [AutoSyncActions.AUTO_SYNC_CHECK_ABORTED]: ({ state }) => ({
-    ...state,
-    checking: false,
-  }),
-  [AutoSyncActions.AUTO_SYNC_AUTH_ERROR]: ({ state, action }) => ({
-    ...state,
-    ...action.payload,
-    checking: false,
-  }),
-  [AutoSyncActions.AUTO_SYNC_CHECK_ERROR]: ({ state, action }) => ({
-    ...state,
-    ...action.payload,
-    checking: false,
-  }),
-  [AutoSyncActions.AUTO_SYNC_RESET]: ({ state }) => ({
-    ...initialState,
-    dialogOpen: state.dialogOpen,
-  }),
-  [AutoSyncActions.AUTO_SYNC_DIALOG_OPEN_SET]: ({ state, action }) => ({
-    ...state,
-    ...action.payload,
-  }),
-  [AutoSyncActions.AUTO_SYNC_STATUS_MESSAGE_SET]: ({ state, action }) => ({
-    ...state,
-    ...action.payload,
-  }),
-  [AutoSyncActions.AUTO_SYNC_STATUS_MARKED_PENDING]: ({ state, action }) => ({
-    ...state,
-    ...action.payload,
-  }),
-};
-
-export const AutoSyncReducer = StoreUtils.exportReducer({
-  actionHandlers,
+const autoSyncSlice = createSlice({
+  name: "autoSync",
   initialState,
+  reducers: {
+    checkStart: (state) => {
+      state.checking = true;
+      state.message = null;
+    },
+    checkEnd: (
+      state,
+      action: PayloadAction<
+        Pick<
+          AutoSyncState,
+          "status" | "conflictingKeysWithMergeNotAllowed" | "lastCheckedAt"
+        >
+      >,
+    ) => {
+      Object.assign(state, action.payload);
+      state.checking = false;
+    },
+    checkAborted: (state) => {
+      state.checking = false;
+    },
+    authError: (state) => {
+      state.status = AutoSyncStatus.authError;
+      state.checking = false;
+    },
+    checkError: (state) => {
+      state.status = AutoSyncStatus.checkError;
+      state.checking = false;
+    },
+    reset: (state) => ({ ...initialState, dialogOpen: state.dialogOpen }),
+    setStatusMessage: (state, action: PayloadAction<AutoSyncMessage>) => {
+      state.message = action.payload;
+    },
+    markPending: (
+      state,
+      action: PayloadAction<{ lastLocalChangeAt: string }>,
+    ) => {
+      state.status = AutoSyncStatus.pending;
+      state.lastLocalChangeAt = action.payload.lastLocalChangeAt;
+    },
+    setDialogOpen: (state, action: PayloadAction<boolean>) => {
+      state.dialogOpen = action.payload;
+    },
+  },
 });
+
+export const AutoSyncSliceActions = autoSyncSlice.actions;
+export const AutoSyncReducer = autoSyncSlice.reducer;

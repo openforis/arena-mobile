@@ -1,6 +1,7 @@
-import { ActionHandlers, StoreUtils } from "../storeUtils";
-import { RemoteConnectionActions } from "./actions";
-import { RemoteConnectionState } from "./types";
+import { User } from "@openforis/arena-core";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+import { RemoteConnectionState, UserProfileIconInfo } from "./types";
 
 const initialState: RemoteConnectionState = {
   user: null,
@@ -8,28 +9,27 @@ const initialState: RemoteConnectionState = {
   userProfileIconInfo: { loaded: false, loading: false },
 };
 
-const actionHandlers: ActionHandlers<RemoteConnectionState> = {
-  [RemoteConnectionActions.USER_LOADING]: ({ state, action }) => ({
-    ...state,
-    // last logged in user (if any) kept while it's fetched again
-    user: action.user ?? null,
-    userLoading: true,
-  }),
-  [RemoteConnectionActions.USER_SET]: ({ state, action }) => ({
-    ...state,
-    user: action.user,
-    userLoading: false,
-  }),
-  [RemoteConnectionActions.USER_PROFILE_ICON_INFO_SET]: ({
-    state,
-    action,
-  }) => ({
-    ...state,
-    userProfileIconInfo: action.payload,
-  }),
-};
-
-export const RemoteConnectionReducer = StoreUtils.exportReducer({
-  actionHandlers,
+const remoteConnectionSlice = createSlice({
+  name: "remoteConnection",
   initialState,
+  reducers: {
+    userLoading: (state, action: PayloadAction<User | null | undefined>) => {
+      // last logged in user (if any) kept while it's fetched again
+      state.user = action.payload ?? null;
+      state.userLoading = true;
+    },
+    userSet: (state, action: PayloadAction<User | null>) => {
+      state.user = action.payload;
+      state.userLoading = false;
+    },
+    userProfileIconInfoSet: (
+      state,
+      action: PayloadAction<UserProfileIconInfo | null>,
+    ) => {
+      state.userProfileIconInfo = action.payload;
+    },
+  },
 });
+
+export const RemoteConnectionSliceActions = remoteConnectionSlice.actions;
+export const RemoteConnectionReducer = remoteConnectionSlice.reducer;

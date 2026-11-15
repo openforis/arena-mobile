@@ -50,7 +50,12 @@ export const UserProfileIcon = (props: Props) => {
 
   return (
     <TouchableOpacity onPress={onPress}>
-      <UserProfileAvatar loading={loading} size={size} uri={uri} user={user} />
+      <UserProfileAvatar
+        loading={loading}
+        size={size}
+        uri={uri ?? undefined}
+        user={user}
+      />
     </TouchableOpacity>
   );
 };

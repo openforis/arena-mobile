@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { RecordEditViewMode } from "model/RecordEditViewMode";
-import { SurveyActionTypes } from "../survey/actionTypes";
+import { SurveySliceActions } from "../survey/reducer";
 import { SurveyOptionsState } from "./state";
 
 const initialState: SurveyOptionsState = {
@@ -44,7 +44,7 @@ const surveyOptionsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(SurveyActionTypes.CURRENT_SURVEY_SET, () => ({
+    builder.addCase(SurveySliceActions.currentSurveySet, () => ({
       ...initialState,
     }));
   },
