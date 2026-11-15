@@ -57,7 +57,7 @@ for lang in $LANGS; do
     echo "=== $lang: $(basename "$flow")"
     test_output="$(mktemp -d)"
     if ! maestro test "$flow" --test-output-dir "$test_output" \
-      -e APP_ID="$APP_ID" \
+      -e APP_ID="$APP_ID" -e DEV_BUNDLE=false \
       -e APP_LANG="$lang" -e APP_LANG_LABEL="${LANG_LABELS[$lang]}"; then
       echo "::warning::Flow $(basename "$flow") failed ($lang)"
       failures=$((failures + 1))

@@ -16,7 +16,7 @@ appId: ${APP_ID}
       NAME: pdf-maps
 - tapOn: ${output.t.downloadedAreas}
 - tapOn: ${output.t.addArea}
-# map tiles downloaded from the internet
+# map tiles downloaded from the internet (no element marks them as loaded)
 - runFlow:
     file: _wait.yaml
     env:

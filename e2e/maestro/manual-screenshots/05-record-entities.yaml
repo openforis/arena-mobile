@@ -20,7 +20,7 @@ appId: ${APP_ID}
 
 # multiple entity (form) and taxon attribute
 - runFlow:
-    file: _open-page.yaml
+    file: ../common/open-page.yaml
     env:
       PAGE: "Regeneration"
 - runFlow:
@@ -47,10 +47,9 @@ appId: ${APP_ID}
 - tapOn:
     id: "search-bar"
 - inputText: "zizi"
-- runFlow:
-    file: _wait.yaml
-    env:
-      SECONDS: 2
+- extendedWaitUntil:
+    visible: ".*Ziziphus mauritiana"
+    timeout: 10000
 - runFlow:
     file: _shot.yaml
     env:
@@ -70,7 +69,7 @@ appId: ${APP_ID}
 - inputText: "3"
 - tapOn: "Number of individuals"
 - runFlow:
-    file: _open-page.yaml
+    file: ../common/open-page.yaml
     env:
       PAGE: "Regeneration"
 - runFlow:
@@ -80,7 +79,7 @@ appId: ${APP_ID}
 
 # files
 - runFlow:
-    file: _open-page.yaml
+    file: ../common/open-page.yaml
     env:
       PAGE: "Media and Documents"
 - runFlow:
@@ -110,7 +109,7 @@ appId: ${APP_ID}
 
 # single node view mode
 - runFlow:
-    file: _open-page.yaml
+    file: ../common/open-page.yaml
     env:
       PAGE: "Site Details"
 - tapOn:
