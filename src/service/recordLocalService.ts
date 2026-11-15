@@ -15,7 +15,10 @@ import { RecordUtils, UserGroupQualifiers } from "model";
 import type { ArenaMobileRecord } from "model";
 import { ArrayUtils, log, PromiseUtils } from "utils";
 
-import { RecordRepository } from "./repository/recordRepository";
+import {
+  RecordKeyValue,
+  RecordRepository,
+} from "./repository/recordRepository";
 import { RecordFileService } from "./recordFileService";
 import { AreaOfInterestProviderDefault } from "./areaOfInterestProvider";
 
@@ -108,7 +111,7 @@ const findRecordSummariesByKeys = async ({
 }: {
   survey: Survey;
   cycle: string;
-  keyValues: unknown[];
+  keyValues: RecordKeyValue[];
   keyValuesFormatted: string[];
 }): Promise<ArenaMobileRecord[]> => {
   const recordSummariesForKeyValues: ArenaMobileRecord[] =

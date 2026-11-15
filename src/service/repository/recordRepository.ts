@@ -52,7 +52,7 @@ type SurveyIdAndRecordUuidsParams = {
 };
 type ClientParam = { client?: SQLiteClient };
 // value of a key attribute: code attribute values have an itemUuid
-type RecordKeyValue =
+export type RecordKeyValue =
   | string
   | number
   | boolean
@@ -279,7 +279,7 @@ const insertRecordSummaries = async ({
   cycle,
   recordSummaries,
 }: SurveyParam & {
-  cycle: string;
+  cycle: string | null | undefined;
   recordSummaries: RemoteRecordSummary[];
 }): Promise<number[]> => {
   const { id: surveyId } = survey;

@@ -114,7 +114,7 @@ const updateLocalRecordsWithRemoteInfo = async ({
         loadStatus === RecordLoadStatus.summary,
     )
     .map(({ uuid }) => recordsSummariesRemoteByUuid[uuid])
-    .filter(Boolean);
+    .filter((summary): summary is RecordSummaryRemote => !!summary);
   await RecordRepository.updateRecordsKeysAndDateModifiedWithSummariesFetchedRemotely(
     { survey, recordSummaries },
   );

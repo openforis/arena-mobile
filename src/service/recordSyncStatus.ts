@@ -1,6 +1,6 @@
 import { Dates, Objects, Survey } from "@openforis/arena-core";
 
-import type { ArenaMobileRecord } from "model";
+import type { ArenaMobileRecord, RemoteRecordSummary } from "model";
 import {
   RecordLoadStatus,
   RecordOrigin,
@@ -9,12 +9,7 @@ import {
 } from "model";
 
 // record summary as returned by the server
-export type RecordSummaryRemote = {
-  uuid: string;
-  step?: number;
-  dateModified?: string;
-  readOnly?: boolean;
-};
+export type RecordSummaryRemote = RemoteRecordSummary;
 
 type RecordSyncStatusParams = {
   survey: Survey;
@@ -26,7 +21,7 @@ const toDate = (dateStr: string | Date | null | undefined) =>
   dateStr ? new Date(dateStr) : null;
 
 // arena-core parseISO handles a missing date (returns undefined)
-const parseISODate = (dateStr: string | undefined) =>
+const parseISODate = (dateStr: string | number | undefined) =>
   Dates.parseISO(dateStr as string);
 
 // no baseline captured yet (record never round-tripped under this logic):

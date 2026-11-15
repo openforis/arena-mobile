@@ -18,6 +18,8 @@ export type RemoteRecordSummary = {
   ownerUuid?: string;
   ownerName?: string;
   readOnly?: boolean;
+  // record step in the server workflow (1 = entry)
+  step?: number;
   keysObj?: RecordSummaryValues;
   summaryAttributesObj?: RecordSummaryValues;
 };
