@@ -60,11 +60,11 @@ export const RecordEditorAppBarActions = (props: Props) => {
   );
 
   const onLinkToPreviousCyclePress = useCallback(() => {
-    dispatch(
-      isLinkedToPreviousCycleRecord
-        ? DataEntryActions.unlinkFromRecordInPreviousCycle()
-        : DataEntryActions.linkToRecordInPreviousCycle(),
-    );
+    if (isLinkedToPreviousCycleRecord) {
+      dispatch(DataEntryActions.unlinkFromRecordInPreviousCycle());
+    } else {
+      dispatch(DataEntryActions.linkToRecordInPreviousCycle());
+    }
   }, [dispatch, isLinkedToPreviousCycleRecord]);
 
   return (

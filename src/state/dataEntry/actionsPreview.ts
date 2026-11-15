@@ -11,7 +11,7 @@ import { SystemUtils } from "utils";
 
 import { RemoteConnectionSelectors } from "../remoteConnection";
 import { SurveySliceActions } from "../survey/reducer";
-import { DataEntryActionTypes } from "./actionTypes";
+import { DataEntrySliceActions } from "./reducer";
 import { selectRecordUpdaterParams } from "./recordUpdaterParams";
 import type { AppDispatch, AppGetState } from "../store";
 
@@ -33,7 +33,7 @@ const startPreview =
     );
     const cycleKey = cycle ?? Surveys.getDefaultCycleKey(survey);
     dispatch(SurveySliceActions.currentSurveyCycleSet(cycleKey));
-    dispatch({ type: DataEntryActionTypes.DATA_ENTRY_RESET });
+    dispatch(DataEntrySliceActions.reset());
 
     const user = RemoteConnectionSelectors.selectLoggedUserSafe(getState());
     const recordEmpty = RecordFactory.createInstance({
@@ -49,13 +49,14 @@ const startPreview =
     for (const node of Object.values(nodes)) {
       Nodes.removeStatusFlags({ node, sideEffect: true });
     }
-    dispatch({
-      type: DataEntryActionTypes.RECORD_SET,
-      record: { ...record, surveyId: survey.id },
-      recordEditLockAvailable: false,
-      recordEditLocked: false,
-      recordPageSelectorMenuOpen: false,
-    });
+    dispatch(
+      DataEntrySliceActions.recordSet({
+        record: { ...record, surveyId: survey.id },
+        recordEditLockAvailable: false,
+        recordEditLocked: false,
+        recordPageSelectorMenuOpen: false,
+      }),
+    );
   };
 
 export const DataEntryActionsPreview = {

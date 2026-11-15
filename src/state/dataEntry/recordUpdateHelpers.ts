@@ -18,12 +18,10 @@ import { i18n } from "localization";
 import { AutoSyncActions } from "../autoSync";
 import { ConfirmUtils } from "../confirm";
 
-import { DataEntryActionTypes } from "./actionTypes";
+import { DataEntrySliceActions } from "./reducer";
 import { DataEntrySelectors } from "./selectors";
 import { ToastActions } from "state/toast";
 import type { AppDispatch, AppGetState } from "../store";
-
-const { RECORD_SET } = DataEntryActionTypes;
 
 export const handleError = (
   dispatch: AppDispatch,
@@ -86,7 +84,7 @@ export const updateRecord = async ({
     dispatch(AutoSyncActions.markPending());
   }
   if (isRecordStillOpen(getState, record)) {
-    await dispatch({ type: RECORD_SET, record: recordUpdated });
+    await dispatch(DataEntrySliceActions.recordSet({ record: recordUpdated }));
   }
   return recordUpdated;
 };

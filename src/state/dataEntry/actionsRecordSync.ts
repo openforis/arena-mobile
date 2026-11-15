@@ -6,12 +6,9 @@ import { RecordService } from "service/recordService";
 import { log } from "utils";
 
 import { SurveySelectors } from "../survey/selectors";
-import { DataEntryActionTypes } from "./actionTypes";
+import { DataEntrySliceActions } from "./reducer";
 import { DataEntrySelectors } from "./selectors";
 import type { AppDispatch, AppGetState } from "../store";
-
-const { PAGE_ENTITY_SET, RECORD_SET, RECORD_SYNC_IN_PROGRESS_SET } =
-  DataEntryActionTypes;
 
 // > 0 while a completed upload is still being followed up on (sync dates being stamped, merged
 // records being fetched back - see exportRecords' onJobComplete): the job monitor is already
@@ -66,7 +63,7 @@ const unlockOpenRecordAfterSync =
   () => (dispatch: AppDispatch, getState: AppGetState) => {
     stopSyncLockWatchdog();
     if (DataEntrySelectors.selectRecordSyncInProgress(getState())) {
-      dispatch({ type: RECORD_SYNC_IN_PROGRESS_SET, inProgress: false });
+      dispatch(DataEntrySliceActions.recordSyncInProgressSet(false));
     }
   };
 
@@ -81,7 +78,7 @@ const lockOpenRecordForSync =
   ({ isBusy }: { isBusy?: () => boolean } = {}) =>
   (dispatch: AppDispatch, getState: AppGetState) => {
     Keyboard.dismiss();
-    dispatch({ type: RECORD_SYNC_IN_PROGRESS_SET, inProgress: true });
+    dispatch(DataEntrySliceActions.recordSyncInProgressSet(true));
 
     stopSyncLockWatchdog();
     let idleChecks = 0;
@@ -134,9 +131,9 @@ const reloadOpenRecord =
       pointer?.parentEntityUuid &&
       !isPageEntityPointerValid({ survey, record, pointer })
     ) {
-      dispatch({ type: PAGE_ENTITY_SET, payload: undefined });
+      dispatch(DataEntrySliceActions.pageEntitySet(undefined));
     }
-    dispatch({ type: RECORD_SET, record });
+    dispatch(DataEntrySliceActions.recordSet({ record }));
     log.debug(`record ${record.uuid} reloaded in the editor`);
   };
 

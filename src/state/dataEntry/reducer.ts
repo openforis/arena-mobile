@@ -1,9 +1,10 @@
+import { ArenaRecord } from "@openforis/arena-core";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+import { RecordCurrentPageEntityPointer } from "model/RecordCurrentPageEntity";
+
 import { SurveySliceActions } from "../survey/reducer";
-
-import { ActionHandlers, StoreUtils } from "../storeUtils";
-
-import { DataEntryActionTypes } from "./actionTypes";
-import { DataEntryState } from "./types";
+import { DataEntryState, PreviousCycleRecordPageEntityPointer } from "./types";
 
 const initialState: DataEntryState = {
   record: undefined,
@@ -18,66 +19,79 @@ const initialState: DataEntryState = {
   previousCycleRecordPageEntity: {},
 };
 
-const actionHandlers: ActionHandlers<DataEntryState> = {
-  [SurveySliceActions.currentSurveySet.type]: () => ({ ...initialState }),
-  [DataEntryActionTypes.DATA_ENTRY_RESET]: () => ({ ...initialState }),
-
-  [DataEntryActionTypes.RECORD_SET]: ({ state, action }) => ({
-    ...state,
-    record: action.record,
-    recordEditLockAvailable:
-      action.recordEditLockAvailable ?? state.recordEditLockAvailable,
-    recordEditLocked: action.recordEditLocked ?? state.recordEditLocked,
-    recordPageSelectorMenuOpen:
-      action.recordPageSelectorMenuOpen ?? state.recordPageSelectorMenuOpen,
-  }),
-  [DataEntryActionTypes.RECORD_EDIT_LOCKED]: ({ state, action }) => ({
-    ...state,
-    recordEditLocked: action.locked,
-  }),
-  [DataEntryActionTypes.RECORD_SYNC_IN_PROGRESS_SET]: ({ state, action }) => ({
-    ...state,
-    recordSyncInProgress: action.inProgress,
-  }),
-  [DataEntryActionTypes.RECORD_PREVIOUS_CYCLE_LOAD]: ({ state, action }) => ({
-    ...state,
-    previousCycleRecordLoading: action.loading,
-  }),
-  [DataEntryActionTypes.RECORD_PREVIOUS_CYCLE_SET]: ({ state, action }) => ({
-    ...state,
-    linkToPreviousCycleRecord: true,
-    previousCycleRecord: action.record,
-    previousCycleRecordPageEntity: {},
-  }),
-  [DataEntryActionTypes.RECORD_PREVIOUS_CYCLE_RESET]: ({ state }) => ({
-    ...state,
-    linkToPreviousCycleRecord: false,
-    previousCycleRecord: undefined,
-    previousCycleRecordPageEntity: {},
-  }),
-  [DataEntryActionTypes.PAGE_ENTITY_SET]: ({ state, action }) => ({
-    ...state,
-    recordCurrentPageEntity: action.payload,
-    activeChildDefIndex: 0,
-  }),
-  [DataEntryActionTypes.PAGE_ENTITY_ACTIVE_CHILD_INDEX_SET]: ({
-    state,
-    action,
-  }) => ({ ...state, activeChildDefIndex: action.index }),
-  [DataEntryActionTypes.PAGE_SELECTOR_MENU_OPEN_SET]: ({ state, action }) => ({
-    ...state,
-    recordPageSelectorMenuOpen: action.open,
-  }),
-  [DataEntryActionTypes.PREVIOUS_CYCLE_PAGE_ENTITY_SET]: ({
-    state,
-    action,
-  }) => ({
-    ...state,
-    previousCycleRecordPageEntity: action.payload,
-  }),
-};
-
-export const DataEntryReducer = StoreUtils.exportReducer({
-  actionHandlers,
+const dataEntrySlice = createSlice({
+  name: "dataEntry",
   initialState,
+  reducers: {
+    reset: () => initialState,
+    // the optional flags are kept unchanged when not specified
+    recordSet: (
+      state,
+      action: PayloadAction<{
+        record: ArenaRecord;
+        recordEditLockAvailable?: boolean;
+        recordEditLocked?: boolean;
+        recordPageSelectorMenuOpen?: boolean;
+      }>,
+    ) => {
+      const {
+        record,
+        recordEditLockAvailable,
+        recordEditLocked,
+        recordPageSelectorMenuOpen,
+      } = action.payload;
+      state.record = record;
+      state.recordEditLockAvailable =
+        recordEditLockAvailable ?? state.recordEditLockAvailable;
+      state.recordEditLocked = recordEditLocked ?? state.recordEditLocked;
+      state.recordPageSelectorMenuOpen =
+        recordPageSelectorMenuOpen ?? state.recordPageSelectorMenuOpen;
+    },
+    recordEditLockedSet: (state, action: PayloadAction<boolean>) => {
+      state.recordEditLocked = action.payload;
+    },
+    recordSyncInProgressSet: (state, action: PayloadAction<boolean>) => {
+      state.recordSyncInProgress = action.payload;
+    },
+    previousCycleRecordLoadingSet: (state, action: PayloadAction<boolean>) => {
+      state.previousCycleRecordLoading = action.payload;
+    },
+    previousCycleRecordSet: (state, action: PayloadAction<ArenaRecord>) => {
+      state.linkToPreviousCycleRecord = true;
+      state.previousCycleRecord = action.payload;
+      state.previousCycleRecordPageEntity = {};
+    },
+    previousCycleRecordReset: (state) => {
+      state.linkToPreviousCycleRecord = false;
+      state.previousCycleRecord = undefined;
+      state.previousCycleRecordPageEntity = {};
+    },
+    pageEntitySet: (
+      state,
+      action: PayloadAction<
+        (RecordCurrentPageEntityPointer & { locked?: boolean }) | undefined
+      >,
+    ) => {
+      state.recordCurrentPageEntity = action.payload;
+      state.activeChildDefIndex = 0;
+    },
+    pageEntityActiveChildIndexSet: (state, action: PayloadAction<number>) => {
+      state.activeChildDefIndex = action.payload;
+    },
+    pageSelectorMenuOpenSet: (state, action: PayloadAction<boolean>) => {
+      state.recordPageSelectorMenuOpen = action.payload;
+    },
+    previousCyclePageEntitySet: (
+      state,
+      action: PayloadAction<PreviousCycleRecordPageEntityPointer>,
+    ) => {
+      state.previousCycleRecordPageEntity = action.payload;
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(SurveySliceActions.currentSurveySet, () => initialState);
+  },
 });
+
+export const DataEntrySliceActions = dataEntrySlice.actions;
+export const DataEntryReducer = dataEntrySlice.reducer;
