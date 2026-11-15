@@ -8,11 +8,11 @@ import {
 } from "model";
 import { RecordService } from "service";
 import { log } from "utils";
+import { HttpErrors } from "utils/HttpErrors";
 
 import {
   AutoSyncActions,
   AutoSyncStatus,
-  isAuthError,
   hasOnlyRemoteChanges,
   isAutoMergeAllowed,
   sameRecordMergeableStatuses,
@@ -176,7 +176,7 @@ const uploadAutoSyncCandidates = async ({
 
 const handleAutoSyncTickError = ({ dispatch, error }: any) => {
   log.warn(`auto-sync: tick failed: ${error}`);
-  if (isAuthError(error)) {
+  if (HttpErrors.isUnauthorized(error)) {
     // stop retrying until the user logs in again - see the guard at the top of runAutoSync
     dispatch(AutoSyncActions.authError());
   } else {

@@ -1,8 +1,9 @@
 import { RecordService } from "service";
-import { AutoSyncActions, isAuthError } from "state/autoSync";
+import { AutoSyncActions } from "state/autoSync";
 import { RemoteConnectionUtils } from "state/remoteConnection/remoteConnectionUtils";
 import type { Navigator } from "navigation/navigator";
 import { log } from "utils";
+import { HttpErrors } from "utils/HttpErrors";
 import type { AppDispatch } from "state/store";
 
 type FetchRecordsWithSyncStatusParams = {
@@ -55,7 +56,7 @@ export const fetchRecordsWithSyncStatus = async ({
     // same distinction as the background tick (see handleAutoSyncTickError): an expired
     // session gets its own "log in again" status instead of a generic server error
     dispatch(
-      isAuthError(error)
+      HttpErrors.isUnauthorized(error)
         ? AutoSyncActions.authError()
         : AutoSyncActions.checkError(),
     );
