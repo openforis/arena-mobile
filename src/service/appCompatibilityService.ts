@@ -1,5 +1,6 @@
 import { Versions } from "@openforis/arena-core";
 
+import { HttpErrors } from "utils/HttpErrors";
 import { log } from "utils/Logger";
 import { SystemUtils } from "utils/SystemUtils";
 
@@ -46,8 +47,7 @@ const fetchMinAppVersionIfNotSupported = async ({
 };
 
 const isAppVersionNotSupportedError = (error: any): boolean =>
-  (error?.status ?? error?.response?.status) ===
-  appVersionNotSupportedStatusCode;
+  HttpErrors.getStatus(error) === appVersionNotSupportedStatusCode;
 
 const getMinVersionFromError = (error: any): string | undefined =>
   error?.response?.data?.params?.minVersion;

@@ -172,9 +172,3 @@ export const wasRecentlyCheckedWithNoNewLocalChanges = ({
     new Date(lastLocalChangeAt).getTime() <= lastCheckedAtMs
   );
 };
-
-// RecordService.syncRecordSummaries and RecordsUploadJob both surface the original HTTP status
-// this way (see recordService.ts and remoteService.ts's withRetry) after a token refresh has
-// already been attempted and failed
-export const isAuthError = (error: any) =>
-  error?.status === 401 || error?.response?.status === 401;
