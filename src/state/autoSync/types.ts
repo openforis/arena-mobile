@@ -30,7 +30,7 @@ export type AutoSyncState = {
   // when a record was last created/edited locally (see AutoSyncActions.markPending) - compared
   // against lastCheckedAt to tell whether a completed check is still up to date, or something
   // new has happened since that a focus-triggered re-check shouldn't skip - see
-  // useRecordsList.checkAutoSyncStatusIfNeeded
+  // useRecordsListLoad.checkAutoSyncStatusIfNeeded
   lastLocalChangeAt: string | null;
   // the last check found records with the same key(s) as a record on the server, but the survey
   // doesn't allow merging them - see hasConflictingKeysWithMergeNotAllowed
