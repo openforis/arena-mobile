@@ -26,6 +26,12 @@ const stringToNumber = (value: any) =>
 const determineTextKey = (...possibleKeys: any[]) =>
   possibleKeys.find((possibleKey) => possibleKey && i18n.exists(possibleKey));
 
+type SettingsDropdownOption = {
+  key: string | number;
+  label: string;
+  labelIsI18nKey?: boolean;
+};
+
 type SettingsItemProps = {
   settings: any;
   settingKey: keyof SettingsObject;
@@ -93,7 +99,7 @@ export const SettingsItem = (props: SettingsItemProps) => {
         <VView>
           <Dropdown
             items={options}
-            itemKeyExtractor={(item: any) => item.key}
+            itemKeyExtractor={(item: SettingsDropdownOption) => item.key}
             label={labelKey}
             onChange={onPropValueChange({ key: settingKey })}
             translateItemLabels={translateItemLabels}

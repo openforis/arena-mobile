@@ -29,7 +29,7 @@ import {
 } from "state";
 import { ArrayUtils } from "utils";
 
-import { SurveyStatusCell } from "./SurveyStatusCell";
+import { SurveyStatusCell, SurveyStatusItem } from "./SurveyStatusCell";
 
 import styles from "./styles";
 
@@ -37,11 +37,18 @@ const { checkLoggedInUser } = RemoteConnectionUtils;
 
 const minSurveysToShowSearchBar = 5;
 
+type SurveyLocalItem = SurveyStatusItem & {
+  id: number;
+  dateModified: string;
+};
+
 const LoadingIconCellRenderer = (_props: DataVisualizerCellProps) => (
   <LoadingIcon />
 );
 
-const CurrentSurveyBadge = ({ item }: DataVisualizerCellProps) => {
+const CurrentSurveyBadge = ({
+  item,
+}: DataVisualizerCellProps<SurveyLocalItem>) => {
   const currentSurveyId = SurveySelectors.useCurrentSurveyId();
   if (item.id !== currentSurveyId) return null;
   return (
@@ -52,7 +59,9 @@ const CurrentSurveyBadge = ({ item }: DataVisualizerCellProps) => {
   );
 };
 
-const DatePublishedCellRenderer = ({ item }: DataVisualizerCellProps) => (
+const DatePublishedCellRenderer = ({
+  item,
+}: DataVisualizerCellProps<SurveyLocalItem>) => (
   <Text variant="bodySmall">
     {Dates.convertDate({
       dateStr: item.dateModified,
@@ -224,7 +233,7 @@ export const SurveysListLocal = () => {
   const viewAsCards = screenViewMode === ScreenViewMode.cards;
 
   const fields = useMemo(() => {
-    const _fields: DataVisualizerField[] = viewAsCards
+    const _fields: DataVisualizerField<SurveyLocalItem>[] = viewAsCards
       ? [
           { key: "labelOrName", header: "common:label", cardRole: "title" },
           { key: "name", header: "common:name", cardRole: "subtitle" },

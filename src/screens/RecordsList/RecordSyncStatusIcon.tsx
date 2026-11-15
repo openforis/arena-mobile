@@ -1,14 +1,10 @@
 import React, { useMemo } from "react";
 
-import {
-  DataVisualizerCellProps,
-  HView,
-  Icon,
-  Text,
-  Tooltip,
-} from "components";
+import { HView, Icon, Text, Tooltip } from "components";
 import { RecordSyncStatus, ScreenViewMode } from "model";
 import { ScreenOptionsSelectors } from "state/screenOptions";
+
+import type { RecordListItem } from "./recordsVisualizerFields";
 
 const colors = {
   red: "red",
@@ -30,8 +26,10 @@ const colorBySyncStatus = {
   [RecordSyncStatus.notUpToDate]: colors.yellow,
 };
 
-type Props = DataVisualizerCellProps & {
+// also used in the legend, with an item having only the sync status
+type Props = {
   alwaysShowLabel?: boolean;
+  item: Pick<RecordListItem, "syncStatus">;
 };
 
 export const RecordSyncStatusIcon = (props: Props) => {
@@ -41,7 +39,7 @@ export const RecordSyncStatusIcon = (props: Props) => {
   const screenViewMode = ScreenOptionsSelectors.useCurrentScreenViewMode();
   const viewAsList = alwaysShowLabel || screenViewMode === ScreenViewMode.list;
 
-  const iconColor = colorBySyncStatus[syncStatus];
+  const iconColor = syncStatus ? colorBySyncStatus[syncStatus] : undefined;
 
   const icon = useMemo(
     () => <Icon color={iconColor} size={24} source="circle" />,

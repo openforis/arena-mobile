@@ -3,15 +3,18 @@ import { useCallback, useMemo } from "react";
 import { useTranslation } from "localization";
 import { Sort, SortObject } from "model";
 
-import { DataVisualizerField } from "../DataVisualizer/types";
+import {
+  DataVisualizerField,
+  DataVisualizerItem,
+} from "../DataVisualizer/types";
 import { HView } from "../HView";
 import { IconButton } from "../IconButton";
 import { MenuButton } from "../MenuButton";
 import { Text } from "../Text";
 import { DataCardsStyles } from "./styles";
 
-type Props = {
-  fields: DataVisualizerField[];
+type Props<T extends DataVisualizerItem> = {
+  fields: DataVisualizerField<T>[];
   onSortChange?: (sort: SortObject) => void;
   sort?: SortObject;
   styles: DataCardsStyles;
@@ -21,7 +24,7 @@ const toggleDirection = (direction?: string) =>
   direction === Sort.asc ? Sort.desc : Sort.asc;
 
 // cards and compact rows have no column headers to tap on: sort via a field menu instead
-export const DataSortBar = (props: Props) => {
+export const DataSortBar = <T extends DataVisualizerItem>(props: Props<T>) => {
   const { fields, onSortChange, sort, styles } = props;
 
   const { t } = useTranslation();

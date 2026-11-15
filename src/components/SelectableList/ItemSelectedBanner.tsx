@@ -47,7 +47,7 @@ type Props = {
   canDelete?: boolean;
   customActions?: SelectedItemsAction[];
   onDeleteSelected: () => void;
-  selectedItemIds: any[];
+  selectedItemIds: string[];
 };
 
 export const ItemSelectedBanner = (props: Props) => {

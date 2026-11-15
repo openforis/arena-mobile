@@ -3,17 +3,18 @@ import { Objects } from "@openforis/arena-core";
 import {
   DataVisualizerCardRole,
   DataVisualizerField,
+  DataVisualizerItem,
 } from "../DataVisualizer/types";
 
-export type FieldsByCardRole = Record<
+export type FieldsByCardRole<T extends DataVisualizerItem> = Record<
   DataVisualizerCardRole,
-  DataVisualizerField[]
+  DataVisualizerField<T>[]
 >;
 
-export const groupFieldsByCardRole = (
-  fields: DataVisualizerField[],
-): FieldsByCardRole => {
-  const result: FieldsByCardRole = {
+export const groupFieldsByCardRole = <T extends DataVisualizerItem>(
+  fields: DataVisualizerField<T>[],
+): FieldsByCardRole<T> => {
+  const result: FieldsByCardRole<T> = {
     title: [],
     subtitle: [],
     badge: [],
@@ -27,9 +28,9 @@ export const groupFieldsByCardRole = (
   return result;
 };
 
-export const getFieldValueText = (
-  item: any,
-  field: DataVisualizerField,
+export const getFieldValueText = <T extends DataVisualizerItem>(
+  item: T,
+  field: DataVisualizerField<T>,
 ): string => {
   const value = Objects.path(field.key.split("."))(item);
   return Objects.isEmpty(value) ? "" : String(value);

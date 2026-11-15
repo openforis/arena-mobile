@@ -12,25 +12,36 @@ import { useTranslation } from "localization";
 
 const MAX_MENU_HEIGHT = 300;
 
-type DropdownProps = {
-  disabled?: boolean;
-  itemKeyExtractor?: (item: any) => any;
-  itemLabelIsI18nKeyExtractor?: (item: any) => boolean;
-  itemLabelExtractor?: (item: any) => string;
-  label?: string;
-  items: any[];
-  onChange?: (value: any) => Promise<void> | void;
-  translateItemLabels?: boolean;
-  showLabel?: boolean;
-  value?: any;
+// used when the items have this shape and no extractors are specified
+type DefaultDropdownItem<V> = {
+  value: V;
+  label: string;
+  labelIsI18nKey?: boolean;
 };
 
-export const Dropdown = (props: DropdownProps) => {
+// V: type of the item keys (the dropdown value)
+type DropdownProps<T, V extends React.Key> = {
+  disabled?: boolean;
+  itemKeyExtractor?: (item: T) => V;
+  itemLabelIsI18nKeyExtractor?: (item: T) => boolean;
+  itemLabelExtractor?: (item: T) => string;
+  label?: string;
+  items: T[];
+  onChange?: (value: V) => Promise<void> | void;
+  translateItemLabels?: boolean;
+  showLabel?: boolean;
+  value?: V;
+};
+
+export const Dropdown = <T, V extends React.Key = string>(
+  props: DropdownProps<T, V>,
+) => {
   const {
     disabled,
-    itemKeyExtractor = (item: any) => item.value,
-    itemLabelIsI18nKeyExtractor = (item: any) => item.labelIsI18nKey ?? true,
-    itemLabelExtractor = (item: any) => item.label,
+    itemKeyExtractor = (item: T) => (item as DefaultDropdownItem<V>).value,
+    itemLabelIsI18nKeyExtractor = (item: T) =>
+      (item as DefaultDropdownItem<V>).labelIsI18nKey ?? true,
+    itemLabelExtractor = (item: T) => (item as DefaultDropdownItem<V>).label,
     label: labelProp = "common:selectAnItem",
     items,
     onChange,
@@ -48,7 +59,7 @@ export const Dropdown = (props: DropdownProps) => {
   const labelText = t(labelProp);
 
   const itemToOption = useCallback(
-    (item: any) => ({
+    (item: T) => ({
       value: itemKeyExtractor(item),
       label:
         translateItemLabels && itemLabelIsI18nKeyExtractor(item)
@@ -70,7 +81,7 @@ export const Dropdown = (props: DropdownProps) => {
   );
 
   const setValue = useCallback(
-    async (val: any) => {
+    async (val: V) => {
       if (disabled) return;
       await onChange?.(val);
     },
