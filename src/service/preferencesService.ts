@@ -1,6 +1,6 @@
 import { Objects, Promises } from "@openforis/arena-core";
 import { asyncStorageKeys } from "./asyncStorage/asyncStorageKeys";
-import StoredObjectManager from "./storedObjectManager";
+import { StoredObject } from "./asyncStorage/StoredItem";
 
 const keys = {
   currentSurveyId: "currentSurveyId",
@@ -16,22 +16,20 @@ const surveyPreferencesKeys = {
   userGroup: "userGroup",
 };
 
-const preferencesStoredObjectManager = new StoredObjectManager(
+const preferencesStore = new StoredObject<Record<string, any>>(
   asyncStorageKeys.preferences,
+  {},
 );
 
 const getCurrentSurveyId = async () =>
-  await preferencesStoredObjectManager.getValue(keys.currentSurveyId);
+  await preferencesStore.getValue(keys.currentSurveyId);
 
 const setCurrentSurveyId = async (surveyId: any) => {
-  await preferencesStoredObjectManager.updateValue(
-    keys.currentSurveyId,
-    surveyId,
-  );
+  await preferencesStore.updateValue(keys.currentSurveyId, surveyId);
 };
 
 const getPrereferencesBySurveyId = async (surveyId: any) => {
-  const preferencesBySurveyId = await preferencesStoredObjectManager.getValue(
+  const preferencesBySurveyId = await preferencesStore.getValue(
     keys.preferencesBySurveyId,
   );
   return preferencesBySurveyId?.[surveyId] || {};
@@ -66,44 +64,41 @@ const getSurveyEntityListColumns = async (
 };
 
 const getLastUsedMapAppId = async (): Promise<string | undefined> =>
-  await preferencesStoredObjectManager.getValue(keys.lastUsedMapAppId);
+  await preferencesStore.getValue(keys.lastUsedMapAppId);
 
 const setLastUsedMapAppId = async (appId: string) => {
-  await preferencesStoredObjectManager.updateValue(
-    keys.lastUsedMapAppId,
-    appId,
-  );
+  await preferencesStore.updateValue(keys.lastUsedMapAppId, appId);
 };
 
 const getWhatsNewSeenIds = async (): Promise<string[]> =>
-  (await preferencesStoredObjectManager.getValue(keys.whatsNewSeenIds)) ?? [];
+  (await preferencesStore.getValue(keys.whatsNewSeenIds)) ?? [];
 
 const setWhatsNewSeenIds = async (ids: string[]) => {
-  await preferencesStoredObjectManager.updateValue(keys.whatsNewSeenIds, ids);
+  await preferencesStore.updateValue(keys.whatsNewSeenIds, ids);
 };
 
 const clearCurrentSurveyId = async () =>
-  await preferencesStoredObjectManager.deleteValue(keys.currentSurveyId);
+  await preferencesStore.deleteValue(keys.currentSurveyId);
 
 const updateSurveyPreferences = async (surveyId: any, updateFn: any) => {
-  const preferencesBySurveyId =
-    (await preferencesStoredObjectManager.getValue(
-      keys.preferencesBySurveyId,
-    )) ?? {};
-  const preferencesBySurveyIdUpdated = { ...preferencesBySurveyId };
-  const surveyPreferences = preferencesBySurveyIdUpdated[surveyId] ?? {};
+  await preferencesStore.update((preferences) => {
+    const preferencesBySurveyIdUpdated = {
+      ...preferences[keys.preferencesBySurveyId],
+    };
+    const surveyPreferences = preferencesBySurveyIdUpdated[surveyId] ?? {};
 
-  const surveyPreferencesUpdated = updateFn(surveyPreferences);
+    const surveyPreferencesUpdated = updateFn(surveyPreferences);
 
-  if (Objects.isEmpty(surveyPreferencesUpdated)) {
-    delete preferencesBySurveyIdUpdated[surveyId];
-  } else {
-    preferencesBySurveyIdUpdated[surveyId] = surveyPreferencesUpdated;
-  }
-  await preferencesStoredObjectManager.updateValue(
-    keys.preferencesBySurveyId,
-    preferencesBySurveyIdUpdated,
-  );
+    if (Objects.isEmpty(surveyPreferencesUpdated)) {
+      delete preferencesBySurveyIdUpdated[surveyId];
+    } else {
+      preferencesBySurveyIdUpdated[surveyId] = surveyPreferencesUpdated;
+    }
+    return {
+      ...preferences,
+      [keys.preferencesBySurveyId]: preferencesBySurveyIdUpdated,
+    };
+  });
 };
 
 const updateSurveyPreference = async (surveyId: any, key: any, value: any) =>
