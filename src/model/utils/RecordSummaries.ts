@@ -1,4 +1,10 @@
-import { NodeDefs, NodeValueFormatter, Objects } from "@openforis/arena-core";
+import {
+  NodeDefs,
+  NodeValueFormatter,
+  Objects,
+  Validation,
+  Validations,
+} from "@openforis/arena-core";
 
 import { SurveyDefs } from "./SurveyDefs";
 
@@ -34,7 +40,12 @@ const getKeyValuesFormatted = ({ survey, recordSummary }: any) => {
   });
 };
 
+// summaries have only the validation counts (see validationFromCountsColumns)
+const hasErrors = (recordSummary: { validation?: Validation | null }) =>
+  Validations.getErrorsCount(Validations.getValidation(recordSummary)) > 0;
+
 export const RecordSummaries = {
+  hasErrors,
   getKeyValue,
   getKeyValuesByDefUuid,
   getKeyValues,

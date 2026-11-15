@@ -36,9 +36,16 @@ type RecordsExportFileGenerationJobContext = JobMobileContext & {
   onlyRemote?: boolean;
 };
 
+type RecordWithMissingFiles = { uuid: string; keysText: string };
+
+export type RecordsExportFileGenerationJobResult = {
+  outputFileUri?: string;
+  recordsWithMissingFiles: RecordWithMissingFiles[];
+};
+
 export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileGenerationJobContext> {
-  outputFileUri: any;
-  recordsWithMissingFiles: { uuid: string; keysText: string }[] = [];
+  outputFileUri?: string;
+  recordsWithMissingFiles: RecordWithMissingFiles[] = [];
 
   constructor(context: RecordsExportFileGenerationJobContext) {
     super({ ...context, onlyRemote: context.onlyRemote ?? false });
@@ -328,7 +335,7 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
     return { recordFiles: exportedRecordFiles, hasMissingFiles };
   }
 
-  override generateResult() {
+  override generateResult(): Promise<RecordsExportFileGenerationJobResult> {
     const { outputFileUri, recordsWithMissingFiles } = this;
     return Promise.resolve({ outputFileUri, recordsWithMissingFiles });
   }

@@ -17,7 +17,7 @@ export enum AutoSyncStatus {
 
 export type AutoSyncMessage = {
   textKey: string;
-  textParams?: Record<string, any>;
+  textParams?: Record<string, unknown>;
 } | null;
 
 export type AutoSyncState = {

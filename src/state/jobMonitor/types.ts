@@ -13,7 +13,7 @@ export type JobMonitorState = {
   errors?: ValidationFields;
   etaSeconds: number | null;
   messageKey?: string;
-  messageParams?: any;
+  messageParams?: Record<string, unknown>;
   progressPercent: number;
   // where this job's own 0-100% progress maps to within a larger multi-job operation (e.g.
   // auto-sync's zip preparation -> upload -> server-side processing chain, each a separate job
