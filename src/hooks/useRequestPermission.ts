@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import type { PermissionResponse } from "expo";
 
+import { log } from "utils/Logger";
+
 export const useRequestPermission = <P extends unknown[]>(
   requestFunction: (...parameters: P) => Promise<PermissionResponse>,
   getterFunction: (() => Promise<PermissionResponse>) | null = null,
@@ -10,9 +12,13 @@ export const useRequestPermission = <P extends unknown[]>(
 
   useEffect(() => {
     if (getterFunction) {
-      getterFunction().then((result) => {
-        setHasPermission(result.granted);
-      });
+      getterFunction()
+        .then((result) => {
+          setHasPermission(result.granted);
+        })
+        .catch((error) => {
+          log.error(`error checking permission: ${error}`);
+        });
     }
   }, [getterFunction]);
 
