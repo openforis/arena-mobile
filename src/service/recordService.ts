@@ -635,7 +635,7 @@ const cloneRecordsIntoDefaultCycle = async ({
 // cached validation) for each given record and persists it. Used to reconcile records
 // whose displayed error/warning counts no longer match their actual content.
 const revalidateRecords = async ({ user, survey, recordIds }: any) => {
-  await Promises.each(recordIds, async (recordId) => {
+  await Promises.each<number>(recordIds, async (recordId) => {
     const record = await RecordRepository.fetchRecord({
       survey,
       recordId,

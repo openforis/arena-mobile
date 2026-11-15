@@ -1,29 +1,52 @@
 import {
+  ArenaRecord,
   Arrays,
   DateFormats,
   Dates,
+  NodeDef,
   NodeDefs,
   NodeDefType,
   Objects,
   RecordFixer,
   Records,
+  Survey,
   Surveys,
+  Validation,
   Validations,
 } from "@openforis/arena-core";
 
-import { RecordSummaries, SurveyDefs } from "model";
+import {
+  RecordSummaries,
+  RecordSummary,
+  RecordSummaryValues,
+  RemoteRecordSummary,
+  SurveyDefs,
+} from "model";
 import { ArenaMobileRecord } from "model/ArenaMobileRecord";
 import { SystemUtils } from "utils";
+
+import { RecordKeyOrSummaryColumn, RecordRow } from "./recordRow";
 
 const SUPPORTED_KEYS = 5;
 const SUPPORTED_SUMMARY_ATTRIBUTES = 5;
 
-const toColumnsSet = (columns: any) =>
-  columns.map((col: any) => `${col} = ?`).join(", ");
+type SurveyAndRecordParams = { survey: Survey; record: ArenaRecord };
+type SurveyAndRemoteSummaryParams = {
+  survey: Survey;
+  recordSummary: RemoteRecordSummary;
+};
+// a column value of a key or summary attribute
+export type KeyOrSummaryColValue = string | null;
 
-const generateColumnNamesWithPrefix = (prefix: any, count: any) =>
+const toColumnsSet = (columns: string[]) =>
+  columns.map((col) => `${col} = ?`).join(", ");
+
+const generateColumnNamesWithPrefix = <P extends "key" | "summary">(
+  prefix: P,
+  count: number,
+) =>
   Array.from(Arrays.fromNumberOfElements(count).keys()).map(
-    (idx) => `${prefix}${idx + 1}`,
+    (idx) => `${prefix}${idx + 1}` as const,
   );
 export const keyColumnNames = generateColumnNamesWithPrefix(
   "key",
@@ -65,7 +88,7 @@ export const validationCountsColumnsSet =
 
 // values of the errors_count and warnings_count columns (null without validation)
 export const extractValidationCountsColumnsValues = (
-  record: any,
+  record: { validation?: Validation | null } | null,
 ): [number | null, number | null] => {
   const validation = record?.validation;
   if (!validation) return [null, null];
@@ -76,29 +99,42 @@ export const extractValidationCountsColumnsValues = (
 };
 
 // summaries get only the validation counts, not the whole validation
-export const validationFromCountsColumns = (row: any) => {
+export const validationFromCountsColumns = (
+  row: Pick<RecordRow, "errors_count" | "warnings_count">,
+): Validation | null => {
   const { errors_count: errors, warnings_count: warnings } = row;
   if (Objects.isNil(errors) && Objects.isNil(warnings)) return null;
   const counts = { errors: errors ?? 0, warnings: warnings ?? 0 };
   return { valid: counts.errors + counts.warnings === 0, counts };
 };
 
-export const toKeyOrSummaryColValue = (value: any) => {
+export const toKeyOrSummaryColValue = (
+  value: unknown,
+): KeyOrSummaryColValue => {
   if (Objects.isEmpty(value)) return null;
   if (typeof value === "string") return value;
   return JSON.stringify(value);
 };
 
-export const extractKeyOrSummaryColValue = ({ row, col }: any) => {
+export const extractKeyOrSummaryColValue = <C extends string>({
+  row,
+  col,
+}: {
+  row: { [key in C]?: unknown };
+  col: C;
+}): unknown => {
   const colValue = row[col];
   try {
-    return JSON.parse(colValue);
+    return JSON.parse(String(colValue));
   } catch (error) {
     return colValue;
   }
 };
 
-export const extractKeyColumnsValues = ({ survey, record }: any) => {
+export const extractKeyColumnsValues = ({
+  survey,
+  record,
+}: SurveyAndRecordParams): KeyOrSummaryColValue[] => {
   const keyValues = Records.getEntityKeyValues(
     survey,
     Records.getRoot(record)!,
@@ -111,7 +147,10 @@ export const extractKeyColumnsValues = ({ survey, record }: any) => {
   return keyColumnsValues;
 };
 
-export const extractSummaryAttributesValues = ({ survey, record }: any) => {
+export const extractSummaryAttributesValues = ({
+  survey,
+  record,
+}: SurveyAndRecordParams): KeyOrSummaryColValue[] => {
   const rootDef = Surveys.getNodeDefRoot({ survey });
   const cycle = Records.getCycle(record);
   const summaryAttributeDefs =
@@ -135,7 +174,7 @@ export const extractSummaryAttributesValues = ({ survey, record }: any) => {
 export const extractRemoteRecordSummaryKeyColumnsValues = ({
   survey,
   recordSummary,
-}: any) => {
+}: SurveyAndRemoteSummaryParams): KeyOrSummaryColValue[] => {
   const { cycle } = recordSummary;
   const keyDefs = SurveyDefs.getRootKeyDefs({ survey, cycle });
   const keyColumnsValues = keyColumnNames.map((_keyColName, index) => {
@@ -150,7 +189,7 @@ export const extractRemoteRecordSummaryKeyColumnsValues = ({
 export const extractRemoteRecordSummarySummaryColumnsValues = ({
   survey,
   recordSummary,
-}: any) => {
+}: SurveyAndRemoteSummaryParams): KeyOrSummaryColValue[] => {
   const { cycle } = recordSummary;
   const rootDef = Surveys.getNodeDefRoot({ survey });
   const summaryAttributeDefs =
@@ -171,7 +210,15 @@ export const extractRemoteRecordSummarySummaryColumnsValues = ({
   return summaryColumnsValues;
 };
 
-export const fixDatetime = (dateStringOrNumber: any): string | undefined => {
+type DatetimeValue = string | number | null | undefined;
+
+export function fixDatetime(
+  dateStringOrNumber: string | number | undefined,
+): string | undefined;
+export function fixDatetime(
+  dateStringOrNumber: DatetimeValue,
+): string | null | undefined;
+export function fixDatetime(dateStringOrNumber: DatetimeValue): DatetimeValue {
   if (!dateStringOrNumber) return dateStringOrNumber;
 
   if (typeof dateStringOrNumber === "number") {
@@ -187,6 +234,22 @@ export const fixDatetime = (dateStringOrNumber: any): string | undefined => {
 
   const parsed = Dates.parse(dateStringOrNumber, formatFrom);
   return parsed ? Dates.formatForStorage(parsed) : undefined;
+}
+
+// as read from the db: summaries have a null validation, records never synced a null dateModifiedSynced
+type RecordFromRow = Omit<
+  RecordSummary,
+  "validation" | "dateModifiedSynced"
+> & {
+  validation?: Validation | null;
+  dateModifiedSynced?: string | null;
+};
+
+type FixRowParams = {
+  survey: Survey;
+  cycle: string | null | undefined;
+  result: RecordFromRow;
+  row: RecordRow;
 };
 
 const fixRowKeyOrSummaryAttributeColumns = ({
@@ -195,10 +258,16 @@ const fixRowKeyOrSummaryAttributeColumns = ({
   columnNames,
   defs,
   wrapperProp,
-}: any) => {
-  result[wrapperProp] = {};
-  for (let index = 0; index < columnNames.length; index++) {
-    const col = columnNames[index];
+}: {
+  result: RecordFromRow;
+  row: RecordRow;
+  columnNames: RecordKeyOrSummaryColumn[];
+  defs: NodeDef<NodeDefType>[];
+  wrapperProp: "keysObj" | "summaryAttributesObj";
+}) => {
+  const values: RecordSummaryValues = {};
+  result[wrapperProp] = values;
+  columnNames.forEach((col, index) => {
     const def = defs[index];
     if (def) {
       // a text value is never JSON: "1.50" must not become 1.5, nor "null" an empty value
@@ -206,13 +275,18 @@ const fixRowKeyOrSummaryAttributeColumns = ({
         def.type === NodeDefType.text
           ? row[col]
           : extractKeyOrSummaryColValue({ row, col });
-      result[wrapperProp][NodeDefs.getName(def)] = value;
+      values[NodeDefs.getName(def)] = value;
     }
-    delete result[col];
-  }
+    Reflect.deleteProperty(result, col);
+  });
 };
 
-const fixRowKeyAttributesColumns = ({ survey, cycle, result, row }: any) =>
+const fixRowKeyAttributesColumns = ({
+  survey,
+  cycle,
+  result,
+  row,
+}: FixRowParams) =>
   fixRowKeyOrSummaryAttributeColumns({
     result,
     row,
@@ -226,11 +300,11 @@ const fixRowSummaryAttributesColumns = ({
   cycle,
   result,
   row,
-}: any) => {
+}: FixRowParams) => {
   const rootDef = Surveys.getNodeDefRoot({ survey });
   const summaryDefs = Surveys.getNodeDefsIncludedInMultipleEntitySummary({
     survey,
-    cycle,
+    cycle: cycle!,
     nodeDef: rootDef,
   });
   fixRowKeyOrSummaryAttributeColumns({
@@ -242,15 +316,23 @@ const fixRowSummaryAttributesColumns = ({
   });
 };
 
-const fixRowValidation = ({ result, row, hasContent }: any) => {
+const fixRowValidation = ({
+  result,
+  row,
+  hasContent,
+}: {
+  result: RecordFromRow;
+  row: RecordRow;
+  hasContent: boolean;
+}) => {
   if (!hasContent) {
-    delete result.errorsCount;
-    delete result.warningsCount;
+    Reflect.deleteProperty(result, "errorsCount");
+    Reflect.deleteProperty(result, "warningsCount");
     result.validation = validationFromCountsColumns(row);
     return;
   }
-  let validation = result.validation;
-  if (validation) {
+  if (result.validation) {
+    let validation: Validation = result.validation;
     if (typeof validation === "string") {
       validation = JSON.parse(validation);
     }
@@ -263,14 +345,16 @@ const fixRowValidation = ({ result, row, hasContent }: any) => {
 
 // the fixes depend on the survey structure and on the app code (including arena-core RecordFixer):
 // a record content is fixed again only when one of them changes (null: survey version unknown, always fix)
-export const getRecordFixKey = (survey: any): string | null => {
+export const getRecordFixKey = (
+  survey: Pick<Survey, "datePublished" | "dateModified"> | null | undefined,
+): string | null => {
   const surveyVersion = survey?.datePublished ?? survey?.dateModified;
   if (!surveyVersion) return null;
   const { version: appVersion } = SystemUtils.getRecordAppInfo();
   return `${surveyVersion}|${appVersion}`;
 };
 
-const rowHasContent = (row: any): boolean =>
+const rowHasContent = (row: Pick<RecordRow, "content">): boolean =>
   !Objects.isEmpty(row.content) && row.content !== "{}";
 
 // fixed_for is selected only together with the content
@@ -278,13 +362,13 @@ export const isRowToBeFixed = ({
   row,
   fixKey,
 }: {
-  row: any;
+  row: Pick<RecordRow, "content" | "fixed_for">;
   fixKey: string | null;
 }): boolean => rowHasContent(row) && (!fixKey || row.fixed_for !== fixKey);
 
 export const rowToRecord =
-  ({ survey }: any) =>
-  (row: any): ArenaMobileRecord => {
+  ({ survey }: { survey: Survey }) =>
+  (row: RecordRow): RecordSummary => {
     const sideEffect = true;
     const hasToBeFixed = isRowToBeFixed({
       row,
@@ -292,9 +376,16 @@ export const rowToRecord =
     });
     const { cycle } = row;
     const hasContent = rowHasContent(row);
-    const result: ArenaMobileRecord = hasContent
-      ? JSON.parse(row.content)
-      : Objects.camelize(row, { skip: ["content"] });
+    // same object as result, typed as a complete record
+    let contentRecord: ArenaMobileRecord | undefined;
+    let result: RecordFromRow;
+    if (hasContent) {
+      const parsed: ArenaMobileRecord = JSON.parse(row.content!);
+      contentRecord = parsed;
+      result = parsed;
+    } else {
+      result = Objects.camelize(row, { skip: ["content"] });
+    }
 
     result.id = row.id;
     result.readOnly = !!row.read_only;
@@ -306,17 +397,19 @@ export const rowToRecord =
     result.dateModifiedSynced = fixDatetime(row.date_modified_synced);
     result.dateSynced = fixDatetime(result.dateSynced);
 
-    if (hasContent) {
-      if (!result._nodesIndex) {
+    if (contentRecord) {
+      if (!contentRecord._nodesIndex) {
         // re-create nodes index
-        Records.addNodes(Records.getNodes(result), { sideEffect })(result);
+        Records.addNodes(Records.getNodes(contentRecord), { sideEffect })(
+          contentRecord,
+        );
       }
       if (hasToBeFixed) {
-        for (const node of Records.getNodesArray(result)) {
+        for (const node of Records.getNodesArray(contentRecord)) {
           node.dateCreated = fixDatetime(node.dateCreated);
           node.dateModified = fixDatetime(node.dateModified);
         }
-        RecordFixer.fixRecord({ survey, record: result, sideEffect });
+        RecordFixer.fixRecord({ survey, record: contentRecord, sideEffect });
       }
     }
     fixRowKeyAttributesColumns({ survey, cycle, result, row });
@@ -327,5 +420,6 @@ export const rowToRecord =
     }
     fixRowValidation({ result, row, hasContent });
 
-    return result;
+    // typed as ArenaMobileRecord by the app (validation and dateModifiedSynced can be null)
+    return result as RecordSummary;
   };

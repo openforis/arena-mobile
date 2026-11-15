@@ -93,7 +93,11 @@ export const useRecordsListLoad = ({
   // called by an effect too: state set only in the promise callbacks, the caller sets the loading state
   const fetchRecords = useCallback(() => {
     const requestId = ++loadRequestIdRef.current;
-    return RecordService.fetchRecords({ survey, cycle, onlyLocal }).then(
+    return RecordService.fetchRecords({
+      survey: survey!,
+      cycle,
+      onlyLocal,
+    }).then(
       (_records) => {
         if (requestId !== loadRequestIdRef.current) return;
 
