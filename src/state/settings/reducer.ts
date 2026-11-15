@@ -1,19 +1,19 @@
-import { SettingsObject } from "model/SettingsModel";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { ActionHandlers, StoreUtils } from "../storeUtils";
-import { SettingsActions } from "./actions";
+import type { SettingsObject } from "model/SettingsModel";
 
 // filled by AppInitializer before the app screens render
 const initialState = {} as SettingsObject;
 
-const actionHandlers: ActionHandlers<SettingsObject> = {
-  [SettingsActions.SETTINGS_SET]: ({ state, action }) => ({
-    ...state,
-    ...action.settings,
-  }),
-};
-
-export const SettingsReducer = StoreUtils.exportReducer({
-  actionHandlers,
+const settingsSlice = createSlice({
+  name: "settings",
   initialState,
+  reducers: {
+    set: (state, action: PayloadAction<Partial<SettingsObject>>) => {
+      Object.assign(state, action.payload);
+    },
+  },
 });
+
+export const SettingsSliceActions = settingsSlice.actions;
+export const SettingsReducer = settingsSlice.reducer;
