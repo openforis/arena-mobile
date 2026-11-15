@@ -171,8 +171,13 @@ describe("repositories IN lists", () => {
       trackIds.push(id);
     }
     await PositionTrackRepository.deleteTracksByRecordUuids(["r1", "r'3"]);
-    const rows = await dbClient.many(`SELECT record_uuid FROM position_track`);
-    expect(rows.map((row: any) => row.record_uuid)).toEqual(["r2"]);
+    const rows = await dbClient.many(
+      `SELECT id, record_uuid FROM position_track`,
+    );
+    // only the track of r2 (the second inserted) is left
+    expect(
+      rows.map((row: any) => ({ id: row.id, recordUuid: row.record_uuid })),
+    ).toEqual([{ id: trackIds[1], recordUuid: "r2" }]);
     expect(await countRows("position_track_point")).toBe(1);
     await PositionTrackRepository.deleteTracksByRecordUuids([]);
     expect(await countRows("position_track")).toBe(1);
