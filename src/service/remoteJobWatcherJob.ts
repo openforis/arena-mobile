@@ -24,7 +24,7 @@ export class RemoteJobWatcherJob extends JobMobile<RecordsUploadAndProcessJobCon
   private settle: ((error?: any) => void) | null = null;
   private failedPolls = 0;
 
-  constructor({ user, survey }: any) {
+  constructor({ user, survey }: RecordsUploadAndProcessJobContext) {
     super({ user, survey, type: REMOTE_JOB_WATCHER_JOB_TYPE });
   }
 

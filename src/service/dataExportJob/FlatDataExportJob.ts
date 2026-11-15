@@ -77,7 +77,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     const { survey } = this.context;
 
     this.logger.debug("Creating temporary folder for data export files");
-    this.tempFolderUri = await Files.createTempFolder();
+    this.tempFolderUri = await this.createTempFolder();
 
     this.nodeDefsToExport = this.determineNodeDefsToExport();
     const nodeDefsToExportNames = this.nodeDefsToExport.map((nodeDef) =>
@@ -350,12 +350,5 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     const { outputFileUri } = this.context;
     // at this point, outputFileUri must be defined
     return Promise.resolve({ outputFileUri: outputFileUri! });
-  }
-
-  protected override async beforeEnd(): Promise<void> {
-    await super.beforeEnd();
-    if (this.tempFolderUri) {
-      return Files.del(this.tempFolderUri);
-    }
   }
 }

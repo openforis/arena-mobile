@@ -161,7 +161,7 @@ export const startUploadDataToRemoteServer =
     // RecordsUploadAndProcessJob for why (and why only these two, not zip-generation too)
     const createUploadAndProcessJob = () =>
       new RecordsUploadAndProcessJob({
-        user,
+        user: user!,
         survey,
         cycle,
         fileUri: outputFileUri,

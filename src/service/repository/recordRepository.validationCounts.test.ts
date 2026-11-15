@@ -10,24 +10,19 @@ import { dbClient } from "db";
 
 import { RecordRepository } from "./recordRepository";
 
-jest.mock("utils", () => ({
-  log: { debug: jest.fn(), warn: jest.fn() },
-  SystemUtils: { getRecordAppInfo: () => ({ version: "2.12.0" }) },
-}));
-jest.mock("model", () => ({
-  ...jest.requireActual("model/RecordLoadStatus"),
-  ...jest.requireActual("model/RecordOrigin"),
-  ...jest.requireActual("model/utils/RecordSummaries"),
-  ...jest.requireActual("model/utils/SurveyDefs"),
-}));
-jest.mock("db", () => {
-  const { dbMigrations } = jest.requireActual("db/initialize");
-  const { createNodeSQLiteClient } = jest.requireActual(
-    "db/testing/createNodeSQLiteClient",
-  );
-  const { DbUtils } = jest.requireActual("db/dbUtils");
-  return { dbClient: createNodeSQLiteClient(dbMigrations).client, DbUtils };
-});
+jest.mock("utils", () =>
+  jest
+    .requireActual("service/repository/testing/repositoryTestMocks")
+    .utilsMock(),
+);
+jest.mock("model", () =>
+  jest
+    .requireActual("service/repository/testing/repositoryTestMocks")
+    .modelMock(),
+);
+jest.mock("db", () =>
+  jest.requireActual("service/repository/testing/repositoryTestMocks").dbMock(),
+);
 
 const { entityDef, integerDef } = SurveyObjectBuilders;
 const { entity, attribute } = RecordNodeBuilders;
