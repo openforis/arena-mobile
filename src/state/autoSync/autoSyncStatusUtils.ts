@@ -4,7 +4,7 @@ import { RecordSyncStatus } from "model";
 
 import { AutoSyncState, AutoSyncStatus } from "./types";
 
-// a focus-triggered re-check (see useRecordsList.checkAutoSyncStatusIfNeeded) is skipped if one
+// a focus-triggered re-check (see useRecordsListLoad.checkAutoSyncStatusIfNeeded) is skipped if one
 // already ran within this long and nothing local has changed since - avoids hammering the
 // server with a repeat check (and possible upload attempt) every time the user quickly bounces
 // between the records list and another screen
@@ -156,7 +156,7 @@ export const hasConflictingKeysWithMergeNotAllowed = ({
   );
 
 // true if a check already completed recently enough (AUTO_SYNC_FOCUS_RECHECK_MIN_INTERVAL_MS)
-// and nothing local has changed since - see useRecordsList.checkAutoSyncStatusIfNeeded, the only
+// and nothing local has changed since - see useRecordsListLoad.checkAutoSyncStatusIfNeeded, the only
 // caller that needs this (the periodic background tick and "Sync now" have their own, different
 // throttling/semantics and must run regardless of this one)
 export const wasRecentlyCheckedWithNoNewLocalChanges = ({
