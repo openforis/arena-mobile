@@ -20,7 +20,7 @@ import { JobMonitorActions } from "../jobMonitor";
 import { SurveySelectors } from "../survey";
 import {
   errorOrJobToString,
-  isAuthError,
+  isAuthErrorOrFailedJobAuthError,
   REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES,
 } from "./dataExportUtils";
 import { i18n } from "localization";
@@ -99,7 +99,7 @@ const handleUploadAndProcessError = async ({
       `auto-sync: upload/processing failed: ${errorOrJobToString(error)}`,
     );
     dispatch(
-      isAuthError(error)
+      isAuthErrorOrFailedJobAuthError(error)
         ? AutoSyncActions.authError()
         : AutoSyncActions.checkError(),
     );

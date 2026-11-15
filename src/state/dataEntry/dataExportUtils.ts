@@ -2,6 +2,7 @@ import { JobStatus } from "@openforis/arena-core";
 
 import type { AppDispatch } from "state/store";
 import { log } from "utils";
+import { HttpErrors } from "utils/HttpErrors";
 
 import { AutoSyncActions } from "../autoSync";
 import { MessageActions } from "../message";
@@ -41,10 +42,9 @@ export const errorOrJobToString = (errorOrJob: any) => {
 export const errorTextLooksLikeAuthError = (text: string) =>
   /\bstatus code 401\b/.test(text);
 
-// a raw axios error still has response.status
-export const isAuthError = (error: any) =>
-  error?.response?.status === 401 ||
-  error?.status === 401 ||
+// raw/wrapped HTTP errors carry the status, failed jobs only the error text
+export const isAuthErrorOrFailedJobAuthError = (error: any) =>
+  HttpErrors.isUnauthorized(error) ||
   errorTextLooksLikeAuthError(errorOrJobToString(error));
 
 export const handleDataExportError =
@@ -55,7 +55,7 @@ export const handleDataExportError =
       // status icon instead, which also stops further automatic ticks until the user retries
       log.warn(`auto-sync: export/upload failed: ${errorOrJobToString(error)}`);
       dispatch(
-        isAuthError(error)
+        isAuthErrorOrFailedJobAuthError(error)
           ? AutoSyncActions.authError()
           : AutoSyncActions.checkError(),
       );
