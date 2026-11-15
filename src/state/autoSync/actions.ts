@@ -48,7 +48,7 @@ const authError = AutoSyncSliceActions.authError;
 // a server error): shown through the sync status icon instead of a blocking popup - avoids
 // popping the same error dialog again every time an automatic re-check is triggered (screen
 // focus, cycle change, ...). Further automatic checks are skipped (see
-// useRecordsList.checkAutoSyncStatusIfNeeded) until the user retries manually (any explicit
+// useRecordsListLoad.checkAutoSyncStatusIfNeeded) until the user retries manually (any explicit
 // "check status"/"send data" action dispatches checkStart/checkEnd/checkError again regardless)
 const checkError = AutoSyncSliceActions.checkError;
 
