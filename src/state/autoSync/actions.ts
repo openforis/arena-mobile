@@ -1,4 +1,7 @@
+import { Survey } from "@openforis/arena-core";
+
 import {
+  RecordWithSyncStatus,
   computeAutoSyncStatus,
   hasConflictingKeysWithMergeNotAllowed,
 } from "./autoSyncStatusUtils";
@@ -16,7 +19,7 @@ const checkStart = AutoSyncSliceActions.checkStart;
 // whether records with conflicting keys can be merged, the auto-sync setting to tell whether
 // records modified on the server too get merged automatically (see computeAutoSyncStatus)
 const checkEnd =
-  ({ records, survey }: { records: any[]; survey: any }) =>
+  ({ records, survey }: { records: RecordWithSyncStatus[]; survey: Survey }) =>
   (dispatch: AppDispatch, getState: AppGetState) => {
     const autoSyncEnabled = !!getState().settings?.autoSyncEnabled;
     dispatch(
@@ -60,8 +63,10 @@ const reset = AutoSyncSliceActions.reset;
 // a short, supplementary note about the outcome of the last completed tick/check - shown
 // alongside (not instead of) the main status text, e.g. "nothing to send right now" after a
 // check that found no record safe to auto-upload. Cleared by the next checkStart.
-const setStatusMessage = (textKey: string, textParams?: Record<string, any>) =>
-  AutoSyncSliceActions.setStatusMessage({ textKey, textParams });
+const setStatusMessage = (
+  textKey: string,
+  textParams?: Record<string, unknown>,
+) => AutoSyncSliceActions.setStatusMessage({ textKey, textParams });
 
 // dispatched right after a record is created or its content changes locally, so the status
 // icon stops claiming "synced" the instant there's something new to upload, instead of only

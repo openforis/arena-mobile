@@ -177,6 +177,17 @@ const _onExportFileGenerationSucceeded = async ({
   }
 };
 
+type ExportRecordsParams = {
+  cycle: string;
+  recordUuids: string[];
+  conflictResolutionStrategy?: string;
+  onlyLocally?: boolean;
+  onlyRemote?: boolean;
+  onJobComplete?: ((jobComplete: any) => void | Promise<void>) | null;
+  onEnd?: (() => void | Promise<void>) | null;
+  silent?: boolean;
+};
+
 export const exportRecords =
   ({
     cycle,
@@ -187,7 +198,7 @@ export const exportRecords =
     onJobComplete: onJobCompleteParam = null,
     onEnd = null,
     silent = false,
-  }: any) =>
+  }: ExportRecordsParams) =>
   async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
