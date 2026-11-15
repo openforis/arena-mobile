@@ -1,9 +1,8 @@
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
 import { ScreenViewMode } from "model/ScreenViewMode";
 import { screenKeys } from "screens/screenKeys";
 
-import { ActionHandlers, StoreUtils } from "../storeUtils";
-
-import { ScreenOptionsActions } from "./actions";
 import { ScreenOptionsState } from "./state";
 
 // surveys lists are short: cards are nicer there
@@ -19,15 +18,19 @@ const initialState = [
   {} as ScreenOptionsState,
 );
 
-const actionHandlers: ActionHandlers<ScreenOptionsState> = {
-  [ScreenOptionsActions.SCREEN_VIEW_MODE_SET]: ({ state, action }) =>
-    ScreenOptionsState.assocViewMode({
-      screenKey: action.screenKey,
-      viewMode: action.viewMode,
-    })(state),
-};
-
-export const ScreenOptionsReducer = StoreUtils.exportReducer({
-  actionHandlers,
+const screenOptionsSlice = createSlice({
+  name: "screenOptions",
   initialState,
+  reducers: {
+    setViewMode: (
+      state,
+      action: PayloadAction<{ screenKey: string; viewMode: ScreenViewMode }>,
+    ) => {
+      const { screenKey, viewMode } = action.payload;
+      state[screenKey] = { ...state[screenKey], viewMode };
+    },
+  },
 });
+
+export const ScreenOptionsSliceActions = screenOptionsSlice.actions;
+export const ScreenOptionsReducer = screenOptionsSlice.reducer;

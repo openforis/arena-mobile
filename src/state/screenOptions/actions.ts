@@ -1,8 +1,7 @@
 import { ScreenViewMode } from "model";
+import { ScreenOptionsSliceActions } from "./reducer";
 import { ScreenOptionsSelectors } from "./selectors";
 import type { AppDispatch, AppGetState } from "../store";
-
-const SCREEN_VIEW_MODE_SET = "SCREEN_VIEW_MODE_SET";
 
 const defaultViewModes = [ScreenViewMode.table, ScreenViewMode.list];
 
@@ -31,12 +30,15 @@ const toggleScreenViewMode =
 
     const viewModeNext = getNextViewMode({ viewMode, viewModes });
 
-    dispatch({ type: SCREEN_VIEW_MODE_SET, screenKey, viewMode: viewModeNext });
+    dispatch(
+      ScreenOptionsSliceActions.setViewMode({
+        screenKey,
+        viewMode: viewModeNext,
+      }),
+    );
   };
 
 export const ScreenOptionsActions = {
-  SCREEN_VIEW_MODE_SET,
-
   getNextViewMode,
   toggleScreenViewMode,
 };
