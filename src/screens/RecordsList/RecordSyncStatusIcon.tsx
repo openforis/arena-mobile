@@ -30,7 +30,6 @@ const colorBySyncStatus = {
 type Props = {
   alwaysShowLabel?: boolean;
   item: Pick<RecordListItem, "syncStatus">;
-  viewMode?: ScreenViewMode;
 };
 
 export const RecordSyncStatusIcon = (props: Props) => {
