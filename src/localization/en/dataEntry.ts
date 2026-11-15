@@ -203,7 +203,7 @@ max count reached`,
 Download it from the server?`,
     confirmSyncRecordsSummaryAndTryAgain: `$t(dataEntry:recordInPreviousCycle.notFoundMessage).
 Fetch the list of records from the server and try again?`,
-    fetchError: "Error fetching record in previuos cycle: {{details}}",
+    fetchError: "Error fetching record in previous cycle: {{details}}",
     multipleRecordsFound:
       "Multiple records with keys {{keyValues}} found in cycle {{cycle}}",
     valuePanelHeader: "Value in cycle {{prevCycle}}",
