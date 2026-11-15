@@ -20,8 +20,6 @@ const deleteRecordFilesMock =
   RecordFileService.deleteSurveyRecordFiles as jest.Mock;
 
 describe("SurveyService.deleteSurveys", () => {
-  beforeEach(() => jest.clearAllMocks());
-
   it("does not fail when the files cannot be deleted", async () => {
     deleteSurveyFileMock.mockRejectedValue(new Error("missing"));
     deleteRecordFilesMock.mockRejectedValue(new Error("missing"));

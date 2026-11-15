@@ -56,7 +56,6 @@ const startJob = async () => {
 describe("RemoteJobWatcherJob", () => {
   beforeEach(() => {
     jest.useFakeTimers();
-    jest.clearAllMocks();
   });
   afterEach(() => jest.useRealTimers());
 

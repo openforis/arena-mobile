@@ -192,10 +192,6 @@ const getStoredRecord = (): ArenaRecord =>
   updateRecordMock.mock.calls[0][0].record;
 
 describe("DataEntryActions: clear values of attributes becoming non-applicable", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   describe("deleteNodes", () => {
     const deleteLastIndividual = async () => {
       const survey = await buildSurvey("count(individual) >= 5");

@@ -10,7 +10,6 @@ import { dbClient } from "db";
 
 import { RecordRepository } from "./recordRepository";
 
-jest.mock("expo-sqlite", () => ({}));
 jest.mock("utils", () => ({
   log: { debug: jest.fn(), warn: jest.fn() },
   SystemUtils: { getRecordAppInfo: () => ({ version: "2.12.0" }) },

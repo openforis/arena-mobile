@@ -15,8 +15,6 @@ const surveyId = 1;
 const invalidFileUuids = ["..", "../..", "../2/x", "a/b", "", ".hidden"];
 
 describe("RecordFileRepository", () => {
-  beforeEach(() => jest.clearAllMocks());
-
   it("accepts a valid file uuid", async () => {
     const fileUuid = "0f5c1e1a-7c3a-4b7e-9d43-2f3d5a1c9e10";
     await RecordFileRepository.deleteRecordFile({ surveyId, fileUuid });

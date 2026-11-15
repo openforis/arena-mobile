@@ -5,9 +5,7 @@ import { RecordsUploadJob } from "./recordsUploadJob";
 
 jest.mock("model", () => jest.requireActual("model/JobMobile"));
 
-jest.mock("utils/Logger", () => ({
-  log: { debug: jest.fn(), error: jest.fn() },
-}));
+jest.mock("utils/Logger");
 
 jest.mock("./recordService", () => ({
   RecordService: { uploadRecordsToRemoteServer: jest.fn() },
@@ -19,8 +17,6 @@ const createJob = (uploadState: any) =>
   new RecordsUploadJob({ user: {}, survey: {}, uploadState });
 
 describe("RecordsUploadJob", () => {
-  beforeEach(() => jest.clearAllMocks());
-
   it("continues from the first chunk not confirmed by the server", async () => {
     const uploadState = { fileId: "file-1", chunkSize: 2048, nextChunk: 1 };
 
