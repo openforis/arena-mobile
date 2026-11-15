@@ -1,27 +1,32 @@
 import { useCallback, useEffect, useState } from "react";
+import type { PermissionResponse } from "expo";
 
-const permissionGranted = "granted";
+import { log } from "utils/Logger";
 
-export const useRequestPermission = (
-  requestFunction: any,
-  getterFunction = null as any,
+export const useRequestPermission = <P extends unknown[]>(
+  requestFunction: (...parameters: P) => Promise<PermissionResponse>,
+  getterFunction: (() => Promise<PermissionResponse>) | null = null,
 ) => {
-  const [hasPermission, setHasPermission] = useState(null as any);
+  // null until the permission is checked or requested
+  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
 
   useEffect(() => {
     if (getterFunction) {
-      getterFunction().then((result: any) => {
-        setHasPermission(result.granted === permissionGranted);
-      });
+      getterFunction()
+        .then((result) => {
+          setHasPermission(result.granted);
+        })
+        .catch((error) => {
+          log.error(`error checking permission: ${error}`);
+        });
     }
   }, [getterFunction]);
 
   const request = useCallback(
-    async (...parameters: any[]) => {
+    async (...parameters: P): Promise<boolean> => {
       if (hasPermission) return true;
 
-      const { status } = await requestFunction(...parameters);
-      const granted = status === permissionGranted;
+      const { granted } = await requestFunction(...parameters);
 
       setHasPermission(granted);
       return granted;

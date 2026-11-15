@@ -171,3 +171,11 @@ describe("record validation counts columns", () => {
     expect(summary.validation).toBeNull();
   });
 });
+
+describe("RecordRepository.updateRecordsDateSync", () => {
+  it("does nothing when no records are passed", async () => {
+    await expect(
+      RecordRepository.updateRecordsDateSync({ surveyId: 1, recordUuids: [] }),
+    ).resolves.toBeUndefined();
+  });
+});
