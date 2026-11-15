@@ -96,10 +96,8 @@ const countOfflineAreas = async (layerId: string): Promise<number> => {
 const markOfflineAreasAsNotDownloaded = async (
   layerId: string,
 ): Promise<void> => {
-  const areas = await OfflineMapAreaRepository.fetchAreas();
-  if (!areas.some((area) => area.layerId === layerId)) return;
   const dateModified = new Date().toISOString();
-  await OfflineMapAreaRepository.saveAreas(
+  await OfflineMapAreaRepository.updateAreas((areas) =>
     areas.map((area) =>
       area.layerId === layerId
         ? {
@@ -114,13 +112,10 @@ const markOfflineAreasAsNotDownloaded = async (
   );
 };
 
-const deleteOfflineAreas = async (layerId: string): Promise<void> => {
-  const areas = await OfflineMapAreaRepository.fetchAreas();
-  const areasNext = areas.filter((area) => area.layerId !== layerId);
-  if (areasNext.length < areas.length) {
-    await OfflineMapAreaRepository.saveAreas(areasNext);
-  }
-};
+const deleteOfflineAreas = (layerId: string): Promise<void> =>
+  OfflineMapAreaRepository.updateAreas((areas) =>
+    areas.filter((area) => area.layerId !== layerId),
+  );
 
 const storeApiKey = async (layerId: string, apiKey: string): Promise<void> => {
   await SecureStoreService.setMapLayerApiKey(layerId, apiKey);
@@ -160,31 +155,32 @@ const saveLayer = async ({
   }
   await storeApiKey(layer.id, apiKeyNext);
 
-  const layersNext = layerPrev
-    ? layers.map((item) => (item.id === layer.id ? layerNext : item))
-    : [...layers, layerNext];
-  const settingsNext = { ...settings, customMapLayers: layersNext };
-  await SettingsService.saveSettings(settingsNext);
-  updateLayersRegistry(layersNext);
+  const settingsNext = await SettingsService.updateSettings((settingsPrev) => {
+    const layersPrev = settingsPrev.customMapLayers ?? [];
+    return {
+      ...settingsPrev,
+      customMapLayers: layersPrev.some((item) => item.id === layer.id)
+        ? layersPrev.map((item) => (item.id === layer.id ? layerNext : item))
+        : [...layersPrev, layerNext],
+    };
+  });
+  updateLayersRegistry(settingsNext.customMapLayers ?? []);
   return settingsNext;
 };
 
 // deletes the layer, its API key, its tiles and its offline map areas; resolves with the updated settings
 const deleteLayer = async (layerId: string): Promise<SettingsObject> => {
-  const settings = await SettingsService.fetchSettings();
-  const layersNext = (settings.customMapLayers ?? []).filter(
-    (item) => item.id !== layerId,
-  );
-  const settingsNext: SettingsObject = {
+  const settingsNext = await SettingsService.updateSettings((settings) => ({
     ...settings,
-    customMapLayers: layersNext,
+    customMapLayers: (settings.customMapLayers ?? []).filter(
+      (item) => item.id !== layerId,
+    ),
     mapLayer:
       settings.mapLayer === layerId
         ? MapLayers.defaultLayerId
         : settings.mapLayer,
-  };
-  await SettingsService.saveSettings(settingsNext);
-  updateLayersRegistry(layersNext);
+  }));
+  updateLayersRegistry(settingsNext.customMapLayers ?? []);
   await storeApiKey(layerId, "");
   await deleteLayerTiles(layerId);
   await deleteOfflineAreas(layerId);
