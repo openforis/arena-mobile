@@ -25,6 +25,7 @@ import {
   SettingsSelectors,
   useAppDispatch,
 } from "state";
+import { useAppTheme } from "theme";
 import { Files, GeoUtils, log } from "utils";
 
 import { useStorageEstimateCheck } from "../OfflineMaps/useStorageEstimateCheck";
@@ -61,6 +62,11 @@ export const PdfMapImportScreen = () => {
   const { fileUri, fileName = "" } = useScreenParams<screenKeys.pdfMapImport>();
   const dispatch = useAppDispatch();
   const toaster = useToast();
+  const theme = useAppTheme();
+  const errorTextStyle = useMemo(
+    () => ({ color: theme.colors.error }),
+    [theme],
+  );
   const settings = SettingsSelectors.useSettings();
   const pdfMaps = settings.pdfMaps;
 
@@ -330,7 +336,7 @@ export const PdfMapImportScreen = () => {
     return (
       <VView style={styles.messageContainer}>
         <Text
-          style={[styles.messageText, styles.errorText]}
+          style={[styles.messageText, errorTextStyle]}
           textKey={errorKey ?? "pdfMaps:import.notGeoreferenced"}
           textParams={errorParams}
         />
@@ -352,9 +358,7 @@ export const PdfMapImportScreen = () => {
           onChange={setName}
           value={name}
         />
-        {nameErrorKey && (
-          <Text style={styles.errorText} textKey={nameErrorKey} />
-        )}
+        {nameErrorKey && <Text style={errorTextStyle} textKey={nameErrorKey} />}
         {candidates.length > 1 && (
           <Dropdown
             items={pageItems}
@@ -398,7 +402,7 @@ export const PdfMapImportScreen = () => {
         <Text
           style={[
             styles.estimateText,
-            (estimate.exceedsMaxTiles || exceedsFreeSpace) && styles.errorText,
+            (estimate.exceedsMaxTiles || exceedsFreeSpace) && errorTextStyle,
           ]}
           textKey={
             estimate.exceedsMaxTiles
@@ -442,7 +446,7 @@ export const PdfMapImportScreen = () => {
             )}
             {previewErrorDetails && (
               <Text
-                style={styles.errorText}
+                style={errorTextStyle}
                 textKey="pdfMaps:import.preview.error"
                 textParams={{ details: previewErrorDetails }}
                 variant="bodySmall"

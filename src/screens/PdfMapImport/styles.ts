@@ -30,9 +30,6 @@ export default StyleSheet.create({
   estimateText: {
     fontWeight: "bold",
   },
-  errorText: {
-    color: "#d32f2f",
-  },
   warningText: {
     color: "#e65100",
   },

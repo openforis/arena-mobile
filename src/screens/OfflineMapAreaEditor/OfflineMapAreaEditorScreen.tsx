@@ -19,6 +19,7 @@ import { useTranslation } from "localization";
 import { LatLng, MapLayers, OfflineMapArea } from "model";
 import { OfflineMapsService } from "service";
 import { SettingsSelectors, useConfirm } from "state";
+import { useAppTheme } from "theme";
 import { Files, GeoUtils, log } from "utils";
 
 import { useOfflineMapAreaDownload } from "../OfflineMaps/useOfflineMapAreaDownload";
@@ -51,6 +52,7 @@ export const OfflineMapAreaEditorScreen = () => {
   const downloadArea = useOfflineMapAreaDownload();
   const settings = SettingsSelectors.useSettings();
   const { t } = useTranslation();
+  const theme = useAppTheme();
 
   const layerItems = useMemo(
     () =>
@@ -311,7 +313,10 @@ export const OfflineMapAreaEditorScreen = () => {
               value={name}
             />
             {nameErrorKey && (
-              <Text style={styles.estimateTextError} textKey={nameErrorKey} />
+              <Text
+                style={{ color: theme.colors.error }}
+                textKey={nameErrorKey}
+              />
             )}
           </AreaEditorStep>
           <AreaEditorStep
