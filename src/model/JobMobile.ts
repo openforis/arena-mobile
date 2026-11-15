@@ -33,8 +33,6 @@ export abstract class JobMobile<C extends JobMobileContext> extends JobBase<
   protected override async onEnd(): Promise<void> {
     await super.onEnd();
     const uris = this.tempFolderUris.splice(0);
-    for (const uri of uris) {
-      await Files.del(uri, true);
-    }
+    await Promise.all(uris.map((uri) => Files.del(uri, true)));
   }
 }
