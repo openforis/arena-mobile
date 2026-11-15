@@ -22,17 +22,15 @@ appId: ${APP_ID}
 
 # add 2 stems
 - tapOn: "Edit Stems"
-- tapOn: "New Stems"
-- tapOn:
-    id: "stem_diameter"
-- inputText: "4.5"
-- tapOn: "Diameter \\[cm\\]"
+- runFlow:
+    file: common/add-stem.yaml
+    env:
+      DIAMETER: "4.5"
 - tapOn: "Stems"
-- tapOn: "New Stems"
-- tapOn:
-    id: "stem_diameter"
-- inputText: "5.5"
-- tapOn: "Diameter \\[cm\\]"
+- runFlow:
+    file: common/add-stem.yaml
+    env:
+      DIAMETER: "5.5"
 
 # back to the regeneration entity (breadcrumb): the attribute is now applicable
 - tapOn: "Regeneration\\[1\\]"
@@ -59,15 +57,7 @@ appId: ${APP_ID}
     visible: "Nodes will no longer apply"
     timeout: 10000
 - assertVisible: ".*Multi-stem notes.*"
-- swipe:
-    direction: RIGHT
-    from:
-      id: "SwipeThumb"
-    duration: 1000
-- tapOn:
-    id: "confirm-dialog-confirm-button"
-- assertNotVisible:
-    id: "confirm-dialog-title"
+- runFlow: common/confirm-with-swipe.yaml
 - assertNotVisible: "5\\.5"
 
 # the attribute is not applicable anymore

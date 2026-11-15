@@ -11,13 +11,7 @@ appId: ${APP_ID}
     file: _shot.yaml
     env:
       NAME: whats-new
-- runFlow:
-    when:
-      visible: "What's new"
-    commands:
-      - tapOn: "Don't show these again"
-      - tapOn:
-          id: "dialog-close-button"
+- runFlow: ../common/dismiss-whats-new.yaml
 - runFlow:
     file: _shot.yaml
     env:
@@ -38,11 +32,7 @@ appId: ${APP_ID}
       - tapOn: ${APP_LANG_LABEL}
       - waitForAnimationToEnd
       - back
-- scrollUntilVisible:
-    element:
-      id: "home-surveys-button"
-- tapOn:
-    id: "home-surveys-button"
+- runFlow: ../common/open-surveys.yaml
 - runFlow:
     file: _shot.yaml
     env:

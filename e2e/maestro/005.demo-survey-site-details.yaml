@@ -23,10 +23,8 @@ appId: ${APP_ID}
 - tapOn: "Plateau District.*"
 - assertVisible: "Plateau District \\(3\\)"
 
-# coordinate from device GPS (~106 m north of the provided location of Test Point 1)
-- setLocation:
-    latitude: 3.9768
-    longitude: 42.10738
+# coordinate from device GPS
+- runFlow: common/set-location-near-test-point-1.yaml
 - scrollUntilVisible:
     element: "Get location"
     direction: DOWN

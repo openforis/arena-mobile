@@ -8,6 +8,7 @@ on:
   pull_request:
     paths:
       - e2e/maestro/manual-screenshots/**
+      - e2e/maestro/common/**
       - e2e/scripts/take-manual-screenshots-android.sh
       - .github/workflows/user-manual-screenshots.yml
   workflow_dispatch:

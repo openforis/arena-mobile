@@ -1,0 +1,6 @@
+appId: ${APP_ID}
+---
+# Device location ~106 m north of the provided location of Test Point 1 (demo survey)
+- setLocation:
+    latitude: 3.9768
+    longitude: 42.10738
