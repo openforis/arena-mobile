@@ -32,6 +32,9 @@ jobs:
       - name: Lint
         run: yarn lint:check
 
+      - name: Format check
+        run: yarn format:check
+
       - name: Type check
         run: yarn test:types
 
