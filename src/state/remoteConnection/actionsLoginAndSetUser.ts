@@ -4,11 +4,9 @@ import { log } from "utils/Logger";
 
 import { AutoSyncActions } from "../autoSync";
 import { DeviceInfoSelectors } from "../deviceInfo/selectors";
-import { RemoteConnectionActionTypes } from "./actionTypes";
+import { RemoteConnectionSliceActions } from "./reducer";
 import { RemoteConnectionSelectors } from "./selectors";
 import type { AppDispatch, AppGetState } from "../store";
-
-const { USER_LOADING, USER_SET } = RemoteConnectionActionTypes;
 
 const fetchUser = async () => {
   try {
@@ -58,9 +56,9 @@ const _loginAndSetUser =
       }
       // the last logged in user is used (e.g. for permissions) until the server answers
       const lastLoggedInUser = await UserService.fetchLastLoggedInUser();
-      dispatch({ type: USER_LOADING, user: lastLoggedInUser });
+      dispatch(RemoteConnectionSliceActions.userLoading(lastLoggedInUser));
       const user = await fetchUser();
-      dispatch({ type: USER_SET, user });
+      dispatch(RemoteConnectionSliceActions.userSet(user));
       if (user) {
         // credentials just proved valid again: drop any auto-sync auth error remembered from
         // before (see AutoSyncActions.reset)
@@ -70,7 +68,7 @@ const _loginAndSetUser =
       // use the last logged in user (if any)
       const lastLoggedInUser = await UserService.fetchLastLoggedInUser();
       if (lastLoggedInUser) {
-        dispatch({ type: USER_SET, user: lastLoggedInUser });
+        dispatch(RemoteConnectionSliceActions.userSet(lastLoggedInUser));
       }
     }
   };

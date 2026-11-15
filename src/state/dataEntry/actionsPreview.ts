@@ -1,4 +1,5 @@
 import {
+  LanguageCode,
   Nodes,
   RecordFactory,
   RecordUpdater,
@@ -9,8 +10,8 @@ import {
 import { SystemUtils } from "utils";
 
 import { RemoteConnectionSelectors } from "../remoteConnection";
-import { SurveyActionTypes } from "../survey/actionTypes";
-import { DataEntryActionTypes } from "./actionTypes";
+import { SurveySliceActions } from "../survey/reducer";
+import { DataEntrySliceActions } from "./reducer";
 import { selectRecordUpdaterParams } from "./recordUpdaterParams";
 import type { AppDispatch, AppGetState } from "../store";
 
@@ -24,14 +25,15 @@ type StartPreviewParams = {
 const startPreview =
   ({ survey, lang = null, cycle = null }: StartPreviewParams) =>
   async (dispatch: AppDispatch, getState: AppGetState) => {
-    dispatch({
-      type: SurveyActionTypes.CURRENT_SURVEY_SET,
-      survey,
-      preferredLanguage: lang,
-    });
+    dispatch(
+      SurveySliceActions.currentSurveySet({
+        survey,
+        preferredLanguage: lang as LanguageCode | null,
+      }),
+    );
     const cycleKey = cycle ?? Surveys.getDefaultCycleKey(survey);
-    dispatch({ type: SurveyActionTypes.CURRENT_SURVEY_CYCLE_SET, cycleKey });
-    dispatch({ type: DataEntryActionTypes.DATA_ENTRY_RESET });
+    dispatch(SurveySliceActions.currentSurveyCycleSet(cycleKey));
+    dispatch(DataEntrySliceActions.reset());
 
     const user = RemoteConnectionSelectors.selectLoggedUserSafe(getState());
     const recordEmpty = RecordFactory.createInstance({
@@ -47,13 +49,14 @@ const startPreview =
     for (const node of Object.values(nodes)) {
       Nodes.removeStatusFlags({ node, sideEffect: true });
     }
-    dispatch({
-      type: DataEntryActionTypes.RECORD_SET,
-      record: { ...record, surveyId: survey.id },
-      recordEditLockAvailable: false,
-      recordEditLocked: false,
-      recordPageSelectorMenuOpen: false,
-    });
+    dispatch(
+      DataEntrySliceActions.recordSet({
+        record: { ...record, surveyId: survey.id },
+        recordEditLockAvailable: false,
+        recordEditLocked: false,
+        recordPageSelectorMenuOpen: false,
+      }),
+    );
   };
 
 export const DataEntryActionsPreview = {

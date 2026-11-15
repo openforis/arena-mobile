@@ -19,7 +19,7 @@ const getSurveyState = (state: RootState) => state.survey;
 const selectCurrentSurvey = (
   state: RootState,
 ): (Survey & { remoteId?: number }) | undefined =>
-  getSurveyState(state).currentSurvey;
+  getSurveyState(state).currentSurvey ?? undefined;
 
 const selectIsCurrentSurveyDemo = (state: RootState): boolean =>
   selectCurrentSurvey(state)?.uuid === SurveyService.demoSurveyUuid;

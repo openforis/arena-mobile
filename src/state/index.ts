@@ -57,13 +57,11 @@ export {
   SettingsSelectors,
 } from "./settings";
 
-export { StoreUtils } from "./storeUtils";
-
 export {
   SurveyActions,
-  SurveyActionTypes,
   SurveyReducer,
   SurveySelectors,
+  SurveySliceActions,
   SurveyState,
 } from "./survey";
 

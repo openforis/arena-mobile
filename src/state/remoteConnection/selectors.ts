@@ -30,7 +30,8 @@ const selectLoggedUserIsLoading = (state: RootState): boolean =>
   !!getRemoteConnectionState(state).userLoading;
 const selectLoggedUserProfileIconInfo = (
   state: RootState,
-): UserProfileIconInfo => getRemoteConnectionState(state).userProfileIconInfo;
+): UserProfileIconInfo | null =>
+  getRemoteConnectionState(state).userProfileIconInfo;
 
 export const RemoteConnectionSelectors = {
   selectLoggedUser,

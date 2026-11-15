@@ -3,7 +3,7 @@ import { LanguageCode, Survey, UserGroup } from "@openforis/arena-core";
 const stateKey = "survey";
 
 export type SurveyState = {
-  currentSurvey?: Survey & { remoteId?: number };
+  currentSurvey?: (Survey & { remoteId?: number }) | null;
   currentSurveyPreferredLanguage?: LanguageCode | null;
   currentSurveyCycle?: string | null;
   currentSurveyUserGroup?: UserGroup | null;

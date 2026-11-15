@@ -1,6 +1,9 @@
+import { User } from "@openforis/arena-core";
+
 import { SecureStoreService, UserService } from "service";
 
 import { loginAndSetUser } from "./actionsLoginAndSetUser";
+import { RemoteConnectionSliceActions } from "./reducer";
 
 jest.mock("service", () => ({
   SecureStoreService: { getAuthRefreshToken: jest.fn() },
@@ -17,8 +20,8 @@ jest.mock("./selectors", () => ({
   RemoteConnectionSelectors: { selectLoggedUser: (state: any) => state.user },
 }));
 
-const cachedUser = { uuid: "cached" };
-const remoteUser = { uuid: "remote" };
+const cachedUser = { uuid: "cached" } as unknown as User;
+const remoteUser = { uuid: "remote" } as unknown as User;
 
 const getState = () => ({
   deviceInfo: { isNetworkConnected: true },
@@ -42,8 +45,10 @@ describe("loginAndSetUser", () => {
     await loginAndSetUser()(dispatch, getState as any);
 
     const types = dispatch.mock.calls.map(([action]) => action);
-    expect(types[0]).toEqual({ type: "USER_LOADING", user: cachedUser });
-    expect(types[1]).toEqual({ type: "USER_SET", user: remoteUser });
+    expect(types[0]).toEqual(
+      RemoteConnectionSliceActions.userLoading(cachedUser),
+    );
+    expect(types[1]).toEqual(RemoteConnectionSliceActions.userSet(remoteUser));
   });
 
   it("shares the request between concurrent calls", async () => {

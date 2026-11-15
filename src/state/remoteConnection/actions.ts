@@ -18,13 +18,11 @@ import { ConfirmActions, ConfirmUtils } from "../confirm";
 import { MessageActions } from "../message";
 import { SettingsActions } from "../settings";
 import { SurveyActions } from "../survey";
-import { RemoteConnectionActionTypes } from "./actionTypes";
 import { loginAndSetUser } from "./actionsLoginAndSetUser";
+import { RemoteConnectionSliceActions } from "./reducer";
 import { RemoteConnectionSelectors } from "./selectors";
 import { invalidTwoFactorCodeError, LoginResponse } from "service/authService";
 import type { AppDispatch, AppGetState } from "../store";
-
-const { USER_SET, USER_PROFILE_ICON_INFO_SET } = RemoteConnectionActionTypes;
 
 const confirmGoToConnectionToRemoteServer =
   ({ navigator }: any) =>
@@ -60,7 +58,7 @@ const onLoginResponseSuccessful = async ({
   const settingsUpdated = { ...settings, serverUrl, email: userEmail };
   await dispatch(SettingsActions.updateSettings(settingsUpdated));
 
-  dispatch({ type: USER_SET, user });
+  dispatch(RemoteConnectionSliceActions.userSet(user));
   // credentials just proved valid again: drop any auto-sync auth error remembered from before
   // (see AutoSyncActions.reset)
   dispatch(AutoSyncActions.reset());
@@ -197,15 +195,21 @@ const fetchLoggedInUserProfileIcon = async (
   const state = getState();
   const user = RemoteConnectionSelectors.selectLoggedUser(state);
   if (!user) return;
-  dispatch({
-    type: USER_PROFILE_ICON_INFO_SET,
-    payload: { loaded: false, loading: true, uri: null },
-  });
+  dispatch(
+    RemoteConnectionSliceActions.userProfileIconInfoSet({
+      loaded: false,
+      loading: true,
+      uri: null,
+    }),
+  );
   const uri = await UserService.fetchUserPicture(user.uuid);
-  dispatch({
-    type: USER_PROFILE_ICON_INFO_SET,
-    payload: { loaded: true, loading: false, uri },
-  });
+  dispatch(
+    RemoteConnectionSliceActions.userProfileIconInfoSet({
+      loaded: true,
+      loading: false,
+      uri,
+    }),
+  );
 };
 
 const _clearUserCredentialsInternal =
@@ -221,8 +225,8 @@ const _clearUserCredentialsInternal =
     await dispatch(SettingsActions.updateSettings(settingsUpdated));
     await SecureStoreService.setAuthRefreshToken(null);
     await AuthService.clearStoredCredentials(settings.serverUrl);
-    dispatch({ type: USER_PROFILE_ICON_INFO_SET, payload: null });
-    dispatch({ type: USER_SET, user: null });
+    dispatch(RemoteConnectionSliceActions.userProfileIconInfoSet(null));
+    dispatch(RemoteConnectionSliceActions.userSet(null));
   };
 
 const clearUserCredentials = () => async (dispatch: AppDispatch) => {
@@ -281,7 +285,6 @@ const logout = () => (dispatch: AppDispatch) => {
 };
 
 export const RemoteConnectionActions = {
-  ...RemoteConnectionActionTypes,
   confirmGoToConnectionToRemoteServer,
   loginAndSetUser,
   login,
