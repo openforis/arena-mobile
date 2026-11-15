@@ -1,7 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 
-import { useSurveyMapLayersGeometries, useToast } from "hooks";
+import {
+  useAsyncValueEffect,
+  useSurveyMapLayersGeometries,
+  useToast,
+} from "hooks";
 import { useTranslation } from "localization";
 import { LatLng, RecordUtils } from "model";
 import { RecordService } from "service";
@@ -154,26 +158,21 @@ export const useRecordsMapData = () => {
   );
 
   // values of hidden track layers are kept but not shown (see tracksByLayerKey)
-  const [trackValues, setTrackValues] = useState<NodeValue[]>([]);
-
-  useEffect(() => {
-    if (!visibleTrackDefUuidsJoint) return;
-    let cancelled = false;
-    RecordService.fetchNodeValuesByDefUuids({
-      surveyId: survey.id!,
-      cycle,
-      nodeDefUuids: visibleTrackDefUuidsJoint.split(","),
-    })
-      .then((values) => {
-        if (!cancelled) setTrackValues(values);
-      })
-      .catch((error) => {
-        toaster("recordsMap:errorLoadingData", { details: String(error) });
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [cycle, focusCount, survey.id, toaster, visibleTrackDefUuidsJoint]);
+  const [trackValues] = useAsyncValueEffect(
+    () =>
+      RecordService.fetchNodeValuesByDefUuids({
+        surveyId: survey.id!,
+        cycle,
+        nodeDefUuids: visibleTrackDefUuidsJoint.split(","),
+      }),
+    [cycle, focusCount, survey.id, visibleTrackDefUuidsJoint],
+    {
+      enabled: !!visibleTrackDefUuidsJoint,
+      initialValue: [] as NodeValue[],
+      onError: (error) =>
+        toaster("recordsMap:errorLoadingData", { details: String(error) }),
+    },
+  );
 
   const visibleAreaNames = useMemo(
     () =>

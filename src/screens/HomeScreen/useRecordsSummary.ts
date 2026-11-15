@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 
 import { DateFormats, Dates } from "@openforis/arena-core";
 
-import { useNavigationIsFocused } from "hooks";
+import { useAsyncValueEffect, useNavigationIsFocused } from "hooks";
 import { RecordService } from "service";
 import { SurveySelectors } from "state";
 import { log } from "utils";
@@ -56,7 +56,6 @@ export const useRecordsSummary = () => {
   const isFocused = useNavigationIsFocused();
   const survey = SurveySelectors.useCurrentSurvey();
   const cycle = SurveySelectors.useCurrentSurveyCycle();
-  const [summary, setSummary] = useState(emptySummary);
 
   const fetchSummary = useCallback(async () => {
     if (!survey) return emptySummary;
@@ -64,28 +63,23 @@ export const useRecordsSummary = () => {
     return summarize(records);
   }, [cycle, survey]);
 
+  const [summary, setSummary] = useAsyncValueEffect(
+    fetchSummary,
+    [fetchSummary],
+    {
+      enabled: isFocused,
+      initialValue: emptySummary,
+      onError: (error) => log.error(`Failed to load records summary: ${error}`),
+    },
+  );
+
   const reload = useCallback(async () => {
     try {
       setSummary(await fetchSummary());
     } catch (error) {
       log.error(`Failed to load records summary: ${error}`);
     }
-  }, [fetchSummary]);
-
-  useEffect(() => {
-    if (!isFocused) return;
-    let cancelled = false;
-    fetchSummary()
-      .then((summaryNext) => {
-        if (!cancelled) setSummary(summaryNext);
-      })
-      .catch((error) => {
-        log.error(`Failed to load records summary: ${error}`);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [fetchSummary, isFocused]);
+  }, [fetchSummary, setSummary]);
 
   return { ...summary, reload };
 };

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { StyleSheet } from "react-native";
 
 import { Dialog, Markdown } from "components";
@@ -6,6 +6,7 @@ import { FormItem } from "components/FormItem";
 import { LoadingIcon } from "components/LoadingIcon";
 import { ScrollView } from "components/ScrollView";
 import { VView } from "components/VView";
+import { useAsyncValueEffect } from "hooks";
 import { API } from "service/api";
 import { useAppTheme } from "theme";
 import { log } from "utils/Logger";
@@ -52,7 +53,11 @@ export const ChangelogViewDialog = (props: ChangelogViewDialogProps) => {
   } = props;
 
   const theme = useAppTheme();
-  const [content, setContent] = useState(changelogContent);
+  const [content] = useAsyncValueEffect(fetchChangelog, [], {
+    enabled: !changelogContent,
+    initialValue: changelogContent,
+    onError: (error) => log.error("Error fetching the changelog", error),
+  });
 
   const styles: any = useMemo(
     () =>
@@ -68,19 +73,6 @@ export const ChangelogViewDialog = (props: ChangelogViewDialogProps) => {
       } as any),
     [theme],
   );
-
-  useEffect(() => {
-    if (changelogContent) return;
-    let cancelled = false;
-    fetchChangelog()
-      .then((text) => {
-        if (!cancelled) setContent(text);
-      })
-      .catch((error) => log.error("Error fetching the changelog", error));
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   return (
     <Dialog
