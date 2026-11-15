@@ -613,19 +613,7 @@ export const buildTrackFeatures = ({
     const label = recordLabelByUuid[recordUuid];
     if (label === undefined) continue;
     const lines = PositionTracks.extractLineCoordinates(value)
-      .map((line) =>
-        line
-          .filter(
-            (position) =>
-              Array.isArray(position) &&
-              Number.isFinite(position[0]) &&
-              Number.isFinite(position[1]),
-          )
-          .map(([longitude, latitude]) => ({
-            latitude: latitude!,
-            longitude: longitude!,
-          })),
-      )
+      .map(toLatLngs)
       .filter((line) => line.length > 1);
     const start = lines[0]?.[0];
     if (!start) continue;
@@ -642,8 +630,8 @@ export const buildTrackFeatures = ({
 };
 
 // GeoJSON positions are [longitude, latitude]
-const toLatLngRing = (ring: number[][]) =>
-  (Array.isArray(ring) ? ring : [])
+const toLatLngs = (positions: number[][]) =>
+  (Array.isArray(positions) ? positions : [])
     .filter(
       (position) =>
         Array.isArray(position) &&
@@ -670,7 +658,7 @@ export const buildAreaOfInterestPolygons = ({
   const result: RecordsMapAreaPolygon[] = [];
   polygons.forEach((rings, index) => {
     const [outerRing, ...innerRings] = (Array.isArray(rings) ? rings : []).map(
-      toLatLngRing,
+      toLatLngs,
     );
     if (!outerRing || outerRing.length < 3) return;
     result.push({

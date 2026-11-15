@@ -18,7 +18,12 @@ import {
 } from "components";
 import { useToast } from "hooks";
 import { JobCancelError, PdfMap } from "model";
-import { PdfMapFileAnalysis, PdfMapPreview, PdfMapsService } from "service";
+import {
+  OfflineMapsService,
+  PdfMapFileAnalysis,
+  PdfMapPreview,
+  PdfMapsService,
+} from "service";
 import {
   JobMonitorActions,
   SettingsActions,
@@ -32,8 +37,6 @@ import styles from "./styles";
 
 const neatlineStrokeColor = "rgba(21, 101, 192, 0.95)";
 const neatlineFillColor = "rgba(21, 101, 192, 0.15)";
-// ratio of the free space above which the user is asked to confirm the import
-const FREE_SPACE_WARNING_RATIO = 0.8;
 
 export type PdfMapImportParams = { fileUri: string; fileName: string };
 
@@ -268,7 +271,8 @@ export const PdfMapImportScreen = () => {
       return;
     }
     if (
-      (freeSpaceUsageRatio ?? 0) >= FREE_SPACE_WARNING_RATIO &&
+      (freeSpaceUsageRatio ?? 0) >=
+        OfflineMapsService.FREE_SPACE_WARNING_RATIO &&
       !(await confirm({
         titleKey: "pdfMaps:import.lowSpaceConfirm.title",
         messageKey: "pdfMaps:import.lowSpaceConfirm.message",

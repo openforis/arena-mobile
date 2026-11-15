@@ -10,6 +10,7 @@ import { useTranslation } from "localization";
 import { LatLng, RecordUtils } from "model";
 import { RecordService } from "service";
 import { SurveySelectors } from "state";
+import { ArrayUtils } from "utils/ArrayUtils";
 
 import {
   buildAreaOfInterestPolygons,
@@ -99,9 +100,7 @@ export const useRecordsMapData = () => {
 
   const toggleLayer = useCallback((layerKey: string) => {
     setVisibleLayerKeys((keysPrev) =>
-      keysPrev.includes(layerKey)
-        ? keysPrev.filter((key) => key !== layerKey)
-        : [...keysPrev, layerKey],
+      ArrayUtils.toggleItem(keysPrev, layerKey),
     );
   }, []);
 

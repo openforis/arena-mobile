@@ -105,8 +105,13 @@ const indexByUuid = (array: any) =>
     return acc;
   }, {});
 
+// adds the item if missing, removes it otherwise
+const toggleItem = <T>(array: T[], item: T): T[] =>
+  array.includes(item) ? array.filter((i) => i !== item) : [...array, item];
+
 export const ArrayUtils = {
   findByUuid,
+  toggleItem,
   sortByProps,
   indexByUuid,
 };

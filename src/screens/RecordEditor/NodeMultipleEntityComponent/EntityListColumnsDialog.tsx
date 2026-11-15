@@ -12,6 +12,7 @@ import {
   ScrollView,
 } from "components";
 import { SurveySelectors } from "state";
+import { ArrayUtils } from "utils/ArrayUtils";
 
 type Props = {
   availableDefs: NodeDef<any>[];
@@ -67,11 +68,7 @@ export const EntityListColumnsDialog = (props: Props) => {
   }, [availableDefs, cycle]);
 
   const toggle = (uuid: string) =>
-    setSelectedUuids((prev) =>
-      prev.includes(uuid)
-        ? prev.filter((selectedUuid) => selectedUuid !== uuid)
-        : [...prev, uuid],
-    );
+    setSelectedUuids((prev) => ArrayUtils.toggleItem(prev, uuid));
 
   const toggleGroup = (defs: NodeDef<any>[], allSelected: boolean) => {
     const groupUuids = defs.map((def) => def.uuid);
