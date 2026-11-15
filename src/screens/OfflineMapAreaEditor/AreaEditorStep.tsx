@@ -88,7 +88,7 @@ export const AreaEditorStep = (props: AreaEditorStepProps) => {
               style={[
                 styles.stepSummary,
                 summaryOnly && styles.stepSummaryOnly,
-                summaryIsError && styles.estimateTextError,
+                summaryIsError && { color: theme.colors.error },
               ]}
               variant={summaryOnly ? "labelLarge" : "bodySmall"}
             >

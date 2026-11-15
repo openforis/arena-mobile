@@ -4,20 +4,14 @@ import { Polygon } from "react-native-maps";
 import { useScreenParams } from "navigation/navigator";
 import { screenKeys } from "screens/screenKeys";
 
-import {
-  HView,
-  IconButton,
-  LoadingIcon,
-  MapView,
-  Text,
-  TextInput,
-  VView,
-} from "components";
+import { LoadingIcon, MapView, Text, VView } from "components";
 import { useTranslation } from "localization";
 import { MapLayers, OfflineMapArea } from "model";
 import { OfflineMapsService } from "service";
 import { GeoUtils, log } from "utils";
 
+import { canSaveMapName } from "../OfflineMaps/mapNameUtils";
+import { MapNameEditHeader } from "../OfflineMaps/MapNameEditHeader";
 import styles from "./styles";
 
 const areaStrokeColor = "rgba(21, 101, 192, 0.95)";
@@ -85,7 +79,11 @@ export const OfflineMapAreaViewerScreen = () => {
     areas,
     areaId,
   });
-  const canSaveName = !!area && !nameErrorKey && name.trim() !== area.name;
+  const canSaveName = canSaveMapName({
+    name,
+    savedName: area?.name,
+    nameErrorKey,
+  });
 
   const onSaveNamePress = useCallback(async () => {
     if (!area) return;
@@ -119,24 +117,14 @@ export const OfflineMapAreaViewerScreen = () => {
 
   return (
     <VView style={styles.container}>
-      <VView style={styles.header}>
-        <HView style={styles.nameRow}>
-          <TextInput
-            error={!!nameErrorKey}
-            label="offlineMaps:areaEditor.name"
-            onChange={onNameChange}
-            style={styles.nameInput}
-            value={name}
-          />
-          <IconButton
-            disabled={!canSaveName}
-            icon="content-save"
-            onPress={onSaveNamePress}
-          />
-        </HView>
-        {nameErrorKey && (
-          <Text style={styles.nameError} textKey={nameErrorKey} />
-        )}
+      <MapNameEditHeader
+        canSave={canSaveName}
+        label="offlineMaps:areaEditor.name"
+        name={name}
+        nameErrorKey={nameErrorKey}
+        onNameChange={onNameChange}
+        onSavePress={onSaveNamePress}
+      >
         <Text
           textKey="offlineMaps:area.layer"
           textParams={{
@@ -155,7 +143,7 @@ export const OfflineMapAreaViewerScreen = () => {
           textKey="offlineMaps:area.zoomLevels"
           textParams={{ minZoom: area.minZoom, maxZoom: area.maxZoom }}
         />
-      </VView>
+      </MapNameEditHeader>
       <MapView
         fitToCoordinatesOnReady={area.coordinates}
         initialRegion={initialRegion}

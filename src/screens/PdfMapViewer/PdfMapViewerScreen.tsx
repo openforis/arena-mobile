@@ -4,19 +4,13 @@ import { Polygon } from "react-native-maps";
 import { useScreenParams } from "navigation/navigator";
 import { screenKeys } from "screens/screenKeys";
 
-import {
-  HView,
-  IconButton,
-  MapView,
-  Switch,
-  Text,
-  TextInput,
-  VView,
-} from "components";
+import { HView, MapView, Switch, Text, VView } from "components";
 import { PdfMapsService } from "service";
 import { SettingsActions, SettingsSelectors, useAppDispatch } from "state";
 import { GeoUtils, log } from "utils";
 
+import { canSaveMapName } from "../OfflineMaps/mapNameUtils";
+import { MapNameEditHeader } from "../OfflineMaps/MapNameEditHeader";
 import styles from "./styles";
 
 const neatlineStrokeColor = "rgba(21, 101, 192, 0.95)";
@@ -57,7 +51,11 @@ export const PdfMapViewerScreen = () => {
     pdfMaps,
     ...(mapId ? { mapId } : {}),
   });
-  const canSaveName = !!pdfMap && !nameErrorKey && name.trim() !== pdfMap.name;
+  const canSaveName = canSaveMapName({
+    name,
+    savedName: pdfMap?.name,
+    nameErrorKey,
+  });
 
   const onSaveNamePress = useCallback(async () => {
     if (!mapId) return;
@@ -71,24 +69,14 @@ export const PdfMapViewerScreen = () => {
 
   return (
     <VView style={styles.container}>
-      <VView style={styles.header}>
-        <HView style={styles.nameRow}>
-          <TextInput
-            error={!!nameErrorKey}
-            label="pdfMaps:import.name"
-            onChange={setName}
-            style={styles.nameInput}
-            value={name}
-          />
-          <IconButton
-            disabled={!canSaveName}
-            icon="content-save"
-            onPress={onSaveNamePress}
-          />
-        </HView>
-        {nameErrorKey && (
-          <Text style={styles.nameError} textKey={nameErrorKey} />
-        )}
+      <MapNameEditHeader
+        canSave={canSaveName}
+        label="pdfMaps:import.name"
+        name={name}
+        nameErrorKey={nameErrorKey}
+        onNameChange={setName}
+        onSavePress={onSaveNamePress}
+      >
         <Text
           textKey="pdfMaps:map.fileName"
           textParams={{ fileName: pdfMap.fileName }}
@@ -110,7 +98,7 @@ export const PdfMapViewerScreen = () => {
           <Text textKey="pdfMaps:hideBaseMap" />
           <Switch onChange={setBaseMapHidden} value={baseMapHidden} />
         </HView>
-      </VView>
+      </MapNameEditHeader>
       <MapView
         baseMapHidden={baseMapHidden}
         fitToCoordinatesOnReady={pdfMap.neatline}
