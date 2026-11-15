@@ -479,6 +479,28 @@ const updateRecordsDateSync = async ({ surveyId, recordUuids }: any) => {
   ]);
 };
 
+// one UPDATE per record, in a single transaction
+const updateRecordsColumnByUuid = async ({
+  surveyId,
+  column,
+  valueByUuid,
+  client,
+}: {
+  surveyId: number;
+  column: "date_modified_remote" | "date_modified_synced";
+  valueByUuid: Record<string, any>;
+  client: any;
+}) => {
+  await client.transaction(async (tx: any) => {
+    await Promises.each(Object.entries(valueByUuid), async ([uuid, value]) => {
+      await tx.runSql(
+        `UPDATE record SET ${column} = ? WHERE survey_id = ? AND uuid = ?`,
+        [value, surveyId, uuid],
+      );
+    });
+  });
+};
+
 /**
  * Persists, for each given record uuid, the server's dateModified as last observed
  * by this device right after a successful upload. This is the baseline later used
@@ -489,19 +511,18 @@ const updateRecordsDateModifiedRemote = async ({
   surveyId,
   dateModifiedRemoteByUuid,
   client = dbClient,
-}: any) => {
-  await client.transaction(async (tx: any) => {
-    await Promises.each(
-      Object.entries(dateModifiedRemoteByUuid),
-      async ([uuid, dateModifiedRemote]) => {
-        await tx.runSql(
-          `UPDATE record SET date_modified_remote = ? WHERE survey_id = ? AND uuid = ?`,
-          [fixDatetime(dateModifiedRemote), surveyId, uuid],
-        );
-      },
-    );
+}: any) =>
+  updateRecordsColumnByUuid({
+    surveyId,
+    column: "date_modified_remote",
+    valueByUuid: Object.fromEntries(
+      Object.entries(dateModifiedRemoteByUuid).map(([uuid, value]) => [
+        uuid,
+        fixDatetime(value),
+      ]),
+    ),
+    client,
   });
-};
 
 const fetchRecordsDateModifiedByUuid = async ({
   surveyId,
@@ -520,19 +541,13 @@ const updateRecordsDateModifiedSynced = async ({
   surveyId,
   dateModifiedByUuid,
   client = dbClient,
-}: any) => {
-  await client.transaction(async (tx: any) => {
-    await Promises.each(
-      Object.entries(dateModifiedByUuid),
-      async ([uuid, dateModified]) => {
-        await tx.runSql(
-          `UPDATE record SET date_modified_synced = ? WHERE survey_id = ? AND uuid = ?`,
-          [dateModified, surveyId, uuid],
-        );
-      },
-    );
+}: any) =>
+  updateRecordsColumnByUuid({
+    surveyId,
+    column: "date_modified_synced",
+    valueByUuid: dateModifiedByUuid,
+    client,
   });
-};
 
 // uuids of the files referenced by the content stored in the device for the given records
 // (all records if not specified)

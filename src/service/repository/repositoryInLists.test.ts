@@ -116,6 +116,34 @@ describe("repositories IN lists", () => {
     ).toEqual({});
   });
 
+  test("updateRecordsDateModifiedRemote/Synced update the given records", async () => {
+    await RecordRepository.updateRecordsDateModifiedRemote({
+      surveyId: 1,
+      dateModifiedRemoteByUuid: { r1: "2026-01-01T10:00:00.000Z" },
+    });
+    await RecordRepository.updateRecordsDateModifiedSynced({
+      surveyId: 1,
+      dateModifiedByUuid: { "r'3": "2026-01-02 10:00:00" },
+    });
+    const rows = await dbClient.many(
+      `SELECT uuid, date_modified_remote, date_modified_synced FROM record
+       WHERE date_modified_remote IS NOT NULL OR date_modified_synced IS NOT NULL
+       ORDER BY uuid`,
+    );
+    expect(rows).toEqual([
+      {
+        uuid: "r'3",
+        date_modified_remote: null,
+        date_modified_synced: "2026-01-02 10:00:00",
+      },
+      {
+        uuid: "r1",
+        date_modified_remote: expect.any(String),
+        date_modified_synced: null,
+      },
+    ]);
+  });
+
   test("fetchRecordsFileUuids with an empty list of records", async () => {
     expect(
       await RecordRepository.fetchRecordsFileUuids({
