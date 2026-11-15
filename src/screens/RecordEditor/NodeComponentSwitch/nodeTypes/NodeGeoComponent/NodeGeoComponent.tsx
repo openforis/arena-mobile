@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 
-import { NodeDefs } from "@openforis/arena-core";
+import { NodeDefGeo, NodeDefs } from "@openforis/arena-core";
 
 import {
   Button,
@@ -19,7 +19,9 @@ import { NodeGeoTrackComponent } from "./NodeGeoTrackComponent";
 import { useNodeGeoComponent } from "./useNodeGeoComponent";
 import styles from "./styles";
 
-export const NodeGeoComponent = memo((props: NodeComponentProps) =>
+type Props = NodeComponentProps<NodeDefGeo>;
+
+export const NodeGeoComponent = memo((props: Props) =>
   PositionTracks.isPositionTrackingNodeDef(props.nodeDef) ? (
     <NodeGeoTrackComponent {...props} />
   ) : (
@@ -27,7 +29,7 @@ export const NodeGeoComponent = memo((props: NodeComponentProps) =>
   ),
 );
 
-const NodeGeoPolygonComponent = (props: NodeComponentProps) => {
+const NodeGeoPolygonComponent = (props: NodeComponentProps<NodeDefGeo>) => {
   const { nodeDef } = props;
 
   log.debug(`rendering NodeGeoComponent for ${NodeDefs.getName(nodeDef)}`);

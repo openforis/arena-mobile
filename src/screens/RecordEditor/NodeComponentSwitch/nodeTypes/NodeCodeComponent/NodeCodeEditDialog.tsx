@@ -1,21 +1,21 @@
 import React, { useCallback } from "react";
 
-import { NodeDefs } from "@openforis/arena-core";
+import { CategoryItem, NodeDefCode, NodeDefs } from "@openforis/arena-core";
 
 import { NodeCodeAutocomplete } from "./NodeCodeAutocomplete";
 import { NodeEditDialogInternal } from "../NodeEditDialogInternal";
 
 type NodeCodeEditDialogProps = {
   editable?: boolean;
-  itemLabelFunction: (item: any) => string;
-  items?: any[];
-  nodeDef?: any;
+  itemLabelFunction: (item: CategoryItem) => string;
+  items?: CategoryItem[];
+  nodeDef: NodeDefCode;
   onDismiss?: () => void;
   onItemAdd: (uuid: string) => void;
   onItemRemove: (uuid: string) => void;
-  onSingleValueChange: (uuid: string) => void;
+  onSingleValueChange: (uuid: string | undefined) => void;
   parentNodeUuid?: string;
-  selectedItems?: any[];
+  selectedItems?: CategoryItem[];
 };
 
 export const NodeCodeEditDialog = (props: NodeCodeEditDialogProps) => {
@@ -35,7 +35,7 @@ export const NodeCodeEditDialog = (props: NodeCodeEditDialogProps) => {
   const multiple = NodeDefs.isMultiple(nodeDef);
 
   const onSingleValueChange = useCallback(
-    (selectedItemUuid: any) => {
+    (selectedItemUuid: string | undefined) => {
       onSingleValueChangeProp?.(selectedItemUuid);
       if (selectedItemUuid) {
         onDismiss?.();

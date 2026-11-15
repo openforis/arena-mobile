@@ -1,6 +1,11 @@
 import { memo, useCallback } from "react";
 
-import { ArenaRecordNode, NodeDefs, Nodes } from "@openforis/arena-core";
+import {
+  ArenaRecordNode,
+  NodeDef,
+  NodeDefs,
+  Nodes,
+} from "@openforis/arena-core";
 
 import { HView, IconButton, VView } from "components";
 import {
@@ -21,7 +26,7 @@ import styles from "./multipleAttributeComponentWrapperStyles";
 
 type AttributeRowProps = {
   node: ArenaRecordNode;
-  nodeDef: any;
+  nodeDef: NodeDef<any>;
   onDelete: (node: ArenaRecordNode) => void;
   parentNodeUuid?: string;
 };

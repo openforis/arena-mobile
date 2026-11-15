@@ -1,10 +1,12 @@
+import { CategoryItem } from "@openforis/arena-core";
+
 import { Text } from "components";
 
 import styles from "./styles";
 
 type NodeCodeReadOnlyValueProps = {
-  itemLabelFunction: (item: any) => string;
-  selectedItems?: any[];
+  itemLabelFunction: (item: CategoryItem) => string;
+  selectedItems?: CategoryItem[];
 };
 
 export const NodeCodeReadOnlyValue = (props: NodeCodeReadOnlyValueProps) => {

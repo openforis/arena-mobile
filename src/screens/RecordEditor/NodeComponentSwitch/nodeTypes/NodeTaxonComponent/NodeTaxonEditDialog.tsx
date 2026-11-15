@@ -1,13 +1,13 @@
 import React, { useCallback } from "react";
 
-import { NodeDefs } from "@openforis/arena-core";
+import { NodeDefs, NodeDefTaxon } from "@openforis/arena-core";
 
 import { log } from "utils";
 import { NodeEditDialogInternal } from "../NodeEditDialogInternal";
 import { NodeTaxonAutocomplete } from "./NodeTaxonAutocomplete";
 
 type NodeTaxonEditDialogProps = {
-  nodeDef: any;
+  nodeDef: NodeDefTaxon;
   onDismiss: () => void;
   parentNodeUuid?: string;
   selectedTaxon?: any;

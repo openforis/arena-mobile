@@ -143,7 +143,7 @@ const extractValidationItem = ({
 
 type RecordValidationReportState = {
   editDialogOpen: boolean;
-  dialogNodeDef?: object;
+  dialogNodeDef?: NodeDef<any>;
   dialogNodeUuid?: string;
   dialogParentNodeUuid?: string;
 };
@@ -244,7 +244,7 @@ export const RecordValidationReport = () => {
           onItemPress={onRowPress}
         />
       )}
-      {editDialogOpen && (
+      {editDialogOpen && dialogNodeDef && (
         <NodeEditDialog
           nodeDef={dialogNodeDef}
           parentNodeUuid={dialogParentNodeUuid}

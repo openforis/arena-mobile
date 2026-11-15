@@ -1,9 +1,11 @@
 import {
+  CategoryItem,
   NodeDef,
   NodeDefs,
   Objects,
   RecordExpressionEvaluator,
   Records,
+  Taxon,
   User,
 } from "@openforis/arena-core";
 
@@ -16,7 +18,7 @@ import {
 import { AreaOfInterestProviderDefault } from "service/areaOfInterestProvider";
 import { useAppSelector } from "state/storeHooks";
 
-export const useItemsFilter = ({
+export const useItemsFilter = <T extends CategoryItem | Taxon>({
   nodeDef,
   parentNodeUuid,
   items,
@@ -24,8 +26,8 @@ export const useItemsFilter = ({
 }: {
   nodeDef: NodeDef<any>;
   parentNodeUuid?: string;
-  items: any[];
-  alwaysIncludeItemFunction?: (item: any) => boolean;
+  items: T[];
+  alwaysIncludeItemFunction?: (item: T) => boolean;
 }) => {
   // selectLoggedUserSafe returns a new object on every call when not logged in
   const loggedUser = useAppSelector(RemoteConnectionSelectors.selectLoggedUser);
@@ -45,7 +47,7 @@ export const useItemsFilter = ({
       const parentNode = Records.getNodeByUuid(parentNodeUuid!)(record);
       const expressionEvaluator = new RecordExpressionEvaluator();
       return Promise.all(
-        items.map(async (item: any) => {
+        items.map(async (item) => {
           if (alwaysIncludeItemFunction?.(item)) return true;
           try {
             return await expressionEvaluator.evalExpression({
@@ -76,7 +78,7 @@ export const useItemsFilter = ({
     ],
     {
       enabled: filterEnabled,
-      initialValue: [] as any[],
+      initialValue: [] as T[],
       isEqual: Objects.isEqual,
     },
   );

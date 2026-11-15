@@ -3,6 +3,7 @@ import { useCallback, useMemo, useState } from "react";
 import {
   CategoryItem,
   CategoryItems,
+  NodeDefCode,
   NodeDefs,
   NodeValues,
   Surveys,
@@ -22,7 +23,10 @@ import { useItemsFilter } from "../useItemsFilter";
 export const useNodeCodeComponentLocalState = ({
   parentNodeUuid,
   nodeDef,
-}: any) => {
+}: {
+  parentNodeUuid?: string;
+  nodeDef: NodeDefCode;
+}) => {
   const dispatch = useAppDispatch();
 
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -80,7 +84,7 @@ export const useNodeCodeComponentLocalState = ({
     selectedItems.length === 1 ? selectedItems[0]?.uuid : null;
 
   const itemLabelFunction = useCallback(
-    (item: any) => {
+    (item: CategoryItem | null | undefined) => {
       if (!item) return "";
 
       return NodeDefs.isCodeShown(cycle)(nodeDef)
@@ -91,7 +95,7 @@ export const useNodeCodeComponentLocalState = ({
   );
 
   const onItemAdd = useCallback(
-    (itemUuid: any) => {
+    (itemUuid: string) => {
       const value = NodeValues.newCodeValue({ itemUuid });
       if (NodeDefs.isSingle(nodeDef)) {
         const node = nodes[0];
@@ -122,7 +126,7 @@ export const useNodeCodeComponentLocalState = ({
   );
 
   const onItemRemove = useCallback(
-    (itemUuid: any) => {
+    (itemUuid: string) => {
       if (NodeDefs.isSingle(nodeDef)) {
         const node = nodes[0];
         if (node) {
@@ -158,7 +162,7 @@ export const useNodeCodeComponentLocalState = ({
   );
 
   const onSingleValueChange = useCallback(
-    (itemUuid: any) => {
+    (itemUuid: string | null | undefined) => {
       const node = nodes[0]!;
       const wasSelected = NodeValues.getItemUuid(node) === itemUuid;
       const value =
