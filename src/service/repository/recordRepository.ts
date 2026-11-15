@@ -472,6 +472,7 @@ const updateRecordsReadOnly = async ({
 };
 
 const updateRecordsDateSync = async ({ surveyId, recordUuids }: any) => {
+  if (recordUuids.length === 0) return;
   const sql = `UPDATE record
   SET date_synced = ?
   WHERE survey_id = ?
