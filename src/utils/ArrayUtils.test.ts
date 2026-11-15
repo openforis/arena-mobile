@@ -103,3 +103,19 @@ describe("ArrayUtils.sortByProps", () => {
     expect(sorted(array, {})).toEqual(array);
   });
 });
+
+describe("ArrayUtils.determineDateFormat", () => {
+  it("detects storage date-times, whose format has [T] and [Z] literals", () => {
+    expect(
+      ArrayUtils.determineDateFormat("2026-11-15T10:20:30.000Z"),
+    ).toBeDefined();
+  });
+
+  it("detects storage dates", () => {
+    expect(ArrayUtils.determineDateFormat("2026-11-15")).toBeDefined();
+  });
+
+  it("ignores text that is not a date", () => {
+    expect(ArrayUtils.determineDateFormat("not a date")).toBeUndefined();
+  });
+});

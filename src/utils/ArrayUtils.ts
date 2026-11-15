@@ -2,6 +2,10 @@ import { DateFormats, Dates, Objects } from "@openforis/arena-core";
 
 import { Sort, SortObject } from "model/Sort";
 
+// length of the values written in the format: text in [...] is a literal, written without the brackets
+const formattedValueLength = (format: string): number =>
+  format.replaceAll("[", "").replaceAll("]", "").length;
+
 const determineDateFormat = (
   value: any,
   dateFormats = [
@@ -14,7 +18,7 @@ const determineDateFormat = (
 ) =>
   dateFormats.find(
     (format) =>
-      value.length === format.length &&
+      value.length === formattedValueLength(format) &&
       Dates.isValidDateInFormat(value, format),
   );
 
@@ -110,6 +114,7 @@ const toggleItem = <T>(array: T[], item: T): T[] =>
   array.includes(item) ? array.filter((i) => i !== item) : [...array, item];
 
 export const ArrayUtils = {
+  determineDateFormat,
   findByUuid,
   toggleItem,
   sortByProps,
