@@ -55,7 +55,7 @@ export const MultipleAttributeComponentWrapper = memo(
     const { nodeDef, parentNodeUuid } = props;
 
     log.debug(
-      `rendering MultipleAttributeComponentWrapper for ${nodeDef.props.name} - parentNodeUuid: ${parentNodeUuid}`,
+      `rendering MultipleAttributeComponentWrapper for ${NodeDefs.getName(nodeDef)} - parentNodeUuid: ${parentNodeUuid}`,
     );
 
     const dispatch = useAppDispatch();

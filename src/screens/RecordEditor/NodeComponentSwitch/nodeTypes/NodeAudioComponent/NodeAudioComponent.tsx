@@ -11,7 +11,7 @@ import styles from "./styles";
 export const NodeAudioComponent = (props: NodeComponentProps<NodeDefFile>) => {
   const { nodeDef, nodeUuid } = props;
 
-  log.debug(`rendering NodeAudioComponent for ${nodeDef.props.name}`);
+  log.debug(`rendering NodeAudioComponent for ${NodeDefs.getName(nodeDef)}`);
 
   const {
     audioRecorder,
