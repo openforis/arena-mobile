@@ -283,7 +283,8 @@ const confirmRecordsSyncedWithRemote = async ({
   survey: RecordsSyncSurvey;
   cycle?: string | null;
   recordUuids: string[];
-  dateModifiedByUuid: Record<string, string>;
+  // local dateModified read before the export (null/undefined if not found)
+  dateModifiedByUuid: Record<string, string | null | undefined>;
 }) => {
   const { id: surveyId } = survey;
 

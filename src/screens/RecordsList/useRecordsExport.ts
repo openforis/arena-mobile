@@ -1,15 +1,11 @@
 import { useCallback, useMemo } from "react";
 
-import { Surveys } from "@openforis/arena-core";
+import { JobSerialized, Survey, Surveys } from "@openforis/arena-core";
 
 import { useToast } from "hooks";
 import { useTranslation } from "localization";
-import {
-  RecordOrigin,
-  RecordSummaries,
-  RecordSyncStatus,
-  RecordUpdateConflictResolutionStrategy as ConflictResolutionStrategy,
-} from "model";
+import { RecordUpdateConflictResolutionStrategy as ConflictResolutionStrategy } from "model";
+import type { RecordsUploadResult } from "service/recordsUploadAndProcessJob";
 import {
   AutoSyncSelectors,
   DataEntryActions,
@@ -23,27 +19,36 @@ import {
   generateRecordsCountSummaryText,
   noRecordsToExportTextKey,
 } from "./recordsListUtils";
+import {
+  buildRecordsCountSummary,
+  checkCanSendData,
+  ExportRecord,
+  filterRecordsByUuids,
+  getLocalRecordUuids,
+  groupRecordsForExport,
+  hasMergeableConflicts,
+  isNothingToExport,
+  RecordsExportGroups,
+  selectRecordsToExport,
+} from "./recordsExportUtils";
 import { RecordsListState } from "./useRecordsList";
 import type { AppDispatch, AppGetState } from "state/store";
 
 export type UseRecordsExportParams = {
-  cycle: any;
+  cycle: string | undefined;
   isDemoSurvey: boolean;
   loadRecordsWithSyncStatus: () => Promise<RecordsListState>;
   networkAvailable: boolean;
-  records: any[];
+  records: ExportRecord[];
   setLoading: (loading: boolean) => void;
-  survey: any;
+  survey: Survey | undefined;
   syncStatusFetched?: boolean;
 };
 
-const filterRecordsByUuids = (
-  records: any[],
-  recordUuids: string[] | undefined,
-) =>
-  recordUuids && recordUuids.length > 0
-    ? records.filter((record) => recordUuids.includes(record.uuid))
-    : records;
+type ConfirmExportResult = {
+  groups?: RecordsExportGroups;
+  confirmResult: OnConfirmParams | boolean | null;
+};
 
 export const useRecordsExport = ({
   cycle,
@@ -73,82 +78,25 @@ export const useRecordsExport = ({
   );
 
   const confirmExportRecords = useCallback(
-    async ({
-      records,
-    }: any): Promise<{
-      newRecords?: any[];
-      updatedRecords?: any[];
-      conflictingRecords?: any[];
-      sameRecordConflicts?: any[];
-      confirmResult: OnConfirmParams | boolean | null;
-    }> => {
-      // records of other user groups cannot be uploaded
-      const getRecordsByStatus = (status: any) =>
-        records.filter((r: any) => !r.readOnly && r.syncStatus === status);
-      const newRecords = getRecordsByStatus(RecordSyncStatus.new);
-      const newRecordsCount = newRecords.length;
-
-      const updatedRecords = getRecordsByStatus(
-        RecordSyncStatus.modifiedLocally,
-      );
-      const updatedRecordsCount = updatedRecords.length;
-
-      const conflictingRecords = getRecordsByStatus(
-        RecordSyncStatus.conflictingKeys,
-      );
-      const conflictingRecordsCount = conflictingRecords.length;
-      // the survey may not allow merging records with the same key(s) (survey security option):
-      // those records then can't be sent at all, the user has to change their key values first
-      const mergeWithSameKeysAllowed =
-        Surveys.isRecordsMergeWithSameKeysAllowed(survey);
-      const mergeableConflictingRecordsCount = mergeWithSameKeysAllowed
-        ? conflictingRecordsCount
-        : 0;
-
-      // records also modified on the server since this device last synced them: currently blocked from
-      // export entirely unless the user opts into merging them with the server's changes.
-      // modifiedLocallyAndRemotely means both sides actually diverged since the last known baseline
-      // (a real risk of the merge silently dropping one side's edit); modifiedRemotely is kept here too
-      // since, before a baseline is captured for a record, it's the only signal we have that the server moved.
-      const sameRecordConflicts = records.filter(
-        (r: any) =>
-          !r.readOnly &&
-          [
-            RecordSyncStatus.modifiedRemotely,
-            RecordSyncStatus.modifiedLocallyAndRemotely,
-          ].includes(r.syncStatus),
-      );
-      const sameRecordConflictsCount = sameRecordConflicts.length;
-
-      if (
-        newRecordsCount +
-          updatedRecordsCount +
-          conflictingRecordsCount +
-          sameRecordConflictsCount ===
-        0
-      ) {
+    async (records: ExportRecord[]): Promise<ConfirmExportResult> => {
+      const groups = groupRecordsForExport(records);
+      if (isNothingToExport(groups)) {
         toaster(noRecordsToExportTextKey);
         return { confirmResult: false };
       }
-      const confirmSingleChoiceOptions =
-        mergeableConflictingRecordsCount + sameRecordConflictsCount > 0
-          ? conflictingRecordsExportOptions
-          : [];
+      const mergeWithSameKeysAllowed =
+        !!survey && Surveys.isRecordsMergeWithSameKeysAllowed(survey);
+      const confirmSingleChoiceOptions = hasMergeableConflicts({
+        groups,
+        mergeWithSameKeysAllowed,
+      })
+        ? conflictingRecordsExportOptions
+        : [];
 
-      const recordsWithErrorsCount = records.filter(
-        RecordSummaries.hasErrors,
-      ).length;
-
-      const recordsCountSummary = {
-        new: newRecordsCount,
-        updated: updatedRecordsCount,
-        conflicting: conflictingRecordsCount,
-        conflictingModifiedRemotely: sameRecordConflictsCount,
-        withValidationErrors: recordsWithErrorsCount,
-      };
+      const recordsCountSummary = buildRecordsCountSummary({ groups, records });
       const recordsCountSummaryText = [
         generateRecordsCountSummaryText({ recordsCountSummary, t }),
-        ...(conflictingRecordsCount > 0 && !mergeWithSameKeysAllowed
+        ...(groups.conflictingRecords.length > 0 && !mergeWithSameKeysAllowed
           ? ["", t("dataEntry:dataExport.mergeWithSameKeysNotAllowed")]
           : []),
       ].join("\n");
@@ -160,98 +108,95 @@ export const useRecordsExport = ({
         singleChoiceOptions: confirmSingleChoiceOptions,
         defaultSingleChoiceValue: confirmSingleChoiceOptions[0]?.value,
       });
-      return {
-        newRecords,
-        updatedRecords,
-        conflictingRecords,
-        sameRecordConflicts,
-        confirmResult,
-      };
+      return { groups, confirmResult };
     },
     [confirm, survey, t, toaster],
   );
 
+  // merging records edited on both this device and the server can silently pick one side's edit
+  // over the other's per field, so ask for an extra explicit confirmation before proceeding
+  const confirmMergeSameRecordConflicts = useCallback(
+    async (count: number) =>
+      !!(await confirm({
+        titleKey: "dataEntry:dataExport.mergeSameRecordConflictConfirm.title",
+        messageKey:
+          "dataEntry:dataExport.mergeSameRecordConflictConfirm.message",
+        messageParams: { count },
+        swipeToConfirm: true,
+      })),
+    [confirm],
+  );
+
   const exportSelectedRecords = useCallback(
-    async ({ selectedRecords, onlyRemote = false }: any) => {
+    async ({
+      selectedRecords,
+      onlyRemote = false,
+    }: {
+      selectedRecords: ExportRecord[];
+      onlyRemote?: boolean;
+    }) => {
       if (isAutoSyncRunningNow()) {
         toaster("dataEntry:autoSync.syncInProgressToast");
         return;
       }
-      const {
-        newRecords,
-        updatedRecords,
-        conflictingRecords,
-        sameRecordConflicts,
-        confirmResult,
-      } = await confirmExportRecords({ records: selectedRecords });
-      if (confirmResult) {
-        const recordsToExport = [...newRecords!, ...updatedRecords!];
+      const { groups, confirmResult } =
+        await confirmExportRecords(selectedRecords);
+      if (!confirmResult || !groups || !survey || !cycle) return;
 
-        let conflictResolutionStrategy =
-          ConflictResolutionStrategy.overwriteIfUpdated;
-        const mergeSelected =
-          (confirmResult as OnConfirmParams).selectedSingleChoiceValue ===
-          ConflictResolutionStrategy.merge;
-        if (mergeSelected) {
-          if (Surveys.isRecordsMergeWithSameKeysAllowed(survey)) {
-            recordsToExport.push(...conflictingRecords!);
-          }
-          recordsToExport.push(...sameRecordConflicts!);
-          conflictResolutionStrategy = ConflictResolutionStrategy.merge;
-        }
-        const recordUuids = recordsToExport.map((r) => r.uuid);
-        if (recordUuids.length === 0) {
-          toaster(noRecordsToExportTextKey);
-          return;
-        }
-
-        // merging records edited on both this device and the server can silently pick one side's edit
-        // over the other's per field, so ask for an extra explicit confirmation before proceeding
-        if (mergeSelected && sameRecordConflicts!.length > 0) {
-          const strongConfirmResult = await confirm({
-            titleKey:
-              "dataEntry:dataExport.mergeSameRecordConflictConfirm.title",
-            messageKey:
-              "dataEntry:dataExport.mergeSameRecordConflictConfirm.message",
-            messageParams: { count: sameRecordConflicts!.length },
-            swipeToConfirm: true,
-          });
-          if (!strongConfirmResult) {
-            return;
-          }
-        }
-
-        setLoading(true);
-
-        const onJobComplete = async (jobCompleted: any) => {
-          const { result } = jobCompleted;
-          const { missingFiles } = result;
-
-          await loadRecordsWithSyncStatus();
-
-          if (missingFiles > 0) {
-            toaster(
-              "dataEntry:dataExport.exportedSuccessfullyButFilesMissing",
-              { missingFiles },
-            );
-          }
-        };
-        dispatch(
-          DataEntryActions.exportRecords({
-            cycle,
-            recordUuids,
-            conflictResolutionStrategy,
-            onJobComplete,
-            onEnd: () => setLoading(false),
-            onlyRemote,
-          }),
-        );
+      const mergeSelected =
+        (confirmResult as OnConfirmParams).selectedSingleChoiceValue ===
+        ConflictResolutionStrategy.merge;
+      const { recordUuids, conflictResolutionStrategy } = selectRecordsToExport(
+        {
+          groups,
+          mergeSelected,
+          mergeWithSameKeysAllowed:
+            Surveys.isRecordsMergeWithSameKeysAllowed(survey),
+        },
+      );
+      if (recordUuids.length === 0) {
+        toaster(noRecordsToExportTextKey);
+        return;
       }
+      const sameRecordConflictsCount = groups.sameRecordConflicts.length;
+      if (
+        mergeSelected &&
+        sameRecordConflictsCount > 0 &&
+        !(await confirmMergeSameRecordConflicts(sameRecordConflictsCount))
+      ) {
+        return;
+      }
+
+      setLoading(true);
+
+      const onJobComplete = async (
+        jobCompleted: JobSerialized<RecordsUploadResult | undefined>,
+      ) => {
+        const missingFiles = jobCompleted.result?.missingFiles ?? 0;
+
+        await loadRecordsWithSyncStatus();
+
+        if (missingFiles > 0) {
+          toaster("dataEntry:dataExport.exportedSuccessfullyButFilesMissing", {
+            missingFiles,
+          });
+        }
+      };
+      dispatch(
+        DataEntryActions.exportRecords({
+          cycle,
+          recordUuids,
+          conflictResolutionStrategy,
+          onJobComplete,
+          onEnd: () => setLoading(false),
+          onlyRemote,
+        }),
+      );
     },
     [
       isAutoSyncRunningNow,
-      confirm,
       confirmExportRecords,
+      confirmMergeSameRecordConflicts,
       cycle,
       dispatch,
       loadRecordsWithSyncStatus,
@@ -266,11 +211,8 @@ export const useRecordsExport = ({
   }, [exportSelectedRecords, records]);
 
   const onExportAllRecordsPress = useCallback(() => {
-    const recordUuids = records
-      ?.filter((record) => record.origin === RecordOrigin.local)
-      .map((record) => record.uuid);
-
-    if (recordUuids?.length === 0) {
+    const recordUuids = getLocalRecordUuids(records);
+    if (recordUuids.length === 0 || !cycle) {
       toaster(noRecordsToExportTextKey);
       return;
     }
@@ -290,8 +232,8 @@ export const useRecordsExport = ({
   }, [dispatch]);
 
   const onExportSelectedRecordUuids = useCallback(
-    async (recordUuids: any) => {
-      const selectedRecords = records!.filter((record) =>
+    async (recordUuids: string[]) => {
+      const selectedRecords = records.filter((record) =>
         recordUuids.includes(record.uuid),
       );
       await exportSelectedRecords({ selectedRecords });
@@ -299,65 +241,36 @@ export const useRecordsExport = ({
     [exportSelectedRecords, records],
   );
 
-  const checkCanSendData = useCallback(
-    (selectedRecordUuids?: string[]) => {
-      if (!survey) {
-        return {
-          errorKey: "recordsList:sendData.error.surveyNotSelected",
-        };
-      }
-      if (!Surveys.isVisibleInMobile(survey)) {
-        return {
-          errorKey: "recordsList:sendData.error.surveyNotVisibleInMobile",
-        };
-      } else if (!Surveys.isRecordsUploadFromMobileAllowed(survey)) {
-        return {
-          errorKey: "recordsList:sendData.error.recordsUploadNotAllowed",
-        };
-      } else if (
-        filterRecordsByUuids(records, selectedRecordUuids).some(
-          RecordSummaries.hasErrors,
-        ) &&
-        !Surveys.isRecordsWithErrorsUploadFromMobileAllowed(survey)
-      ) {
-        return {
-          errorKey:
-            "recordsList:sendData.error.recordsWithErrorsUploadNotAllowed",
-        };
-      }
-      return {};
-    },
-    [records, survey],
-  );
-
   const onSendDataPress = useCallback(
     async (selectedRecordUuids?: string[]) => {
-      const { errorKey } = checkCanSendData(selectedRecordUuids);
+      const errorKey = checkCanSendData({
+        survey,
+        records,
+        selectedRecordUuids,
+      });
       if (errorKey) {
         toaster("recordsList:sendData.error.generic", {
           details: t(errorKey),
         });
-      } else {
-        const {
-          syncStatusFetched: syncStatusFetchedNext,
-          records: recordsNext,
-        } = await loadRecordsWithSyncStatus();
-        if (syncStatusFetchedNext) {
-          const recordsToSend = filterRecordsByUuids(
+        return;
+      }
+      const { syncStatusFetched: syncStatusFetchedNext, records: recordsNext } =
+        await loadRecordsWithSyncStatus();
+      if (syncStatusFetchedNext) {
+        await exportSelectedRecords({
+          selectedRecords: filterRecordsByUuids(
             recordsNext,
             selectedRecordUuids,
-          );
-          await exportSelectedRecords({
-            selectedRecords: recordsToSend,
-            onlyRemote: true,
-          });
-        }
+          ),
+          onlyRemote: true,
+        });
       }
     },
     [
-      checkCanSendData,
       exportSelectedRecords,
       loadRecordsWithSyncStatus,
+      records,
+      survey,
       t,
       toaster,
     ],

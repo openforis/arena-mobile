@@ -1,10 +1,16 @@
-import { JobStatus, Objects } from "@openforis/arena-core";
+import {
+  JobSerialized,
+  JobStatus,
+  Objects,
+  Validation,
+} from "@openforis/arena-core";
 
 import { RecordService, UserService } from "service";
 import {
   RecordsExportFileGenerationJob,
   RecordsExportFileGenerationJobResult,
 } from "service/recordsExportFileGenerationJob";
+import type { RecordsUploadResult } from "service/recordsUploadAndProcessJob";
 
 import { i18n } from "localization";
 import { JobCancelError, ValidationUtils } from "model";
@@ -36,6 +42,15 @@ const exportType = {
   share: "share",
 };
 
+type UploadJobSummary = JobSerialized<RecordsUploadResult | undefined>;
+
+type OnUploadJobComplete = (
+  jobComplete: UploadJobSummary,
+) => void | Promise<void>;
+
+// errors of the export file generation job, by record
+type ExportFileGenerationErrors = Record<string, { error: Validation }>;
+
 const onExportConfirmed =
   ({
     selectedSingleChoiceValue,
@@ -46,7 +61,15 @@ const onExportConfirmed =
     silent = false,
     // see startUploadDataToRemoteServer's `chained` param
     chained = false,
-  }: any) =>
+  }: {
+    selectedSingleChoiceValue?: string | null;
+    conflictResolutionStrategy?: string;
+    outputFileUri: string;
+    skipMissingFiles?: boolean;
+    onJobComplete?: OnUploadJobComplete;
+    silent?: boolean;
+    chained?: boolean;
+  }) =>
   async (dispatch: AppDispatch) => {
     try {
       if (selectedSingleChoiceValue === exportType.remote) {
@@ -76,8 +99,12 @@ const _onExportFileGenerationError = ({
   errors,
   dispatch,
   silent = false,
-}: any) => {
-  const validationErrors = Object.values(errors).map((item: any) => item.error);
+}: {
+  errors: ExportFileGenerationErrors;
+  dispatch: AppDispatch;
+  silent?: boolean;
+}) => {
+  const validationErrors = Object.values(errors).map((item) => item.error);
   const details = validationErrors
     .map((validationError) =>
       ValidationUtils.getJointErrorText({
@@ -113,12 +140,24 @@ const _onExportFileGenerationSucceeded = async ({
   onJobComplete,
   dispatch,
   silent = false,
-}: any) => {
-  const { outputFileUri, recordsWithMissingFiles = [] } = result || {};
+}: {
+  result: RecordsExportFileGenerationJobResult | undefined;
+  onlyLocally: boolean;
+  onlyRemote?: boolean;
+  conflictResolutionStrategy: string;
+  onJobComplete: OnUploadJobComplete;
+  dispatch: AppDispatch;
+  silent?: boolean;
+}) => {
+  const { outputFileUri, recordsWithMissingFiles = [] } = result ?? {};
+  if (!outputFileUri) {
+    log.warn("exportRecords: export file generated without output file");
+    return;
+  }
 
   if (recordsWithMissingFiles.length > 0 && !silent) {
     const recordsList = recordsWithMissingFiles
-      .map(({ keysText }: { keysText: string }) => `- ${keysText}`)
+      .map(({ keysText }) => `- ${keysText}`)
       .join("\n");
 
     const confirmed = await ConfirmUtils.confirm({
@@ -186,7 +225,7 @@ type ExportRecordsParams = {
   conflictResolutionStrategy?: string;
   onlyLocally?: boolean;
   onlyRemote?: boolean;
-  onJobComplete?: ((jobComplete: any) => void | Promise<void>) | null;
+  onJobComplete?: OnUploadJobComplete | null;
   onEnd?: (() => void | Promise<void>) | null;
   silent?: boolean;
 };
@@ -207,15 +246,14 @@ export const exportRecords =
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
     const surveyId = survey.id;
-    let dateModifiedByUuid: Record<string, any> = {};
+    let dateModifiedByUuid: Record<string, string | null | undefined> = {};
 
-    const onUploadComplete = async (jobComplete: any) => {
-      const { result } = jobComplete;
+    const onUploadComplete = async (jobComplete: UploadJobSummary) => {
       const {
-        mergedRecordsMap,
+        mergedRecordsMap = {},
         mergedSameRecordUuids = [],
         skippedRecordsUuids = [],
-      } = result;
+      } = jobComplete.result ?? {};
 
       // records merged with their own server copy are left out: the local copy doesn't match the
       // server's until the merged version is fetched (below), which stamps the sync baseline itself.
@@ -249,7 +287,7 @@ export const exportRecords =
         // (visible under "records in device") instead of "remote", otherwise it would only be
         // visible under "all records".
         const mergedIntoRecordUuids = [
-          ...new Set(Object.values(mergedRecordsMap) as string[]),
+          ...new Set(Object.values(mergedRecordsMap)),
         ];
         const mergedRecordsFetched = await fetchMergedRecordsAndNotify({
           dispatch,
@@ -305,7 +343,7 @@ export const exportRecords =
       await onJobCompleteParam?.(jobComplete);
     };
 
-    const onJobComplete = (jobComplete: any) =>
+    const onJobComplete = (jobComplete: UploadJobSummary) =>
       DataEntryActionsRecordSync.runAsPostUploadProcessing(() =>
         onUploadComplete(jobComplete),
       );

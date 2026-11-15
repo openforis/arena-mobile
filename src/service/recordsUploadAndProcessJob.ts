@@ -6,6 +6,16 @@ import { RecordsUploadAndProcessJobContext } from "./RecordsUploadAndProcessJobC
 import { RecordsUploadJob } from "./recordsUploadJob";
 import { RemoteJobWatcherJob } from "./remoteJobWatcherJob";
 
+// result of the server-side records import job
+export type RecordsUploadResult = {
+  // local record uuid => uuid of the server record (same keys) it was merged into
+  mergedRecordsMap?: Record<string, string>;
+  // records merged with their own server copy (same uuid)
+  mergedSameRecordUuids?: string[];
+  skippedRecordsUuids?: string[];
+  missingFiles?: number;
+};
+
 // uploads the records zip, then watches the server-side job it kicks off, as ONE job: this only
 // merges the upload and server-side processing phases (not the zip-preparation phase before
 // them) because those two never have a user-facing gate in between them (unlike zip preparation,
@@ -40,7 +50,7 @@ export class RecordsUploadAndProcessJob extends JobMobile<RecordsUploadAndProces
     return super.onInnerJobEvent(event);
   }
 
-  override generateResult() {
+  override generateResult(): Promise<RecordsUploadResult | undefined> {
     const watcherJob = this.innerJobs?.[1];
     return Promise.resolve(watcherJob?.result);
   }
