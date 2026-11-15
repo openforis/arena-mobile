@@ -72,7 +72,6 @@ describe("PositionTrackingService", () => {
   });
 
   beforeEach(async () => {
-    jest.clearAllMocks();
     await PositionTrackingService.unload();
     watchPositionMock.mockImplementation(async ({ onLocation }: any) => {
       emitLocation = onLocation;
