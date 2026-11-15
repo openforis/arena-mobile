@@ -1,6 +1,16 @@
+import { User } from "@openforis/arena-core";
+
 import { ImageUtils } from "utils/ImageUtils";
 import { log } from "utils/Logger";
+import { asyncStorageKeys } from "./asyncStorage/asyncStorageKeys";
+import { StoredItem } from "./asyncStorage/StoredItem";
 import { RemoteService } from "./remoteService";
+
+// last user logged in on this device, used while offline or until the server answers
+const lastLoggedInUserStore = new StoredItem<User | null>(
+  asyncStorageKeys.loggedInUser,
+  null,
+);
 
 const fetchUser = async () => {
   const { data } = await RemoteService.get("/auth/user");
@@ -20,7 +30,20 @@ const fetchUserPicture = async (userUuid: string) => {
   }
 };
 
+const fetchLastLoggedInUser = (): Promise<User | null> =>
+  lastLoggedInUserStore.fetch();
+
+const saveLastLoggedInUser = async (user: User): Promise<void> => {
+  await lastLoggedInUserStore.save(user);
+};
+
+const clearLastLoggedInUser = (): Promise<void> =>
+  lastLoggedInUserStore.clear();
+
 export const UserService = {
   fetchUser,
   fetchUserPicture,
+  fetchLastLoggedInUser,
+  saveLastLoggedInUser,
+  clearLastLoggedInUser,
 };
