@@ -10,17 +10,9 @@ import { PositionTrackingActions } from "../positionTracking/actions";
 import { SurveySelectors } from "../survey";
 
 import { DataEntryActionsRecordPreviousCycle } from "./actionsRecordPreviousCycle";
-import { DataEntryActionTypes } from "./actionTypes";
+import { DataEntrySliceActions } from "./reducer";
 import { DataEntrySelectors } from "./selectors";
 import type { AppDispatch, AppGetState } from "../store";
-
-const {
-  DATA_ENTRY_RESET,
-  PAGE_ENTITY_ACTIVE_CHILD_INDEX_SET,
-  PAGE_ENTITY_SET,
-  PAGE_SELECTOR_MENU_OPEN_SET,
-  RECORD_EDIT_LOCKED,
-} = DataEntryActionTypes;
 
 const { updatePreviousCyclePageEntity } = DataEntryActionsRecordPreviousCycle;
 
@@ -55,7 +47,7 @@ export const selectCurrentPageEntity =
       locked,
     };
 
-    dispatch({ type: PAGE_ENTITY_SET, payload });
+    dispatch(DataEntrySliceActions.pageEntitySet(payload));
 
     if (DataEntrySelectors.selectIsLinkedToPreviousCycleRecord(state)) {
       dispatch(updatePreviousCyclePageEntity);
@@ -73,7 +65,7 @@ export const selectCurrentPageEntity =
 
 export const selectCurrentPageEntityActiveChildIndex =
   (index: any) => (dispatch: AppDispatch, getState: AppGetState) => {
-    dispatch({ type: PAGE_ENTITY_ACTIVE_CHILD_INDEX_SET, index });
+    dispatch(DataEntrySliceActions.pageEntityActiveChildIndexSet(index));
     const state = getState();
     const isPhone = DeviceInfoSelectors.selectIsPhone(state);
     if (isPhone) {
@@ -88,7 +80,7 @@ export const toggleRecordPageMenuOpen = (
   Keyboard.dismiss();
   const state = getState();
   const open = DataEntrySelectors.selectRecordPageSelectorMenuOpen(state);
-  dispatch({ type: PAGE_SELECTOR_MENU_OPEN_SET, open: !open });
+  dispatch(DataEntrySliceActions.pageSelectorMenuOpenSet(!open));
 };
 
 const closeRecordPageMenu = (dispatch: AppDispatch, getState: AppGetState) => {
@@ -96,7 +88,7 @@ const closeRecordPageMenu = (dispatch: AppDispatch, getState: AppGetState) => {
   const pageSelectorMenuOpen =
     DataEntrySelectors.selectRecordPageSelectorMenuOpen(state);
   if (pageSelectorMenuOpen) {
-    dispatch({ type: PAGE_SELECTOR_MENU_OPEN_SET, open: false });
+    dispatch(DataEntrySliceActions.pageSelectorMenuOpenSet(false));
   }
 };
 
@@ -107,7 +99,7 @@ export const toggleRecordEditLock = (
   Keyboard.dismiss();
   const state = getState();
   const locked = DataEntrySelectors.selectRecordEditLocked(state);
-  dispatch({ type: RECORD_EDIT_LOCKED, locked: !locked });
+  dispatch(DataEntrySliceActions.recordEditLockedSet(!locked));
 };
 
 export const navigateToRecordsList =
@@ -122,7 +114,7 @@ export const navigateToRecordsList =
           await dispatch(PositionTrackingActions.closeTrack());
           // pop=true pops the current screen from the stack and avoids going back to it (unmounts the RecordEditor component)
           navigator.navigateToRecordsList({ pop: true });
-          dispatch({ type: DATA_ENTRY_RESET });
+          dispatch(DataEntrySliceActions.reset());
         },
       }),
     );

@@ -1,5 +1,0 @@
-export const RemoteConnectionActionTypes = {
-  USER_LOADING: "USER_LOADING",
-  USER_SET: "USER_SET",
-  USER_PROFILE_ICON_INFO_SET: "USER_PROFILE_ICON_INFO_SET",
-};

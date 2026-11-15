@@ -6,16 +6,13 @@ import { log } from "utils";
 
 import { createCallbackRegistry } from "../callbackRegistry";
 import type { AppDispatch, AppGetState, RootState } from "../store";
+import { JobMonitorSliceActions } from "./reducer";
 
 // the websocket can miss the final update (e.g. a job ending before the handshake)
 const REMOTE_JOB_STATUS_POLL_INTERVAL_MS = 30_000;
 
 // progress updates can come for every processed item: every dispatch re-runs all the store subscribers
 const JOB_MONITOR_UPDATE_MIN_INTERVAL_MS = 250;
-
-const JOB_MONITOR_START = "JOB_MONITOR_START";
-const JOB_MONITOR_UPDATE = "JOB_MONITOR_UPDATE";
-const JOB_MONITOR_END = "JOB_MONITOR_END";
 
 const getJobMonitorState = (state: RootState) => state.jobMonitor;
 
@@ -236,7 +233,7 @@ const createOnJobUpdateCallback = ({
     if (!skipUpdate) {
       lastUpdatePayload = payload;
       lastUpdateTime = now;
-      dispatch({ type: JOB_MONITOR_UPDATE, payload });
+      dispatch(JobMonitorSliceActions.update(payload));
     }
     if (isJobStatusEnded(status)) {
       if (!job) {
@@ -336,9 +333,8 @@ const start =
       onCancel,
       onClose,
     });
-    dispatch({
-      type: JOB_MONITOR_START,
-      payload: {
+    dispatch(
+      JobMonitorSliceActions.start({
         jobUuid,
         titleKey,
         cancelButtonTextKey,
@@ -357,8 +353,8 @@ const start =
         transferSpeedTextKey,
         transferEtaTextKey,
         etaSeconds: null,
-      },
-    });
+      }),
+    );
 
     const onJobUpdate = createOnJobUpdateCallback({
       dispatch,
@@ -448,14 +444,10 @@ const close = () => (dispatch: AppDispatch, getState: AppGetState) => {
   const onClose = JobMonitorCallbacksRegistry.get(callbacksId)?.onClose;
   JobMonitorCallbacksRegistry.remove(callbacksId);
   onClose?.();
-  dispatch({ type: JOB_MONITOR_END });
+  dispatch(JobMonitorSliceActions.end());
 };
 
 export const JobMonitorActions = {
-  JOB_MONITOR_START,
-  JOB_MONITOR_UPDATE,
-  JOB_MONITOR_END,
-
   start,
   startAsync,
   cancel,
