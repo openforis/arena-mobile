@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useNavigator } from "navigation/navigator";
 import * as DocumentPicker from "expo-document-picker";
 
@@ -14,15 +14,10 @@ import {
   Text,
   VView,
 } from "components";
-import { useNavigationFocus, useToast } from "hooks";
+import { useConfirmedAction, useFocusLoad, useToast } from "hooks";
 import { PdfMap } from "model";
 import { PdfMapsService } from "service";
-import {
-  SettingsActions,
-  SettingsSelectors,
-  useAppDispatch,
-  useConfirm,
-} from "state";
+import { SettingsActions, SettingsSelectors, useAppDispatch } from "state";
 import { useAppTheme } from "theme";
 import { Files, log } from "utils";
 
@@ -110,7 +105,7 @@ export const PdfMapsTab = () => {
 
   const navigator = useNavigator();
   const dispatch = useAppDispatch();
-  const confirm = useConfirm();
+  const { confirmAndRun, running: deleting } = useConfirmedAction();
   const toaster = useToast();
   const settings = SettingsSelectors.useSettings();
   const rendererAvailable = PdfMapsService.isRendererAvailable();
@@ -125,7 +120,6 @@ export const PdfMapsTab = () => {
 
   const [storageSize, setStorageSize] = useState<number | null>(null);
   const [freeDiskStorage, setFreeDiskStorage] = useState<number | null>(null);
-  const [deleting, setDeleting] = useState(false);
 
   const fetchStorageInfo = useCallback(
     () =>
@@ -139,16 +133,13 @@ export const PdfMapsTab = () => {
     [],
   );
 
-  const loadStorageInfo = useCallback(async () => {
-    setStorageSize(null);
-    await fetchStorageInfo();
-  }, [fetchStorageInfo]);
+  const resetStorageSize = useCallback(() => setStorageSize(null), []);
 
-  // tabs are mounted when the screen is already focused: load on mount too (storage size is initially null)
-  useEffect(() => {
-    void fetchStorageInfo();
-  }, [fetchStorageInfo]);
-  useNavigationFocus(loadStorageInfo);
+  // storage size is initially null
+  const loadStorageInfo = useFocusLoad({
+    fetch: fetchStorageInfo,
+    reset: resetStorageSize,
+  });
 
   const onImportPress = useCallback(async () => {
     try {
@@ -190,21 +181,18 @@ export const PdfMapsTab = () => {
   const onDeletePress = useCallback(
     async (pdfMap: PdfMap) => {
       if (
-        await confirm({
-          messageKey: "pdfMaps:map.deleteConfirm",
-          messageParams: { name: pdfMap.name },
-        })
+        await confirmAndRun(
+          {
+            messageKey: "pdfMaps:map.deleteConfirm",
+            messageParams: { name: pdfMap.name },
+          },
+          () => dispatch(SettingsActions.deletePdfMap(pdfMap.id)),
+        )
       ) {
-        setDeleting(true);
-        try {
-          await dispatch(SettingsActions.deletePdfMap(pdfMap.id));
-        } finally {
-          setDeleting(false);
-        }
         await loadStorageInfo();
       }
     },
-    [confirm, dispatch, loadStorageInfo],
+    [confirmAndRun, dispatch, loadStorageInfo],
   );
 
   return (
