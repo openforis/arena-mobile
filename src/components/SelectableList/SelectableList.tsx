@@ -11,15 +11,15 @@ import { RadioButton } from "../RadioButton";
 
 import styles from "./styles";
 
-type ListItemIconProps = {
+type ListItemIconProps<T> = {
   multiple: boolean;
   checked: boolean;
   editable: boolean;
-  onItemSelect: (item: any) => void;
-  item: any;
+  onItemSelect: (item: T) => void;
+  item: T;
 };
 
-const ListItemIcon = (props: ListItemIconProps) => {
+const ListItemIcon = <T,>(props: ListItemIconProps<T>) => {
   const { multiple, checked, editable, onItemSelect, item } = props;
 
   const onPress = useCallback(() => onItemSelect(item), [item, onItemSelect]);
@@ -31,13 +31,13 @@ const ListItemIcon = (props: ListItemIconProps) => {
   );
 };
 
-type SelectableListItemProps = ListItemIconProps & {
+type SelectableListItemProps<T> = ListItemIconProps<T> & {
   description?: string | null;
   title: string | null;
 };
 
-const SelectableListItem = memo(function SelectableListItem(
-  props: SelectableListItemProps,
+const SelectableListItem = memo(function SelectableListItem<T>(
+  props: SelectableListItemProps<T>,
 ) {
   const {
     checked,
@@ -75,24 +75,24 @@ const SelectableListItem = memo(function SelectableListItem(
       style={styles.item}
     />
   );
-});
+}) as <T>(props: SelectableListItemProps<T>) => React.ReactElement;
 
 const nullExtractor = () => null;
-const noSelectedItems: any[] = [];
+const noSelectedItems: never[] = [];
 
-export type SelectableListProps = {
+export type SelectableListProps<T> = {
   editable?: boolean;
-  itemKeyExtractor?: (item: any) => string;
-  itemLabelExtractor?: (item: any) => string;
-  itemDescriptionExtractor?: (item: any) => string | null | undefined;
-  items: any[];
+  itemKeyExtractor?: (item: T) => string;
+  itemLabelExtractor?: (item: T) => string;
+  itemDescriptionExtractor?: (item: T) => string | null | undefined;
+  items: T[];
   multiple?: boolean;
-  onChange?: (items: any[]) => void;
-  selectedItems?: any[];
+  onChange?: (items: T[]) => void;
+  selectedItems?: T[];
   style?: StyleProp<ViewStyle>;
 };
 
-export const SelectableList = (props: SelectableListProps) => {
+export const SelectableList = <T,>(props: SelectableListProps<T>) => {
   const {
     editable = true,
     itemKeyExtractor,
@@ -108,11 +108,11 @@ export const SelectableList = (props: SelectableListProps) => {
   log.debug(`rendering SelectableList`);
 
   // stable: items re-render only when their own props change
-  const onItemSelect = useStableCallback((item: any) => {
+  const onItemSelect = useStableCallback((item: T) => {
     if (!onChange) return;
 
     const wasSelected = selectedItems.includes(item);
-    let selectedItemsNext;
+    let selectedItemsNext: T[];
     if (multiple) {
       selectedItemsNext = wasSelected
         ? Arrays.removeItem(item)(selectedItems)
@@ -124,7 +124,7 @@ export const SelectableList = (props: SelectableListProps) => {
   });
 
   const renderItem = useCallback(
-    ({ item }: any) => (
+    ({ item }: { item: T }) => (
       <SelectableListItem
         checked={selectedItems.includes(item)}
         description={itemDescriptionExtractor(item)}

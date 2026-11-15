@@ -18,29 +18,34 @@ import { SelectableList } from "../SelectableList";
 import styles from "./styles";
 import { SelectableListProps } from "components/SelectableList/SelectableList";
 
-const noItems: any[] = [];
+const noItems: never[] = [];
 
-const defaultItemKeyExtractor = (item: any) => item?.key;
-const defaultItemLabelExtractor = (item: any) => item?.label;
-const defaultItemDescriptionExtractor = (item: any) => item?.description;
+// used when the items have this shape and no extractors are specified
+type DefaultItem = { key: string; label: string; description?: string | null };
 
-const _objToArray = (obj: any) => {
+const defaultItemKeyExtractor = (item: unknown) => (item as DefaultItem)?.key;
+const defaultItemLabelExtractor = (item: unknown) =>
+  (item as DefaultItem)?.label;
+const defaultItemDescriptionExtractor = (item: unknown) =>
+  (item as DefaultItem)?.description;
+
+const _objToArray = <T,>(obj: T | T[] | null | undefined): T[] => {
   if (!obj) return [];
   if (Array.isArray(obj)) return obj;
   return [obj];
 };
 
-type Props = SelectableListProps & {
+type Props<T> = SelectableListProps<T> & {
   filterItems?: (params: {
-    items: any[];
+    items: T[];
     filterInputValue: string | null;
-  }) => any[];
+  }) => T[];
   itemsCountToShowFilter?: number;
   maxItemsToShow?: number;
-  onSelectedItemsChange: (items: any[], filterValue?: string | null) => void;
+  onSelectedItemsChange: (items: T[], filterValue?: string | null) => void;
 };
 
-export const SelectableListWithFilter = (props: Props) => {
+export const SelectableListWithFilter = <T,>(props: Props<T>) => {
   const {
     editable = true,
     filterItems,
@@ -79,7 +84,7 @@ export const SelectableListWithFilter = (props: Props) => {
         return items.slice(0, maxItemsToShow);
       } else {
         return items
-          .filter((item: any) => !selectedItems.includes(item))
+          .filter((item) => !selectedItems.includes(item))
           .slice(0, maxItemsToShow);
       }
     }
@@ -88,7 +93,7 @@ export const SelectableListWithFilter = (props: Props) => {
     }
     const filterValueLowerCase = filterValue!.toLocaleLowerCase();
     return items.filter(
-      (item: any) =>
+      (item) =>
         !selectedItems.includes(item) &&
         itemLabelExtractor(item)
           .toLocaleLowerCase()
@@ -132,21 +137,21 @@ export const SelectableListWithFilter = (props: Props) => {
   );
 
   const _onSelectedItemsChange = useCallback(
-    (selectedItemsNext: any) => {
+    (selectedItemsNext: T[]) => {
       onSelectedItemsChange(selectedItemsNext, filterInputValue);
     },
     [filterInputValue, onSelectedItemsChange],
   );
 
   const onListSelectionChange = useCallback(
-    (newValue: any) => {
+    (newValue: T[]) => {
       _onSelectedItemsChange(_objToArray(newValue));
     },
     [_onSelectedItemsChange],
   );
 
   const onItemRemove = useCallback(
-    (item: any) => {
+    (item: T) => {
       _onSelectedItemsChange(Arrays.removeItem(item)(selectedItems));
     },
     [_onSelectedItemsChange, selectedItems],
@@ -170,7 +175,7 @@ export const SelectableListWithFilter = (props: Props) => {
               }
             >
               <View style={styles.selectedItemsContainer}>
-                {selectedItems.map((item: any) => (
+                {selectedItems.map((item) => (
                   <Chip
                     key={itemKeyExtractor(item)}
                     onClose={() => onItemRemove(item)}
