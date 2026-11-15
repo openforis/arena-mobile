@@ -1,4 +1,4 @@
-import { Surveys } from "@openforis/arena-core";
+import { Survey, Surveys } from "@openforis/arena-core";
 
 import { RecordSyncStatus } from "model";
 
@@ -13,7 +13,7 @@ export const AUTO_SYNC_FOCUS_RECHECK_MIN_INTERVAL_MS = 60_000; // 1 minute
 // RecordService.syncRecordSummaries attaches syncStatus ad-hoc (no dedicated record-summary
 // type exists in the codebase yet); this is the minimal shape this function actually reads.
 // RecordSyncStatus is a plain object (not a TS enum), so its value type is derived this way.
-type RecordWithSyncStatus = {
+export type RecordWithSyncStatus = {
   syncStatus?: (typeof RecordSyncStatus)[keyof typeof RecordSyncStatus];
 };
 
@@ -27,7 +27,9 @@ export const sameRecordMergeableStatuses = new Set<string>([
 ]);
 
 // nothing to send, and a merge would bring back what the server deleted (needs the local sync date)
-export const hasOnlyRemoteChanges = (record: any): boolean =>
+export const hasOnlyRemoteChanges = (
+  record: RecordWithSyncStatus & { dateModifiedSynced?: string | null },
+): boolean =>
   record.syncStatus === RecordSyncStatus.modifiedRemotely &&
   !!record.dateModifiedSynced;
 
@@ -38,7 +40,7 @@ export const isAutoMergeAllowed = ({
   survey,
 }: {
   autoSyncEnabled: boolean;
-  survey: any;
+  survey: Survey;
 }): boolean =>
   autoSyncEnabled &&
   Surveys.isVisibleInMobile(survey) &&
@@ -112,7 +114,7 @@ export const computeAutoSyncStatus = ({
   autoSyncEnabled = false,
 }: {
   records: RecordWithSyncStatus[];
-  survey: any;
+  survey: Survey;
   autoSyncEnabled?: boolean;
 }): AutoSyncStatus => {
   const mergeWithSameKeysAllowed =
@@ -148,7 +150,7 @@ export const hasConflictingKeysWithMergeNotAllowed = ({
   survey,
 }: {
   records: RecordWithSyncStatus[];
-  survey: any;
+  survey: Survey;
 }): boolean =>
   !Surveys.isRecordsMergeWithSameKeysAllowed(survey) &&
   records.some(

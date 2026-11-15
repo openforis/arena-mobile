@@ -1,3 +1,5 @@
+import type { Survey } from "@openforis/arena-core";
+
 import { RecordSyncStatus } from "../../model/RecordSyncStatus";
 
 import {
@@ -24,14 +26,18 @@ jest.mock("@openforis/arena-core", () => ({
   },
 }));
 
-const surveyMergeAllowed = { props: {} };
-const surveyMergeNotAllowed = {
-  props: { security: { allowRecordsMergeWithSameKeys: false } },
-};
+// only the props read by the mocked Surveys functions above
+const surveyWithSecurity = (security: Record<string, boolean> = {}) =>
+  ({ props: { security } }) as unknown as Survey;
 
-const surveyDownloadNotAllowed = {
-  props: { security: { allowRecordsDownloadInMobile: false } },
-};
+const surveyMergeAllowed = surveyWithSecurity();
+const surveyMergeNotAllowed = surveyWithSecurity({
+  allowRecordsMergeWithSameKeys: false,
+});
+
+const surveyDownloadNotAllowed = surveyWithSecurity({
+  allowRecordsDownloadInMobile: false,
+});
 
 const recordsWithStatuses = (...statuses: string[]) =>
   statuses.map((syncStatus) => ({ syncStatus })) as any[];

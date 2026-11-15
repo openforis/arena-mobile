@@ -1,7 +1,10 @@
 import { JobStatus, Objects } from "@openforis/arena-core";
 
 import { RecordService, UserService } from "service";
-import { RecordsExportFileGenerationJob } from "service/recordsExportFileGenerationJob";
+import {
+  RecordsExportFileGenerationJob,
+  RecordsExportFileGenerationJobResult,
+} from "service/recordsExportFileGenerationJob";
 
 import { i18n } from "localization";
 import { JobCancelError, ValidationUtils } from "model";
@@ -177,6 +180,17 @@ const _onExportFileGenerationSucceeded = async ({
   }
 };
 
+type ExportRecordsParams = {
+  cycle: string;
+  recordUuids: string[];
+  conflictResolutionStrategy?: string;
+  onlyLocally?: boolean;
+  onlyRemote?: boolean;
+  onJobComplete?: ((jobComplete: any) => void | Promise<void>) | null;
+  onEnd?: (() => void | Promise<void>) | null;
+  silent?: boolean;
+};
+
 export const exportRecords =
   ({
     cycle,
@@ -187,7 +201,7 @@ export const exportRecords =
     onJobComplete: onJobCompleteParam = null,
     onEnd = null,
     silent = false,
-  }: any) =>
+  }: ExportRecordsParams) =>
   async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
@@ -322,16 +336,19 @@ export const exportRecords =
       // wired through the job monitor (rather than a plain job.start()) so the zip
       // preparation phase is observable and cancelable, same as the upload phase below
       // a job is always passed in, so this always resolves with a real result (or rejects)
-      const jobComplete = (await JobMonitorActions.startAsync({
-        dispatch,
-        job,
-        titleKey: "dataEntry:dataExport.exportingData",
-        autoDismiss: true,
-        silent,
-        ...(onlyRemote
-          ? REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES.zipGeneration
-          : {}),
-      }))!;
+      const jobComplete =
+        (await JobMonitorActions.startAsync<RecordsExportFileGenerationJobResult>(
+          {
+            dispatch,
+            job,
+            titleKey: "dataEntry:dataExport.exportingData",
+            autoDismiss: true,
+            silent,
+            ...(onlyRemote
+              ? REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES.zipGeneration
+              : {}),
+          },
+        ))!;
 
       log.debug(
         `exportRecords: zip preparation succeeded, outputFileUri=${jobComplete.result?.outputFileUri}`,
