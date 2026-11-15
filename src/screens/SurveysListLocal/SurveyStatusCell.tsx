@@ -2,6 +2,7 @@ import { useMemo } from "react";
 
 import {
   DataVisualizerCellProps,
+  DataVisualizerItem,
   HView,
   Icon,
   Text,
@@ -29,9 +30,15 @@ const statusIconColorByStatus: Record<UpdateStatus | SurveyStatus, string> = {
   [SurveyStatus.notVisibleInMobile]: "red",
 };
 
-export const SurveyStatusCell = (props: DataVisualizerCellProps) => {
+export type SurveyStatusItem = DataVisualizerItem & {
+  status?: SurveyStatus | UpdateStatus | null;
+};
+
+export const SurveyStatusCell = (
+  props: DataVisualizerCellProps<SurveyStatusItem>,
+) => {
   const { item, viewMode } = props;
-  const status: SurveyStatus | UpdateStatus = item.status;
+  const status = item.status as SurveyStatus | UpdateStatus;
 
   const icon = useMemo(
     () =>

@@ -7,11 +7,11 @@ type PaginationState = {
   page: number;
 };
 
-export const usePagination = ({
+export const usePagination = <T>({
   items,
   initialItemsPerPage = itemsPerPageOptions[0]!,
 }: {
-  items: any[];
+  items: T[];
   initialItemsPerPage?: number;
 }) => {
   const [state, setState] = useState<PaginationState>({

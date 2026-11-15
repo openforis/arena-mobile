@@ -2,6 +2,7 @@ import {
   DateFormats,
   Dates,
   NodeDefs,
+  Validation,
   Validations,
 } from "@openforis/arena-core";
 
@@ -9,6 +10,7 @@ import {
   DataVisualizerCellProps,
   DataVisualizerCellRenderer,
   DataVisualizerField,
+  DataVisualizerItem,
   Icon,
   LoadingIcon,
   Text,
@@ -21,6 +23,18 @@ import { RecordSyncStatusIcon } from "./RecordSyncStatusIcon";
 import { RecordValidationBadge } from "./RecordValidationBadge";
 import { RecordListConstants } from "./recordListConstants";
 
+// record summary as shown in the records list (only the props read by the cell renderers)
+export type RecordListItem = DataVisualizerItem & {
+  loadStatus?: RecordLoadStatus;
+  origin?: RecordOrigin;
+  readOnly?: boolean;
+  syncStatus?: string;
+  validation: Validation;
+};
+
+export type RecordListField = DataVisualizerField<RecordListItem>;
+type RecordListCellProps = DataVisualizerCellProps<RecordListItem>;
+
 export const formatDateToDateTimeDisplay = (date: any) =>
   typeof date === "string"
     ? Dates.convertDate({
@@ -30,13 +44,13 @@ export const formatDateToDateTimeDisplay = (date: any) =>
       })
     : Dates.format(date, DateFormats.datetimeDisplay);
 
-const RecordOriginCellRenderer = ({ item }: DataVisualizerCellProps) => (
+const RecordOriginCellRenderer = ({ item }: RecordListCellProps) => (
   <Icon
     source={RecordListConstants.iconByOrigin[item.origin as RecordOrigin]}
   />
 );
 
-const RecordLoadStatusCellRenderer = ({ item }: DataVisualizerCellProps) => (
+const RecordLoadStatusCellRenderer = ({ item }: RecordListCellProps) => (
   <Icon
     source={
       RecordListConstants.iconByLoadStatus[item.loadStatus as RecordLoadStatus]
@@ -44,7 +58,7 @@ const RecordLoadStatusCellRenderer = ({ item }: DataVisualizerCellProps) => (
   />
 );
 
-const LoadingIconCellRenderer = (_props: DataVisualizerCellProps) => (
+const LoadingIconCellRenderer = (_props: RecordListCellProps) => (
   <LoadingIcon />
 );
 
@@ -52,14 +66,14 @@ const getSyncStatusCellRenderer = ({
   syncStatusLoading,
 }: {
   syncStatusLoading?: boolean;
-}): DataVisualizerCellRenderer =>
+}): DataVisualizerCellRenderer<RecordListItem> =>
   syncStatusLoading ? LoadingIconCellRenderer : RecordSyncStatusIcon;
 
-const RecordErrorsListCellRenderer = ({ item }: DataVisualizerCellProps) => (
+const RecordErrorsListCellRenderer = ({ item }: RecordListCellProps) => (
   <Text>{Validations.getErrorsCount(item.validation)}</Text>
 );
 
-const RecordWarningsListCellRenderer = ({ item }: DataVisualizerCellProps) => (
+const RecordWarningsListCellRenderer = ({ item }: RecordListCellProps) => (
   <Text>{Validations.getWarningsCount(item.validation)}</Text>
 );
 
@@ -67,7 +81,7 @@ export const buildKeySummaryFields = ({
   rootKeyDefs,
   rootSummaryDefs,
   lang,
-}: any): DataVisualizerField[] => [
+}: any): RecordListField[] => [
   ...rootKeyDefs.map((keyDef: any) => ({
     key: `keysObj.${NodeDefs.getName(keyDef)}`,
     cardRole: "title" as const,
@@ -90,7 +104,7 @@ export const buildErrorsField = ({
 }: {
   recordsHaveErrorsOrWarnings: boolean;
   screenViewMode: ScreenViewMode;
-}): DataVisualizerField[] =>
+}): RecordListField[] =>
   recordsHaveErrorsOrWarnings
     ? [
         {
@@ -115,8 +129,8 @@ export const buildDetailFields = ({
 }: {
   screenViewMode: ScreenViewMode;
   recordsHaveErrorsOrWarnings: boolean;
-}): DataVisualizerField[] => {
-  const result: DataVisualizerField[] = [];
+}): RecordListField[] => {
+  const result: RecordListField[] = [];
   // the table errors column shows just an icon: show the counts in the expanded row
   if (recordsHaveErrorsOrWarnings && screenViewMode === ScreenViewMode.table) {
     result.push({
@@ -157,7 +171,7 @@ export const buildRemoteFields = ({
   showRemoteProps,
 }: {
   showRemoteProps?: boolean;
-}): DataVisualizerField[] => {
+}): RecordListField[] => {
   if (!showRemoteProps) return [];
   return [
     {
@@ -193,7 +207,7 @@ export const buildReadOnlyFields = ({
   recordsHaveReadOnly,
 }: {
   recordsHaveReadOnly: boolean;
-}): DataVisualizerField[] =>
+}): RecordListField[] =>
   recordsHaveReadOnly
     ? [
         {
@@ -208,8 +222,8 @@ export const buildReadOnlyFields = ({
 export const buildSyncStatusFields = ({
   syncStatusLoading,
   syncStatusFetched,
-}: any): DataVisualizerField[] => {
-  const result: DataVisualizerField[] = [];
+}: any): RecordListField[] => {
+  const result: RecordListField[] = [];
   if (syncStatusLoading || syncStatusFetched) {
     result.push({
       key: "syncStatus",

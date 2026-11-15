@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { useNavigator } from "navigation/navigator";
 
-import { DateFormats, Dates, Surveys } from "@openforis/arena-core";
+import { DateFormats, Dates, Survey, Surveys } from "@openforis/arena-core";
 
 import {
   DataVisualizer,
@@ -35,7 +35,16 @@ const INITIAL_STATE = {
 
 const minSurveysToShowSearchBar = 5;
 
-const DescriptionCellRenderer = ({ item }: DataVisualizerCellProps) => {
+// only published surveys are fetched
+type SurveyRemoteItem = Survey & {
+  datePublished: string;
+  key: string;
+  loadStatusKey: string;
+};
+
+type SurveyRemoteCellProps = DataVisualizerCellProps<SurveyRemoteItem>;
+
+const DescriptionCellRenderer = ({ item }: SurveyRemoteCellProps) => {
   const defaultLanguage = Surveys.getDefaultLanguage(item);
   const description = item.props?.descriptions?.[defaultLanguage];
   return description ? (
@@ -45,7 +54,7 @@ const DescriptionCellRenderer = ({ item }: DataVisualizerCellProps) => {
   ) : null;
 };
 
-const DatePublishedCellRenderer = ({ item }: DataVisualizerCellProps) => (
+const DatePublishedCellRenderer = ({ item }: SurveyRemoteCellProps) => (
   <Text>
     {Dates.convertDate({
       dateStr: item.datePublished,
@@ -56,7 +65,7 @@ const DatePublishedCellRenderer = ({ item }: DataVisualizerCellProps) => (
 );
 
 // loadStatusKey is computed with the items
-const StatusCell = ({ item }: DataVisualizerCellProps) => (
+const StatusCell = ({ item }: SurveyRemoteCellProps) => (
   <Text textKey={item.loadStatusKey} />
 );
 
@@ -69,7 +78,7 @@ export const SurveysListRemote = () => {
 
   const dataFields = useMemo(() => {
     if (viewAsCards) {
-      const cardFields: DataVisualizerField[] = [
+      const cardFields: DataVisualizerField<SurveyRemoteItem>[] = [
         { key: "defaultLabel", header: "common:label", cardRole: "title" },
         { key: "name", header: "common:name", cardRole: "subtitle" },
         {
@@ -93,7 +102,7 @@ export const SurveysListRemote = () => {
       ];
       return cardFields;
     }
-    const fields: any[] = [
+    const fields: DataVisualizerField<SurveyRemoteItem>[] = [
       {
         key: "name",
         header: "common:name",

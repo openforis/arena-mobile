@@ -22,6 +22,7 @@ export type {
   DataVisualizerCellProps,
   DataVisualizerCellRenderer,
   DataVisualizerField,
+  DataVisualizerItem,
   DataVisualizerProps,
 } from "./DataVisualizer";
 export { DateTimePicker } from "./DateTimePicker";

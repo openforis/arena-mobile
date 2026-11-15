@@ -4,5 +4,6 @@ export type {
   DataVisualizerCellProps,
   DataVisualizerCellRenderer,
   DataVisualizerField,
+  DataVisualizerItem,
   DataVisualizerProps,
 } from "./types";

@@ -3,11 +3,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Objects, Surveys, Validations } from "@openforis/arena-core";
 
-import {
-  DataVisualizer,
-  DataVisualizerField,
-  SelectedItemsAction,
-} from "components";
+import { DataVisualizer, SelectedItemsAction } from "components";
 import { useTranslation } from "localization";
 import { Cycles, RecordUtils, Sort, SurveyDefs } from "model";
 import {
@@ -27,6 +23,7 @@ import {
   buildRemoteFields,
   buildSyncStatusFields,
   formatDateToDateTimeDisplay,
+  RecordListField,
 } from "./recordsVisualizerFields";
 
 // table view only: the list and cards views are virtualized
@@ -170,7 +167,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
   );
 
   const fields = useMemo(
-    (): DataVisualizerField[] => [
+    (): RecordListField[] => [
       ...buildKeySummaryFields({ rootKeyDefs, rootSummaryDefs, lang }),
       ...buildErrorsField({
         recordsHaveErrorsOrWarnings,

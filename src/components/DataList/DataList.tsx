@@ -9,6 +9,7 @@ import { FieldRows } from "../DataCards/DataCardParts";
 import { getFieldRowsLayout } from "../DataCards/dataCardsUtils";
 import {
   DataVisualizerField,
+  DataVisualizerItem,
   DataVisualizerProps,
 } from "../DataVisualizer/types";
 import { HView } from "../HView";
@@ -19,20 +20,22 @@ import { useStyles } from "./styles";
 // item padding, accent bar and list padding
 const itemHorizontalPadding = 48;
 
-type DataListItemProps = {
+type DataListItemProps<T extends DataVisualizerItem> = {
   fieldRowsLayout: { columns: number; labelWidth: number };
-  item: any;
-  onLongPress: (item: any) => void;
-  onPress: (item: any) => void;
-  onSelect: (item: any) => void;
-  otherFields: DataVisualizerField[];
+  item: T;
+  onLongPress: (item: T) => void;
+  onPress: (item: T) => void;
+  onSelect: (item: T) => void;
+  otherFields: DataVisualizerField<T>[];
   selected: boolean;
   selectionEnabled: boolean;
   styles: ReturnType<typeof useStyles>;
-  titleFields: DataVisualizerField[];
+  titleFields: DataVisualizerField<T>[];
 };
 
-const DataListItem = memo(function DataListItem(props: DataListItemProps) {
+const DataListItem = memo(function DataListItem<T extends DataVisualizerItem>(
+  props: DataListItemProps<T>,
+) {
   const {
     fieldRowsLayout,
     item,
@@ -86,11 +89,15 @@ const DataListItem = memo(function DataListItem(props: DataListItemProps) {
       </HView>
     </Pressable>
   );
-});
+}) as <T extends DataVisualizerItem>(
+  props: DataListItemProps<T>,
+) => React.ReactElement;
 
-const itemKeyExtractor = (item: any) => String(item.key);
+const itemKeyExtractor = (item: DataVisualizerItem) => String(item.key);
 
-export const DataList = (props: DataVisualizerProps) => {
+export const DataList = <T extends DataVisualizerItem>(
+  props: DataVisualizerProps<T>,
+) => {
   const {
     canDelete = true,
     fields,
@@ -142,7 +149,7 @@ export const DataList = (props: DataVisualizerProps) => {
   const onSelect = useStableCallback(onItemSelect);
 
   const renderItem = useCallback(
-    ({ item }: { item: any }) => (
+    ({ item }: { item: T }) => (
       <DataListItem
         fieldRowsLayout={fieldRowsLayout}
         item={item}

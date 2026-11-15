@@ -4,7 +4,10 @@ import { FlatList, Pressable, useWindowDimensions } from "react-native";
 import { ScreenViewMode } from "model";
 
 import { Checkbox } from "../Checkbox";
-import { DataVisualizerProps } from "../DataVisualizer/types";
+import {
+  DataVisualizerItem,
+  DataVisualizerProps,
+} from "../DataVisualizer/types";
 import { HView } from "../HView";
 import { ItemSelectedBanner, useSelectableList } from "../SelectableList";
 import { VView } from "../VView";
@@ -23,7 +26,9 @@ const minCardWidth = 420;
 // card padding and list padding
 const cardHorizontalPadding = 40;
 
-export const DataCardList = (props: DataVisualizerProps) => {
+export const DataCardList = <T extends DataVisualizerItem>(
+  props: DataVisualizerProps<T>,
+) => {
   const {
     canDelete = true,
     fields,
@@ -73,7 +78,7 @@ export const DataCardList = (props: DataVisualizerProps) => {
   });
 
   const renderItem = useCallback(
-    ({ item }: any) => {
+    ({ item }: { item: T }) => {
       const selected = selectedItemIds.includes(item.key);
       const viewMode = ScreenViewMode.cards;
       const partProps = { item, styles, viewMode };
