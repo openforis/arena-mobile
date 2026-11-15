@@ -1,4 +1,5 @@
 export { useAppInfo } from "./useAppInfo";
+export { useAsyncValueEffect } from "./useAsyncValueEffect";
 export { useAvailableGpsSources } from "./useAvailableGpsSources";
 export { useBackHandler } from "./useBackHandler";
 export { useCurrentLocationWatch } from "./useCurrentLocationWatch";

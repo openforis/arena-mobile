@@ -57,6 +57,10 @@ export default [
       ...Object.fromEntries(
         reactCompilerRules.map((rule) => [`react-hooks/${rule}`, "error"]),
       ),
+      "react-hooks/exhaustive-deps": [
+        "warn",
+        { additionalHooks: "^useAsyncValueEffect$" },
+      ],
       "react/jsx-uses-react": "off",
       "react/react-in-jsx-scope": "off",
       "react/prop-types": "off",

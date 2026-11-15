@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-
 import {
   NodeDef,
   NodeDefs,
@@ -9,6 +7,7 @@ import {
   User,
 } from "@openforis/arena-core";
 
+import { useAsyncValueEffect } from "hooks";
 import {
   DataEntrySelectors,
   RemoteConnectionSelectors,
@@ -28,8 +27,6 @@ export const useItemsFilter = ({
   items: any[];
   alwaysIncludeItemFunction?: (item: any) => boolean;
 }) => {
-  const [filteredItems, setFilteredItems] = useState([] as any[]);
-
   // selectLoggedUserSafe returns a new object on every call when not logged in
   const loggedUser = useAppSelector(RemoteConnectionSelectors.selectLoggedUser);
   const survey = useAppSelector(SurveySelectors.selectCurrentSurvey)!;
@@ -42,51 +39,47 @@ export const useItemsFilter = ({
   const filterEnabled =
     items.length > 0 && !Objects.isEmpty(itemsFilter) && !!parentNodeUuid;
 
-  useEffect(() => {
-    if (!filterEnabled) return;
-    let cancelled = false;
-    const user = loggedUser ?? ({ props: {} } as User);
-    const parentNode = Records.getNodeByUuid(parentNodeUuid!)(record);
-    const expressionEvaluator = new RecordExpressionEvaluator();
-    void Promise.all(
-      items.map(async (item: any) => {
-        if (alwaysIncludeItemFunction?.(item)) return true;
-        try {
-          return await expressionEvaluator.evalExpression({
-            user,
-            survey,
-            areaOfInterestProvider: AreaOfInterestProviderDefault,
-            record,
-            prevCycleRecord,
-            node: parentNode!,
-            query: itemsFilter!,
-            item,
-          });
-        } catch {
-          return false;
-        }
-      }),
-    ).then((results) => {
-      if (cancelled) return;
-      const _filteredItems = items.filter((_, index) => !!results[index]);
-      setFilteredItems((prev) =>
-        Objects.isEqual(prev, _filteredItems) ? prev : _filteredItems,
-      );
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [
-    alwaysIncludeItemFunction,
-    filterEnabled,
-    items,
-    itemsFilter,
-    loggedUser,
-    parentNodeUuid,
-    prevCycleRecord,
-    record,
-    survey,
-  ]);
+  const [filteredItems] = useAsyncValueEffect(
+    () => {
+      const user = loggedUser ?? ({ props: {} } as User);
+      const parentNode = Records.getNodeByUuid(parentNodeUuid!)(record);
+      const expressionEvaluator = new RecordExpressionEvaluator();
+      return Promise.all(
+        items.map(async (item: any) => {
+          if (alwaysIncludeItemFunction?.(item)) return true;
+          try {
+            return await expressionEvaluator.evalExpression({
+              user,
+              survey,
+              areaOfInterestProvider: AreaOfInterestProviderDefault,
+              record,
+              prevCycleRecord,
+              node: parentNode!,
+              query: itemsFilter!,
+              item,
+            });
+          } catch {
+            return false;
+          }
+        }),
+      ).then((results) => items.filter((_, index) => !!results[index]));
+    },
+    [
+      alwaysIncludeItemFunction,
+      items,
+      itemsFilter,
+      loggedUser,
+      parentNodeUuid,
+      prevCycleRecord,
+      record,
+      survey,
+    ],
+    {
+      enabled: filterEnabled,
+      initialValue: [] as any[],
+      isEqual: Objects.isEqual,
+    },
+  );
 
   return filterEnabled ? filteredItems : items;
 };
