@@ -1,11 +1,11 @@
 import { useMemo } from "react";
 
-import { Taxon, VernacularName } from "@openforis/arena-core";
+import { Survey, Taxon, VernacularName } from "@openforis/arena-core";
 
 import { Taxa } from "model/Taxa";
 import { LanguageUtils } from "utils/LanguageUtils";
 
-import { buildTaxonSearchKeys } from "./taxaSearch";
+import { buildTaxonSearchKeys, TaxonSearchItem } from "./taxaSearch";
 
 const calculateVernacularNamesCount = (taxon: Taxon) =>
   Object.values(taxon.vernacularNames ?? {}).reduce(
@@ -14,11 +14,11 @@ const calculateVernacularNamesCount = (taxon: Taxon) =>
   );
 
 const vernacularNameObjectToItem =
-  (taxonItem: any) =>
-  (vernacularNameObj: any): any => {
+  (taxonItem: TaxonSearchItem) =>
+  (vernacularNameObj: VernacularName): TaxonSearchItem => {
     const { uuid: vernacularNameUuid, props } = vernacularNameObj;
     const { name: vernacularName, lang: vernacularNameLangCode } = props;
-    const item: any = {
+    const item: TaxonSearchItem = {
       ...taxonItem,
       vernacularName,
       vernacularNameLangCode,
@@ -53,7 +53,7 @@ const joinVernacularNameObjects = ({
   let singleVernacularNameUuid: string | undefined;
   for (const [lang, vernacularNameObjects] of vernacularNameEntries) {
     const vernacularNamesInLangJoint = vernacularNameObjects
-      .map((vernacularNameObj: any) => {
+      .map((vernacularNameObj) => {
         const { name: vernacularName } = vernacularNameObj.props;
         return vernacularName;
       })
@@ -76,7 +76,11 @@ export const useTaxa = ({
   survey,
   taxonomyUuid,
   joinVernacularNames = false,
-}: any) => {
+}: {
+  survey: Survey;
+  taxonomyUuid: string | undefined;
+  joinVernacularNames?: boolean;
+}) => {
   const taxonIndex = useMemo(
     () => survey.refData?.taxonIndex ?? {},
     [survey.refData?.taxonIndex],
@@ -85,7 +89,7 @@ export const useTaxa = ({
   const { taxa, unknownTaxon, unlistedTaxon } = useMemo(() => {
     const taxaByCode: Record<string, Taxon> = {};
     const allTaxa: Taxon[] = Object.values(taxonIndex);
-    const taxaReduced = [];
+    const taxaReduced: TaxonSearchItem[] = [];
     for (const taxon of allTaxa) {
       if (taxon.taxonomyUuid !== taxonomyUuid) {
         continue;
@@ -93,7 +97,7 @@ export const useTaxa = ({
       const taxonCode = taxon.props.code;
       taxaByCode[taxonCode] = taxon;
 
-      const taxonItem: any = {
+      const taxonItem: TaxonSearchItem = {
         ...taxon,
         vernacularNamesCount: calculateVernacularNamesCount(taxon),
       };

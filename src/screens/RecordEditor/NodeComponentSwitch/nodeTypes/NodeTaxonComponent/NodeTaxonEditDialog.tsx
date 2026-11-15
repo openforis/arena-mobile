@@ -1,17 +1,18 @@
 import React, { useCallback } from "react";
 
-import { NodeDefs, NodeDefTaxon } from "@openforis/arena-core";
+import { NodeDefs, NodeDefTaxon, NodeValueTaxon } from "@openforis/arena-core";
 
 import { log } from "utils";
 import { NodeEditDialogInternal } from "../NodeEditDialogInternal";
 import { NodeTaxonAutocomplete } from "./NodeTaxonAutocomplete";
+import { TaxonSearchItem } from "./taxaSearch";
 
 type NodeTaxonEditDialogProps = {
   nodeDef: NodeDefTaxon;
   onDismiss: () => void;
   parentNodeUuid?: string;
-  selectedTaxon?: any;
-  updateNodeValue: (params: { value: any }) => void;
+  selectedTaxon?: TaxonSearchItem | null;
+  updateNodeValue: (params: { value: NodeValueTaxon | null }) => void;
 };
 
 export const NodeTaxonEditDialog = (props: NodeTaxonEditDialogProps) => {
@@ -24,7 +25,7 @@ export const NodeTaxonEditDialog = (props: NodeTaxonEditDialogProps) => {
   } = props;
   log.debug(`rendering NodeTaxonEditDialog for ${NodeDefs.getName(nodeDef)}`);
   const updateNodeValue = useCallback(
-    ({ value: valueNext }: { value: any }) => {
+    ({ value: valueNext }: { value: NodeValueTaxon | null }) => {
       onDismiss();
       updateNodeValueProp({ value: valueNext });
     },

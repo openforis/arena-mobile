@@ -14,11 +14,11 @@ import {
   MessageActions,
   SurveySelectors,
   useAppDispatch,
-  useConfirm,
 } from "state";
 import { log } from "utils";
 
 import { NewNodeButton } from "../NewNodeButton";
+import { useConfirmDeleteNodes } from "../useConfirmDeleteNodes";
 import { SingleAttributeComponentSwitch } from "./SingleAttributeComponentSwitch";
 import { NodeComponentProps } from "./nodeTypes/nodeComponentPropTypes";
 
@@ -55,11 +55,11 @@ export const MultipleAttributeComponentWrapper = memo(
     const { nodeDef, parentNodeUuid } = props;
 
     log.debug(
-      `rendering MultipleAttributeComponentWrapper for ${nodeDef.props.name} - parentNodeUuid: ${parentNodeUuid}`,
+      `rendering MultipleAttributeComponentWrapper for ${NodeDefs.getName(nodeDef)} - parentNodeUuid: ${parentNodeUuid}`,
     );
 
     const dispatch = useAppDispatch();
-    const confirm = useConfirm();
+    const confirmDeleteNodes = useConfirmDeleteNodes();
     const lang = SurveySelectors.useCurrentSurveyPreferredLang();
 
     const { nodes } = DataEntrySelectors.useRecordChildNodes({
@@ -90,16 +90,13 @@ export const MultipleAttributeComponentWrapper = memo(
 
     const onDelete = useCallback(
       async (node: ArenaRecordNode) => {
-        if (
-          Nodes.isValueBlank(node) ||
-          (await confirm({
-            messageKey: "dataEntry:confirmDeleteValue.message",
-          }))
-        ) {
-          dispatch(DataEntryActions.deleteNodes([node.uuid]));
-        }
+        await confirmDeleteNodes({
+          messageKey: "dataEntry:confirmDeleteValue.message",
+          nodeUuids: [node.uuid],
+          skipConfirm: Nodes.isValueBlank(node),
+        });
       },
-      [confirm, dispatch],
+      [confirmDeleteNodes],
     );
 
     return (

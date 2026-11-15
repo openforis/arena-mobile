@@ -29,7 +29,7 @@ const getNodeMultipleEntityComponent = () =>
 export const NodeComponentSwitch = memo((props: NodeComponentProps) => {
   const { nodeDef, parentNodeUuid } = props;
 
-  log.debug(`rendering NodeComponentSwitch for ${nodeDef.props.name}`);
+  log.debug(`rendering NodeComponentSwitch for ${NodeDefs.getName(nodeDef)}`);
 
   const viewMode = SurveyOptionsSelectors.useRecordEditViewMode();
 
