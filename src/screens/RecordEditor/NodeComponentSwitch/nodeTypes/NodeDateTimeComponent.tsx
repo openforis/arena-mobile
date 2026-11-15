@@ -24,7 +24,7 @@ type NodeDateTimeComponentProps = NodeComponentProps<
 export const NodeDateTimeComponent = (props: NodeDateTimeComponentProps) => {
   const { mode, nodeDef, nodeUuid } = props;
 
-  log.debug(`rendering NodeDateTimeComponent for ${nodeDef.props.name}`);
+  log.debug(`rendering NodeDateTimeComponent for ${NodeDefs.getName(nodeDef)}`);
   const formatDisplay =
     mode === "date" ? DateFormats.dateDisplay : DateFormats.timeStorage;
   const formatStorage =

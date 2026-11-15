@@ -1,3 +1,5 @@
+import { Taxon } from "@openforis/arena-core";
+
 const alwaysIncludeVernacularNames = false;
 const alwaysIncludeSingleVernacularName = true;
 
@@ -10,6 +12,17 @@ export type TaxonSearchKeys = {
   vernacularNamesJointParts: string[];
 };
 
+// taxon list item: a taxon, or one of its vernacular names (see useTaxa)
+export type TaxonSearchItem = Taxon & {
+  scientificName?: string;
+  searchKeys?: TaxonSearchKeys;
+  singleVernacularNameUuid?: string;
+  vernacularNameLangCode?: string;
+  vernacularNamesCount?: number;
+  vernacularNamesJoint?: string;
+  vernacularNameUuid?: string;
+};
+
 const preparePartForSearch = (part: string): string => part.toLocaleLowerCase();
 
 export const extractPartsForSearch = (value?: string | null): string[] =>
@@ -20,7 +33,7 @@ export const buildTaxonLabel = ({
   taxon,
 }: {
   codeVisible: boolean;
-  taxon: any;
+  taxon: TaxonSearchItem;
 }): string => {
   const { props, scientificName } = taxon;
   const { code, scientificName: scientificNameProp } = props;
@@ -32,7 +45,9 @@ export const buildTaxonLabel = ({
   return parts.join(" ");
 };
 
-export const buildTaxonSearchKeys = (taxon: any): TaxonSearchKeys => ({
+export const buildTaxonSearchKeys = (
+  taxon: TaxonSearchItem,
+): TaxonSearchKeys => ({
   code: preparePartForSearch(String(taxon.props.code ?? "")),
   labelParts: extractPartsForSearch(
     buildTaxonLabel({ codeVisible: false, taxon }),
@@ -54,7 +69,7 @@ export const isTaxonMatchingFilter = ({
 }: {
   codeVisible: boolean;
   inputValueParts: string[];
-  taxon: any;
+  taxon: TaxonSearchItem;
 }): boolean => {
   const { vernacularName, vernacularNamesCount } = taxon;
   const searchKeys: TaxonSearchKeys =
@@ -93,27 +108,27 @@ export const filterTaxa = ({
   codeVisible: boolean;
   filterInputValue: string | null | undefined;
   maxItems: number;
-  taxa: any[];
-  unknownTaxon: any;
-  unlistedTaxon: any;
-}): any[] => {
+  taxa: TaxonSearchItem[];
+  unknownTaxon: TaxonSearchItem | undefined;
+  unlistedTaxon: TaxonSearchItem | undefined;
+}): TaxonSearchItem[] => {
   if ((filterInputValue?.trim().length ?? 0) === 0) {
     return [];
   }
   const inputValueParts = extractPartsForSearch(filterInputValue);
-  const taxaFiltered = [];
+  const taxaFiltered: TaxonSearchItem[] = [];
   for (
     let index = 0;
     index < taxa.length && taxaFiltered.length < maxItems;
     index++
   ) {
-    const taxon = taxa[index];
+    const taxon = taxa[index]!;
     if (isTaxonMatchingFilter({ codeVisible, inputValueParts, taxon })) {
       taxaFiltered.push(taxon);
     }
   }
   if (taxaFiltered.length === 0) {
-    taxaFiltered.push(unlistedTaxon, unknownTaxon);
+    taxaFiltered.push(unlistedTaxon!, unknownTaxon!);
   }
   return taxaFiltered;
 };

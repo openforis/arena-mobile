@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 
-import { CategoryItem, Objects, Points } from "@openforis/arena-core";
+import { CategoryItem, Points } from "@openforis/arena-core";
 
 import {
   Button,
@@ -19,7 +19,7 @@ type NodeCodeFindClosestSamplingPointDialogProps = {
   itemLabelFunction: (item: CategoryItem) => string;
   items: CategoryItem[];
   onDismiss: () => void;
-  onItemSelected: (item: any) => void;
+  onItemSelected: (item: CategoryItem) => void;
 };
 
 export const NodeCodeFindClosestSamplingPointDialog = ({
@@ -44,11 +44,11 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
   } = useLocation();
 
   const [selectedMinDistanceItem, setSelectedMinDistanceItem] =
-    useState<any>(null);
+    useState<CategoryItem | null>(null);
 
   const findItemsWithMinDistance = useCallback(() => {
     let minDistanceItems: CategoryItem[] = [];
-    let minDistance: any = null;
+    let minDistance: number | null = null;
 
     for (const item of items) {
       const itemLocation = item?.props?.extra?.location;
@@ -64,8 +64,7 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
       } else {
         distance = Infinity;
       }
-      const isFirstItem = Objects.isEmpty(minDistance);
-      if (isFirstItem || distance < minDistance) {
+      if (minDistance === null || distance < minDistance) {
         minDistance = distance;
         minDistanceItems = [item];
       } else if (distance === minDistance) {
@@ -79,7 +78,10 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
   }, [items, pointLatLong, srsIndex]);
 
   const { minDistance, minDistanceItems } = useMemo(
-    (): { minDistance: number; minDistanceItems: CategoryItem[] | null } =>
+    (): {
+      minDistance: number | null;
+      minDistanceItems: CategoryItem[] | null;
+    } =>
       items && locationFetched && pointLatLong
         ? findItemsWithMinDistance()
         : { minDistance: Number.NaN, minDistanceItems: null },
@@ -87,7 +89,7 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
   );
 
   const onUseSelectedItemPress = useCallback(() => {
-    onItemSelected(selectedMinDistanceItem);
+    onItemSelected(selectedMinDistanceItem!);
   }, [onItemSelected, selectedMinDistanceItem]);
 
   return (
@@ -139,7 +141,7 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
             itemLabelExtractor={itemLabelFunction}
             items={minDistanceItems}
             onChange={(selectedItems: CategoryItem[]) => {
-              setSelectedMinDistanceItem(selectedItems[0]);
+              setSelectedMinDistanceItem(selectedItems[0] ?? null);
             }}
             selectedItems={
               selectedMinDistanceItem ? [selectedMinDistanceItem] : []

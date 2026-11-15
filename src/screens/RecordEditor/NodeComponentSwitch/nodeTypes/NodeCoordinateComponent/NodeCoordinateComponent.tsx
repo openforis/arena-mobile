@@ -1,6 +1,6 @@
 import React, { memo, useCallback } from "react";
 
-import { NodeDefCoordinate, Objects } from "@openforis/arena-core";
+import { NodeDefCoordinate, NodeDefs, Objects } from "@openforis/arena-core";
 
 import {
   DeleteIconButton,
@@ -29,7 +29,9 @@ type Props = NodeComponentProps<NodeDefCoordinate>;
 export const NodeCoordinateComponent = memo((props: Props) => {
   const { nodeDef, nodeUuid } = props;
 
-  log.debug(`rendering NodeCoordinateComponent for ${nodeDef.props.name}`);
+  log.debug(
+    `rendering NodeCoordinateComponent for ${NodeDefs.getName(nodeDef)}`,
+  );
 
   const {
     accuracy,
