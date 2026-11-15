@@ -11,7 +11,7 @@ export const useRequestPermission = (
   useEffect(() => {
     if (getterFunction) {
       getterFunction().then((result: any) => {
-        setHasPermission(result.granted === permissionGranted);
+        setHasPermission(result.granted);
       });
     }
   }, [getterFunction]);
