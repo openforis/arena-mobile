@@ -26,8 +26,6 @@ const deleteFileMock = RecordFileService.deleteRecordFile as jest.Mock;
 const fetchFileUuidsMock = RecordRepository.fetchRecordsFileUuids as jest.Mock;
 
 describe("RecordService.deleteRecords", () => {
-  beforeEach(() => jest.clearAllMocks());
-
   it("deletes the files no other record references", async () => {
     fetchFileUuidsMock
       .mockResolvedValueOnce(["file-1", "file-2"])

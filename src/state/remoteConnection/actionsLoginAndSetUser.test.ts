@@ -13,7 +13,7 @@ jest.mock("service/asyncStorage/AsyncStorageUtils", () => ({
 jest.mock("service/asyncStorage/asyncStorageKeys", () => ({
   asyncStorageKeys: { loggedInUser: "loggedInUser" },
 }));
-jest.mock("utils/Logger", () => ({ log: { error: jest.fn() } }));
+jest.mock("utils/Logger");
 jest.mock("../autoSync", () => ({
   AutoSyncActions: { reset: () => ({ type: "autoSyncReset" }) },
 }));
@@ -34,7 +34,6 @@ const getState = () => ({
 
 describe("loginAndSetUser", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
     (SecureStoreService.getAuthRefreshToken as jest.Mock).mockResolvedValue(
       "token",
     );
