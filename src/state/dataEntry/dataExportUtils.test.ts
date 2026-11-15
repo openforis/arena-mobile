@@ -3,7 +3,7 @@ import { JobStatus } from "@openforis/arena-core";
 import {
   errorOrJobToString,
   errorTextLooksLikeAuthError,
-  isAuthError,
+  isAuthErrorOrFailedJobAuthError,
 } from "./dataExportUtils";
 
 jest.mock("utils", () => ({ log: { warn: jest.fn() } }));
@@ -51,21 +51,29 @@ describe("errorTextLooksLikeAuthError", () => {
   });
 });
 
-describe("isAuthError", () => {
+describe("isAuthErrorOrFailedJobAuthError", () => {
   test("axios-like error with response status 401", () => {
-    expect(isAuthError({ response: { status: 401 } })).toBe(true);
-    expect(isAuthError({ response: { status: 500 } })).toBe(false);
+    expect(isAuthErrorOrFailedJobAuthError({ response: { status: 401 } })).toBe(
+      true,
+    );
+    expect(isAuthErrorOrFailedJobAuthError({ response: { status: 500 } })).toBe(
+      false,
+    );
   });
 
   test("error with status 401", () => {
-    expect(isAuthError({ status: 401 })).toBe(true);
+    expect(isAuthErrorOrFailedJobAuthError({ status: 401 })).toBe(true);
   });
 
   test("Error whose message contains status code 401", () => {
-    expect(isAuthError(new Error("Request failed with status code 401"))).toBe(
-      true,
+    expect(
+      isAuthErrorOrFailedJobAuthError(
+        new Error("Request failed with status code 401"),
+      ),
+    ).toBe(true);
+    expect(isAuthErrorOrFailedJobAuthError(new Error("Network Error"))).toBe(
+      false,
     );
-    expect(isAuthError(new Error("Network Error"))).toBe(false);
   });
 
   test("failed job whose collapsed errors contain status code 401", () => {
@@ -78,11 +86,11 @@ describe("isAuthError", () => {
         },
       },
     };
-    expect(isAuthError(job)).toBe(true);
+    expect(isAuthErrorOrFailedJobAuthError(job)).toBe(true);
   });
 
   test("empty values", () => {
-    expect(isAuthError(null)).toBe(false);
-    expect(isAuthError(undefined)).toBe(false);
+    expect(isAuthErrorOrFailedJobAuthError(null)).toBe(false);
+    expect(isAuthErrorOrFailedJobAuthError(undefined)).toBe(false);
   });
 });
