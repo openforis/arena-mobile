@@ -1,4 +1,9 @@
 export type { ArenaMobileRecord } from "./ArenaMobileRecord";
+export type {
+  RecordSummary,
+  RecordSummaryValues,
+  RemoteRecordSummary,
+} from "./RecordSummary";
 export { BatteryState } from "./BatteryState";
 export { Cycles } from "./Cycles";
 export { GpsSourceSetting } from "./GpsSourceSettings";

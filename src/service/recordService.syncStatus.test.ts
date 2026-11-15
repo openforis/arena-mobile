@@ -1,3 +1,5 @@
+import { Survey } from "@openforis/arena-core";
+
 import { RecordOrigin, RecordSyncStatus } from "model";
 
 import { RecordService } from "./recordService";
@@ -35,7 +37,7 @@ const remote = (props: any = {}) => ({ uuid, step: 1, ...props });
 
 const determine = (recordSummaryLocal: any, recordSummaryRemote?: any) =>
   RecordService.determineRecordSyncStatus({
-    survey: {},
+    survey: {} as Survey,
     recordSummaryLocal,
     recordSummaryRemote,
   });

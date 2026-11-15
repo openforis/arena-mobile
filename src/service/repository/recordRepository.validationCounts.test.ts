@@ -140,7 +140,9 @@ describe("record validation counts columns", () => {
       recordUuid: record.uuid,
       validation: {
         valid: false,
-        fields: { n1: { valid: false, errors: [{ key: "required" }] } },
+        fields: {
+          n1: { valid: false, errors: [{ key: "required", valid: false }] },
+        },
         counts: { errors: 1, warnings: 0 },
       },
     });
@@ -155,7 +157,12 @@ describe("record validation counts columns", () => {
       survey,
       cycle: "0",
       recordSummaries: [
-        { uuid: "remote-1", dateCreated: Date.now(), dateModified: Date.now() },
+        {
+          uuid: "remote-1",
+          cycle: "0",
+          dateCreated: Date.now(),
+          dateModified: Date.now(),
+        },
       ],
     });
 
