@@ -18,7 +18,6 @@ jest.mock("./asyncStorage/AsyncStorageUtils", () => {
     },
   };
 });
-jest.mock("react-native-keychain", () => ({}));
 jest.mock("./api", () => ({ API: {} }));
 jest.mock("utils/SystemUtils", () => ({ SystemUtils: {} }));
 
@@ -34,5 +33,20 @@ describe("SettingsService.updateSetting", () => {
     const stored = JSON.parse(Object.values(mockStorage)[0]!);
     expect(stored.fontScale).toBe(2);
     expect(stored.animationsEnabled).toBe(false);
+  });
+});
+
+describe("SettingsService.updateSettings", () => {
+  it("doesn't drop updates made while other updates are pending", async () => {
+    await Promise.all([
+      SettingsService.updateSetting({ key: "fontScale", value: 3 } as any),
+      SettingsService.updateSettings((settings) => ({
+        ...settings,
+        pdfMaps: [{ id: "map" } as any],
+      })),
+    ]);
+    const stored = JSON.parse(Object.values(mockStorage)[0]!);
+    expect(stored.fontScale).toBe(3);
+    expect(stored.pdfMaps).toEqual([{ id: "map" }]);
   });
 });

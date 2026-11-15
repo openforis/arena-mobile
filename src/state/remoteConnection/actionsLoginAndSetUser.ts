@@ -1,6 +1,4 @@
 import { SecureStoreService, UserService } from "service";
-import { AsyncStorageUtils } from "service/asyncStorage/AsyncStorageUtils";
-import { asyncStorageKeys } from "service/asyncStorage/asyncStorageKeys";
 import { HttpErrors } from "utils/HttpErrors";
 import { log } from "utils/Logger";
 
@@ -12,9 +10,6 @@ import type { AppDispatch, AppGetState } from "../store";
 
 const { USER_LOADING, USER_SET } = RemoteConnectionActionTypes;
 
-const getUserInAsyncStorage = () =>
-  AsyncStorageUtils.getItem(asyncStorageKeys.loggedInUser);
-
 const fetchUser = async () => {
   try {
     return await UserService.fetchUser();
@@ -23,7 +18,7 @@ const fetchUser = async () => {
     // session no longer valid: a new login is required
     if (HttpErrors.isUnauthorizedResponse(error)) return null;
     // server not reachable (e.g. network connected but no internet): keep the last logged in user
-    return getUserInAsyncStorage();
+    return UserService.fetchLastLoggedInUser();
   }
 };
 
@@ -62,8 +57,8 @@ const _loginAndSetUser =
         return;
       }
       // the last logged in user is used (e.g. for permissions) until the server answers
-      const userInAsyncStorage = await getUserInAsyncStorage();
-      dispatch({ type: USER_LOADING, user: userInAsyncStorage });
+      const lastLoggedInUser = await UserService.fetchLastLoggedInUser();
+      dispatch({ type: USER_LOADING, user: lastLoggedInUser });
       const user = await fetchUser();
       dispatch({ type: USER_SET, user });
       if (user) {
@@ -72,10 +67,10 @@ const _loginAndSetUser =
         dispatch(AutoSyncActions.reset());
       }
     } else {
-      // retrieve user from async storage (if any)
-      const userInAsyncStorage = await getUserInAsyncStorage();
-      if (userInAsyncStorage) {
-        dispatch({ type: USER_SET, user: userInAsyncStorage });
+      // use the last logged in user (if any)
+      const lastLoggedInUser = await UserService.fetchLastLoggedInUser();
+      if (lastLoggedInUser) {
+        dispatch({ type: USER_SET, user: lastLoggedInUser });
       }
     }
   };
