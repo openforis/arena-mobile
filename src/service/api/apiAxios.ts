@@ -92,31 +92,22 @@ const postCancelable = (
   return { promise, cancel };
 };
 
-const post = async (
-  options: RequestOptions,
+const _withData = async (
+  promise: Promise<AxiosResponse>,
 ): Promise<{ data: any; response: AxiosResponse }> => {
-  const { promise } = postCancelable(options);
-
   const response = await promise;
-
-  const { data } = response;
-
-  return { data, response };
+  return { data: response.data, response };
 };
 
-const del = async (
-  options: RequestOptions,
-): Promise<{ data: any; response: AxiosResponse }> => {
+const post = (options: RequestOptions) =>
+  _withData(postCancelable(options).promise);
+
+const del = (options: RequestOptions) => {
   const { serverUrl, uri, config } = options;
   const url = APIUtils.getUrl({ serverUrl, uri });
-  const newConfig: AxiosRequestConfig = { ...config, method: "delete" };
-  const { promise } = _prepareRequest(url, newConfig);
-
-  const response = await promise;
-
-  const { data } = response;
-
-  return { data, response };
+  return _withData(
+    _prepareRequest(url, { ...config, method: "delete" }).promise,
+  );
 };
 
 const _prepareMultipartDataOptions = (
