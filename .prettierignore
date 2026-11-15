@@ -21,3 +21,6 @@ e2e/maestro/manual-screenshots/labels.js
 
 # written by docs/user-manual/scripts/segments.py
 docs/user-manual/translations/
+
+# hand-formatted video generator
+docs/whats-new-2026/video/
