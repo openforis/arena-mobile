@@ -15,10 +15,21 @@ export type PositionTrack = {
   nodeUuid: string;
   status: PositionTrackStatus;
   // node value when the track was started: the recorded segments are appended to it
-  baseValue: any;
+  baseValue: unknown;
 };
 
-const rowToTrack = (row: any): PositionTrack => ({
+type PositionTrackRow = {
+  id: number;
+  survey_id: number;
+  record_uuid: string;
+  node_uuid: string;
+  status: PositionTrackStatus;
+  base_value: string | null;
+};
+
+type PositionTrackPointRow = TrackPoint & { segment_index: number };
+
+const rowToTrack = (row: PositionTrackRow): PositionTrack => ({
   id: row.id,
   surveyId: row.survey_id,
   recordUuid: row.record_uuid,
@@ -54,7 +65,7 @@ const insertTrack = async ({
 const fetchTrackByRecordUuid = async (
   recordUuid: string,
 ): Promise<PositionTrack | null> => {
-  const row = await dbClient.one(
+  const row = await dbClient.one<PositionTrackRow>(
     `SELECT * FROM position_track WHERE record_uuid = ? ORDER BY id DESC`,
     [recordUuid],
   );
@@ -100,7 +111,7 @@ const insertPoint = async ({
 };
 
 const fetchSegments = async (trackId: number): Promise<TrackSegment[]> => {
-  const rows: any[] = await dbClient.many(
+  const rows = await dbClient.many<PositionTrackPointRow>(
     `SELECT segment_index, time, latitude, longitude, altitude, accuracy
      FROM position_track_point
      WHERE track_id = ?
@@ -144,7 +155,7 @@ const deleteTrack = (id: number) => deleteTracksByIds([id]);
 
 const deleteTracksByRecordUuids = async (recordUuids: string[]) => {
   if (recordUuids.length === 0) return;
-  const rows: any[] = await dbClient.many(
+  const rows = await dbClient.many<Pick<PositionTrackRow, "id">>(
     `SELECT id FROM position_track WHERE record_uuid IN (${DbUtils.placeholders(recordUuids)})`,
     recordUuids,
   );
