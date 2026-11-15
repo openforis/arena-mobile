@@ -14,7 +14,6 @@ describe("startSessionInit", () => {
 
   beforeEach(() => {
     jest.useFakeTimers();
-    jest.clearAllMocks();
   });
 
   afterEach(() => {

@@ -22,7 +22,6 @@ const geoUri = "geo:1.5,2.5?q=1.5,2.5";
 
 describe("MapAppsAdapter (Android)", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
     (getApps as jest.Mock).mockResolvedValue([
       { id: "google-maps", name: "Google Maps" },
     ]);

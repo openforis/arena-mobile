@@ -68,7 +68,6 @@ const upload = (onChunkUploaded: jest.Mock = jest.fn(), startFromChunk = 1) =>
 
 describe("RecordRemoteService.uploadRecords", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
     mockTotalChunks = 2;
   });
 
