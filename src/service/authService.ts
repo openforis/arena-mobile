@@ -3,6 +3,7 @@ import { Dictionary, User } from "@openforis/arena-core";
 import { API } from "./api";
 import { SecureStoreService } from "./SecureStoreService";
 import { SettingsService } from "./settingsService";
+import { HttpErrors } from "utils/HttpErrors";
 import { log } from "utils/Logger";
 import { SystemUtils } from "utils/SystemUtils";
 
@@ -55,7 +56,7 @@ const extractErrorMessageFromLoginError = (err: any): { error: string } => {
   if (!response) {
     return { error: invalidServerUrlError };
   }
-  if (response.status === 401) {
+  if (HttpErrors.isUnauthorizedResponse(err)) {
     return { error: invalidCredentialsError };
   }
   return { error: err.message };
@@ -144,7 +145,7 @@ const login = async ({
     return result;
   } catch (err: any) {
     // the 2FA code is sent only after the password has been accepted
-    if (twoFactorToken && err.response?.status === 401) {
+    if (twoFactorToken && HttpErrors.isUnauthorizedResponse(err)) {
       return { error: invalidTwoFactorCodeError };
     }
     return extractErrorMessageFromLoginError(err);
@@ -190,7 +191,7 @@ const logout = async () => {
 
 // the server answers 401 when the refresh token is invalid, expired or revoked
 const isRefreshTokenRejected = (error: any): boolean =>
-  error?.response?.status === 401;
+  HttpErrors.isUnauthorizedResponse(error);
 
 // returns true if the user has been logged in again with the credentials stored in the keychain
 const loginWithStoredCredentials = async (): Promise<boolean> => {

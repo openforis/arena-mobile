@@ -1,6 +1,7 @@
 import { SecureStoreService, UserService } from "service";
 import { AsyncStorageUtils } from "service/asyncStorage/AsyncStorageUtils";
 import { asyncStorageKeys } from "service/asyncStorage/asyncStorageKeys";
+import { HttpErrors } from "utils/HttpErrors";
 import { log } from "utils/Logger";
 
 import { AutoSyncActions } from "../autoSync";
@@ -20,7 +21,7 @@ const fetchUser = async () => {
   } catch (error: any) {
     log.error("Error fetching user", error);
     // session no longer valid: a new login is required
-    if (error?.response?.status === 401) return null;
+    if (HttpErrors.isUnauthorizedResponse(error)) return null;
     // server not reachable (e.g. network connected but no internet): keep the last logged in user
     return getUserInAsyncStorage();
   }

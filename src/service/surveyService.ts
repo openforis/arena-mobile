@@ -8,6 +8,7 @@ import {
 
 import { SurveyPackage } from "model/SurveyPackage";
 import { Files, log } from "utils";
+import { HttpErrors } from "utils/HttpErrors";
 
 import { SurveyRepository } from "./repository/surveyRepository";
 import { SurveyFSRepository } from "./repository/surveyFSRepository";
@@ -194,11 +195,6 @@ type SurveyRemoteFetchResult = {
   unzippedDirUri: string | null;
 };
 
-const isEndpointNotSupportedError = (error: any): boolean => {
-  const status = Number(error?.response?.status);
-  return status === 404 || status === 501;
-};
-
 const readSurveyPackage = async ({
   unzippedDirUri,
 }: {
@@ -228,7 +224,7 @@ const fetchSurveyPackageRemote = async ({
       `api/mobile/survey/${id}/package`,
     );
   } catch (error) {
-    if (isEndpointNotSupportedError(error)) {
+    if (HttpErrors.isEndpointNotSupported(error)) {
       log.debug("survey package endpoint not supported by the server");
       return null;
     }

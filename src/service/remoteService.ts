@@ -1,6 +1,7 @@
 import { Dictionary } from "@openforis/arena-core";
 import { CanceledError } from "axios";
 
+import { HttpErrors } from "utils/HttpErrors";
 import { SystemUtils } from "utils/SystemUtils";
 
 import { API } from "./api";
@@ -44,9 +45,8 @@ const withRetry = async (
   try {
     return await callback();
   } catch (error: any) {
-    const status = Number(error?.response?.status);
     // the token refresh request doesn't go through here (see AuthService)
-    if (status === 401 && maxRetries > 0) {
+    if (HttpErrors.isUnauthorizedResponse(error) && maxRetries > 0) {
       try {
         await AuthService.refreshAuthTokens();
       } catch {
