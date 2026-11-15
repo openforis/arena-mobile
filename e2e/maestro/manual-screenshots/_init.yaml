@@ -4,6 +4,7 @@ appId: ${APP_ID}
 - runScript: labels.js
 - launchApp
 # the "What's new" dialog, if still shown, covers the home screen
+# (not common/dismiss-whats-new.yaml: the labels here are in the app language)
 - extendedWaitUntil:
     visible: ${output.t.whatsNew}
     timeout: 5000

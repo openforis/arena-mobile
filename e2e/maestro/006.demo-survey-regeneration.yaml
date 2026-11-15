@@ -69,12 +69,10 @@ appId: ${APP_ID}
     direction: DOWN
 - tapOn: "Edit Stems"
 - assertVisible: "No entities defined"
-- tapOn: "New Stems"
-- assertVisible: "Stem no\\."
-- tapOn:
-    id: "stem_diameter"
-- inputText: "4.5"
-- tapOn: "Diameter \\[cm\\]"
+- runFlow:
+    file: common/add-stem.yaml
+    env:
+      DIAMETER: "4.5"
 
 # back to the list of regeneration entities (bottom bar button): summary columns are shown
 - runFlow:

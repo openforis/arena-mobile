@@ -1,6 +1,7 @@
 appId: ${APP_ID}
 ---
 # Waits about SECONDS seconds (e.g. for map tiles to be downloaded)
+# fixed sleep: use it only when no element marks the screen as ready
 - extendedWaitUntil:
     visible: "zzz-text-never-shown"
     timeout: ${SECONDS * 1000}

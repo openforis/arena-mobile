@@ -1,0 +1,9 @@
+appId: ${APP_ID}
+---
+# Demo survey: adds a stem from the list of stems. Params: DIAMETER
+- tapOn: "New Stems"
+- assertVisible: "Stem no\\."
+- tapOn:
+    id: "stem_diameter"
+- inputText: "${DIAMETER}"
+- tapOn: "Diameter \\[cm\\]"
