@@ -18,10 +18,12 @@ describe("validation counts columns values", () => {
     const validation = {
       valid: false,
       fields: {
-        n1: { valid: false, errors: [{ key: "required" }] },
+        n1: { valid: false, errors: [{ key: "required", valid: false }] },
         n2: {
           valid: false,
-          fields: { n3: { valid: false, warnings: [{ key: "custom" }] } },
+          fields: {
+            n3: { valid: false, warnings: [{ key: "custom", valid: false }] },
+          },
         },
       },
     };
