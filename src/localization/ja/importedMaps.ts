@@ -1,43 +1,48 @@
 export default {
-  title: "PDFマップ",
+  title: "インポートしたマップ",
   description:
-    "このデバイスに保存されている地理空間(ジオリファレンス済み)PDFファイルからマップをインポートします。インターネットに接続していなくても、アプリのすべての地図でベースマップの上に表示されます。",
+    "このデバイスに保存されている地理空間(ジオリファレンス済み)PDFまたはGeoTIFFファイルからマップをインポートします。インターネットに接続していなくても、アプリのすべての地図でベースマップの上に表示されます。",
   rendererNotAvailable:
-    "このバージョンのアプリはPDFマップに対応していません。最新バージョンに更新してください",
-  importPdf: "PDFをインポート",
-  noMaps: "インポートされたPDFマップはまだありません",
+    "このバージョンのアプリはインポートしたマップに対応していません。最新バージョンに更新してください",
+  importMap: "マップをインポート",
+  noMaps: "インポートされたマップはまだありません",
   storage: {
-    used: "PDFマップの使用容量:",
+    used: "インポートしたマップの使用容量:",
   },
   opacity: "不透明度: {{value}}%",
-  hideBaseMap: "PDFのみ",
+  hideBaseMap: "インポートしたマップのみ",
   map: {
     fileName: "ファイル: {{fileName}}",
     page: "ページ: {{page}}",
     zoomLevels: "ズームレベル: {{minZoom}} - {{maxZoom}}",
     tiles: "タイル: {{count}}",
     size: "サイズ: {{size}}(PDFファイル: {{sourceSize}})",
+    sizeTilesOnly: "サイズ: {{size}}",
     datumWarning:
       "マップの測地系がWGS84ではありません。マップが数メートルずれる可能性があります",
     visible: "地図に表示",
-    deleteConfirm: "PDFマップ「{{name}}」を削除しますか?",
-    notFound: "PDFマップが見つかりません",
-    viewerTitle: "PDFマップ",
+    deleteConfirm: "マップ「{{name}}」を削除しますか?",
+    notFound: "マップが見つかりません",
+    viewerTitle: "インポートしたマップ",
   },
   import: {
-    title: "PDFマップをインポート",
-    analyzing: "PDFファイルのジオリファレンスを読み込んでいます...",
-    errorReading: "PDFファイルの読み込み中にエラーが発生しました: {{details}}",
+    title: "マップをインポート",
+    analyzing: "ファイルのジオリファレンスを読み込んでいます...",
+    errorReading: "ファイルの読み込み中にエラーが発生しました: {{details}}",
     notGeoreferenced:
-      "PDFファイルはジオリファレンスされていません。マップの地理座標が含まれていません",
+      "ファイルはジオリファレンスされていません。マップの地理座標が含まれていません",
     unsupportedGeoreference:
       "このPDFファイルのジオリファレンス(OGC GeoPDF形式)にはまだ対応していません",
+    unsupportedFile: "このファイルはPDFでもGeoTIFFでもありません",
+    unsupportedGeoTiffFormat:
+      "このGeoTIFFファイルの画像には対応していません({{details}})。インポートできるのは、サンプルあたり8ビットの画像(RGB、RGBA、グレースケール、またはカラーパレット付き)のみです",
     page: "ページ",
     pageItem: "ページ {{page}}",
     name: "名前",
     maxZoom: "最大ズーム: {{value}}",
-    nativeZoom: "(PDFの解像度: {{value}})",
-    maxZoomAboveNative: "PDFの解像度を超えるズームレベルはぼやけて表示されます",
+    nativeZoom: "(マップの解像度: {{value}})",
+    maxZoomAboveNative:
+      "マップの解像度を超えるズームレベルはぼやけて表示されます",
     estimate: "{{tiles}} タイル · 約{{size}}(空き容量: {{freeSpace}})",
     estimateTooManyTiles:
       "{{tiles}} タイル: 多すぎます(最大 {{maxTiles}})。最大ズームを下げてください",
@@ -56,12 +61,12 @@ export default {
       error: "プレビューを表示できません: {{details}}",
     },
     importButton: "インポート",
-    jobTitle: "PDFマップをインポートしています",
-    complete: "PDFマップをインポートしました({{size}})",
-    error: "PDFマップのインポート中にエラーが発生しました: {{details}}",
+    jobTitle: "マップをインポートしています",
+    complete: "マップをインポートしました({{size}})",
+    error: "マップのインポート中にエラーが発生しました: {{details}}",
   },
   validation: {
     nameRequired: "名前は必須です",
-    nameDuplicate: "この名前は別のPDFマップで使用されています",
+    nameDuplicate: "この名前は別のインポートしたマップで使用されています",
   },
 };

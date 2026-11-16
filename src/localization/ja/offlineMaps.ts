@@ -2,7 +2,7 @@ export default {
   title: "オフラインマップ",
   tabs: {
     areas: "ダウンロード済みエリア",
-    importedMaps: "PDFマップ",
+    importedMaps: "インポートしたマップ",
   },
   description:
     "現場に行く前に対象エリアの地図をダウンロードしてください。地理属性の描画や表示の際に、インターネット接続がなくても利用できます。",

@@ -2,7 +2,7 @@ export default {
   title: "ከመስመር ውጭ ካርታዎች",
   tabs: {
     areas: "የወረዱ ቦታዎች",
-    importedMaps: "የPDF ካርታዎች",
+    importedMaps: "የገቡ ካርታዎች",
   },
   description:
     "ወደ መስክ ከመሄድዎ በፊት የሚፈልጉትን አካባቢ ካርታ ያውርዱ፦ የጂኦግራፊ ባህሪያትን ሲስሉ ወይም ሲመለከቱ ያለ በይነመረብ ግንኙነትም ይገኛል።",
