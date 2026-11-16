@@ -225,8 +225,10 @@ This is the only native change: the next app version needs a new native build
 ## Plan
 
 1. **Rename + this note** (this PR).
-2. **Spike** (done, see *Spike results*) and **device benchmark** (done, see
-   *Device benchmark*): run it on Android and iOS devices before the UI work.
+2. **Spike** (done, see *Spike results*). No separate device benchmark: the
+   import runs as a job with progress and cancel, whatever its duration; the
+   timings of the first imports on devices tell whether native JPEG decoding
+   is worth it.
 3. **GeoTIFF reading and georeference** (pure JS, unit tests with small
    fixtures made with GDAL: UTM 33N LZW RGB, EPSG:4326 Deflate grayscale with
    nodata, palette, tiled JPEG/YCbCr COG with overviews, rotated
@@ -286,58 +288,26 @@ Mpx/s:
 Estimate on phones (2–3× slower than this CPU without JIT): a 64 Mpx JPEG
 orthophoto at the native zoom ~2–4 min, Deflate ~1.5–3 min, LZW ~4–8 min,
 plus the native rendering. Acceptable for a one-time import with progress and
-cancel; slow for 300+ Mpx files. To confirm on devices with the benchmark;
-if too slow, the most common case (JPEG-compressed tiles) can be decoded
+cancel; slow for 300+ Mpx files. If too slow on devices, the most common case (JPEG-compressed tiles) can be decoded
 natively instead: each TIFF JPEG tile + `JPEGTables` is a standalone JPEG
 stream for `BitmapFactory` / ImageIO (10× faster or more), with geotiff.js
 still used for the structure and the other compressions.
 
 **Not verified** (no Hermes VM in the container): `TextDecoder` (used by
 geotiff.js for ASCII tags; a tiny fallback is installed if Hermes lacks it)
-and the actual Hermes timings: see *Device benchmark*.
+and the actual Hermes timings (first imports on devices).
 
-## Device benchmark
+## Reading code
 
-The reading code of step 3 is already in `src/utils/geoTiff/` (file source,
-LZW decoder, pixel formats, window reader with strip cache, georeference,
-`TextDecoder` fallback), unit tested with small GDAL fixtures
+Already in `src/utils/geoTiff/` (used by step 3): file source on the
+expo-file-system `FileHandle` (serial reads, contiguous ranges merged), LZW
+decoder, pixel formats, RGBA window reader with strip cache and time slicing
+(tiles decoded one at a time, yield to the event loop after 50 ms: JS thread
+blocked max ~40 ms per step in the container), georeference, `TextDecoder`
+fallback. Unit tested with small GDAL fixtures
 (`src/utils/geoTiff/__fixtures__/generate.py`: expected corners and pixels
-computed by GDAL). A developer screen runs it on a device:
-`src/service/importedMaps/geoTiffBenchmark.ts`,
-`src/screens/GeoTiffBenchmark`.
+computed by GDAL).
 
-Open it from **Offline maps → PDF maps → GeoTIFF benchmark (developer)**. The
-button is visible in development builds and in builds made with
-`EXPO_PUBLIC_DEV_TOOLS=true` (`DevTools.enabled`). Development builds run a
-non-minified bundle with dev checks, so the timings that count come from a
-release build:
-
-- local build: `EXPO_PUBLIC_DEV_TOOLS=true npx expo run:android --variant release`
-  (iOS: `--configuration Release`);
-- EAS: add `"env": { "EXPO_PUBLIC_DEV_TOOLS": "true" }` to the `preview`
-  profile (or an EAS environment variable) for the test build.
-
-Select a GeoTIFF (it is copied to the cache, deleted when leaving the
-screen), choose the first 16 blocks (quick, with an estimate for the whole
-image) or the whole image, **Run**; copy or share the report. It contains:
-JS engine (Hermes version) and `TextDecoder` (native or fallback); header
-reads; image structure (size, samples, compression, tiling, overviews); CRS,
-datum shift warning, corners; first block fast path vs geotiff.js `readRGB`;
-low zoom read (whole image into ~1024 px, from the overviews); full
-resolution decode in 1024 px blocks: Mpx/s, slowest block, max time the JS
-thread was blocked, tiles decoded, file reads, JS heap.
-
-Test files: real orthophotos/scanned sheets, or generated with GDAL, e.g. a
-JPEG COG and an LZW striped file:
-
-```bash
-gdal_translate -of COG -co COMPRESS=JPEG -co QUALITY=85 input.tif ortho_jpeg_cog.tif
-gdal_translate -co COMPRESS=LZW input.tif ortho_lzw.tif
-```
-
-Example report in the container (Node with JIT, not Hermes), 8000×8000 JPEG
-COG, first 16 blocks: 10 Mpx/s, slowest block 131 ms, JS thread blocked
-max 37 ms; low zoom from the 2000 px overview in 0.3 s reading 0.5 MB.
 Noticed: tiled files need 2 small reads per tile for the offsets and byte
 counts (`loadValueIndexed`) besides the data; reading those arrays once would
 reduce the native calls.

@@ -65,8 +65,4 @@ export default {
     nameRequired: "Name is required",
     nameDuplicate: "Name already in use by another PDF map",
   },
-  // developer tool: English only
-  benchmark: {
-    title: "GeoTIFF benchmark",
-  },
 };

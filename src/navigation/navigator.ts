@@ -18,7 +18,6 @@ export type AppStackParamList = {
   [screenKeys.about]: undefined;
   [screenKeys.customMapLayerEditor]: CustomMapLayerEditorParams | undefined;
   [screenKeys.customMapLayers]: undefined;
-  [screenKeys.geoTiffBenchmark]: undefined;
   [screenKeys.home]: undefined;
   [screenKeys.locationMapViewer]: LocationMapViewerParams;
   [screenKeys.offlineMapAreaEditor]: undefined;
@@ -50,7 +49,6 @@ export const createNavigator = (navigation: any) => {
     navigateToCustomMapLayerEditor: (params?: CustomMapLayerEditorParams) =>
       nav.navigate(screenKeys.customMapLayerEditor, params),
     navigateToCustomMapLayers: () => nav.navigate(screenKeys.customMapLayers),
-    navigateToGeoTiffBenchmark: () => nav.navigate(screenKeys.geoTiffBenchmark),
     navigateToLocationMapViewer: (params: LocationMapViewerParams) =>
       nav.navigate(screenKeys.locationMapViewer, params),
     navigateToOfflineMapAreaEditor: () =>
