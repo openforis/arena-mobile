@@ -9,3 +9,4 @@ appId: ${APP_ID}
 - runFlow: 007.demo-survey-media.yaml
 - runFlow: 008.demo-survey-navigate-to-target.yaml
 - runFlow: 009.demo-survey-clear-not-applicable-values.yaml
+- runFlow: 010.offline-maps-import-geotiff.yaml

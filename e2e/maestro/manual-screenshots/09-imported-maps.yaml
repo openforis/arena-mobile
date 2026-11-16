@@ -1,0 +1,54 @@
+appId: ${APP_ID}
+---
+# Offline maps: import of a GeoTIFF map (e2e/maestro/assets/geotiff-test-map.tif, copied to the
+# Download folder by take-manual-screenshots-android.sh); also used for the "What's new" images
+- runFlow: _init.yaml
+- runFlow:
+    file: _open-menu-item.yaml
+    env:
+      ITEM: ${output.t.offlineMaps}
+- tapOn: ${output.t.importedMaps}
+- tapOn: ${output.t.importMap}
+# system file picker (system language: English); the file can be already listed in the recent files
+- extendedWaitUntil:
+    visible: "geotiff-test-map.tif|Show roots"
+    timeout: 30000
+- runFlow:
+    when:
+      notVisible: "geotiff-test-map.tif"
+    commands:
+      - tapOn: "Show roots"
+      - tapOn: "Downloads"
+- tapOn: "geotiff-test-map.tif"
+- extendedWaitUntil:
+    visible: ${output.t.importButton}
+    timeout: 60000
+- extendedWaitUntil:
+    notVisible: ${output.t.previewRendering}
+    timeout: 120000
+# map tiles downloaded from the internet (no element marks them as loaded)
+- runFlow:
+    file: _wait.yaml
+    env:
+      SECONDS: 10
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: imported-map-import
+- tapOn: ${output.t.importButton}
+- extendedWaitUntil:
+    visible: "geotiff-test-map"
+    timeout: 180000
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: imported-maps-list
+- tapOn: "geotiff-test-map"
+- runFlow:
+    file: _wait.yaml
+    env:
+      SECONDS: 10
+- runFlow:
+    file: _shot.yaml
+    env:
+      NAME: imported-map-viewer
