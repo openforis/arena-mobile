@@ -78,6 +78,10 @@ const nativeModule =
 // false in Expo Go or in builds made before the native module was added
 const isAvailable = (): boolean => !!nativeModule;
 
+// false in builds made before GeoTIFF support (the JS code can be newer than the native code)
+const isImageRenderingAvailable = (): boolean =>
+  typeof nativeModule?.renderImageTiles === "function";
+
 const getNativeModule = (): ImportedMapRendererNativeModule => {
   if (!nativeModule) {
     throw new Error("ImportedMapRenderer native module not available");
@@ -87,6 +91,7 @@ const getNativeModule = (): ImportedMapRendererNativeModule => {
 
 export const ImportedMapRenderer = {
   isAvailable,
+  isImageRenderingAvailable,
   getPageCount: (pdfPath: string) => getNativeModule().getPageCount(pdfPath),
   renderTiles: (options: RenderTilesOptions) =>
     getNativeModule().renderTiles(options),

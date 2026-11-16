@@ -54,6 +54,8 @@ export type ImportedMapFileAnalysis = {
   candidates: ImportedMapPageCandidate[];
   // GeoTIFF: why its pixels cannot be read (e.g. "16 bits per sample")
   unsupportedFormat?: string;
+  // the native renderer of this build cannot render the file (GeoTIFF in builds made before its support)
+  rendererNotAvailable?: boolean;
 };
 
 // tiles rendered into a temporary folder to preview the map before importing it
@@ -144,7 +146,12 @@ const analyzeFile = async (
 ): Promise<ImportedMapFileAnalysis> => {
   const sourceType = detectMapFileType(readFileHeader(fileUri));
   if (sourceType === "pdf") return analyzePdf(fileUri);
-  if (sourceType === "geotiff") return analyzeGeoTiff(fileUri);
+  if (sourceType === "geotiff") {
+    if (!ImportedMapRenderer.isImageRenderingAvailable()) {
+      return { sourceType, candidates: [], rendererNotAvailable: true };
+    }
+    return analyzeGeoTiff(fileUri);
+  }
   return { sourceType: null, candidates: [] };
 };
 

@@ -48,6 +48,7 @@ export const getAnalysisErrorKey = (
 ): string | undefined => {
   if (analysis.candidates.length > 0) return undefined;
   if (!analysis.sourceType) return "importedMaps:import.unsupportedFile";
+  if (analysis.rendererNotAvailable) return "importedMaps:rendererNotAvailable";
   if (analysis.unsupportedFormat) {
     return "importedMaps:import.unsupportedGeoTiffFormat";
   }

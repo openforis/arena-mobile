@@ -83,6 +83,16 @@ describe("getAnalysisErrorKey", () => {
     );
   });
 
+  it("reports GeoTIFF files when the native renderer of the build can't render them", () => {
+    expect(
+      getAnalysisErrorKey({
+        sourceType: "geotiff",
+        candidates: [],
+        rendererNotAvailable: true,
+      }),
+    ).toBe("importedMaps:rendererNotAvailable");
+  });
+
   it("reports GeoTIFF files whose pixels cannot be read", () => {
     const analysis: ImportedMapFileAnalysis = {
       sourceType: "geotiff",
