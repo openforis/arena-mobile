@@ -79,24 +79,37 @@ pick file → analyze (header only) → georeference (pixel ↔ mercator homogra
 MIT; `proj4` already lists it as an optional peer dependency):
 
 - tags, GeoKeys, image size, tiling, overviews (`getImageCount` / `getImage`);
-- **windowed decoding with resampling**: `image.readRGB({ window, width,
-  height, enableAlpha, interleave: true })` returns RGB(A) for any
-  photometric interpretation (RGB, grayscale, palette, YCbCr, CMYK) and
-  decodes only the strips/tiles touching the window; with overviews the
-  closest lower resolution image is used;
-- compressions: none, PackBits, LZW, Deflate, JPEG (all in JS). LERC and
-  Zstandard use WebAssembly decoders, not available on Hermes → those files
-  are rejected with a message.
+- decoding of single tiles/strips (`getTileOrStrip` with the decoder of the
+  compression); the window of a block is assembled by our code (see *Spike
+  results*: `readRGB` reads every sample through a `DataView`, 2–4× slower
+  without JIT): decoded rows copied into an RGBA buffer, conversion only for
+  grayscale, palette and YCbCr (JPEG tiles are decoded to YCbCr);
+- compressions: none, PackBits, LZW (our typed-array decoder, registered
+  with `addDecoder`), Deflate, JPEG (all in JS). LERC and Zstandard use
+  WebAssembly decoders, not available on Hermes → those files are rejected
+  with a message.
+
+Metro: `web-worker` (decoder pool, node entry not bundleable), the inline
+worker source (`geotiff/dist-module/worker/create.js`, 246 KB) and the
+WebAssembly decoders (`lerc`, `zstddec`) are resolved to empty modules in
+`metro.config.js`; `fs` is already replaced by the package `browser` field.
 
 **File access**: GeoTIFFs can be hundreds of MB, they must not be read in
 memory as a whole (as `GeoPdfParser` does with PDFs). A geotiff.js custom
 source reads byte ranges with the `expo-file-system` `FileHandle`
 (`offset` + `readBytes`), so only the header, the IFDs and the strips/tiles
-needed by a block are read.
+needed by a block are read; contiguous slices are read with one call (strips
+of uncompressed or LZW files are often a few KB: thousands of reads).
 
-Everything runs on the JS thread (no web workers in React Native): the job
-awaits between blocks so the UI stays responsive (progress dialog,
-cancel). Decoding is slower than native code; to measure in the spike.
+Everything runs on the JS thread (no web workers in React Native): reads are
+async native calls, so the JS thread is released between tiles/strips and the
+UI stays responsive (progress dialog, cancel); the longest uninterrupted
+step is the decoding of one tile/strip.
+
+Stripped files with full-width strips: a strip covers several blocks of the
+same row, so decoded strips are kept (small LRU cache, blocks processed row
+by row) instead of being decoded again for each block (8× slower otherwise
+on an 8000 px wide image).
 
 ### 2. Georeference → homography
 
@@ -107,8 +120,8 @@ cancel). Decoding is slower than native code; to measure in the spike.
 2. CRS definition, in this order:
    - GeoKeys → proj4 definition (EPSG code or user-defined parameters) with
      [`geotiff-geokeys-to-proj4`](https://github.com/matafokka/geotiff-geokeys-to-proj4)
-     (it includes the EPSG tables needed for the codes; ~1.5 MB unpacked,
-     check the bundle size impact in the spike);
+     (it includes the EPSG tables needed for the codes; +355 KB in the
+     bundle);
    - fallback: the WKT of an SRS with the same EPSG code in the current
      survey (`Surveys.getSRSIndex`, defined in Arena);
    - otherwise: "coordinate system not supported (EPSG:xxxx)";
@@ -126,9 +139,12 @@ top-left, y down: already the convention of the PDF display space). The
 neatline is the image footprint (4 corners); content outside it is
 transparent, and so are the nodata pixels / alpha.
 
-`datumCompatible` is true when the CRS definition is known (the datum shift is
-applied by proj4); a definition without datum information gives the same
-warning as PDFs.
+`datumCompatible` is true when the datum is WGS84-compatible or the
+definition has the datum shift (`+towgs84` / `+nadgrids`, applied by proj4).
+`geotiff-geokeys-to-proj4` doesn't always give it: for EPSG:27700 (British
+National Grid, OSGB36) the map is ~105 m off. Then the survey SRS with the
+same code (its WKT usually has `TOWGS84`) or a small table of 7-parameter
+shifts for common datums is used; otherwise the map gets the datum warning.
 
 **Native zoom**: from the pixel size in meters (pixel scale, converted for
 geographic CRSs) instead of the PDF render DPI; the georeference gets a
@@ -153,9 +169,11 @@ renderImageTiles({
 
 - for each block (1024 px): the planner gives the display → block matrix;
   the JS side computes the image window covered by the block (inverse matrix
-  on the block corners, plus a 1 px margin), the window size matching the
-  block resolution (never above the source resolution), decodes it with
-  geotiff.js and passes it with the matrix adjusted to the window;
+  on the block corners, plus a 1 px margin), decodes it at the resolution of
+  the closest overview at or above the block resolution (no resampling in
+  JS: the native side scales; without overviews, rows/columns are decimated
+  while copying, for the low zooms of the preview) and passes it with the
+  matrix adjusted to the window;
 - Android: `Bitmap.copyPixelsFromBuffer` + `Canvas.drawBitmap(bitmap, matrix,
   filterPaint)` with the clip path; iOS: `CGImage` from the buffer drawn with
   a `CGAffineTransform` (bilinear interpolation on both);
@@ -206,11 +224,9 @@ This is the only native change: the next app version needs a new native build
 ## Plan
 
 1. **Rename + this note** (this PR).
-2. **Spike** (de-risk geotiff.js on Hermes): Metro resolution of the package
-   (`exports`, `web-worker` dependency, dynamic `import()` of the decoders),
-   `TextDecoder`, custom `FileHandle` source; decoding time on a mid-range
-   Android device for a 100–300 MB LZW / JPEG GeoTIFF, with and without
-   overviews; bundle size of `geotiff-geokeys-to-proj4`.
+2. **Spike** (done, see *Spike results*); still to do on devices: decoding
+   time on Hermes and `TextDecoder`, with a dev-only benchmark in the next PR
+   (before the UI work).
 3. **GeoTIFF reading and georeference** (pure JS, unit tests with small
    fixtures made with GDAL: UTM 33N LZW RGB, EPSG:4326 Deflate grayscale with
    nodata, palette, tiled JPEG/YCbCr COG with overviews, rotated
@@ -220,6 +236,65 @@ This is the only native change: the next app version needs a new native build
 4. **Rendering and UI**: native `renderImageTiles` (Android, iOS), import
    job/preview for both sources, model, import screen, texts and
    translations, user manual sections to update.
+
+## Spike results
+
+Done in the development container with GDAL 3.12 fixtures (synthetic
+orthophoto 8000×8000 px, UTM 33N, in several compressions, plus 2000×2000
+px and special cases). Scripts and fixtures are not committed (generated
+again with GDAL for the unit tests of step 3).
+
+**Bundling** (`expo export:embed`, Android, minified; Hermes bytecode compiled
+by the project `hermesc` without errors):
+
+- fails until `web-worker` is resolved to an empty module (its node entry
+  has an `import()` Metro can't transform); `fs` is fine (`browser` field);
+- size added to the JS bundle: geotiff.js +259 KB (after stubbing the inline
+  worker and the WebAssembly decoders: +602 KB without),
+  `geotiff-geokeys-to-proj4` +355 KB; `proj4` is already in the bundle
+  (arena-core).
+
+**Georeference** (corners and center vs GDAL): exact (< 1 mm) for UTM
+WGS84, EPSG:4326 grayscale, ED50 / UTM (EPSG:23033, `+towgs84` given),
+user-defined Lambert conformal conic with `TOWGS84`, rotated image
+(`ModelTransformation`), palette, RGBA. **EPSG:27700: ~105 m** (no datum
+shift, see §2). Not georeferenced files are detected (no tie point /
+transformation, no GeoKeys). Header and IFDs: 2–15 reads, < 8 KB, < 10 ms.
+
+**Decoding**, 1024×1024 windows over the whole image, Node 22 on the
+container CPU; `--jitless` (no JIT, like Hermes) is the relevant column,
+Mpx/s:
+
+| File (2000×2000, RGB) | `readRGB`, jitless | fast path, jitless | fast path, JIT |
+|---|---|---|---|
+| uncompressed (strips) | 1.8 | 6.8 | 33 |
+| PackBits (strips) | 1.0 | 2.1 | 17 |
+| LZW (strips) | 0.2 | 0.5 (typed-array LZW) | 7.8 |
+| Deflate + predictor (tiled 256) | 1.0 | 1.5 | 16 |
+| JPEG YCbCr (tiled 256) | 0.7 | 1.0 | 11 |
+
+- fast path = tiles/strips copied into the RGBA window (identical output to
+  `readRGB`, ±1 for JPEG YCbCr conversion); our LZW decoder: same output,
+  2–4× faster than geotiff's (JS arrays, one allocation per code);
+- 8000×8000 (64 Mpx), JIT: JPEG COG 5.0 s, Deflate 3.1 s, LZW full-width
+  strips 24 s (strips decoded again for each block: strip cache needed);
+- memory: heap < 30 MB with 1024² windows; the file is never in memory;
+- low zooms with overviews (COG): whole image → 1024² from the 2000 px
+  overview in 0.4 s, reading 0.4 MB; without overviews the whole file is
+  read (150 MB Deflate: 6.9 s with JIT).
+
+Estimate on phones (2–3× slower than this CPU without JIT): a 64 Mpx JPEG
+orthophoto at the native zoom ~2–4 min, Deflate ~1.5–3 min, LZW ~4–8 min,
+plus the native rendering. Acceptable for a one-time import with progress and
+cancel; slow for 300+ Mpx files. To confirm on devices with the benchmark;
+if too slow, the most common case (JPEG-compressed tiles) can be decoded
+natively instead: each TIFF JPEG tile + `JPEGTables` is a standalone JPEG
+stream for `BitmapFactory` / ImageIO (10× faster or more), with geotiff.js
+still used for the structure and the other compressions.
+
+**Not verified** (no Hermes VM in the container): `TextDecoder` (used by
+geotiff.js for ASCII tags; a tiny polyfill if Hermes lacks it) and the
+actual Hermes timings.
 
 ## Testing
 
@@ -234,10 +309,13 @@ This is the only native change: the next app version needs a new native build
 
 ## Risks
 
-- **geotiff.js on Hermes** (bundling, missing web APIs): checked first, in the
-  spike. Fallback: a native TIFF decoder (libtiff), more native code.
-- **Import time** of big files decoded in JS; mitigated by overviews (COG),
-  zoom choice, cancel. Preview of big files without overviews.
+- **Import time** of big files decoded in JS (see *Spike results*):
+  mitigated by the fast path, overviews (COG), zoom choice, cancel; next
+  option: native decoding of JPEG tiles. Preview of big files without
+  overviews reads the whole file.
+- **Hermes runtime** (`TextDecoder`, timings): bundling and bytecode
+  compilation verified, runtime only on devices. Fallback: a native TIFF
+  decoder (libtiff), more native code.
 - **CRS coverage**: codes missing in the bundled tables and not in the
   survey → not supported (message names the EPSG code).
 - Very large extents: a single homography is not enough → split (phase 2).
