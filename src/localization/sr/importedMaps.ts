@@ -5,6 +5,8 @@ export default {
   rendererNotAvailable:
     "Ova verzija aplikacije ne podržava uvezene mape: ažurirajte je na najnoviju verziju",
   importMap: "Uvezi mapu",
+  supportedFormats:
+    "Podržane datoteke: geoprostorni PDF (.pdf) i GeoTIFF (.tif, .tiff)",
   noMaps: "Još nije uvezena nijedna mapa",
   storage: {
     used: "Prostor koji zauzimaju uvezene mape:",

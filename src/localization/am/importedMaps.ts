@@ -5,6 +5,7 @@ export default {
   rendererNotAvailable:
     "ይህ የመተግበሪያው ስሪት የገቡ ካርታዎችን አይደግፍም፦ ወደ የቅርብ ጊዜው ስሪት ያዘምኑት",
   importMap: "ካርታ አስመጣ",
+  supportedFormats: "የሚደገፉ ፋይሎች፦ ጂኦስፓሻል PDF (.pdf) እና GeoTIFF (.tif, .tiff)",
   noMaps: "እስካሁን ምንም ካርታ አልመጣም",
   storage: {
     used: "በገቡ ካርታዎች የተያዘ ቦታ፦",

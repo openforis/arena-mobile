@@ -5,6 +5,8 @@ export default {
   rendererNotAvailable:
     "Les cartes importées ne sont pas prises en charge par cette version de l'application : mettez-la à jour vers la dernière version",
   importMap: "Importer une carte",
+  supportedFormats:
+    "Fichiers pris en charge : PDF géospatial (.pdf) et GeoTIFF (.tif, .tiff)",
   noMaps: "Aucune carte importée pour le moment",
   storage: {
     used: "Espace utilisé par les cartes importées :",

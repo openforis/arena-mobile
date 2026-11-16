@@ -250,6 +250,11 @@ export const ImportedMapsTab = () => {
           textKey="importedMaps:importMap"
         />
       </HView>
+      <Text
+        style={styles.supportedFormatsText}
+        textKey="importedMaps:supportedFormats"
+        variant="bodySmall"
+      />
       {deleting && <LoadingIcon />}
       {importedMaps.length === 0 && (
         <Text style={styles.emptyText} textKey="importedMaps:noMaps" />

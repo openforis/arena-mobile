@@ -5,6 +5,8 @@ export default {
   rendererNotAvailable:
     "このバージョンのアプリはインポートしたマップに対応していません。最新バージョンに更新してください",
   importMap: "マップをインポート",
+  supportedFormats:
+    "対応ファイル：地理空間PDF（.pdf）およびGeoTIFF（.tif、.tiff）",
   noMaps: "インポートされたマップはまだありません",
   storage: {
     used: "インポートしたマップの使用容量:",

@@ -5,6 +5,8 @@ export default {
   rendererNotAvailable:
     "Importerade kartor stöds inte av den här versionen av appen: uppdatera den till den senaste versionen",
   importMap: "Importera karta",
+  supportedFormats:
+    "Filer som stöds: geospatial PDF (.pdf) och GeoTIFF (.tif, .tiff)",
   noMaps: "Inga kartor har importerats ännu",
   storage: {
     used: "Utrymme som används av importerade kartor:",

@@ -5,6 +5,8 @@ export default {
   rendererNotAvailable:
     "Os mapas importados não são compatíveis com esta versão do aplicativo: atualize-o para a versão mais recente",
   importMap: "Importar mapa",
+  supportedFormats:
+    "Arquivos suportados: PDF geoespacial (.pdf) e GeoTIFF (.tif, .tiff)",
   noMaps: "Nenhum mapa importado ainda",
   storage: {
     used: "Espaço usado pelos mapas importados:",

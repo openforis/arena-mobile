@@ -5,6 +5,8 @@ export default {
   rendererNotAvailable:
     "Peta yang diimpor tidak didukung oleh versi aplikasi ini: perbarui ke versi terbaru",
   importMap: "Impor peta",
+  supportedFormats:
+    "File yang didukung: PDF geospasial (.pdf) dan GeoTIFF (.tif, .tiff)",
   noMaps: "Belum ada peta yang diimpor",
   storage: {
     used: "Ruang yang digunakan oleh peta yang diimpor:",

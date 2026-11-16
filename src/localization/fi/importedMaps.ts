@@ -5,6 +5,8 @@ export default {
   rendererNotAvailable:
     "Tämä sovelluksen versio ei tue tuotuja karttoja: päivitä sovellus uusimpaan versioon",
   importMap: "Tuo kartta",
+  supportedFormats:
+    "Tuetut tiedostot: paikkatieto-PDF (.pdf) ja GeoTIFF (.tif, .tiff)",
   noMaps: "Karttoja ei ole vielä tuotu",
   storage: {
     used: "Tuotujen karttojen käyttämä tila:",

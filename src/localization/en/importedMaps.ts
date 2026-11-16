@@ -5,6 +5,8 @@ export default {
   rendererNotAvailable:
     "Imported maps are not supported by this version of the app: update it to the latest version",
   importMap: "Import map",
+  supportedFormats:
+    "Supported files: geospatial PDF (.pdf) and GeoTIFF (.tif, .tiff)",
   noMaps: "No maps imported yet",
   storage: {
     used: "Space used by imported maps:",
