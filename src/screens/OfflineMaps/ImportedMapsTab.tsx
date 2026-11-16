@@ -20,6 +20,7 @@ import { ImportedMapsService } from "service";
 import { SettingsActions, SettingsSelectors, useAppDispatch } from "state";
 import { useAppTheme } from "theme";
 import { Files, log } from "utils";
+import { DevTools } from "utils/DevTools";
 
 import styles from "./styles";
 
@@ -241,6 +242,15 @@ export const ImportedMapsTab = () => {
           textKey="importedMaps:importPdf"
         />
       </HView>
+      {DevTools.enabled && (
+        <Button
+          icon="speedometer"
+          mode="outlined"
+          onPress={navigator.navigateToGeoTiffBenchmark}
+          textIsI18nKey={false}
+          textKey="GeoTIFF benchmark (developer)"
+        />
+      )}
       {deleting && <LoadingIcon />}
       {importedMaps.length === 0 && (
         <Text style={styles.emptyText} textKey="importedMaps:noMaps" />

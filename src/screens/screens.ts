@@ -3,6 +3,7 @@ import HomeScreen from "./HomeScreen";
 import AboutScreen from "./AboutScreen";
 import CustomMapLayerEditor from "./CustomMapLayerEditor";
 import CustomMapLayers from "./CustomMapLayers";
+import GeoTiffBenchmark from "./GeoTiffBenchmark";
 import LocationMapViewer from "./LocationMapViewer";
 import OfflineMapAreaEditor from "./OfflineMapAreaEditor";
 import OfflineMapAreaViewer from "./OfflineMapAreaViewer";
@@ -80,6 +81,12 @@ export const screens = {
     hasOptionsMenuVisible: false,
     title: "importedMaps:import.title",
     component: MapImport,
+  },
+  [screenKeys.geoTiffBenchmark]: {
+    ...screenDefaults,
+    hasOptionsMenuVisible: false,
+    title: "importedMaps:benchmark.title",
+    component: GeoTiffBenchmark,
   },
   [screenKeys.importedMapViewer]: {
     ...screenDefaults,
