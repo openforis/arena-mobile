@@ -3,6 +3,11 @@ export default {
   since: "Depuis la version {{version}}",
   dontShowAgain: "Ne plus afficher",
   items: {
+    geoTiffMaps: {
+      title: "Cartes GeoTIFF",
+      description:
+        "Dans **Cartes hors ligne**, l'onglet **Cartes importées** (anciennement **Cartes PDF**) peut désormais aussi importer des fichiers **GeoTIFF**, p. ex. des orthophotos ou des feuilles de carte numérisées : utilisez **Importer une carte** et choisissez un fichier PDF ou GeoTIFF.\n\nLa carte s'affiche par-dessus la carte de base dans toutes les cartes de l'application, même sans connexion internet.",
+    },
     mapLayers: {
       title: "Carte : zones d'intérêt et couches de carte",
       description:
@@ -16,7 +21,7 @@ export default {
     offlineMaps: {
       title: "Cartes hors ligne",
       description:
-        "Ouvrez **Cartes hors ligne** depuis le menu principal et utilisez **Ajouter une zone** pour télécharger la carte de votre zone d'intérêt avant d'aller sur le terrain : elle sera disponible même sans connexion internet.\n\nDans l'onglet **Cartes PDF**, vous pouvez aussi importer des cartes PDF géoréférencées : elles s'affichent par-dessus la carte de base.",
+        "Ouvrez **Cartes hors ligne** depuis le menu principal et utilisez **Ajouter une zone** pour télécharger la carte de votre zone d'intérêt avant d'aller sur le terrain : elle sera disponible même sans connexion internet.\n\nDans l'onglet **Cartes importées**, vous pouvez aussi importer des cartes PDF ou GeoTIFF géoréférencées : elles s'affichent par-dessus la carte de base.",
     },
     recordsMap: {
       title: "Enregistrements sur la carte",

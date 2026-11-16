@@ -9,7 +9,7 @@ appId: ${APP_ID}
     file: _shot.yaml
     env:
       NAME: offline-maps
-- tapOn: ${output.t.pdfMaps}
+- tapOn: ${output.t.importedMaps}
 - runFlow:
     file: _shot.yaml
     env:

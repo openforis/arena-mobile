@@ -22,7 +22,7 @@ const MAX_ZOOM_LIMIT = 21;
 // (less than the width of a phone screen, so the whole map is visible when zoomed to fit)
 const MIN_ZOOM_EXTENT_PIXELS = 256;
 
-export type PdfMapGeoreference = {
+export type ImportedMapGeoreference = {
   pageIndex: number;
   displayToMercator: Homography;
   mercatorToDisplay: Homography;
@@ -33,7 +33,7 @@ export type PdfMapGeoreference = {
   datumCompatible: boolean;
 };
 
-export type PdfMapZoomRange = {
+export type ImportedMapZoomRange = {
   // zoom level matching the resolution of the page rendered at DEFAULT_RENDER_DPI
   nativeZoom: number;
   minZoom: number;
@@ -63,7 +63,7 @@ const computeGeoreference = ({
 }: {
   page: GeoPdfPage;
   viewport: GeoPdfViewport;
-}): PdfMapGeoreference | null => {
+}): ImportedMapGeoreference | null => {
   const userToDisplay = GeoPdfTransform.computeUserToDisplayMatrix(page);
   const displayPoints = viewport.controlPoints.map((cp) =>
     GeoPdfTransform.applyAffine(userToDisplay, cp.user),
@@ -103,9 +103,9 @@ const computeCentroid = (points: Point[]): Point => ({
 });
 
 const computeZoomRange = (
-  georeference: PdfMapGeoreference,
+  georeference: ImportedMapGeoreference,
   dpi = DEFAULT_RENDER_DPI,
-): PdfMapZoomRange => {
+): ImportedMapZoomRange => {
   const { displayToMercator, neatlineDisplay } = georeference;
   const nativeZoomExact = GeoPdfTransform.computeNativeZoom({
     displayToMercator,
@@ -158,7 +158,7 @@ const countTiles = ({
 
 // world pixel at the specified zoom -> display space
 const worldPixelToDisplay = (
-  georeference: PdfMapGeoreference,
+  georeference: ImportedMapGeoreference,
   zoom: number,
   point: Point,
 ): Point =>
@@ -168,7 +168,7 @@ const worldPixelToDisplay = (
   );
 
 const displayToWorldPixel = (
-  georeference: PdfMapGeoreference,
+  georeference: ImportedMapGeoreference,
   zoom: number,
   point: Point,
 ): Point =>
@@ -182,7 +182,7 @@ const planRenderBlocks = ({
   zoom,
   tilesPerBlockSide = TILES_PER_BLOCK_SIDE,
 }: {
-  georeference: PdfMapGeoreference;
+  georeference: ImportedMapGeoreference;
   zoom: number;
   tilesPerBlockSide?: number;
 }): RenderBlock[] => {

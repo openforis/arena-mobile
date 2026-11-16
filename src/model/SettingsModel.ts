@@ -3,7 +3,7 @@ import { GpsSourceSetting } from "./GpsSourceSettings";
 import { ThemesSettings } from "./Themes";
 import { LanguageConstants, LanguagesSettings } from "./LanguageSettings";
 import { CustomMapLayer, MapProvider } from "./MapLayers";
-import { PdfMap } from "./PdfMap";
+import { ImportedMap } from "./ImportedMap";
 
 enum PropertyType {
   boolean = "boolean",
@@ -55,7 +55,7 @@ export enum SettingKey {
   positionTrackingBatterySaver = "positionTrackingBatterySaver",
   positionTrackingMinDistance = "positionTrackingMinDistance",
   mapProvider = "mapProvider",
-  pdfMaps = "pdfMaps",
+  importedMaps = "importedMaps",
   preferredGpsSourceId = "preferredGpsSourceId",
   serverUrlType = "serverUrlType",
   serverUrl = "serverUrl",
@@ -230,8 +230,8 @@ export type SettingsObject = {
   // via the generic `properties` schema because the options are dynamic (see MapLayerSettingsField)
   mapLayer: string;
   mapProvider: MapProvider;
-  // maps imported from geospatial PDF files (tiles stored on the device, see PdfMapsService)
-  pdfMaps?: PdfMap[];
+  // maps imported from files, e.g. geospatial PDFs (tiles stored on the device, see ImportedMapsService)
+  importedMaps?: ImportedMap[];
   // position tracking: max accuracy (m) of the recorded points
   positionTrackingAccuracyThreshold: number;
   // position tracking: less precise location updates to reduce battery usage

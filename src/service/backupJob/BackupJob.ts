@@ -4,7 +4,7 @@ import { JobMobile, JobMobileContext } from "model";
 import { Files } from "utils";
 
 import { OfflineMapTilesStorage } from "../offlineMaps/offlineMapTilesStorage";
-import { PdfMapsStorage } from "../pdfMaps/pdfMapsStorage";
+import { ImportedMapsStorage } from "../importedMaps/importedMapsStorage";
 
 const outputFileNamePrefix = `arena_mobile_full_backup_`;
 
@@ -25,7 +25,7 @@ export class BackupJob extends JobMobile<BackupJobContext> {
     // PDF maps imported again; move them temporarily outside of the backed up folder
     const dirUris = [
       OfflineMapTilesStorage.getTilesRootDirUri(),
-      PdfMapsStorage.getRootDirUri(),
+      ImportedMapsStorage.getRootDirUri(),
     ];
     const existing = await Promise.all(dirUris.map((uri) => Files.exists(uri)));
     const moveTimestamp = Date.now();

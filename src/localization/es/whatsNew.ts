@@ -3,6 +3,11 @@ export default {
   since: "Desde la versión {{version}}",
   dontShowAgain: "No volver a mostrar",
   items: {
+    geoTiffMaps: {
+      title: "Mapas GeoTIFF",
+      description:
+        "En **Mapas sin conexión**, la pestaña **Mapas importados** (antes **Mapas PDF**) ahora también puede importar archivos **GeoTIFF**, p. ej. ortofotos u hojas de mapas escaneadas: usa **Importar mapa** y elige un archivo PDF o GeoTIFF.\n\nEl mapa se muestra sobre el mapa base en todos los mapas de la aplicación, incluso sin conexión a internet.",
+    },
     mapLayers: {
       title: "Mapa: áreas de interés y capas de mapa",
       description:
@@ -16,7 +21,7 @@ export default {
     offlineMaps: {
       title: "Mapas sin conexión",
       description:
-        "Abre **Mapas sin conexión** desde el menú principal y usa **Añadir área** para descargar el mapa de tu zona de interés antes de ir al campo: estará disponible incluso sin conexión a internet.\n\nEn la pestaña **Mapas PDF** también puedes importar mapas PDF georreferenciados: se muestran sobre el mapa base.",
+        "Abre **Mapas sin conexión** desde el menú principal y usa **Añadir área** para descargar el mapa de tu zona de interés antes de ir al campo: estará disponible incluso sin conexión a internet.\n\nEn la pestaña **Mapas importados** también puedes importar mapas PDF o GeoTIFF georreferenciados: se muestran sobre el mapa base.",
     },
     recordsMap: {
       title: "Registros en el mapa",

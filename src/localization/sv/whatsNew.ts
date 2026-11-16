@@ -3,6 +3,11 @@ export default {
   since: "Sedan version {{version}}",
   dontShowAgain: "Visa inte dessa igen",
   items: {
+    geoTiffMaps: {
+      title: "GeoTIFF-kartor",
+      description:
+        "I **Offlinekartor** kan fliken **Importerade kartor** (tidigare **PDF-kartor**) nu även importera **GeoTIFF**-filer, t.ex. ortofoton eller skannade kartblad: använd **Importera karta** och välj en PDF- eller GeoTIFF-fil.\n\nKartan visas ovanpå baskartan i alla appens kartor, även utan internetanslutning.",
+    },
     mapLayers: {
       title: "Karta: intresseområden och kartlager",
       description:
@@ -16,7 +21,7 @@ export default {
     offlineMaps: {
       title: "Offlinekartor",
       description:
-        "Öppna **Offlinekartor** från huvudmenyn och använd **Lägg till område** för att ladda ner kartan över ditt intresseområde innan du går ut i fält: den är tillgänglig även utan internetanslutning.\n\nPå fliken **PDF-kartor** kan du också importera georefererade PDF-kartor: de visas ovanpå baskartan.",
+        "Öppna **Offlinekartor** från huvudmenyn och använd **Lägg till område** för att ladda ner kartan över ditt intresseområde innan du går ut i fält: den är tillgänglig även utan internetanslutning.\n\nPå fliken **Importerade kartor** kan du också importera georefererade PDF- eller GeoTIFF-kartor: de visas ovanpå baskartan.",
     },
     recordsMap: {
       title: "Poster på kartan",

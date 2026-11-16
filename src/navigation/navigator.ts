@@ -10,8 +10,8 @@ import type { CustomMapLayerEditorParams } from "screens/CustomMapLayerEditor/Cu
 import type { LocationMapViewerParams } from "screens/LocationMapViewer/LocationMapViewerScreen";
 import type { OfflineMapAreaViewerParams } from "screens/OfflineMapAreaViewer/OfflineMapAreaViewerScreen";
 import type { OfflineMapsTab } from "screens/OfflineMaps/OfflineMapsScreen";
-import type { PdfMapImportParams } from "screens/PdfMapImport/PdfMapImportScreen";
-import type { PdfMapViewerParams } from "screens/PdfMapViewer/PdfMapViewerScreen";
+import type { MapImportParams } from "screens/MapImport/MapImportScreen";
+import type { ImportedMapViewerParams } from "screens/ImportedMapViewer/ImportedMapViewerScreen";
 import type { RecordsMapParams } from "screens/RecordsMap/RecordsMapScreen";
 
 export type AppStackParamList = {
@@ -23,8 +23,8 @@ export type AppStackParamList = {
   [screenKeys.offlineMapAreaEditor]: undefined;
   [screenKeys.offlineMapAreaViewer]: OfflineMapAreaViewerParams;
   [screenKeys.offlineMaps]: { initialTab?: OfflineMapsTab } | undefined;
-  [screenKeys.pdfMapImport]: PdfMapImportParams;
-  [screenKeys.pdfMapViewer]: PdfMapViewerParams;
+  [screenKeys.mapImport]: MapImportParams;
+  [screenKeys.importedMapViewer]: ImportedMapViewerParams;
   [screenKeys.recordsList]: undefined;
   [screenKeys.recordsMap]: RecordsMapParams | undefined;
   [screenKeys.recordEditor]: undefined;
@@ -57,10 +57,10 @@ export const createNavigator = (navigation: any) => {
       nav.navigate(screenKeys.offlineMapAreaViewer, params),
     navigateToOfflineMaps: (params?: { initialTab?: OfflineMapsTab }) =>
       nav.navigate(screenKeys.offlineMaps, params),
-    navigateToPdfMapImport: (params: PdfMapImportParams) =>
-      nav.navigate(screenKeys.pdfMapImport, params),
-    navigateToPdfMapViewer: (params: PdfMapViewerParams) =>
-      nav.navigate(screenKeys.pdfMapViewer, params),
+    navigateToMapImport: (params: MapImportParams) =>
+      nav.navigate(screenKeys.mapImport, params),
+    navigateToImportedMapViewer: (params: ImportedMapViewerParams) =>
+      nav.navigate(screenKeys.importedMapViewer, params),
     navigateToRecordEditor: () => nav.navigate(screenKeys.recordEditor),
     // pop: go back to the existing records list instead of pushing a new one
     navigateToRecordsList: ({ pop = false }: { pop?: boolean } = {}) =>

@@ -20,15 +20,15 @@ import RNMapView, {
 
 import { useIsNetworkConnected } from "hooks/useIsNetworkConnected";
 import { useTranslation } from "localization";
-import { LatLng, MapLayers, MapProvider, PdfMap } from "model";
+import { LatLng, MapLayers, MapProvider, ImportedMap } from "model";
 import { OfflineMapTilesStorage } from "service/offlineMaps/offlineMapTilesStorage";
-import { PdfMapsStorage } from "service/pdfMaps/pdfMapsStorage";
+import { ImportedMapsStorage } from "service/importedMaps/importedMapsStorage";
 import { SettingsSelectors } from "state/settings/selectors";
 import { Environment } from "utils";
 
 import { IconButton } from "../IconButton";
 import { Text } from "../Text";
-import { PdfMapsPanel } from "./PdfMapsPanel";
+import { ImportedMapsPanel } from "./ImportedMapsPanel";
 import styles from "./styles";
 import { SurveyMapLayersOverlays } from "./SurveyMapLayersOverlays";
 import { SurveyMapLayersPanel } from "./SurveyMapLayersPanel";
@@ -80,7 +80,7 @@ type Props = {
   // called with the zoom level of the visible region (also with Apple Maps, that doesn't give the camera zoom)
   onZoomChange?: (zoom: number) => void;
   // PDF maps shown even when they are hidden in the settings
-  pdfMapIds?: string[];
+  importedMapIds?: string[];
   // when specified, it overrides the map provider in the settings
   provider?: MapProvider;
   showMapTypeSelector?: boolean;
@@ -104,9 +104,9 @@ const mapTypes: MapType[] = ["standard", "satellite", "hybrid"];
 const TILE_CACHE_MAX_AGE_SECONDS = 365 * 24 * 60 * 60;
 
 // PDF maps are drawn above the base map layer (zIndex -1) and below the other overlays
-const PDF_MAP_Z_INDEX = -0.5;
+const IMPORTED_MAP_Z_INDEX = -0.5;
 // tiles above the max zoom level of a PDF map are obtained scaling the ones of the max zoom
-const PDF_MAP_MAXIMUM_Z = 22;
+const IMPORTED_MAP_MAXIMUM_Z = 22;
 
 // time the name of the layer is shown after switching layer
 const LAYER_NAME_VISIBILITY_MILLIS = 1500;
@@ -138,7 +138,7 @@ export const MapView = forwardRef<RNMapView | null, Props>(
       onMapReady,
       onRegionChangeComplete,
       onZoomChange,
-      pdfMapIds,
+      importedMapIds,
       provider: providerProp,
       showMapTypeSelector = true,
       style,
@@ -175,31 +175,33 @@ export const MapView = forwardRef<RNMapView | null, Props>(
     const layerNameTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
       null,
     );
-    const visiblePdfMaps = useMemo(
+    const visibleImportedMaps = useMemo(
       () =>
-        (settings.pdfMaps ?? []).filter(
-          (pdfMap) => pdfMap.visible || pdfMapIds?.includes(pdfMap.id),
+        (settings.importedMaps ?? []).filter(
+          (importedMap) =>
+            importedMap.visible || importedMapIds?.includes(importedMap.id),
         ),
-      [pdfMapIds, settings.pdfMaps],
+      [importedMapIds, settings.importedMaps],
     );
     const tileOverlays = useMemo<MapTileOverlay[]>(
       () => [
-        ...visiblePdfMaps.map((pdfMap) => ({
-          key: pdfMap.id,
-          tilesPath: PdfMapsStorage.getTilesCachePath(pdfMap.id),
-          minZoom: pdfMap.minZoom,
-          maxZoom: pdfMap.maxZoom,
-          opacity: pdfMap.opacity,
+        ...visibleImportedMaps.map((importedMap) => ({
+          key: importedMap.id,
+          tilesPath: ImportedMapsStorage.getTilesCachePath(importedMap.id),
+          minZoom: importedMap.minZoom,
+          maxZoom: importedMap.maxZoom,
+          opacity: importedMap.opacity,
         })),
         ...(extraTileOverlays ?? []),
       ],
-      [extraTileOverlays, visiblePdfMaps],
+      [extraTileOverlays, visibleImportedMaps],
     );
-    const hasPdfMaps = (settings.pdfMaps?.length ?? 0) > 0;
+    const hasImportedMaps = (settings.importedMaps?.length ?? 0) > 0;
     const mapTypeSelectorVisible =
-      showMapTypeSelector && (!layerIdProp || hasPdfMaps);
+      showMapTypeSelector && (!layerIdProp || hasImportedMaps);
     const freeLayerVisible = useFreeLayers && !baseMapHidden;
-    const [pdfMapsPanelVisible, setPdfMapsPanelVisible] = useState(false);
+    const [importedMapsPanelVisible, setImportedMapsPanelVisible] =
+      useState(false);
     const {
       layers: surveyLayers,
       visibleLayerKeys: visibleSurveyLayerKeys,
@@ -297,12 +299,12 @@ export const MapView = forwardRef<RNMapView | null, Props>(
       }
     }, [showLayerName, useFreeLayers]);
 
-    const openPdfMapsPanel = useCallback(
-      () => setPdfMapsPanelVisible(true),
+    const openImportedMapsPanel = useCallback(
+      () => setImportedMapsPanelVisible(true),
       [],
     );
-    const closePdfMapsPanel = useCallback(
-      () => setPdfMapsPanelVisible(false),
+    const closeImportedMapsPanel = useCallback(
+      () => setImportedMapsPanelVisible(false),
       [],
     );
     const openSurveyLayersPanel = useCallback(
@@ -313,8 +315,8 @@ export const MapView = forwardRef<RNMapView | null, Props>(
       () => setSurveyLayersPanelVisible(false),
       [],
     );
-    const onZoomToPdfMap = useCallback((pdfMap: PdfMap) => {
-      internalRef.current?.fitToCoordinates(pdfMap.neatline, {
+    const onZoomToImportedMap = useCallback((importedMap: ImportedMap) => {
+      internalRef.current?.fitToCoordinates(importedMap.neatline, {
         edgePadding: defaultEdgePadding,
         animated: true,
       });
@@ -398,7 +400,7 @@ export const MapView = forwardRef<RNMapView | null, Props>(
               // tiles are only read from the device (offline mode): the url is never used
               urlTemplate={`file://${overlay.tilesPath}/{z}/{x}/{y}`}
               minimumZ={overlay.minZoom}
-              maximumZ={PDF_MAP_MAXIMUM_Z}
+              maximumZ={IMPORTED_MAP_MAXIMUM_Z}
               maximumNativeZ={overlay.maxZoom}
               offlineMode
               opacity={overlay.opacity ?? 1}
@@ -406,7 +408,7 @@ export const MapView = forwardRef<RNMapView | null, Props>(
               shouldReplaceMapContent={baseMapHidden}
               tileCacheMaxAge={TILE_CACHE_MAX_AGE_SECONDS}
               tileCachePath={overlay.tilesPath}
-              zIndex={PDF_MAP_Z_INDEX}
+              zIndex={IMPORTED_MAP_Z_INDEX}
             />
           ))}
           {/* before the children: below the overlays of the screen */}
@@ -449,11 +451,11 @@ export const MapView = forwardRef<RNMapView | null, Props>(
                 size={18}
               />
             )}
-            {mapTypeSelectorVisible && hasPdfMaps && (
+            {mapTypeSelectorVisible && hasImportedMaps && (
               <IconButton
-                icon="file-pdf-box"
+                icon="map-legend"
                 mode="contained"
-                onPress={openPdfMapsPanel}
+                onPress={openImportedMapsPanel}
                 size={18}
               />
             )}
@@ -469,10 +471,10 @@ export const MapView = forwardRef<RNMapView | null, Props>(
             {extraButtons}
           </View>
         )}
-        {pdfMapsPanelVisible && (
-          <PdfMapsPanel
-            onDismiss={closePdfMapsPanel}
-            onZoomToMap={onZoomToPdfMap}
+        {importedMapsPanelVisible && (
+          <ImportedMapsPanel
+            onDismiss={closeImportedMapsPanel}
+            onZoomToMap={onZoomToImportedMap}
           />
         )}
         {surveyLayersPanelVisible && (

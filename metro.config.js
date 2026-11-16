@@ -32,7 +32,17 @@ const tslibEsmPath = require.resolve("tslib/tslib.es6.mjs");
 
 const defaultResolveRequest = config.resolver.resolveRequest;
 
+// geotiff: decoders run on the JS thread, so its worker pool (web-worker, inline worker source)
+// is never used; its WebAssembly decoders (LERC, Zstandard) can't run on Hermes
+const isUnusedGeoTiffModule = (context, moduleName) =>
+  ["web-worker", "lerc", "zstddec"].includes(moduleName) ||
+  (moduleName === "./worker/create.js" &&
+    context.originModulePath.includes(`${path.sep}geotiff${path.sep}`));
+
 config.resolver.resolveRequest = (context, moduleName, platform) => {
+  if (isUnusedGeoTiffModule(context, moduleName)) {
+    return { type: "empty" };
+  }
   if (platform === "web") {
     const shim = webShims[moduleName];
     if (shim) {

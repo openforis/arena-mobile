@@ -9,7 +9,7 @@ import home from "./home";
 import loginInfo from "./loginInfo";
 import job from "./job";
 import offlineMaps from "./offlineMaps";
-import pdfMaps from "./pdfMaps";
+import importedMaps from "./importedMaps";
 import permissions from "./permissions";
 import recordsList from "./recordsList";
 import recordsMap from "./recordsMap";
@@ -31,7 +31,7 @@ export default {
   loginInfo,
   job,
   offlineMaps,
-  pdfMaps,
+  importedMaps,
   permissions,
   recordsList,
   recordsMap,

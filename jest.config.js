@@ -1,10 +1,11 @@
-// dependencies of @openforis/arena-core published as ES modules only
+// dependencies (of @openforis/arena-core, geotiff) published as ES modules only
 const esModules = [
   "@jsep-plugin/regex",
   "@turf/[^/]+",
   "change-case",
   "jsep",
   "n2words",
+  "quick-lru",
   "uuid",
   "wkt-parser",
 ].join("|");

@@ -3,6 +3,11 @@ export default {
   since: "Sejak versi {{version}}",
   dontShowAgain: "Jangan tampilkan lagi",
   items: {
+    geoTiffMaps: {
+      title: "Peta GeoTIFF",
+      description:
+        "Di **Peta offline**, tab **Peta yang diimpor** (sebelumnya **Peta PDF**) kini juga dapat mengimpor file **GeoTIFF**, mis. ortofoto atau lembar peta hasil pindaian: gunakan **Impor peta** lalu pilih file PDF atau GeoTIFF.\n\nPeta ditampilkan di atas peta dasar pada semua peta aplikasi, bahkan tanpa koneksi internet.",
+    },
     mapLayers: {
       title: "Peta: area minat dan lapisan peta",
       description:
@@ -16,7 +21,7 @@ export default {
     offlineMaps: {
       title: "Peta offline",
       description:
-        "Buka **Peta offline** dari menu utama dan gunakan **Tambah area** untuk mengunduh peta area yang Anda minati sebelum ke lapangan: peta tetap tersedia meskipun tanpa koneksi internet.\n\nDi tab **Peta PDF** Anda juga dapat mengimpor peta PDF bergeoreferensi: peta ditampilkan di atas peta dasar.",
+        "Buka **Peta offline** dari menu utama dan gunakan **Tambah area** untuk mengunduh peta area yang Anda minati sebelum ke lapangan: peta tetap tersedia meskipun tanpa koneksi internet.\n\nDi tab **Peta yang diimpor** Anda juga dapat mengimpor peta PDF atau GeoTIFF bergeoreferensi: peta ditampilkan di atas peta dasar.",
     },
     recordsMap: {
       title: "Data di peta",
