@@ -1,10 +1,15 @@
 import * as Location from "expo-location";
 
 import { changeLanguage } from "localization";
-import { CustomMapLayer, PdfMap, SettingsModel, SettingsObject } from "model";
+import {
+  CustomMapLayer,
+  ImportedMap,
+  SettingsModel,
+  SettingsObject,
+} from "model";
 import {
   CustomMapLayersService,
-  PdfMapsService,
+  ImportedMapsService,
   SettingsService,
 } from "service";
 import { Permissions } from "utils";
@@ -70,23 +75,23 @@ const deleteCustomMapLayer =
     dispatch(setSettings(settingsUpdated));
   };
 
-const updatePdfMap =
+const updateImportedMap =
   ({
     mapId,
     changes,
   }: {
     mapId: string;
-    changes: Partial<Pick<PdfMap, "name" | "visible" | "opacity">>;
+    changes: Partial<Pick<ImportedMap, "name" | "visible" | "opacity">>;
   }) =>
   async (dispatch: AppDispatch) => {
-    const settingsUpdated = await PdfMapsService.updateMap(mapId, changes);
+    const settingsUpdated = await ImportedMapsService.updateMap(mapId, changes);
     if (settingsUpdated) {
       dispatch(setSettings(settingsUpdated));
     }
   };
 
-const deletePdfMap = (mapId: string) => async (dispatch: AppDispatch) => {
-  const settingsUpdated = await PdfMapsService.deleteMap(mapId);
+const deleteImportedMap = (mapId: string) => async (dispatch: AppDispatch) => {
+  const settingsUpdated = await ImportedMapsService.deleteMap(mapId);
   dispatch(setSettings(settingsUpdated));
 };
 
@@ -138,8 +143,8 @@ export const SettingsActions = {
   updateSettings,
   saveCustomMapLayer,
   deleteCustomMapLayer,
-  updatePdfMap,
-  deletePdfMap,
+  updateImportedMap,
+  deleteImportedMap,
 
   startGpsLocking,
 };

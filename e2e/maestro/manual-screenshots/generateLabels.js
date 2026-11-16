@@ -50,7 +50,7 @@ const keys = {
   noRecordsFound: "dataEntry:noRecordsFound",
   offlineMaps: "offlineMaps:title",
   options: "dataEntry:options",
-  pdfMaps: "offlineMaps:tabs.pdfMaps",
+  importedMaps: "offlineMaps:tabs.importedMaps",
   searchTaxon: "dataEntry:taxon.search",
   selectItem: "dataEntry:code.selectItem",
   selectPicture: "dataEntry:fileAttribute.selectPicture",

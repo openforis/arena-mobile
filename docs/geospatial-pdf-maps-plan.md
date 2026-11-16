@@ -1,5 +1,7 @@
 # Geospatial PDF maps – implementation plan
 
+> The feature was later renamed "imported maps" (`PdfMap` → `ImportedMap`, `pdfMaps` → `importedMaps`, `modules/pdf-map-renderer` → `modules/imported-map-renderer`): see `geotiff-maps-plan.md`. Names below are the original ones.
+
 Branch: `feat/geospatial-pdf-maps`
 
 ## Goals

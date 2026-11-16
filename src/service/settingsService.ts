@@ -51,7 +51,31 @@ const systemSettingApplierByKey: Partial<
     SystemUtils.setKeepScreenAwake(value),
 };
 
-const settingsStore = new StoredObject<SettingsObject>(
+// key of the imported maps up to version 2.11.3 (PDF maps only)
+const LEGACY_IMPORTED_MAPS_KEY = "pdfMaps";
+
+const migrateStoredSettings = (
+  stored: SettingsObject | null,
+): SettingsObject | null => {
+  if (!stored || !(LEGACY_IMPORTED_MAPS_KEY in stored)) return stored;
+  const { [LEGACY_IMPORTED_MAPS_KEY]: legacyImportedMaps, ...rest } =
+    stored as SettingsObject & Record<string, unknown>;
+  return {
+    ...rest,
+    importedMaps:
+      rest.importedMaps ??
+      (legacyImportedMaps as SettingsObject["importedMaps"]),
+  };
+};
+
+// settings stored by previous versions are migrated when read (and saved at the next update)
+class SettingsStore extends StoredObject<SettingsObject> {
+  protected override fromStored(stored: SettingsObject | null): SettingsObject {
+    return super.fromStored(migrateStoredSettings(stored));
+  }
+}
+
+const settingsStore = new SettingsStore(
   asyncStorageKeys.settings,
   defaultSettings as SettingsObject,
 );

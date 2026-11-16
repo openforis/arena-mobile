@@ -2,7 +2,7 @@ export default {
   title: "Mape van mreže",
   tabs: {
     areas: "Preuzete oblasti",
-    pdfMaps: "PDF mape",
+    importedMaps: "PDF mape",
   },
   description:
     "Preuzmite mapu oblasti od interesa prije odlaska na teren: biće dostupna i bez internet veze pri crtanju ili pregledu geografskih atributa.",

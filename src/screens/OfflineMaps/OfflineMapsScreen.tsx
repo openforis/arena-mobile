@@ -6,12 +6,12 @@ import { ScreenView, SegmentedButtons, VView } from "components";
 import { log } from "utils";
 
 import { OfflineMapAreasTab } from "./OfflineMapAreasTab";
-import { PdfMapsTab } from "./PdfMapsTab";
+import { ImportedMapsTab } from "./ImportedMapsTab";
 import styles from "./styles";
 
 export enum OfflineMapsTab {
   areas = "areas",
-  pdfMaps = "pdfMaps",
+  importedMaps = "importedMaps",
 }
 
 const tabButtons = [
@@ -22,8 +22,8 @@ const tabButtons = [
   },
   {
     icon: "file-pdf-box",
-    label: "offlineMaps:tabs.pdfMaps",
-    value: OfflineMapsTab.pdfMaps,
+    label: "offlineMaps:tabs.importedMaps",
+    value: OfflineMapsTab.importedMaps,
   },
 ];
 
@@ -43,7 +43,11 @@ export const OfflineMapsScreen = () => {
           onChange={(value) => setTab(value as OfflineMapsTab)}
           value={tab}
         />
-        {tab === OfflineMapsTab.areas ? <OfflineMapAreasTab /> : <PdfMapsTab />}
+        {tab === OfflineMapsTab.areas ? (
+          <OfflineMapAreasTab />
+        ) : (
+          <ImportedMapsTab />
+        )}
       </VView>
     </ScreenView>
   );

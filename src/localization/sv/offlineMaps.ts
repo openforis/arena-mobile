@@ -2,7 +2,7 @@ export default {
   title: "Offlinekartor",
   tabs: {
     areas: "Nedladdade områden",
-    pdfMaps: "PDF-kartor",
+    importedMaps: "PDF-kartor",
   },
   description:
     "Ladda ner kartan över ditt intresseområde innan du går ut i fält: den är tillgänglig även utan internetanslutning när du ritar eller visar geografiska attribut.",

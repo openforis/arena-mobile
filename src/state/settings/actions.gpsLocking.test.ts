@@ -15,7 +15,7 @@ jest.mock("model", () => ({
 }));
 jest.mock("service", () => ({
   CustomMapLayersService: {},
-  PdfMapsService: {},
+  ImportedMapsService: {},
   SettingsService: {
     updateSetting: async ({ key, value }: any) => ({ [key]: value }),
   },

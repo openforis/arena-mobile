@@ -11,27 +11,27 @@ export default StyleSheet.create({
     right: 8,
     zIndex: 1,
   },
-  pdfMapItems: {
+  importedMapItems: {
     rowGap: 8,
     paddingVertical: 8,
   },
-  pdfMapItem: {
+  importedMapItem: {
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 8,
     paddingVertical: 4,
   },
-  pdfMapItemHeader: {
+  importedMapItemHeader: {
     alignItems: "center",
   },
-  pdfMapItemCheckbox: {
+  importedMapItemCheckbox: {
     flex: 1,
   },
-  pdfMapOpacityRow: {
+  importedMapOpacityRow: {
     alignItems: "center",
     columnGap: 8,
   },
-  pdfMapOpacitySlider: {
+  importedMapOpacitySlider: {
     flex: 1,
   },
   surveyLayerGroup: {

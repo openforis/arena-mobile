@@ -13,14 +13,14 @@ export type { CustomMapLayerTestResult } from "./customMapLayers/customMapLayers
 export type { CustomMapLayerValidation } from "./customMapLayers/customMapLayerValidator";
 export { OfflineMapsService } from "./offlineMaps/offlineMapsService";
 export type { OfflineMapAreaEstimate } from "./offlineMaps/offlineMapsService";
-export { PdfMapsService } from "./pdfMaps/pdfMapsService";
+export { ImportedMapsService } from "./importedMaps/importedMapsService";
 export type {
-  PdfMapEstimate,
-  PdfMapFileAnalysis,
-  PdfMapPageCandidate,
-  PdfMapPreview,
-} from "./pdfMaps/pdfMapsService";
-export type { PdfMapImportJobResult } from "./pdfMaps/PdfMapImportJob";
+  ImportedMapEstimate,
+  ImportedMapFileAnalysis,
+  ImportedMapPageCandidate,
+  ImportedMapPreview,
+} from "./importedMaps/importedMapsService";
+export type { ImportedMapImportJobResult } from "./importedMaps/ImportedMapImportJob";
 export { PreferencesService } from "./preferencesService";
 export { RecordFileService } from "./recordFileService";
 export { RecordService } from "./recordService";

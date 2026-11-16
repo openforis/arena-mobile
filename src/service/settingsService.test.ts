@@ -42,11 +42,32 @@ describe("SettingsService.updateSettings", () => {
       SettingsService.updateSetting({ key: "fontScale", value: 3 } as any),
       SettingsService.updateSettings((settings) => ({
         ...settings,
-        pdfMaps: [{ id: "map" } as any],
+        importedMaps: [{ id: "map" } as any],
       })),
     ]);
     const stored = JSON.parse(Object.values(mockStorage)[0]!);
     expect(stored.fontScale).toBe(3);
-    expect(stored.pdfMaps).toEqual([{ id: "map" }]);
+    expect(stored.importedMaps).toEqual([{ id: "map" }]);
+  });
+});
+
+describe("SettingsService.fetchSettings", () => {
+  it("migrates the PDF maps stored by version 2.11.3", async () => {
+    mockStorage["@settings"] = JSON.stringify({
+      fontScale: 2,
+      pdfMaps: [{ id: "map" }],
+    });
+    let service: typeof SettingsService | undefined;
+    jest.isolateModules(() => {
+      service = require("./settingsService").SettingsService;
+    });
+    const settings = await service!.fetchSettings();
+    expect(settings.importedMaps).toEqual([{ id: "map" }]);
+    expect(settings).not.toHaveProperty("pdfMaps");
+
+    await service!.updateSetting({ key: "fontScale", value: 3 } as any);
+    const stored = JSON.parse(mockStorage["@settings"]!);
+    expect(stored.importedMaps).toEqual([{ id: "map" }]);
+    expect(stored).not.toHaveProperty("pdfMaps");
   });
 });
