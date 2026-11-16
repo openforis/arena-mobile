@@ -1,5 +1,7 @@
 import { BaseDecoder, GeoTIFFImage, addDecoder, getDecoder } from "geotiff";
 
+import { PromiseUtils } from "utils/PromiseUtils";
+
 import { decompressLzw } from "./lzw";
 import { PixelFormat, TileSource } from "./GeoTiffWindowReader";
 
@@ -82,37 +84,41 @@ const toColorMap8 = (colorMap: ArrayLike<number>): Uint8Array => {
   return result;
 };
 
-const detectPixelFormat = async (image: GeoTIFFImage): Promise<PixelFormat> => {
-  const compression = await getCompression(image);
-  if (!SUPPORTED_COMPRESSIONS.has(compression)) {
-    throw new GeoTiffUnsupportedError(`compression ${compression}`);
-  }
+// throws when the samples are not 8 bit unsigned integers, interleaved (chunky)
+const checkSamples = async (image: GeoTIFFImage): Promise<void> => {
   const samplesPerPixel = image.getSamplesPerPixel();
-  for (let i = 0; i < samplesPerPixel; i++) {
-    if (image.getBitsPerSample(i) !== 8) {
-      throw new GeoTiffUnsupportedError(
-        `${image.getBitsPerSample(i)} bits per sample`,
-      );
-    }
+  const bitsPerSample = Array.from({ length: samplesPerPixel }, (_, i) =>
+    image.getBitsPerSample(i),
+  );
+  const otherBits = bitsPerSample.find((bits) => bits !== 8);
+  if (otherBits !== undefined) {
+    throw new GeoTiffUnsupportedError(`${otherBits} bits per sample`);
   }
-  const sampleFormat = await loadValue(image, "SampleFormat");
-  if (sampleFormat && Array.from<number>(sampleFormat).some((f) => f !== 1)) {
+  const sampleFormat: number[] = Array.from(
+    (await loadValue(image, "SampleFormat")) ?? [],
+  );
+  if (sampleFormat.some((format) => format !== 1)) {
     throw new GeoTiffUnsupportedError("sample format not unsigned integer");
   }
-  if (
-    samplesPerPixel > 1 &&
-    (await loadValue(image, "PlanarConfiguration")) === 2
-  ) {
+  const planarConfiguration = await loadValue(image, "PlanarConfiguration");
+  if (samplesPerPixel > 1 && planarConfiguration === 2) {
     throw new GeoTiffUnsupportedError("planar configuration (separate bands)");
   }
-  const photometric = await loadValue(image, "PhotometricInterpretation");
-  const extraSamples: number[] = Array.from(
-    (await loadValue(image, "ExtraSamples")) ?? [],
-  );
-  const hasAlpha = ALPHA_EXTRA_SAMPLES.has(extraSamples[0] ?? 0);
-  const noData = image.getGDALNoData();
-  const base = { samplesPerPixel, noData };
+};
 
+const toPixelFormat = async ({
+  image,
+  photometric,
+  compression,
+  hasAlpha,
+}: {
+  image: GeoTIFFImage;
+  photometric: number;
+  compression: number;
+  hasAlpha: boolean;
+}): Promise<PixelFormat | null> => {
+  const samplesPerPixel = image.getSamplesPerPixel();
+  const base = { samplesPerPixel, noData: image.getGDALNoData() };
   switch (photometric) {
     case PHOTOMETRIC.whiteIsZero:
     case PHOTOMETRIC.blackIsZero:
@@ -122,7 +128,7 @@ const detectPixelFormat = async (image: GeoTIFFImage): Promise<PixelFormat> => {
         whiteIsZero: photometric === PHOTOMETRIC.whiteIsZero,
       };
     case PHOTOMETRIC.rgb:
-      if (samplesPerPixel < 3) break;
+      if (samplesPerPixel < 3) return null;
       return {
         ...base,
         kind: samplesPerPixel > 3 && hasAlpha ? "rgba" : "rgb",
@@ -135,14 +141,36 @@ const detectPixelFormat = async (image: GeoTIFFImage): Promise<PixelFormat> => {
       };
     case PHOTOMETRIC.ycbcr:
       // only JPEG: the JPEG decoder gives full resolution YCbCr pixels
-      if (compression !== COMPRESSION.jpeg) break;
-      return { ...base, kind: "ycbcr" };
+      return compression === COMPRESSION.jpeg
+        ? { ...base, kind: "ycbcr" }
+        : null;
     default:
-      break;
+      return null;
   }
-  throw new GeoTiffUnsupportedError(
-    `photometric interpretation ${photometric} with ${samplesPerPixel} samples per pixel`,
+};
+
+const detectPixelFormat = async (image: GeoTIFFImage): Promise<PixelFormat> => {
+  const compression = await getCompression(image);
+  if (!SUPPORTED_COMPRESSIONS.has(compression)) {
+    throw new GeoTiffUnsupportedError(`compression ${compression}`);
+  }
+  await checkSamples(image);
+  const photometric = await loadValue(image, "PhotometricInterpretation");
+  const extraSamples: number[] = Array.from(
+    (await loadValue(image, "ExtraSamples")) ?? [],
   );
+  const format = await toPixelFormat({
+    image,
+    photometric,
+    compression,
+    hasAlpha: ALPHA_EXTRA_SAMPLES.has(extraSamples[0] ?? 0),
+  });
+  if (!format) {
+    throw new GeoTiffUnsupportedError(
+      `photometric interpretation ${photometric} with ${image.getSamplesPerPixel()} samples per pixel`,
+    );
+  }
+  return format;
 };
 
 // resolves after a macrotask when the JS thread has been busy for more than maxBusyMs
@@ -170,7 +198,7 @@ const createTileSource = async (image: GeoTIFFImage): Promise<TileSource> => {
   } as any);
   const yieldIfBusy = createTimeSlicer();
   // one tile at a time, so that the UI can be updated between two decodings
-  let queue: Promise<unknown> = Promise.resolve();
+  const enqueue = PromiseUtils.createSerialQueue();
   const decodeTile = async (tileX: number, tileY: number) => {
     await yieldIfBusy();
     const { data } = await image.getTileOrStrip(tileX, tileY, 0, decoder);
@@ -181,11 +209,7 @@ const createTileSource = async (image: GeoTIFFImage): Promise<TileSource> => {
     height: image.getHeight(),
     tileWidth,
     tileHeight,
-    getTile: (tileX, tileY) => {
-      const next = queue.then(() => decodeTile(tileX, tileY));
-      queue = next.catch(() => undefined);
-      return next;
-    },
+    getTile: (tileX, tileY) => enqueue(() => decodeTile(tileX, tileY)),
   };
 };
 

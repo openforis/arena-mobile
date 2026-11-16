@@ -28,8 +28,7 @@ export type Window = [x0: number, y0: number, x1: number, y1: number];
 
 export type RgbaWindow = { data: Uint8Array; width: number; height: number };
 
-const clampByte = (value: number): number =>
-  value < 0 ? 0 : value > 255 ? 255 : value;
+const clampByte = (value: number): number => Math.min(255, Math.max(0, value));
 
 // converts `count` pixels from src (srcStep samples apart) into RGBA
 type RowConverter = (
@@ -76,7 +75,8 @@ const createRowConverter = (format: PixelFormat): RowConverter => {
           out[d] = value;
           out[d + 1] = value;
           out[d + 2] = value;
-          out[d + 3] = hasAlpha ? src[s + 1]! : raw === noData ? 0 : 255;
+          const opacity = raw === noData ? 0 : 255;
+          out[d + 3] = hasAlpha ? src[s + 1]! : opacity;
         }
       };
     }

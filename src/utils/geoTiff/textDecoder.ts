@@ -12,13 +12,13 @@ class Utf8TextDecoder {
     for (let i = 0; i < bytes.length; i++) {
       const byte = bytes[i]!;
       if (byte < 0x80) {
-        result += String.fromCharCode(byte);
+        result += String.fromCodePoint(byte);
       } else if (byte >= 0xc0 && byte < 0xe0 && i + 1 < bytes.length) {
-        result += String.fromCharCode(
+        result += String.fromCodePoint(
           ((byte & 0x1f) << 6) | (bytes[++i]! & 0x3f),
         );
       } else if (byte >= 0xe0 && byte < 0xf0 && i + 2 < bytes.length) {
-        result += String.fromCharCode(
+        result += String.fromCodePoint(
           ((byte & 0x0f) << 12) |
             ((bytes[++i]! & 0x3f) << 6) |
             (bytes[++i]! & 0x3f),

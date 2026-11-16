@@ -19,7 +19,7 @@ export type GeoTiffCrs = {
 // GTRasterTypeGeoKey: the tie point refers to the center of the pixel
 const RASTER_PIXEL_IS_POINT = 2;
 
-const WGS84_COMPATIBLE_ELLIPSOIDS = ["WGS84", "GRS80"];
+const WGS84_COMPATIBLE_ELLIPSOIDS = new Set(["WGS84", "GRS80"]);
 
 const getPixelToCrs = async (
   image: GeoTIFFImage,
@@ -56,7 +56,7 @@ const getPixelToCrs = async (
 const hasDatumShift = (proj4String: string): boolean => {
   if (/\+towgs84=|\+nadgrids=|\+datum=WGS84/.test(proj4String)) return true;
   const ellipsoid = /\+ellps=(\S+)/.exec(proj4String)?.[1];
-  return !!ellipsoid && WGS84_COMPATIBLE_ELLIPSOIDS.includes(ellipsoid);
+  return !!ellipsoid && WGS84_COMPATIBLE_ELLIPSOIDS.has(ellipsoid);
 };
 
 const getCrs = (image: GeoTIFFImage): GeoTiffCrs | null => {

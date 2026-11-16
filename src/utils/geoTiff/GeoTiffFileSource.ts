@@ -1,5 +1,7 @@
 import { File, FileHandle } from "expo-file-system";
 
+import { PromiseUtils } from "utils/PromiseUtils";
+
 // geotiff.js source reading byte ranges of a local file (the file is never read as a whole)
 
 export type ByteRange = { offset: number; length: number };
@@ -12,7 +14,7 @@ export const mergeContiguousRanges = (
 ): { merged: ByteRange; parts: ByteRange[] }[] => {
   const groups: { merged: ByteRange; parts: ByteRange[] }[] = [];
   for (const range of ranges) {
-    const last = groups[groups.length - 1];
+    const last = groups.at(-1);
     if (last && last.merged.offset + last.merged.length === range.offset) {
       last.merged.length += range.length;
       last.parts.push(range);
@@ -26,7 +28,8 @@ export const mergeContiguousRanges = (
 export class GeoTiffFileSource {
   readsCount = 0;
   bytesRead = 0;
-  private queue: Promise<unknown> = Promise.resolve();
+  // one read at a time: the file handle has a single offset
+  private readonly enqueue = PromiseUtils.createSerialQueue();
 
   constructor(
     private readonly readRange: RangeReader,
@@ -48,32 +51,33 @@ export class GeoTiffFileSource {
     return this.size;
   }
 
-  // reads one group at a time: the file handle has a single offset
-  fetch(slices: ByteRange[]): Promise<ArrayBuffer[]> {
-    const run = async (): Promise<ArrayBuffer[]> => {
-      const result: ArrayBuffer[] = [];
-      for (const { merged, parts } of mergeContiguousRanges(slices)) {
-        const length = Math.max(
-          0,
-          Math.min(merged.length, this.size - merged.offset),
-        );
-        const bytes = await this.readRange({ offset: merged.offset, length });
-        this.readsCount += 1;
-        this.bytesRead += bytes.length;
-        for (const part of parts) {
+  private read(range: ByteRange): Promise<Uint8Array> {
+    const length = Math.max(
+      0,
+      Math.min(range.length, this.size - range.offset),
+    );
+    return this.enqueue(() =>
+      this.readRange({ offset: range.offset, length }),
+    ).then((bytes) => {
+      this.readsCount += 1;
+      this.bytesRead += bytes.length;
+      return bytes;
+    });
+  }
+
+  async fetch(slices: ByteRange[]): Promise<ArrayBuffer[]> {
+    const groups = await Promise.all(
+      mergeContiguousRanges(slices).map(async ({ merged, parts }) => {
+        const bytes = await this.read(merged);
+        // copies: geotiff.js keeps the buffers it gets
+        return parts.map((part) => {
           const start = part.offset - merged.offset;
-          // a copy: geotiff.js keeps the buffers it gets
-          result.push(
-            bytes.slice(start, Math.min(start + part.length, bytes.length))
-              .buffer,
-          );
-        }
-      }
-      return result;
-    };
-    const next = this.queue.then(run);
-    this.queue = next.catch(() => undefined);
-    return next;
+          return bytes.slice(start, Math.min(start + part.length, bytes.length))
+            .buffer;
+        });
+      }),
+    );
+    return groups.flat();
   }
 
   close(): Promise<void> {

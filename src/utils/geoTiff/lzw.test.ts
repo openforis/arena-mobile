@@ -72,7 +72,7 @@ describe("decompressLzw", () => {
   it("decodes data that needs codes of all lengths and clear codes", () => {
     const data = generateData(200000);
     const decoded = decompressLzw(compressLzw(data), data.length);
-    expect(decoded.length).toBe(data.length);
+    expect(decoded).toHaveLength(data.length);
     expect(decoded).toEqual(data);
   });
 

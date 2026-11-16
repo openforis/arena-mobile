@@ -15,27 +15,28 @@ from rasterio.transform import Affine, from_origin
 from rasterio.warp import transform
 
 W, H = 40, 30
-HERE = os.path.dirname(os.path.abspath(__file__))
+HERE = os.environ.get("FIXTURES_OUT_DIR") or os.path.dirname(os.path.abspath(__file__))
 
 y, x = np.mgrid[0:H, 0:W]
 RGB = np.stack([(x * 6) % 256, (y * 8) % 256, ((x + y) * 3) % 256]).astype(np.uint8)
 UTM = from_origin(500000, 4650000, 10, 10)
+UTM_33N = "EPSG:32633"
 LCC = "+proj=lcc +lat_1=43 +lat_2=62 +lat_0=30 +lon_0=10 +x_0=0 +y_0=0 +ellps=intl +towgs84=-87,-98,-121,0,0,0,0 +units=m +no_defs"
 
 FIXTURES = {
-    "rgb_lzw_strips.tif": dict(data=RGB, crs="EPSG:32633", transform=UTM, compress="lzw", blockysize=4),
-    "rgb_deflate_tiled.tif": dict(data=RGB, crs="EPSG:32633", transform=UTM, compress="deflate", predictor=2, tiled=True, blockxsize=16, blockysize=16),
-    "rgb_packbits.tif": dict(data=RGB, crs="EPSG:32633", transform=UTM, compress="packbits"),
-    "rgb_jpeg_ycbcr.tif": dict(data=RGB, crs="EPSG:32633", transform=UTM, compress="jpeg", photometric="ycbcr", tiled=True, blockxsize=16, blockysize=16, jpeg_quality=95, overviews=[2]),
-    "rgba.tif": dict(data=np.concatenate([RGB, np.where(x > 20, 255, 0)[None].astype(np.uint8)]), crs="EPSG:32633", transform=UTM, photometric="rgb", alpha="yes"),
-    "gray_nodata_4326.tif": dict(data=RGB[:1], crs="EPSG:4326", transform=from_origin(12.0, 42.0, 0.001, 0.001), nodata=0, compress="deflate"),
-    "palette.tif": dict(data=(RGB[:1] // 64), crs="EPSG:32633", transform=UTM, photometric="palette", colormap={i: (i * 60, 255 - i * 60, 100, 255) for i in range(4)}),
-    "rotated.tif": dict(data=RGB, crs="EPSG:32633", transform=Affine.translation(500000, 4650000) * Affine.rotation(20) * Affine.scale(10, -10)),
-    "ed50_utm.tif": dict(data=RGB, crs="EPSG:23033", transform=UTM),
-    "user_defined_lcc.tif": dict(data=RGB, crs=CRS.from_proj4(LCC), transform=from_origin(150000, 1400000, 10, 10)),
-    "osgb36_27700.tif": dict(data=RGB, crs="EPSG:27700", transform=from_origin(400000, 300000, 10, 10)),
-    "uint16.tif": dict(data=RGB.astype(np.uint16) * 100, crs="EPSG:32633", transform=UTM),
-    "no_georeference.tif": dict(data=RGB),
+    "rgb_lzw_strips.tif": {"data": RGB, "crs": UTM_33N, "transform": UTM, "compress": "lzw", "blockysize": 4},
+    "rgb_deflate_tiled.tif": {"data": RGB, "crs": UTM_33N, "transform": UTM, "compress": "deflate", "predictor": 2, "tiled": True, "blockxsize": 16, "blockysize": 16},
+    "rgb_packbits.tif": {"data": RGB, "crs": UTM_33N, "transform": UTM, "compress": "packbits"},
+    "rgb_jpeg_ycbcr.tif": {"data": RGB, "crs": UTM_33N, "transform": UTM, "compress": "jpeg", "photometric": "ycbcr", "tiled": True, "blockxsize": 16, "blockysize": 16, "jpeg_quality": 95, "overviews": [2]},
+    "rgba.tif": {"data": np.concatenate([RGB, np.where(x > 20, 255, 0)[None].astype(np.uint8)]), "crs": UTM_33N, "transform": UTM, "photometric": "rgb", "alpha": "yes"},
+    "gray_nodata_4326.tif": {"data": RGB[:1], "crs": "EPSG:4326", "transform": from_origin(12.0, 42.0, 0.001, 0.001), "nodata": 0, "compress": "deflate"},
+    "palette.tif": {"data": (RGB[:1] // 64), "crs": UTM_33N, "transform": UTM, "photometric": "palette", "colormap": {i: (i * 60, 255 - i * 60, 100, 255) for i in range(4)}},
+    "rotated.tif": {"data": RGB, "crs": UTM_33N, "transform": Affine.translation(500000, 4650000) * Affine.rotation(20) * Affine.scale(10, -10)},
+    "ed50_utm.tif": {"data": RGB, "crs": "EPSG:23033", "transform": UTM},
+    "user_defined_lcc.tif": {"data": RGB, "crs": CRS.from_proj4(LCC), "transform": from_origin(150000, 1400000, 10, 10)},
+    "osgb36_27700.tif": {"data": RGB, "crs": "EPSG:27700", "transform": from_origin(400000, 300000, 10, 10)},
+    "uint16.tif": {"data": RGB.astype(np.uint16) * 100, "crs": UTM_33N, "transform": UTM},
+    "no_georeference.tif": {"data": RGB},
 }
 
 PIXELS = [(0, 0), (17, 3), (39, 29), (25, 16)]
