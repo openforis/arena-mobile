@@ -243,13 +243,15 @@ export const ImportedMapsTab = () => {
         />
       </HView>
       {DevTools.enabled && (
-        <Button
-          icon="speedometer"
-          mode="outlined"
-          onPress={navigator.navigateToGeoTiffBenchmark}
-          textIsI18nKey={false}
-          textKey="GeoTIFF benchmark (developer)"
-        />
+        <HView style={styles.buttonsRow}>
+          <Button
+            color="secondary"
+            icon="speedometer"
+            onPress={navigator.navigateToGeoTiffBenchmark}
+            textIsI18nKey={false}
+            textKey="GeoTIFF benchmark (developer)"
+          />
+        </HView>
       )}
       {deleting && <LoadingIcon />}
       {importedMaps.length === 0 && (
