@@ -4,7 +4,7 @@ position and the orientation of an imported map can be checked on the map of the
 Requires rasterio (it bundles GDAL) and Pillow: python -m pip install rasterio pillow
 Usage (from this folder):
   python generate_geotiffs.py            # e2e test file: geotiff-test-map.tif
-  python generate_geotiffs.py --samples DIR  # also the samples for manual tests, in DIR
+  python generate_geotiffs.py --samples      # also the samples for manual tests, in geotiff-samples/ (not committed)
 """
 
 import argparse
@@ -21,6 +21,7 @@ from rasterio.transform import Affine
 from rasterio.warp import transform as transform_points
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+SAMPLES_DIR = os.path.join(HERE, "geotiff-samples")
 UTM_33N = "EPSG:32633"
 # FAO headquarters, Rome
 ROME = (12.4893, 41.8835)
@@ -152,8 +153,8 @@ def samples(out_dir):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--samples", help="folder where the samples for manual tests are written")
+    parser.add_argument("--samples", action="store_true", help="also write the samples for manual tests (in geotiff-samples/)")
     args = parser.parse_args()
     e2e_map(HERE)
     if args.samples:
-        samples(args.samples)
+        samples(SAMPLES_DIR)

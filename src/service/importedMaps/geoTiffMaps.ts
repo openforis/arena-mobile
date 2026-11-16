@@ -74,8 +74,11 @@ const analyzeImage = async (image: GeoTIFFImage): Promise<GeoTiffAnalysis> => {
   });
   if (!result) return { georeference: null };
   // georeferencing as read from the file: useful to diagnose maps placed wrongly
+  const geoKeysErrors = crs.errors.length
+    ? ", GeoKeys errors: " + crs.errors.join("; ")
+    : "";
   log.debug(
-    `GeoTIFF map: ${image.getWidth()}x${image.getHeight()} px, CRS ${crs.proj4}, datum shift known: ${crs.datumShiftKnown}, fit error ${result.maxFitErrorMeters.toFixed(2)} m${crs.errors.length ? `, GeoKeys errors: ${crs.errors.join("; ")}` : ""}`,
+    `GeoTIFF map: ${image.getWidth()}x${image.getHeight()} px, CRS ${crs.proj4}, datum shift known: ${crs.datumShiftKnown}, fit error ${result.maxFitErrorMeters.toFixed(2)} m${geoKeysErrors}`,
   );
   return { georeference: result.georeference };
 };

@@ -92,7 +92,7 @@ describe("GeoTiffMaps.createBlockRenderer", () => {
         return p.x >= 0 && p.y >= 0 && p.x < 1024 && p.y < 1024;
       });
       const [pixels, options] = renderImageTiles.mock.calls[callIndex]!;
-      expect(pixels.length).toBe(
+      expect(pixels).toHaveLength(
         options.pixelsWidth * options.pixelsHeight * 4,
       );
       const block = blocks[callIndex]!;
