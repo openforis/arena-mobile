@@ -20,6 +20,7 @@ export type {
   PdfMapPageCandidate,
   PdfMapPreview,
 } from "./pdfMaps/pdfMapsService";
+export type { PdfMapImportJobResult } from "./pdfMaps/PdfMapImportJob";
 export { PreferencesService } from "./preferencesService";
 export { RecordFileService } from "./recordFileService";
 export { RecordService } from "./recordService";
