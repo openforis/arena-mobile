@@ -2,6 +2,10 @@ import type { ImageSourcePropType } from "react-native";
 
 // screenshots of the "What's new" items, by item id (static requires, as the bundler needs them)
 export const whatsNewImagesById: Record<string, ImageSourcePropType[]> = {
+  geoTiffMaps: [
+    require("../../assets/whatsNew/geoTiffMaps-1.jpg"),
+    require("../../assets/whatsNew/geoTiffMaps-2.jpg"),
+  ],
   mapLayers: [require("../../assets/whatsNew/recordsMapLayerGroups-1.jpg")],
   geoAttribute: [
     require("../../assets/whatsNew/geoAttribute-1.jpg"),
