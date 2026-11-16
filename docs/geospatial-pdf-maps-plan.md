@@ -1,6 +1,6 @@
 # Geospatial PDF maps – implementation plan
 
-> The feature was later renamed "imported maps" (`PdfMap` → `ImportedMap`, `pdfMaps` → `importedMaps`, `modules/pdf-map-renderer` → `modules/imported-map-renderer`): see `geotiff-maps-plan.md`. Names below are the original ones.
+> Code names updated after the rename "PDF map" → "imported map" (to import GeoTIFF files too, see `geotiff-maps-plan.md`). The storage folder is still `pdf_maps`.
 
 Branch: `feat/geospatial-pdf-maps`
 
@@ -113,7 +113,7 @@ Also computed here:
 
 There is no PDF rasterizer among the current dependencies, and existing RN PDF
 libraries only render whole pages for viewing/thumbnails. A **local Expo
-module** `modules/pdf-map-renderer` (Expo Modules API, autolinked by prebuild,
+module** `modules/imported-map-renderer` (Expo Modules API, autolinked by prebuild,
 like any other native dependency of the dev/production builds):
 
 - Android: `android.graphics.pdf.PdfRenderer` – `Page.render(bitmap, clip,
@@ -175,20 +175,20 @@ and opacity are stored in the settings, so they apply to all the maps.
 
 ### 5. Data and services
 
-- `src/model/PdfMap.ts`:
+- `src/model/ImportedMap.ts`:
   `{ id, name, fileName, pageIndex, neatline: LatLng[], minZoom, maxZoom,
   tilesCount, sizeBytes, sourceSizeBytes, datumCompatible, visible, opacity,
   dateCreated, dateModified }`;
-- the PDF maps are stored in the **settings** (`pdfMaps`, like
+- the PDF maps are stored in the **settings** (`importedMaps`, like
   `customMapLayers`): `MapView` reads them from the Redux settings state, so a
   change of visibility/opacity is applied to all the maps immediately;
-  `src/service/pdfMaps/pdfMapRepository.ts` reads/writes them;
-- `src/service/pdfMaps/PdfMapImportJob.ts`: `JobMobile` (progress + cancel
+  `src/service/importedMaps/importedMapRepository.ts` reads/writes them;
+- `src/service/importedMaps/ImportedMapImportJob.ts`: `JobMobile` (progress + cancel
   through `JobMonitorActions.startAsync`, like `OfflineMapAreaDownloadJob`):
   copy PDF → check that the native renderer can open it → render max zoom
   blocks → build overviews → save the map; on cancel or error the files are
   deleted;
-- `src/service/pdfMaps/pdfMapsService.ts`: analyze file (pages/georeference/
+- `src/service/importedMaps/importedMapsService.ts`: analyze file (pages/georeference/
   zoom range), estimate, default name, name validation, import job, update
   (name, visible, opacity), delete (map folder), storage used;
 - files: `documentDirectory/pdf_maps/{id}/source.pdf` (kept, to be able to
@@ -207,10 +207,10 @@ and opacity are stored in the settings, so they apply to all the maps.
 - **PDF maps tab**: description, storage used by PDF maps + free disk space,
   **Import PDF** button, list of the maps (name, file, page, zoom range,
   tiles, size, datum warning, "Show on maps" switch, delete); tapping a map
-  opens the **PDF map viewer** (`screenKeys.pdfMapViewer`): rename + map
+  opens the **PDF map viewer** (`screenKeys.importedMapViewer`): rename + map
   preview (the PDF map is shown even if hidden in the settings).
 - **Preview before the import**: when a page is selected, its lowest zoom
-  levels (4) are rendered into a temporary folder (`cache/pdf_map_previews`)
+  levels (4) are rendered into a temporary folder (`cache/imported_map_previews`)
   with the same pipeline used by the import, and shown on the map of the
   import screen; so the user sees exactly where and how the PDF will be placed.
 - **Current zoom** shown in the import screen and in the viewer (`MapView`
@@ -221,7 +221,7 @@ and opacity are stored in the settings, so they apply to all the maps.
   replacing the Apple map content on iOS), to check what is in the PDF alone.
 - When the native renderer is not available (Expo Go, old builds) the import
   button is disabled and a message is shown.
-- **Import flow** (`screenKeys.pdfMapImport`):
+- **Import flow** (`screenKeys.mapImport`):
   1. pick the file (`expo-document-picker`, `application/pdf`, already a
      dependency);
   2. parse; if the file has several georeferenced pages/viewports, choose which
@@ -235,7 +235,7 @@ and opacity are stored in the settings, so they apply to all the maps.
 
 ### 7. Localization
 
-New `pdfMaps` namespace (English); other languages fall back to English, as for
+New `importedMaps` namespace (English); other languages fall back to English, as for
 `offlineMaps`.
 
 ## Implementation status
@@ -246,11 +246,11 @@ Implemented in this branch:
   detected and reported as not supported), `GeoPdfTransform` (homography,
   page rotation, mercator/tile math, native zoom), `GeoPdfTilePlanner`
   (render blocks of 4×4 tiles, overview tiles) with Jest tests.
-- [x] Local Expo module `modules/pdf-map-renderer` (Android `PdfRenderer`, iOS
+- [x] Local Expo module `modules/imported-map-renderer` (Android `PdfRenderer`, iOS
   CoreGraphics): `renderTiles` (white paper + clip to the map frame, empty
   tiles skipped, JPEG for opaque tiles, PNG otherwise), `buildOverviewTiles`,
   `getPageCount`, `closeDocument`.
-- [x] `PdfMap` model in the settings, repository, service, import job.
+- [x] `ImportedMap` model in the settings, repository, service, import job.
 - [x] `MapView`: visible PDF maps as offline `UrlTile` overlays (opacity,
   over-zoom), PDF maps panel (visibility, opacity, zoom to map).
 - [x] Offline maps screen with tabs, PDF maps tab, import screen (page choice,
