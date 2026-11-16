@@ -21,7 +21,7 @@ const tabButtons = [
     value: OfflineMapsTab.areas,
   },
   {
-    icon: "file-pdf-box",
+    icon: "map-legend",
     label: "offlineMaps:tabs.importedMaps",
     value: OfflineMapsTab.importedMaps,
   },

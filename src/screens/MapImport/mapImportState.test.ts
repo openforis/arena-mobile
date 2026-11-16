@@ -42,6 +42,7 @@ const createAnalysis = (
   candidates: ImportedMapPageCandidate[],
   hasUnsupportedGeoreference = false,
 ): ImportedMapFileAnalysis => ({
+  sourceType: "pdf",
   info: {
     pagesCount: candidates.length,
     pages: [],
@@ -74,6 +75,26 @@ describe("getAnalysisErrorKey", () => {
     expect(getAnalysisErrorKey(createAnalysis([], true))).toBe(
       "importedMaps:import.unsupportedGeoreference",
     );
+  });
+
+  it("reports files that are neither PDF nor TIFF", () => {
+    expect(getAnalysisErrorKey({ sourceType: null, candidates: [] })).toBe(
+      "importedMaps:import.unsupportedFile",
+    );
+  });
+
+  it("reports GeoTIFF files whose pixels cannot be read", () => {
+    const analysis: ImportedMapFileAnalysis = {
+      sourceType: "geotiff",
+      candidates: [],
+      unsupportedFormat: "16 bits per sample",
+    };
+    expect(getAnalysisErrorKey(analysis)).toBe(
+      "importedMaps:import.unsupportedGeoTiffFormat",
+    );
+    expect(analyzedState(analysis).errorParams).toEqual({
+      details: "16 bits per sample",
+    });
   });
 });
 

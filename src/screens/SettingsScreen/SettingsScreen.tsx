@@ -154,7 +154,7 @@ export const SettingsScreen = () => {
               )}
               {isMapsGroup && (
                 <Button
-                  icon="file-pdf-box"
+                  icon="map-legend"
                   onPress={() =>
                     navigator.navigateToOfflineMaps({
                       initialTab: OfflineMapsTab.importedMaps,

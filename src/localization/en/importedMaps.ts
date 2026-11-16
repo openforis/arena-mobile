@@ -1,44 +1,48 @@
 export default {
-  title: "PDF maps",
+  title: "Imported maps",
   description:
-    "Import maps from geospatial (georeferenced) PDF files stored on this device: they are shown on top of the base map in all the maps of the app, even without an internet connection.",
+    "Import maps from geospatial (georeferenced) PDF or GeoTIFF files stored on this device: they are shown on top of the base map in all the maps of the app, even without an internet connection.",
   rendererNotAvailable:
-    "PDF maps are not supported by this version of the app: update it to the latest version",
-  importPdf: "Import PDF",
-  noMaps: "No PDF maps imported yet",
+    "Imported maps are not supported by this version of the app: update it to the latest version",
+  importMap: "Import map",
+  noMaps: "No maps imported yet",
   storage: {
-    used: "Space used by PDF maps:",
+    used: "Space used by imported maps:",
   },
   opacity: "Opacity: {{value}}%",
-  hideBaseMap: "Only PDF",
+  hideBaseMap: "Only imported map",
   map: {
     fileName: "File: {{fileName}}",
     page: "Page: {{page}}",
     zoomLevels: "Zoom levels: {{minZoom}} - {{maxZoom}}",
     tiles: "Tiles: {{count}}",
     size: "Size: {{size}} (PDF file: {{sourceSize}})",
+    sizeTilesOnly: "Size: {{size}}",
     datumWarning:
       "The datum of the map is not WGS84: the map could be shifted by some meters",
     visible: "Show on maps",
-    deleteConfirm: "Delete the PDF map '{{name}}'?",
-    notFound: "PDF map not found",
-    viewerTitle: "PDF map",
+    deleteConfirm: "Delete the map '{{name}}'?",
+    notFound: "Map not found",
+    viewerTitle: "Imported map",
   },
   import: {
-    title: "Import PDF map",
-    analyzing: "Reading the georeferencing of the PDF file...",
-    errorReading: "Error reading the PDF file: {{details}}",
+    title: "Import map",
+    analyzing: "Reading the georeferencing of the file...",
+    errorReading: "Error reading the file: {{details}}",
     notGeoreferenced:
-      "The PDF file is not georeferenced: it doesn't contain the geographic coordinates of the map",
+      "The file is not georeferenced: it doesn't contain the geographic coordinates of the map",
     unsupportedGeoreference:
       "The georeferencing of this PDF file (OGC GeoPDF encoding) is not supported yet",
+    unsupportedFile: "The file is not a PDF or a GeoTIFF",
+    unsupportedGeoTiffFormat:
+      "The images of this GeoTIFF file are not supported ({{details}}): only images with 8 bits per sample (RGB, RGBA, grayscale or with a color palette) can be imported",
     page: "Page",
     pageItem: "Page {{page}}",
     name: "Name",
     maxZoom: "Max zoom: {{value}}",
-    nativeZoom: "(PDF resolution: {{value}})",
+    nativeZoom: "(map resolution: {{value}})",
     maxZoomAboveNative:
-      "Zoom levels above the resolution of the PDF will look blurred",
+      "Zoom levels above the resolution of the map will look blurred",
     estimate: "{{tiles}} tiles · ~{{size}} (free space: {{freeSpace}})",
     estimateTooManyTiles:
       "{{tiles}} tiles: too many (max {{maxTiles}}); reduce the max zoom",
@@ -57,12 +61,12 @@ export default {
       error: "Preview not available: {{details}}",
     },
     importButton: "Import",
-    jobTitle: "Importing PDF map",
-    complete: "PDF map imported ({{size}})",
-    error: "Error importing the PDF map: {{details}}",
+    jobTitle: "Importing the map",
+    complete: "Map imported ({{size}})",
+    error: "Error importing the map: {{details}}",
   },
   validation: {
     nameRequired: "Name is required",
-    nameDuplicate: "Name already in use by another PDF map",
+    nameDuplicate: "Name already in use by another imported map",
   },
 };

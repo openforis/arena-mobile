@@ -3,6 +3,8 @@ import { toProj4 } from "geotiff-geokeys-to-proj4";
 import proj4 from "proj4";
 
 import { LatLng } from "model/LocationPoint";
+import { ImportedMapGeoreference } from "utils/GeoPdfTilePlanner";
+import { GeoPdfTransform, Point } from "utils/GeoPdfTransform";
 
 // pixel (column, row of the image corners: 0..width, 0..height) → coordinates in the image CRS
 export type PixelToCrs = (column: number, row: number) => [number, number];
@@ -78,8 +80,95 @@ const getCrs = (image: GeoTIFFImage): GeoTiffCrs | null => {
   };
 };
 
+const GRID_SIZE = 5;
+
+const pixelToLatLng = (
+  pixelToCrs: PixelToCrs,
+  crs: Pick<GeoTiffCrs, "toLatLng">,
+  { x, y }: Point,
+): LatLng => crs.toLatLng(...pixelToCrs(x, y));
+
+// image pixels → web mercator: homography fitted on a grid of points projected exactly;
+// the "display space" of the tile planner is the image pixel space (origin top-left, y down)
+const computeGeoreference = ({
+  width,
+  height,
+  pixelToCrs,
+  crs,
+}: {
+  width: number;
+  height: number;
+  pixelToCrs: PixelToCrs;
+  crs: Pick<GeoTiffCrs, "toLatLng" | "datumShiftKnown">;
+}): {
+  georeference: ImportedMapGeoreference;
+  // max distance between the fitted and the exact position of the grid cell centers
+  maxFitErrorMeters: number;
+} | null => {
+  const gridPoints: Point[] = [];
+  for (let row = 0; row < GRID_SIZE; row++) {
+    for (let col = 0; col < GRID_SIZE; col++) {
+      gridPoints.push({
+        x: (col * width) / (GRID_SIZE - 1),
+        y: (row * height) / (GRID_SIZE - 1),
+      });
+    }
+  }
+  const toMercator = (point: Point) =>
+    GeoPdfTransform.latLngToMercator(pixelToLatLng(pixelToCrs, crs, point));
+  const displayToMercator = GeoPdfTransform.computeHomography(
+    gridPoints,
+    gridPoints.map(toMercator),
+  );
+  if (!displayToMercator) return null;
+  const mercatorToDisplay = GeoPdfTransform.invertHomography(displayToMercator);
+  if (!mercatorToDisplay) return null;
+
+  const neatlineDisplay: Point[] = [
+    { x: 0, y: 0 },
+    { x: width, y: 0 },
+    { x: width, y: height },
+    { x: 0, y: height },
+  ];
+  const neatline = neatlineDisplay.map((point) =>
+    GeoPdfTransform.mercatorToLatLng(
+      GeoPdfTransform.applyHomography(displayToMercator, point),
+    ),
+  );
+  // mercator meters are stretched by 1/cos(latitude)
+  const latitudeScale = Math.cos(
+    (neatline.reduce((sum, p) => sum + p.latitude, 0) / neatline.length) *
+      (Math.PI / 180),
+  );
+  const cellCenters = gridPoints
+    .filter(({ x, y }) => x < width && y < height)
+    .map(({ x, y }) => ({
+      x: x + width / (GRID_SIZE - 1) / 2,
+      y: y + height / (GRID_SIZE - 1) / 2,
+    }));
+  const maxFitErrorMeters = Math.max(
+    ...cellCenters.map((point) => {
+      const fitted = GeoPdfTransform.applyHomography(displayToMercator, point);
+      const exact = toMercator(point);
+      return Math.hypot(fitted.x - exact.x, fitted.y - exact.y) * latitudeScale;
+    }),
+  );
+  return {
+    georeference: {
+      pageIndex: 0,
+      displayToMercator,
+      mercatorToDisplay,
+      neatlineDisplay,
+      neatline,
+      datumCompatible: crs.datumShiftKnown,
+    },
+    maxFitErrorMeters,
+  };
+};
+
 export const GeoTiffGeoreference = {
   getPixelToCrs,
   getCrs,
   hasDatumShift,
+  computeGeoreference,
 };

@@ -45,6 +45,38 @@ internal struct RenderTilesOptions: Record {
   var tiles: [RenderTileTarget] = []
 }
 
+internal struct RenderImageTilesOptions: Record {
+  // size of the image (RGBA pixels, not premultiplied)
+  @Field
+  var pixelsWidth: Int = 0
+
+  @Field
+  var pixelsHeight: Int = 0
+
+  // affine transform [a, b, c, d, e, f] from image pixels to block pixels
+  @Field
+  var matrix: [Double] = []
+
+  // map frame in block pixels (x0, y0, x1, y1, ...): content outside it is transparent
+  @Field
+  var clipPolygon: [Double] = []
+
+  @Field
+  var width: Int = 0
+
+  @Field
+  var height: Int = 0
+
+  @Field
+  var tileSize: Int = 256
+
+  @Field
+  var jpegQuality: Int = 85
+
+  @Field
+  var tiles: [RenderTileTarget] = []
+}
+
 internal struct OverviewTileTarget: Record {
   @Field
   var path: String = ""
@@ -77,6 +109,12 @@ internal final class PdfPageNotFoundException: GenericException<Int> {
   }
 }
 
+internal final class InvalidPixelsException: GenericException<Int> {
+  override var reason: String {
+    "Expected \(param) bytes of RGBA pixels"
+  }
+}
+
 internal final class BitmapCreationException: Exception {
   override var reason: String {
     "Cannot create the bitmap to render the map tiles"
@@ -101,6 +139,10 @@ public class ImportedMapRendererModule: Module {
       self.lock.lock()
       defer { self.lock.unlock() }
       return try self.renderTiles(options)
+    }
+
+    AsyncFunction("renderImageTiles") { (pixels: Data, options: RenderImageTilesOptions) -> [String: Any] in
+      return try self.renderImageTiles(pixels, options)
     }
 
     AsyncFunction("buildOverviewTiles") { (options: BuildOverviewTilesOptions) -> [String: Any] in
@@ -167,6 +209,89 @@ public class ImportedMapRendererModule: Module {
     return path
   }
 
+  // writes the tiles of the rendered block; returns the number of written tiles and their size
+  private func writeBlockTiles(
+    context: CGContext,
+    tiles: [RenderTileTarget],
+    width: Int,
+    height: Int,
+    tileSize: Int,
+    jpegQuality: Int
+  ) throws -> [String: Any] {
+    var written = 0
+    var bytes: Int64 = 0
+    for target in tiles {
+      let x = target.col * tileSize
+      let y = target.row * tileSize
+      if x < 0 || y < 0 || x + tileSize > width || y + tileSize > height {
+        continue
+      }
+      let size = try writeTile(
+        context: context,
+        region: CGRect(x: x, y: y, width: tileSize, height: tileSize),
+        path: target.path,
+        jpegQuality: jpegQuality
+      )
+      if size > 0 {
+        written += 1
+        bytes += size
+      }
+    }
+    return ["written": written, "bytes": Double(bytes)]
+  }
+
+  // RGBA bytes (not premultiplied) -> image
+  private func createImage(_ pixels: Data, width: Int, height: Int) throws -> CGImage {
+    let expectedBytes = width * height * 4
+    guard pixels.count >= expectedBytes,
+      let provider = CGDataProvider(data: pixels as CFData),
+      let image = CGImage(
+        width: width,
+        height: height,
+        bitsPerComponent: 8,
+        bitsPerPixel: 32,
+        bytesPerRow: width * 4,
+        space: CGColorSpace(name: CGColorSpace.sRGB) ?? CGColorSpaceCreateDeviceRGB(),
+        bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.last.rawValue),
+        provider: provider,
+        decode: nil,
+        shouldInterpolate: true,
+        intent: .defaultIntent
+      )
+    else {
+      throw InvalidPixelsException(expectedBytes)
+    }
+    return image
+  }
+
+  private func renderImageTiles(_ pixels: Data, _ options: RenderImageTilesOptions) throws -> [String: Any] {
+    let image = try createImage(pixels, width: options.pixelsWidth, height: options.pixelsHeight)
+    let context = try createContext(width: options.width, height: options.height)
+    context.saveGState()
+    if let clipPath = createClipPath(options.clipPolygon) {
+      context.addPath(clipPath)
+      context.clip()
+    }
+    let m = options.matrix
+    if m.count >= 6 {
+      context.concatenate(CGAffineTransform(a: m[0], b: m[1], c: m[2], d: m[3], tx: m[4], ty: m[5]))
+    }
+    // the context is flipped (y down): draw the image upside down so that it appears upright
+    let imageHeight = CGFloat(options.pixelsHeight)
+    context.translateBy(x: 0, y: imageHeight)
+    context.scaleBy(x: 1, y: -1)
+    context.draw(image, in: CGRect(x: 0, y: 0, width: CGFloat(options.pixelsWidth), height: imageHeight))
+    context.restoreGState()
+    return try writeBlockTiles(
+      context: context,
+      tiles: options.tiles,
+      width: options.width,
+      height: options.height,
+      tileSize: options.tileSize,
+      jpegQuality: options.jpegQuality
+    )
+  }
+
   private func renderTiles(_ options: RenderTilesOptions) throws -> [String: Any] {
     let pdfDocument = try openDocument(options.pdfPath)
     // CGPDFDocument pages are 1-based
@@ -204,27 +329,14 @@ public class ImportedMapRendererModule: Module {
     context.drawPDFPage(page)
     context.restoreGState()
 
-    var written = 0
-    var bytes: Int64 = 0
-    let tileSize = options.tileSize
-    for target in options.tiles {
-      let x = target.col * tileSize
-      let y = target.row * tileSize
-      if x < 0 || y < 0 || x + tileSize > options.width || y + tileSize > options.height {
-        continue
-      }
-      let size = try writeTile(
-        context: context,
-        region: CGRect(x: x, y: y, width: tileSize, height: tileSize),
-        path: target.path,
-        jpegQuality: options.jpegQuality
-      )
-      if size > 0 {
-        written += 1
-        bytes += size
-      }
-    }
-    return ["written": written, "bytes": Double(bytes)]
+    return try writeBlockTiles(
+      context: context,
+      tiles: options.tiles,
+      width: options.width,
+      height: options.height,
+      tileSize: options.tileSize,
+      jpegQuality: options.jpegQuality
+    )
   }
 
   private func buildOverviewTiles(_ options: BuildOverviewTilesOptions) throws -> [String: Any] {

@@ -453,7 +453,7 @@ export const MapView = forwardRef<RNMapView | null, Props>(
             )}
             {mapTypeSelectorVisible && hasImportedMaps && (
               <IconButton
-                icon="file-pdf-box"
+                icon="map-legend"
                 mode="contained"
                 onPress={openImportedMapsPanel}
                 size={18}

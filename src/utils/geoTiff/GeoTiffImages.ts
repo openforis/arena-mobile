@@ -1,4 +1,10 @@
-import { BaseDecoder, GeoTIFFImage, addDecoder, getDecoder } from "geotiff";
+import {
+  BaseDecoder,
+  GeoTIFF,
+  GeoTIFFImage,
+  addDecoder,
+  getDecoder,
+} from "geotiff";
 
 import { PromiseUtils } from "utils/PromiseUtils";
 
@@ -213,7 +219,38 @@ const createTileSource = async (image: GeoTIFFImage): Promise<TileSource> => {
   };
 };
 
+// NewSubfileType flags
+const SUBFILE_REDUCED_RESOLUTION = 1;
+const SUBFILE_MASK = 4;
+
+// full resolution image, then its overviews (largest first); transparency masks are excluded
+const getLevels = async (tiff: GeoTIFF): Promise<GeoTIFFImage[]> => {
+  const count = await tiff.getImageCount();
+  const images = await Promise.all(
+    Array.from({ length: count }, (_, index) => tiff.getImage(index)),
+  );
+  const subfileTypes: number[] = await Promise.all(
+    images.map(
+      async (image) => (await loadValue(image, "NewSubfileType")) ?? 0,
+    ),
+  );
+  const [fullResolution] = images;
+  if (!fullResolution) return [];
+  const overviews = images
+    .filter(
+      (image, index) =>
+        index > 0 &&
+        (subfileTypes[index]! & SUBFILE_REDUCED_RESOLUTION) !== 0 &&
+        (subfileTypes[index]! & SUBFILE_MASK) === 0 &&
+        image.getSamplesPerPixel() === fullResolution.getSamplesPerPixel() &&
+        image.getWidth() < fullResolution.getWidth(),
+    )
+    .sort((a, b) => b.getWidth() - a.getWidth());
+  return [fullResolution, ...overviews];
+};
+
 export const GeoTiffImages = {
+  getLevels,
   registerDecoders,
   detectPixelFormat,
   createTileSource,

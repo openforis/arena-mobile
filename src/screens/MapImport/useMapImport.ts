@@ -83,7 +83,7 @@ export const useMapImport = () => {
           freeDiskStorage: freeSpace,
         });
       } catch (error) {
-        log.error("error reading PDF file", error);
+        log.error("error reading the map file", error);
         dispatchImport({
           type: "analysisFailed",
           errorKey: "importedMaps:import.errorReading",
@@ -94,7 +94,7 @@ export const useMapImport = () => {
     void analyze();
   }, [fileUri]);
 
-  // the file picker copied the file into the cache folder: the import job makes its own copy
+  // the file picker copied the file into the cache folder: the import job copies a PDF and reads a GeoTIFF from here (before leaving)
   useEffect(
     () => () => {
       if (fileUri?.startsWith(Files.cacheDirectory)) {
@@ -123,7 +123,7 @@ export const useMapImport = () => {
             preview: previewRendered,
           });
       } catch (error) {
-        log.error("error rendering PDF map preview", error);
+        log.error("error rendering the map preview", error);
         if (!stopped)
           dispatchPreview({
             type: "previewFailed",
@@ -253,7 +253,7 @@ export const useMapImport = () => {
       navigator.goBack();
     } catch (error) {
       if (!(error instanceof JobCancelError)) {
-        log.error("PDF map import failed", error);
+        log.error("map import failed", error);
         toaster("importedMaps:import.error", {
           details: extractErrorDetails(error),
         });

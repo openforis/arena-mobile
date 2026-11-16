@@ -24,6 +24,21 @@ export type RenderTilesOptions = {
   tiles: RenderTileTarget[];
 };
 
+export type RenderImageTilesOptions = {
+  // size of the image (RGBA pixels, not premultiplied)
+  pixelsWidth: number;
+  pixelsHeight: number;
+  // image pixels -> block pixels: [a, b, c, d, e, f]
+  matrix: number[];
+  // map frame in block pixels: [x0, y0, x1, y1, ...]
+  clipPolygon: number[];
+  width: number;
+  height: number;
+  tileSize: number;
+  jpegQuality: number;
+  tiles: RenderTileTarget[];
+};
+
 export type OverviewTileTarget = {
   path: string;
   // tiles of the next zoom level: top-left, top-right, bottom-left, bottom-right
@@ -45,6 +60,10 @@ export type TilesWriteResult = {
 type ImportedMapRendererNativeModule = {
   getPageCount(pdfPath: string): Promise<number>;
   renderTiles(options: RenderTilesOptions): Promise<TilesWriteResult>;
+  renderImageTiles(
+    pixels: Uint8Array,
+    options: RenderImageTilesOptions,
+  ): Promise<TilesWriteResult>;
   buildOverviewTiles(
     options: BuildOverviewTilesOptions,
   ): Promise<TilesWriteResult>;
@@ -71,6 +90,8 @@ export const ImportedMapRenderer = {
   getPageCount: (pdfPath: string) => getNativeModule().getPageCount(pdfPath),
   renderTiles: (options: RenderTilesOptions) =>
     getNativeModule().renderTiles(options),
+  renderImageTiles: (pixels: Uint8Array, options: RenderImageTilesOptions) =>
+    getNativeModule().renderImageTiles(pixels, options),
   buildOverviewTiles: (options: BuildOverviewTilesOptions) =>
     getNativeModule().buildOverviewTiles(options),
   closeDocument: () => getNativeModule().closeDocument(),

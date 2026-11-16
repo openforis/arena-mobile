@@ -1,11 +1,16 @@
 import { LatLng } from "./LocationPoint";
 
-// map imported from a file (geospatial PDF page), rendered into map tiles stored on the device
+export type ImportedMapSourceType = "pdf" | "geotiff";
+
+// map imported from a file (geospatial PDF page or GeoTIFF), rendered into map tiles stored on the device
 export type ImportedMap = {
   id: string;
   name: string;
   // name of the imported file
   fileName: string;
+  // not set for the maps imported before GeoTIFF support: "pdf"
+  sourceType?: ImportedMapSourceType;
+  // PDF page (0 for GeoTIFF)
   pageIndex: number;
   // map frame on the map
   neatline: LatLng[];
@@ -14,9 +19,9 @@ export type ImportedMap = {
   tilesCount: number;
   // size of the tiles
   sizeBytes: number;
-  // size of the PDF file (kept on the device)
+  // size of the source file kept on the device (PDF only: GeoTIFF files are not kept)
   sourceSizeBytes: number;
-  // false when the datum of the PDF is not compatible with WGS84: the map can be shifted
+  // false when the datum of the map is not compatible with WGS84: the map can be shifted
   datumCompatible: boolean;
   visible: boolean;
   // 0 - 1

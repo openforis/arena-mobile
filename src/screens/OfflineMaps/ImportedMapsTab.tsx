@@ -19,11 +19,14 @@ import { ImportedMap } from "model";
 import { ImportedMapsService } from "service";
 import { SettingsActions, SettingsSelectors, useAppDispatch } from "state";
 import { useAppTheme } from "theme";
-import { Files, log } from "utils";
+import { Environment, Files, log } from "utils";
 
 import styles from "./styles";
 
-const PDF_MIME_TYPE = "application/pdf";
+// PDF or GeoTIFF (detected from the content: some Android file providers don't report .tif files as image/tiff)
+const MAP_FILE_MIME_TYPES = Environment.isAndroid
+  ? ["application/pdf", "image/tiff", "application/octet-stream"]
+  : ["application/pdf", "image/tiff"];
 
 const formatDate = (isoDate: string): string =>
   Dates.format(new Date(isoDate), DateFormats.datetimeDisplay);
@@ -55,10 +58,12 @@ const ImportedMapItem = ({
         textKey="importedMaps:map.fileName"
         textParams={{ fileName: importedMap.fileName }}
       />
-      <Text
-        textKey="importedMaps:map.page"
-        textParams={{ page: importedMap.pageIndex + 1 }}
-      />
+      {(importedMap.sourceType ?? "pdf") === "pdf" && (
+        <Text
+          textKey="importedMaps:map.page"
+          textParams={{ page: importedMap.pageIndex + 1 }}
+        />
+      )}
       <Text
         textKey="importedMaps:map.zoomLevels"
         textParams={{
@@ -71,7 +76,11 @@ const ImportedMapItem = ({
         textParams={{ count: importedMap.tilesCount }}
       />
       <Text
-        textKey="importedMaps:map.size"
+        textKey={
+          importedMap.sourceSizeBytes > 0
+            ? "importedMaps:map.size"
+            : "importedMaps:map.sizeTilesOnly"
+        }
         textParams={{
           size: Files.toHumanReadableFileSize(importedMap.sizeBytes),
           sourceSize: Files.toHumanReadableFileSize(
@@ -152,7 +161,7 @@ export const ImportedMapsTab = () => {
   const onImportPress = useCallback(async () => {
     try {
       const { assets, canceled } = await DocumentPicker.getDocumentAsync({
-        type: PDF_MIME_TYPE,
+        type: MAP_FILE_MIME_TYPES,
         copyToCacheDirectory: true,
       });
       const asset = assets?.[0];
@@ -162,7 +171,7 @@ export const ImportedMapsTab = () => {
         fileName: asset.name,
       });
     } catch (error) {
-      log.error("error selecting PDF file", error);
+      log.error("error selecting the map file", error);
       toaster("importedMaps:import.errorReading", { details: String(error) });
     }
   }, [navigator, toaster]);
@@ -236,9 +245,9 @@ export const ImportedMapsTab = () => {
       <HView style={styles.buttonsRow}>
         <Button
           disabled={!rendererAvailable || deleting}
-          icon="file-pdf-box"
+          icon="file-import-outline"
           onPress={onImportPress}
-          textKey="importedMaps:importPdf"
+          textKey="importedMaps:importMap"
         />
       </HView>
       {deleting && <LoadingIcon />}

@@ -79,7 +79,7 @@ type Props = {
   onZoomToMap: (importedMap: ImportedMap) => void;
 };
 
-// lets the user choose the PDF maps shown on the maps and their opacity
+// lets the user choose the imported maps (PDF, GeoTIFF) shown on the maps and their opacity
 export const ImportedMapsPanel = ({ onDismiss, onZoomToMap }: Props) => {
   const dispatch = useAppDispatch();
   const settings = SettingsSelectors.useSettings();

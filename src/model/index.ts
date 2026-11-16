@@ -19,7 +19,7 @@ export type { LocationPoint, AveragedLocation, LatLng } from "./LocationPoint";
 export { MapLayerId, MapLayerType, MapLayers, MapProvider } from "./MapLayers";
 export type { CustomMapLayer, MapLayer } from "./MapLayers";
 export type { OfflineMapArea } from "./OfflineMapArea";
-export type { ImportedMap } from "./ImportedMap";
+export type { ImportedMap, ImportedMapSourceType } from "./ImportedMap";
 export type {
   RecordCurrentPageEntity,
   RecordCurrentPageEntityPointer,

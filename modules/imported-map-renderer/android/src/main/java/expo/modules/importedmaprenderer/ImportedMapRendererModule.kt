@@ -63,6 +63,38 @@ class RenderTilesOptions : Record {
   val tiles: List<RenderTileTarget> = emptyList()
 }
 
+class RenderImageTilesOptions : Record {
+  // size of the image (RGBA pixels, not premultiplied)
+  @Field
+  val pixelsWidth: Int = 0
+
+  @Field
+  val pixelsHeight: Int = 0
+
+  // affine transform [a, b, c, d, e, f] from image pixels to block pixels
+  @Field
+  val matrix: List<Double> = emptyList()
+
+  // map frame in block pixels (x0, y0, x1, y1, ...): content outside it is transparent
+  @Field
+  val clipPolygon: List<Double> = emptyList()
+
+  @Field
+  val width: Int = 0
+
+  @Field
+  val height: Int = 0
+
+  @Field
+  val tileSize: Int = 256
+
+  @Field
+  val jpegQuality: Int = 85
+
+  @Field
+  val tiles: List<RenderTileTarget> = emptyList()
+}
+
 class OverviewTileTarget : Record {
   @Field
   val path: String = ""
@@ -86,6 +118,9 @@ class BuildOverviewTilesOptions : Record {
 class PdfOpenException(path: String, cause: Throwable?) :
   CodedException("ERR_PDF_OPEN", "Cannot open PDF file: $path", cause)
 
+class InvalidPixelsException(expected: Int, actual: Int) :
+  CodedException("ERR_INVALID_PIXELS", "Expected $expected bytes of RGBA pixels, got $actual", null)
+
 class ImportedMapRendererModule : Module() {
   companion object {
     private const val TAG = "ImportedMapRenderer"
@@ -105,6 +140,10 @@ class ImportedMapRendererModule : Module() {
 
     AsyncFunction("renderTiles") { options: RenderTilesOptions ->
       synchronized(lock) { renderTiles(options) }
+    }
+
+    AsyncFunction("renderImageTiles") { pixels: ByteArray, options: RenderImageTilesOptions ->
+      renderImageTiles(pixels, options)
     }
 
     AsyncFunction("buildOverviewTiles") { options: BuildOverviewTilesOptions ->
@@ -166,6 +205,79 @@ class ImportedMapRendererModule : Module() {
     return path
   }
 
+  private fun toMatrix(m: List<Double>): Matrix {
+    val transform = Matrix()
+    transform.setValues(
+      floatArrayOf(
+        m[0].toFloat(), m[2].toFloat(), m[4].toFloat(),
+        m[1].toFloat(), m[3].toFloat(), m[5].toFloat(),
+        0f, 0f, 1f
+      )
+    )
+    return transform
+  }
+
+  // makes the content outside the map frame transparent (anti-aliased edge)
+  private fun clearOutside(canvas: Canvas, clipPath: Path) {
+    clipPath.fillType = Path.FillType.INVERSE_WINDING
+    canvas.drawPath(clipPath, Paint().apply {
+      xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
+      style = Paint.Style.FILL
+      isAntiAlias = true
+    })
+  }
+
+  // writes the tiles of the rendered block; returns the number of written tiles and their size
+  private fun writeBlockTiles(bitmap: Bitmap, tiles: List<RenderTileTarget>, tileSize: Int, jpegQuality: Int): Map<String, Any> {
+    var written = 0
+    var bytes = 0L
+    for (target in tiles) {
+      val x = target.col * tileSize
+      val y = target.row * tileSize
+      if (x < 0 || y < 0 || x + tileSize > bitmap.width || y + tileSize > bitmap.height) continue
+      val size = writeTile(bitmap, Rect(x, y, x + tileSize, y + tileSize), target.path, jpegQuality)
+      if (size > 0) {
+        written += 1
+        bytes += size
+      }
+    }
+    return mapOf("written" to written, "bytes" to bytes.toDouble())
+  }
+
+  // RGBA bytes (not premultiplied) -> bitmap (setPixels premultiplies the ARGB colors)
+  private fun createImageBitmap(pixels: ByteArray, width: Int, height: Int): Bitmap {
+    val count = width * height
+    if (pixels.size < count * 4) throw InvalidPixelsException(count * 4, pixels.size)
+    val colors = IntArray(count)
+    for (i in 0 until count) {
+      val p = i * 4
+      colors[i] = ((pixels[p + 3].toInt() and 0xff) shl 24) or
+        ((pixels[p].toInt() and 0xff) shl 16) or
+        ((pixels[p + 1].toInt() and 0xff) shl 8) or
+        (pixels[p + 2].toInt() and 0xff)
+    }
+    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+    bitmap.setPixels(colors, 0, width, 0, 0, width, height)
+    return bitmap
+  }
+
+  private fun renderImageTiles(pixels: ByteArray, options: RenderImageTilesOptions): Map<String, Any> {
+    val image = createImageBitmap(pixels, options.pixelsWidth, options.pixelsHeight)
+    val bitmap = Bitmap.createBitmap(options.width, options.height, Bitmap.Config.ARGB_8888)
+    try {
+      val canvas = Canvas(bitmap)
+      canvas.drawBitmap(image, toMatrix(options.matrix), Paint().apply {
+        isFilterBitmap = true
+        isAntiAlias = true
+      })
+      createClipPath(options.clipPolygon)?.let { clearOutside(canvas, it) }
+      return writeBlockTiles(bitmap, options.tiles, options.tileSize, options.jpegQuality)
+    } finally {
+      image.recycle()
+      bitmap.recycle()
+    }
+  }
+
   private fun renderTiles(options: RenderTilesOptions): Map<String, Any> {
     val pdfRenderer = openRenderer(options.pdfPath)
     val bitmap = Bitmap.createBitmap(options.width, options.height, Bitmap.Config.ARGB_8888)
@@ -182,43 +294,15 @@ class ImportedMapRendererModule : Module() {
       } else {
         bitmap.eraseColor(Color.WHITE)
       }
-      val m = options.matrix
-      val transform = Matrix()
-      transform.setValues(
-        floatArrayOf(
-          m[0].toFloat(), m[2].toFloat(), m[4].toFloat(),
-          m[1].toFloat(), m[3].toFloat(), m[5].toFloat(),
-          0f, 0f, 1f
-        )
-      )
+      val transform = toMatrix(options.matrix)
       val page = pdfRenderer.openPage(options.pageIndex)
       try {
         page.render(bitmap, null, transform, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
       } finally {
         page.close()
       }
-      if (clipPath != null) {
-        clipPath.fillType = Path.FillType.INVERSE_WINDING
-        canvas.drawPath(clipPath, Paint().apply {
-          xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
-          style = Paint.Style.FILL
-          isAntiAlias = true
-        })
-      }
-      var written = 0
-      var bytes = 0L
-      val tileSize = options.tileSize
-      for (target in options.tiles) {
-        val x = target.col * tileSize
-        val y = target.row * tileSize
-        if (x < 0 || y < 0 || x + tileSize > bitmap.width || y + tileSize > bitmap.height) continue
-        val size = writeTile(bitmap, Rect(x, y, x + tileSize, y + tileSize), target.path, options.jpegQuality)
-        if (size > 0) {
-          written += 1
-          bytes += size
-        }
-      }
-      return mapOf("written" to written, "bytes" to bytes.toDouble())
+      if (clipPath != null) clearOutside(canvas, clipPath)
+      return writeBlockTiles(bitmap, options.tiles, options.tileSize, options.jpegQuality)
     } finally {
       bitmap.recycle()
     }

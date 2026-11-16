@@ -47,10 +47,21 @@ export const getAnalysisErrorKey = (
   analysis: ImportedMapFileAnalysis,
 ): string | undefined => {
   if (analysis.candidates.length > 0) return undefined;
-  return analysis.info.hasUnsupportedGeoreference
+  if (!analysis.sourceType) return "importedMaps:import.unsupportedFile";
+  if (analysis.unsupportedFormat) {
+    return "importedMaps:import.unsupportedGeoTiffFormat";
+  }
+  return analysis.info?.hasUnsupportedGeoreference
     ? "importedMaps:import.unsupportedGeoreference"
     : "importedMaps:import.notGeoreferenced";
 };
+
+const getAnalysisErrorParams = (
+  analysis: ImportedMapFileAnalysis,
+): Record<string, string> | undefined =>
+  analysis.candidates.length === 0 && analysis.unsupportedFormat
+    ? { details: analysis.unsupportedFormat }
+    : undefined;
 
 // default name and max zoom of the selected page
 const selectCandidate = (
@@ -86,7 +97,7 @@ export const mapImportReducer = (
         analysis,
         freeDiskStorage,
         errorKey: getAnalysisErrorKey(analysis),
-        errorParams: undefined,
+        errorParams: getAnalysisErrorParams(analysis),
       };
       return selectCandidate(stateNext, state.candidateIndex);
     }

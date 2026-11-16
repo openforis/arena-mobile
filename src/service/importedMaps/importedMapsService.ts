@@ -1,9 +1,14 @@
 import { UUIDs, User } from "@openforis/arena-core";
+import { File } from "expo-file-system";
 
-import { ImportedMap } from "model/ImportedMap";
+import { ImportedMap, ImportedMapSourceType } from "model/ImportedMap";
 import { SettingsObject } from "model/SettingsModel";
 import { Files } from "utils/Files";
 import { GeoPdfInfo, GeoPdfParser } from "utils/GeoPdfParser";
+import {
+  FILE_TYPE_HEADER_LENGTH,
+  detectMapFileType,
+} from "utils/geoTiff/fileType";
 import { log } from "utils/Logger";
 import {
   GeoPdfTilePlanner,
@@ -16,10 +21,12 @@ import { ImportedMapRenderer } from "./ImportedMapRenderer";
 import { ImportedMapRepository } from "./importedMapRepository";
 import { ImportedMapsStorage } from "./importedMapsStorage";
 import { ImportedMapTilesRenderer } from "./importedMapTilesRenderer";
+import { createBlockRenderer } from "./blockRenderers";
+import { GeoTiffMaps } from "./geoTiffMaps";
 
 // limit the tiles of a single map (rendering time and device storage)
 const MAX_TILES_PER_MAP = 100000;
-// tiles above the native resolution of the PDF are blurred: allow only a few more zoom levels
+// tiles above the native resolution of the map are blurred: allow only a few more zoom levels
 const MAX_EXTRA_ZOOM_LEVELS = 2;
 const MAX_ZOOM = 21;
 // average size of a rendered tile (mix of JPEG and PNG)
@@ -30,6 +37,8 @@ const PREVIEW_ZOOM_LEVELS = 4;
 const MAX_NAME_LENGTH = 100;
 
 export type ImportedMapPageCandidate = {
+  sourceType: ImportedMapSourceType;
+  // PDF page (0 for GeoTIFF)
   pageIndex: number;
   // name of the main map frame of the page, if any
   viewportName?: string;
@@ -38,8 +47,13 @@ export type ImportedMapPageCandidate = {
 };
 
 export type ImportedMapFileAnalysis = {
-  info: GeoPdfInfo;
+  // null: neither a PDF nor a TIFF file
+  sourceType: ImportedMapSourceType | null;
+  // PDF only
+  info?: GeoPdfInfo;
   candidates: ImportedMapPageCandidate[];
+  // GeoTIFF: why its pixels cannot be read (e.g. "16 bits per sample")
+  unsupportedFormat?: string;
 };
 
 // tiles rendered into a temporary folder to preview the map before importing it
@@ -59,12 +73,13 @@ export type ImportedMapEstimate = {
 const isRendererAvailable = ImportedMapRenderer.isAvailable;
 
 // reads the georeferencing of the pages of the PDF file
-const analyzeFile = async (
+const analyzePdf = async (
   fileUri: string,
 ): Promise<ImportedMapFileAnalysis> => {
   const bytes = await Files.readAsBytes(fileUri);
   if (!bytes) {
     return {
+      sourceType: "pdf",
       info: { pagesCount: 0, pages: [], hasUnsupportedGeoreference: false },
       candidates: [],
     };
@@ -83,13 +98,54 @@ const analyzeFile = async (
     });
     if (!georeference) continue;
     candidates.push({
+      sourceType: "pdf",
       pageIndex: page.pageIndex,
       ...(viewport.name ? { viewportName: viewport.name } : {}),
       georeference,
       zoomRange: GeoPdfTilePlanner.computeZoomRange(georeference),
     });
   }
-  return { info, candidates };
+  return { sourceType: "pdf", info, candidates };
+};
+
+const analyzeGeoTiff = async (
+  fileUri: string,
+): Promise<ImportedMapFileAnalysis> => {
+  const { georeference, unsupportedFormat } =
+    await GeoTiffMaps.analyze(fileUri);
+  if (!georeference) {
+    return { sourceType: "geotiff", candidates: [], unsupportedFormat };
+  }
+  return {
+    sourceType: "geotiff",
+    candidates: [
+      {
+        sourceType: "geotiff",
+        pageIndex: 0,
+        georeference,
+        zoomRange: GeoTiffMaps.computeZoomRange(georeference),
+      },
+    ],
+  };
+};
+
+const readFileHeader = (fileUri: string): Uint8Array => {
+  const handle = new File(fileUri).open();
+  try {
+    return handle.readBytesSync(FILE_TYPE_HEADER_LENGTH);
+  } finally {
+    handle.close();
+  }
+};
+
+// reads the georeferencing of the file (PDF or GeoTIFF, detected from its content)
+const analyzeFile = async (
+  fileUri: string,
+): Promise<ImportedMapFileAnalysis> => {
+  const sourceType = detectMapFileType(readFileHeader(fileUri));
+  if (sourceType === "pdf") return analyzePdf(fileUri);
+  if (sourceType === "geotiff") return analyzeGeoTiff(fileUri);
+  return { sourceType: null, candidates: [] };
 };
 
 const getSelectableMaxZoomRange = (
@@ -121,7 +177,7 @@ const estimate = ({
 };
 
 const getFileNameWithoutExtension = (fileName: string): string =>
-  fileName.replace(/\.pdf$/i, "");
+  fileName.replace(/\.(pdf|tiff?)$/i, "");
 
 const generateDefaultName = ({
   fileName,
@@ -182,6 +238,7 @@ const createImportJob = ({
     id: UUIDs.v4(),
     name: name.trim(),
     fileName,
+    sourceType: candidate.sourceType,
     pageIndex: candidate.pageIndex,
     neatline: georeference.neatline,
     minZoom: Math.min(zoomRange.minZoom, maxZoom),
@@ -225,7 +282,11 @@ const renderPreview = async ({
     await Files.mkDir(dirUri);
     const tilesPath = ImportedMapsStorage.toFileSystemPath(dirUri);
     await ImportedMapTilesRenderer.renderTiles({
-      pdfPath: ImportedMapsStorage.toFileSystemPath(sourceFileUri),
+      blockRenderer: await createBlockRenderer({
+        sourceType: candidate.sourceType,
+        sourceFileUri,
+        pageIndex: candidate.pageIndex,
+      }),
       georeference,
       minZoom,
       maxZoom,

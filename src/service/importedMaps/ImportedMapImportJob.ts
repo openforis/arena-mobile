@@ -7,9 +7,10 @@ import { ImportedMapRenderer } from "./ImportedMapRenderer";
 import { ImportedMapsStorage } from "./importedMapsStorage";
 import { ImportedMapRepository } from "./importedMapRepository";
 import { ImportedMapTilesRenderer } from "./importedMapTilesRenderer";
+import { createBlockRenderer } from "./blockRenderers";
 
 export type ImportedMapImportJobContext = JobMobileContext & {
-  // file selected by the user (it will be copied into the app storage)
+  // file selected by the user (a PDF is copied into the app storage, a GeoTIFF is read from here)
   sourceFileUri: string;
   importedMap: ImportedMap;
   georeference: ImportedMapGeoreference;
@@ -28,17 +29,27 @@ export class ImportedMapImportJob extends JobMobile<ImportedMapImportJobContext>
     const mapDirUri = ImportedMapsStorage.getMapDirUri(importedMap.id);
     try {
       await Files.mkDir(mapDirUri);
-      const sourceCopyUri = ImportedMapsStorage.getSourceFileUri(
-        importedMap.id,
-      );
-      await Files.copyFile({ from: sourceFileUri, to: sourceCopyUri });
-      const pdfPath = ImportedMapsStorage.toFileSystemPath(sourceCopyUri);
-      // fails if the PDF cannot be opened by the native renderer (e.g. password protected)
-      await ImportedMapRenderer.getPageCount(pdfPath);
+      const sourceType = importedMap.sourceType ?? "pdf";
+      // the PDF is kept (to render it again); GeoTIFF files are often bigger than their tiles
+      const sourceCopyUri =
+        sourceType === "pdf"
+          ? ImportedMapsStorage.getSourceFileUri(importedMap.id)
+          : null;
+      if (sourceCopyUri) {
+        await Files.copyFile({ from: sourceFileUri, to: sourceCopyUri });
+        // fails if the PDF cannot be opened by the native renderer (e.g. password protected)
+        await ImportedMapRenderer.getPageCount(
+          ImportedMapsStorage.toFileSystemPath(sourceCopyUri),
+        );
+      }
 
       const { tilesCount, sizeBytes } =
         await ImportedMapTilesRenderer.renderTiles({
-          pdfPath,
+          blockRenderer: await createBlockRenderer({
+            sourceType,
+            sourceFileUri: sourceCopyUri ?? sourceFileUri,
+            pageIndex: importedMap.pageIndex,
+          }),
           georeference,
           minZoom: importedMap.minZoom,
           maxZoom: importedMap.maxZoom,
@@ -63,13 +74,13 @@ export class ImportedMapImportJob extends JobMobile<ImportedMapImportJobContext>
     }
   }
 
-  private async saveMap(sourceCopyUri: string): Promise<void> {
+  private async saveMap(sourceCopyUri: string | null): Promise<void> {
     const now = new Date().toISOString();
     const importedMap: ImportedMap = {
       ...this.context.importedMap,
       tilesCount: this.tilesCount,
       sizeBytes: this.sizeBytes,
-      sourceSizeBytes: await Files.getSize(sourceCopyUri),
+      sourceSizeBytes: sourceCopyUri ? await Files.getSize(sourceCopyUri) : 0,
       dateCreated: now,
       dateModified: now,
     };

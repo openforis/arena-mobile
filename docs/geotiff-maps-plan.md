@@ -188,8 +188,8 @@ This is the only native change: the next app version needs a new native build
 ### 4. Model and storage
 
 - `ImportedMap`: `sourceType: "pdf" | "geotiff"` (missing → `"pdf"` for the
-  maps imported by 2.11.3), `pageIndex` only for PDFs, `crs` (label shown in
-  the list, e.g. "EPSG:32633").
+  maps imported before), `pageIndex` 0 for GeoTIFF (the page is shown in the
+  list only for PDFs).
 - The source GeoTIFF is **not kept** after the import (the PDF is kept to be
   able to re-render it): GeoTIFFs are often much bigger than the tiles at the
   chosen zoom; `sourceSizeBytes` is 0. The copy made by the document picker
@@ -204,8 +204,9 @@ This is the only native change: the next app version needs a new native build
 - Analysis: one candidate per file (the full resolution image; the other
   images are overviews or masks). The page selector is hidden.
 - Same name, max zoom slider, estimate, preview and warnings. For big files
-  without overviews the preview has to read the whole image: it shows a
-  progress indicator and can be skipped.
+  without overviews the preview has to read the whole image: it is rendered
+  in the background ("Rendering the preview...") and doesn't block the
+  import.
 - Errors: not georeferenced, unsupported CRS, unsupported pixel format
   (e.g. 16-bit / float data, more than 4 bands: DEMs, raw satellite bands),
   unsupported compression (LERC, Zstandard), file too big for the 100 000
@@ -224,7 +225,9 @@ This is the only native change: the next app version needs a new native build
 
 ## Plan
 
-1. **Rename + this note** (this PR).
+All the steps are in the same PR (openforis/arena-mobile#419).
+
+1. **Rename + this note**.
 2. **Spike** (done, see *Spike results*). No separate device benchmark: the
    import runs as a job with progress and cancel, whatever its duration; the
    timings of the first imports on devices tell whether native JPEG decoding
@@ -235,9 +238,9 @@ This is the only native change: the next app version needs a new native build
    (`ModelTransformation`), user-defined Lambert conformal conic, 16-bit
    (rejected), not georeferenced (rejected)); generic parts of transform and
    planner split from the PDF ones.
-4. **Rendering and UI**: native `renderImageTiles` (Android, iOS), import
-   job/preview for both sources, model, import screen, texts and
-   translations, user manual sections to update.
+4. **Rendering and UI** (done, see *Implementation*): native
+   `renderImageTiles` (Android, iOS), import job/preview for both sources,
+   model, import screen, texts and translations.
 
 ## Spike results
 
@@ -311,6 +314,40 @@ computed by GDAL).
 Noticed: tiled files need 2 small reads per tile for the offsets and byte
 counts (`loadValueIndexed`) besides the data; reading those arrays once would
 reduce the native calls.
+
+## Implementation
+
+- `utils/geoTiff/fileType.ts`: PDF or TIFF from the first bytes.
+- `utils/geoTiff/GeoTiffGeoreference.ts` `computeGeoreference`: 5×5 grid of
+  image pixels projected exactly (proj4) → least squares homography to
+  mercator; the fit error is written to the log. The image pixel space is
+  the "display space" of the tile planner, so `GeoPdfTilePlanner` (blocks,
+  overviews, clip) is used unchanged; the native zoom is computed with
+  72 DPI (1 display unit = 1 rendered pixel).
+- `utils/geoTiff/GeoTiffBlockPlanner.ts`: for a render block, the image
+  window it covers (+2 px for the filtering), the image level (full
+  resolution or the smallest overview still at least as detailed as the
+  block; `NewSubfileType` masks excluded), the decimation step without
+  overviews, and the matrix window pixels → block pixels.
+- `service/importedMaps/geoTiffMaps.ts`: analysis (format check,
+  georeference, zoom range) and the GeoTIFF block renderer (decoded tiles
+  cached per level, 48 MB); `blockRenderers.ts` chooses the PDF or GeoTIFF
+  renderer, `importedMapTilesRenderer.ts` is shared (blocks, then overview
+  tiles).
+- Native `renderImageTiles(pixels: Uint8Array, options)`: Android
+  `ByteArray` → `setPixels` (premultiplies the alpha) → `Canvas.drawBitmap`
+  with the matrix and bilinear filtering, then the content outside the map
+  frame is cleared; iOS `Data` → `CGImage` (alpha not premultiplied) drawn
+  with the matrix in the clipped context. Tiles are written by the code
+  shared with `renderTiles`.
+- Import job: the PDF is copied into the map folder; the GeoTIFF is read
+  from the copy made by the file picker (deleted when leaving the import
+  screen), `sourceSizeBytes` 0 ("Size" without the source file in the
+  list).
+- Tested in Jest with the GDAL fixtures and the native module mocked: the
+  corners of a north-up and of a rotated GeoTIFF land within 1.5 px of the
+  world pixel computed from the GDAL coordinates at zoom 17, and the
+  pixels passed to the native renderer are the GDAL ones.
 
 ## Testing
 

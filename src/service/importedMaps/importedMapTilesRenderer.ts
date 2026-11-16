@@ -7,13 +7,17 @@ import { GeoPdfTransform, Point } from "utils/GeoPdfTransform";
 import { MapTileUtils, TileCoordinate } from "utils/MapTileUtils";
 import { PromiseUtils } from "utils/PromiseUtils";
 
-import { ImportedMapRenderer } from "./ImportedMapRenderer";
+import {
+  ImportedMapRenderer,
+  RenderTileTarget,
+  TilesWriteResult,
+} from "./ImportedMapRenderer";
 
-// Renders a georeferenced PDF page into XYZ tiles ({tilesPath}/{z}/{x}/{y}):
-// the max zoom level is rendered from the PDF, the lower ones are built by downsampling.
+// Renders an imported map (PDF page or GeoTIFF) into XYZ tiles ({tilesPath}/{z}/{x}/{y}):
+// the max zoom level is rendered from the source file, the lower ones are built by downsampling.
 // Used by the import job and by the preview shown before the import.
 
-const JPEG_QUALITY = 85;
+export const JPEG_QUALITY = 85;
 const OVERVIEW_TILES_BATCH_SIZE = 32;
 
 export type ImportedMapTilesRenderResult = {
@@ -21,11 +25,30 @@ export type ImportedMapTilesRenderResult = {
   sizeBytes: number;
 };
 
-const toFlatCoordinates = (points: Point[]): number[] =>
+// renders the tiles of a block of the max zoom level from the source file
+export type BlockRenderer = {
+  renderBlock: (
+    block: RenderBlock,
+    tilesPath: string,
+  ) => Promise<TilesWriteResult>;
+  close: () => Promise<void>;
+};
+
+export const toFlatCoordinates = (points: Point[]): number[] =>
   points.flatMap(({ x, y }) => [x, y]);
 
 const getTilePath = (tilesPath: string, tile: TileCoordinate): string =>
   `${tilesPath}/${MapTileUtils.getTileRelativePath(tile)}`;
+
+export const toBlockTileTargets = (
+  block: RenderBlock,
+  tilesPath: string,
+): RenderTileTarget[] =>
+  block.tiles.map(({ col, row, tile }) => ({
+    col,
+    row,
+    path: getTilePath(tilesPath, tile),
+  }));
 
 const toBatches = <T>(items: T[], batchSize: number): T[][] => {
   const batches: T[][] = [];
@@ -35,32 +58,29 @@ const toBatches = <T>(items: T[], batchSize: number): T[][] => {
   return batches;
 };
 
-const renderBlock = ({
+// file system path of the PDF file (no file:// scheme)
+export const createPdfBlockRenderer = ({
   pdfPath,
   pageIndex,
-  tilesPath,
-  block,
 }: {
   pdfPath: string;
   pageIndex: number;
-  tilesPath: string;
-  block: RenderBlock;
-}) =>
-  ImportedMapRenderer.renderTiles({
-    pdfPath,
-    pageIndex,
-    matrix: block.matrix,
-    clipPolygon: toFlatCoordinates(block.clipPolygon),
-    width: block.width,
-    height: block.height,
-    tileSize: GeoPdfTransform.TILE_SIZE,
-    jpegQuality: JPEG_QUALITY,
-    tiles: block.tiles.map(({ col, row, tile }) => ({
-      col,
-      row,
-      path: getTilePath(tilesPath, tile),
-    })),
-  });
+}): BlockRenderer => ({
+  renderBlock: (block, tilesPath) =>
+    ImportedMapRenderer.renderTiles({
+      pdfPath,
+      pageIndex,
+      matrix: block.matrix,
+      clipPolygon: toFlatCoordinates(block.clipPolygon),
+      width: block.width,
+      height: block.height,
+      tileSize: GeoPdfTransform.TILE_SIZE,
+      jpegQuality: JPEG_QUALITY,
+      tiles: toBlockTileTargets(block, tilesPath),
+    }),
+  // the native renderer keeps the PDF document open
+  close: () => ImportedMapRenderer.closeDocument().catch(() => {}),
+});
 
 const buildOverviewTiles = ({
   tilesPath,
@@ -89,7 +109,7 @@ const buildOverviewTiles = ({
   });
 
 const renderTiles = async ({
-  pdfPath,
+  blockRenderer,
   georeference,
   minZoom,
   maxZoom,
@@ -98,8 +118,7 @@ const renderTiles = async ({
   onTotal,
   onStepComplete,
 }: {
-  // file system path of the PDF file (no file:// scheme)
-  pdfPath: string;
+  blockRenderer: BlockRenderer;
   georeference: ImportedMapGeoreference;
   minZoom: number;
   maxZoom: number;
@@ -111,16 +130,6 @@ const renderTiles = async ({
   onStepComplete?: () => void;
 }): Promise<ImportedMapTilesRenderResult> => {
   const result: ImportedMapTilesRenderResult = { tilesCount: 0, sizeBytes: 0 };
-  const addResult = ({
-    written,
-    bytes,
-  }: {
-    written: number;
-    bytes: number;
-  }) => {
-    result.tilesCount += written;
-    result.sizeBytes += bytes;
-  };
   const blocks = GeoPdfTilePlanner.planRenderBlocks({
     georeference,
     zoom: maxZoom,
@@ -134,35 +143,32 @@ const renderTiles = async ({
     OVERVIEW_TILES_BATCH_SIZE,
   );
   onTotal?.(blocks.length + overviewBatches.length);
-  // one step at a time: the native renderer keeps a single PDF document open
+  // one step at a time: the source file is read by one renderer
   const runSequentially = <T>(
     items: T[],
-    step: (item: T) => Promise<{ written: number; bytes: number }>,
+    step: (item: T) => Promise<TilesWriteResult>,
   ) =>
     PromiseUtils.runWithConcurrency({
       items,
       concurrency: 1,
       shouldStop,
       task: async (item) => {
-        addResult(await step(item));
+        const { written, bytes } = await step(item);
+        result.tilesCount += written;
+        result.sizeBytes += bytes;
         onStepComplete?.();
       },
     });
   try {
     await runSequentially(blocks, (block) =>
-      renderBlock({
-        pdfPath,
-        pageIndex: georeference.pageIndex,
-        tilesPath,
-        block,
-      }),
+      blockRenderer.renderBlock(block, tilesPath),
     );
     await runSequentially(overviewBatches, (tiles) =>
       buildOverviewTiles({ tilesPath, tiles }),
     );
     return result;
   } finally {
-    await ImportedMapRenderer.closeDocument().catch(() => {});
+    await blockRenderer.close();
   }
 };
 
