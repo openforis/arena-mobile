@@ -2,7 +2,7 @@ export default {
   title: "Cartes hors ligne",
   tabs: {
     areas: "Zones téléchargées",
-    importedMaps: "Cartes PDF",
+    importedMaps: "Cartes importées",
   },
   description:
     "Téléchargez la carte de votre zone d'intérêt avant d'aller sur le terrain : elle sera disponible même sans connexion internet lors du dessin ou de l'affichage des attributs géographiques.",

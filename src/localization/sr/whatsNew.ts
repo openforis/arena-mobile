@@ -3,6 +3,11 @@ export default {
   since: "Od verzije {{version}}",
   dontShowAgain: "Ne prikazuj ponovo",
   items: {
+    geoTiffMaps: {
+      title: "GeoTIFF mape",
+      description:
+        "U odjeljku **Mape van mreže**, kartica **Uvezene mape** (ranije **PDF mape**) sada može da uveze i **GeoTIFF** fajlove, npr. ortofoto snimke ili skenirane listove karata: koristite **Uvezi mapu** i izaberite PDF ili GeoTIFF fajl.\n\nMapa se prikazuje preko osnovne mape na svim mapama u aplikaciji, čak i bez internet veze.",
+    },
     mapLayers: {
       title: "Mapa: oblasti od interesa i slojevi mape",
       description:
@@ -16,7 +21,7 @@ export default {
     offlineMaps: {
       title: "Mape van mreže",
       description:
-        "Otvorite **Mape van mreže** iz glavnog menija i pomoću **Dodaj oblast** preuzmite mapu oblasti od interesa prije odlaska na teren: biće dostupna i bez internet veze.\n\nNa kartici **PDF mape** možete uvesti i georeferencirane PDF mape: prikazuju se preko osnovne mape.",
+        "Otvorite **Mape van mreže** iz glavnog menija i pomoću **Dodaj oblast** preuzmite mapu oblasti od interesa prije odlaska na teren: biće dostupna i bez internet veze.\n\nNa kartici **Uvezene mape** možete uvesti i georeferencirane PDF ili GeoTIFF mape: prikazuju se preko osnovne mape.",
     },
     recordsMap: {
       title: "Zapisi na mapi",

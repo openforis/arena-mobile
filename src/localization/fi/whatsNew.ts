@@ -3,6 +3,11 @@ export default {
   since: "Versiosta {{version}} alkaen",
   dontShowAgain: "Älä näytä näitä uudelleen",
   items: {
+    geoTiffMaps: {
+      title: "GeoTIFF-kartat",
+      description:
+        "**Offline-kartat**-näkymän **Tuodut kartat**-välilehdelle (aiemmin **PDF-kartat**) voi nyt tuoda myös **GeoTIFF**-tiedostoja, esim. ortokuvia tai skannattuja karttalehtiä: valitse **Tuo kartta** ja valitse PDF- tai GeoTIFF-tiedosto.\n\nKartta näytetään pohjakartan päällä kaikissa sovelluksen kartoissa, myös ilman internetyhteyttä.",
+    },
     mapLayers: {
       title: "Kartta: kiinnostusalueet ja karttatasot",
       description:
@@ -16,7 +21,7 @@ export default {
     offlineMaps: {
       title: "Offline-kartat",
       description:
-        "Avaa **Offline-kartat** päävalikosta ja lataa kiinnostavan alueen kartta **Lisää alue** -toiminnolla ennen maastoon lähtöä: se on käytettävissä myös ilman internetyhteyttä.\n\n**PDF-kartat**-välilehdellä voit myös tuoda georeferoituja PDF-karttoja: ne näytetään pohjakartan päällä.",
+        "Avaa **Offline-kartat** päävalikosta ja lataa kiinnostavan alueen kartta **Lisää alue** -toiminnolla ennen maastoon lähtöä: se on käytettävissä myös ilman internetyhteyttä.\n\n**Tuodut kartat**-välilehdellä voit myös tuoda georeferoituja PDF- tai GeoTIFF-karttoja: ne näytetään pohjakartan päällä.",
     },
     recordsMap: {
       title: "Tietueet kartalla",

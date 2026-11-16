@@ -1,44 +1,48 @@
 export default {
-  title: "PDF-kartat",
+  title: "Tuodut kartat",
   description:
-    "Tuo karttoja tähän laitteeseen tallennetuista paikkatieto-PDF-tiedostoista (georeferoiduista): ne näytetään taustakartan päällä kaikissa sovelluksen kartoissa, myös ilman internetyhteyttä.",
+    "Tuo karttoja tähän laitteeseen tallennetuista paikkatieto-PDF- tai GeoTIFF-tiedostoista (georeferoiduista): ne näytetään taustakartan päällä kaikissa sovelluksen kartoissa, myös ilman internetyhteyttä.",
   rendererNotAvailable:
-    "Tämä sovelluksen versio ei tue PDF-karttoja: päivitä sovellus uusimpaan versioon",
-  importPdf: "Tuo PDF",
-  noMaps: "PDF-karttoja ei ole vielä tuotu",
+    "Tämä sovelluksen versio ei tue tuotuja karttoja: päivitä sovellus uusimpaan versioon",
+  importMap: "Tuo kartta",
+  noMaps: "Karttoja ei ole vielä tuotu",
   storage: {
-    used: "PDF-karttojen käyttämä tila:",
+    used: "Tuotujen karttojen käyttämä tila:",
   },
   opacity: "Peittävyys: {{value}} %",
-  hideBaseMap: "Vain PDF",
+  hideBaseMap: "Vain tuotu kartta",
   map: {
     fileName: "Tiedosto: {{fileName}}",
     page: "Sivu: {{page}}",
     zoomLevels: "Zoomaustasot: {{minZoom}} - {{maxZoom}}",
     tiles: "Karttaruudut: {{count}}",
     size: "Koko: {{size}} (PDF-tiedosto: {{sourceSize}})",
+    sizeTilesOnly: "Koko: {{size}}",
     datumWarning:
       "Kartan datum ei ole WGS84: kartta voi olla siirtynyt muutamia metrejä",
     visible: "Näytä kartoilla",
-    deleteConfirm: "Poistetaanko PDF-kartta '{{name}}'?",
-    notFound: "PDF-karttaa ei löytynyt",
-    viewerTitle: "PDF-kartta",
+    deleteConfirm: "Poistetaanko kartta '{{name}}'?",
+    notFound: "Karttaa ei löytynyt",
+    viewerTitle: "Tuotu kartta",
   },
   import: {
-    title: "Tuo PDF-kartta",
-    analyzing: "Luetaan PDF-tiedoston georeferointia...",
-    errorReading: "Virhe luettaessa PDF-tiedostoa: {{details}}",
+    title: "Tuo kartta",
+    analyzing: "Luetaan tiedoston georeferointia...",
+    errorReading: "Virhe luettaessa tiedostoa: {{details}}",
     notGeoreferenced:
-      "PDF-tiedostoa ei ole georeferoitu: se ei sisällä kartan maantieteellisiä koordinaatteja",
+      "Tiedostoa ei ole georeferoitu: se ei sisällä kartan maantieteellisiä koordinaatteja",
     unsupportedGeoreference:
       "Tämän PDF-tiedoston georeferointia (OGC GeoPDF -koodaus) ei vielä tueta",
+    unsupportedFile: "Tiedosto ei ole PDF- eikä GeoTIFF-tiedosto",
+    unsupportedGeoTiffFormat:
+      "Tämän GeoTIFF-tiedoston kuvia ei tueta ({{details}}): vain kuvia, joissa on 8 bittiä näytettä kohden (RGB, RGBA, harmaasävy tai väripaletti), voidaan tuoda",
     page: "Sivu",
     pageItem: "Sivu {{page}}",
     name: "Nimi",
     maxZoom: "Suurin zoomaus: {{value}}",
-    nativeZoom: "(PDF:n resoluutio: {{value}})",
+    nativeZoom: "(kartan resoluutio: {{value}})",
     maxZoomAboveNative:
-      "PDF:n resoluutiota suuremmat zoomaustasot näyttävät sumeilta",
+      "Kartan resoluutiota suuremmat zoomaustasot näyttävät sumeilta",
     estimate: "{{tiles}} karttaruutua · ~{{size}} (vapaa tila: {{freeSpace}})",
     estimateTooManyTiles:
       "{{tiles}} karttaruutua: liikaa (enintään {{maxTiles}}); pienennä suurinta zoomausta",
@@ -57,12 +61,12 @@ export default {
       error: "Esikatselu ei ole käytettävissä: {{details}}",
     },
     importButton: "Tuo",
-    jobTitle: "Tuodaan PDF-karttaa",
-    complete: "PDF-kartta tuotu ({{size}})",
-    error: "Virhe tuotaessa PDF-karttaa: {{details}}",
+    jobTitle: "Tuodaan karttaa",
+    complete: "Kartta tuotu ({{size}})",
+    error: "Virhe tuotaessa karttaa: {{details}}",
   },
   validation: {
     nameRequired: "Nimi on pakollinen",
-    nameDuplicate: "Nimi on jo toisen PDF-kartan käytössä",
+    nameDuplicate: "Nimi on jo toisen tuodun kartan käytössä",
   },
 };

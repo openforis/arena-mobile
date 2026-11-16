@@ -2,7 +2,7 @@ export default {
   title: "Offline-kartat",
   tabs: {
     areas: "Ladatut alueet",
-    importedMaps: "PDF-kartat",
+    importedMaps: "Tuodut kartat",
   },
   description:
     "Lataa kiinnostuksen kohteena olevan alueen kartta ennen maastoon lähtöä: se on käytettävissä myös ilman internetyhteyttä, kun piirrät tai tarkastelet maantieteellisiä attribuutteja.",
