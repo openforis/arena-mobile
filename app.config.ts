@@ -1,7 +1,7 @@
 import { ExpoConfig } from "expo/config";
 
 const appVersion = "2.11.4";
-const buildNumber = 159;
+const buildNumber = 160;
 
 const basePlugins: ExpoConfig["plugins"] = [
   ["expo-asset", { assets: ["assets"] }],
@@ -45,6 +45,10 @@ const basePlugins: ExpoConfig["plugins"] = [
         "android:largeHeap": "true",
       },
     },
+  ],
+  [
+    "./plugins/optionalAndroidFeatures",
+    ["android.hardware.screen.portrait", "android.hardware.wifi"],
   ],
   "./plugins/mapAppsQueries",
   "./plugins/httpUserAgent",
