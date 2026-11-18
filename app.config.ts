@@ -46,6 +46,10 @@ const basePlugins: ExpoConfig["plugins"] = [
       },
     },
   ],
+  [
+    "./plugins/optionalAndroidFeatures",
+    ["android.hardware.screen.portrait", "android.hardware.wifi"],
+  ],
   "./plugins/mapAppsQueries",
   "./plugins/httpUserAgent",
   "./plugins/androidNativeDebugSymbols",
