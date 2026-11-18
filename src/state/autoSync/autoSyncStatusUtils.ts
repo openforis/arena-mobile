@@ -1,10 +1,10 @@
-import { Surveys } from "@openforis/arena-core";
+import { Survey, Surveys } from "@openforis/arena-core";
 
 import { RecordSyncStatus } from "model";
 
 import { AutoSyncState, AutoSyncStatus } from "./types";
 
-// a focus-triggered re-check (see useRecordsList.checkAutoSyncStatusIfNeeded) is skipped if one
+// a focus-triggered re-check (see useRecordsListLoad.checkAutoSyncStatusIfNeeded) is skipped if one
 // already ran within this long and nothing local has changed since - avoids hammering the
 // server with a repeat check (and possible upload attempt) every time the user quickly bounces
 // between the records list and another screen
@@ -13,7 +13,7 @@ export const AUTO_SYNC_FOCUS_RECHECK_MIN_INTERVAL_MS = 60_000; // 1 minute
 // RecordService.syncRecordSummaries attaches syncStatus ad-hoc (no dedicated record-summary
 // type exists in the codebase yet); this is the minimal shape this function actually reads.
 // RecordSyncStatus is a plain object (not a TS enum), so its value type is derived this way.
-type RecordWithSyncStatus = {
+export type RecordWithSyncStatus = {
   syncStatus?: (typeof RecordSyncStatus)[keyof typeof RecordSyncStatus];
 };
 
@@ -27,7 +27,9 @@ export const sameRecordMergeableStatuses = new Set<string>([
 ]);
 
 // nothing to send, and a merge would bring back what the server deleted (needs the local sync date)
-export const hasOnlyRemoteChanges = (record: any): boolean =>
+export const hasOnlyRemoteChanges = (
+  record: RecordWithSyncStatus & { dateModifiedSynced?: string | null },
+): boolean =>
   record.syncStatus === RecordSyncStatus.modifiedRemotely &&
   !!record.dateModifiedSynced;
 
@@ -38,7 +40,7 @@ export const isAutoMergeAllowed = ({
   survey,
 }: {
   autoSyncEnabled: boolean;
-  survey: any;
+  survey: Survey;
 }): boolean =>
   autoSyncEnabled &&
   Surveys.isVisibleInMobile(survey) &&
@@ -112,7 +114,7 @@ export const computeAutoSyncStatus = ({
   autoSyncEnabled = false,
 }: {
   records: RecordWithSyncStatus[];
-  survey: any;
+  survey: Survey;
   autoSyncEnabled?: boolean;
 }): AutoSyncStatus => {
   const mergeWithSameKeysAllowed =
@@ -148,7 +150,7 @@ export const hasConflictingKeysWithMergeNotAllowed = ({
   survey,
 }: {
   records: RecordWithSyncStatus[];
-  survey: any;
+  survey: Survey;
 }): boolean =>
   !Surveys.isRecordsMergeWithSameKeysAllowed(survey) &&
   records.some(
@@ -156,7 +158,7 @@ export const hasConflictingKeysWithMergeNotAllowed = ({
   );
 
 // true if a check already completed recently enough (AUTO_SYNC_FOCUS_RECHECK_MIN_INTERVAL_MS)
-// and nothing local has changed since - see useRecordsList.checkAutoSyncStatusIfNeeded, the only
+// and nothing local has changed since - see useRecordsListLoad.checkAutoSyncStatusIfNeeded, the only
 // caller that needs this (the periodic background tick and "Sync now" have their own, different
 // throttling/semantics and must run regardless of this one)
 export const wasRecentlyCheckedWithNoNewLocalChanges = ({
@@ -172,9 +174,3 @@ export const wasRecentlyCheckedWithNoNewLocalChanges = ({
     new Date(lastLocalChangeAt).getTime() <= lastCheckedAtMs
   );
 };
-
-// RecordService.syncRecordSummaries and RecordsUploadJob both surface the original HTTP status
-// this way (see recordService.ts and remoteService.ts's withRetry) after a token refresh has
-// already been attempted and failed
-export const isAuthError = (error: any) =>
-  error?.status === 401 || error?.response?.status === 401;

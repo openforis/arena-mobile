@@ -1,7 +1,7 @@
 import { memo, useCallback } from "react";
 import { StyleSheet } from "react-native";
 
-import { NodeDefs } from "@openforis/arena-core";
+import { NodeDefEntity, NodeDefs } from "@openforis/arena-core";
 
 import { Button, VView } from "components";
 import {
@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
 });
 
 export const NodeMultipleEntityPreviewComponent = memo(
-  (props: NodeComponentProps) => {
+  (props: NodeComponentProps<NodeDefEntity>) => {
     const { nodeDef, parentNodeUuid } = props;
 
     log.debug(

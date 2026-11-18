@@ -35,7 +35,7 @@ import { revalidateRecords } from "./actionsRecordsRevalidate";
 import { ensureUserGroupReady } from "./actionsUserGroup";
 import { DataEntryActionsRecordSync } from "./actionsRecordSync";
 import { DataEntryActionsPreview } from "./actionsPreview";
-import { DataEntryActionTypes } from "./actionTypes";
+import { DataEntrySliceActions } from "./reducer";
 import { DataEntrySelectors } from "./selectors";
 import { serializeRecordUpdate } from "./recordUpdateQueue";
 import { selectRecordUpdaterParams } from "./recordUpdaterParams";
@@ -62,8 +62,6 @@ import {
   removeNodesFlags,
   updateRecord,
 } from "./recordUpdateHelpers";
-
-const { RECORD_SET } = DataEntryActionTypes;
 
 const { linkToRecordInPreviousCycle, unlinkFromRecordInPreviousCycle } =
   DataEntryActionsRecordPreviousCycle;
@@ -307,14 +305,15 @@ const editRecord =
         titleKey: "recordsList:continueEditing.title",
       }));
 
-    await dispatch({
-      type: RECORD_SET,
-      record,
-      recordEditLockAvailable: locked,
-      recordEditLocked:
-        locked && (!resumeLastEditedPage || lastEditedPage.locked),
-      recordPageSelectorMenuOpen: false,
-    });
+    await dispatch(
+      DataEntrySliceActions.recordSet({
+        record,
+        recordEditLockAvailable: locked,
+        recordEditLocked:
+          locked && (!resumeLastEditedPage || lastEditedPage.locked),
+        recordPageSelectorMenuOpen: false,
+      }),
+    );
 
     navigator.navigateToRecordEditor();
 

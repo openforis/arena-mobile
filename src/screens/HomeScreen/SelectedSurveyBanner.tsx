@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 import { StyleSheet } from "react-native";
 
 import { Surveys, UserGroup, Users } from "@openforis/arena-core";
@@ -12,7 +12,7 @@ import {
   ViewMoreText,
   VView,
 } from "components";
-import { useIsNetworkConnected } from "hooks";
+import { useAsyncValueEffect, useIsNetworkConnected } from "hooks";
 import { useTranslation } from "localization";
 import { SurveyStatus, UpdateStatus } from "model";
 import { RemoteConnectionSelectors, SurveySelectors } from "state";
@@ -45,6 +45,11 @@ const styles = StyleSheet.create({
 type SelectedSurveyBannerState = {
   updateStatus: UpdateStatus | SurveyStatus;
   errorKey?: string | null;
+};
+
+const initialState: SelectedSurveyBannerState = {
+  updateStatus: UpdateStatus.loading,
+  errorKey: null,
 };
 
 const determineUserGroupStatusKey = ({
@@ -88,50 +93,35 @@ export const SelectedSurveyBanner = () => {
   const userGroup = SurveySelectors.useCurrentSurveyUserGroup();
   const userGroupReady = SurveySelectors.useCurrentSurveyUserGroupReady();
 
-  const [state, setState] = useState({
-    updateStatus: UpdateStatus.loading,
-    errorKey: null,
-  } as SelectedSurveyBannerState);
+  const fetchStatus = useCallback(
+    () =>
+      determineSurveyUpdateStatus({
+        networkAvailable,
+        survey,
+        surveyName,
+        user,
+      }),
+    [networkAvailable, survey, surveyName, user],
+  );
+
+  const [state, setState] = useAsyncValueEffect<SelectedSurveyBannerState>(
+    fetchStatus,
+    [fetchStatus],
+    {
+      enabled: !!survey,
+      initialValue: initialState,
+      onError: (error) =>
+        log.error("Failed to determine survey update status:", error),
+    },
+  );
   const { updateStatus, errorKey } = state;
 
-  const fetchStatus = useCallback(async () => {
-    if (!survey) {
-      return;
-    }
-
-    return determineSurveyUpdateStatus({
-      networkAvailable,
-      survey,
-      surveyName,
-      user,
-    });
-  }, [networkAvailable, survey, surveyName, user]);
-
   const determineStatus = useCallback(async () => {
+    if (!survey) return;
     const nextState = await fetchStatus();
-
-    if (nextState) {
-      setState(nextState);
-    }
+    setState(nextState);
     return nextState;
-  }, [fetchStatus]);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    fetchStatus()
-      .then((nextState) => {
-        if (!cancelled && nextState) {
-          setState(nextState);
-        }
-      })
-      .catch((error) => {
-        log.error("Failed to determine survey update status:", error);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [fetchStatus]);
+  }, [fetchStatus, setState, survey]);
 
   if (!survey) return null;
 

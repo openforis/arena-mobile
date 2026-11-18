@@ -1,41 +1,54 @@
-import { Objects } from "@openforis/arena-core";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { ActionHandlers, StoreUtils } from "../storeUtils";
-
-import { RecordEditViewMode } from "model";
-import { SurveyActionTypes } from "../survey/actionTypes";
-import { SurveyOptionsActions } from "./actions";
+import { RecordEditViewMode } from "model/RecordEditViewMode";
+import { SurveySliceActions } from "../survey/reducer";
 import { SurveyOptionsState } from "./state";
 
 const initialState: SurveyOptionsState = {
   recordEditViewMode: RecordEditViewMode.form,
 };
 
-const actionHandlers: ActionHandlers<SurveyOptionsState> = {
-  [SurveyActionTypes.CURRENT_SURVEY_SET]: () => ({ ...initialState }),
-
-  [SurveyOptionsActions.RECORD_EDIT_VIEW_MODE_SET]: ({ state, action }) => ({
-    ...state,
-    recordEditViewMode: action.viewMode,
-  }),
-
-  [SurveyOptionsActions.ENTITY_LIST_COLUMNS_ALL_SET]: ({ state, action }) => ({
-    ...state,
-    entityListColumnsByEntityDefUuid: action.columnsByEntityDefUuid,
-  }),
-
-  [SurveyOptionsActions.ENTITY_LIST_COLUMNS_SET]: ({ state, action }) => {
-    const path = [
-      SurveyOptionsState.keys.entityListColumnsByEntityDefUuid,
-      action.entityDefUuid,
-    ];
-    return action.columns
-      ? Objects.assocPath({ obj: state, path, value: action.columns })
-      : Objects.dissocPath({ obj: state, path });
-  },
-};
-
-export const SurveyOptionsReducer = StoreUtils.exportReducer({
-  actionHandlers,
+const surveyOptionsSlice = createSlice({
+  name: "surveyOptions",
   initialState,
+  reducers: {
+    setRecordEditViewMode: (state, action: PayloadAction<string>) => {
+      state.recordEditViewMode = action.payload;
+    },
+    setAllEntityListColumns: (
+      state,
+      action: PayloadAction<Record<string, string[]> | undefined>,
+    ) => {
+      state.entityListColumnsByEntityDefUuid = action.payload;
+    },
+    // columns: null removes the entry (default columns)
+    setEntityListColumns: (
+      state,
+      action: PayloadAction<{
+        entityDefUuid: string;
+        columns: string[] | null;
+      }>,
+    ) => {
+      const { entityDefUuid, columns } = action.payload;
+      if (columns) {
+        state.entityListColumnsByEntityDefUuid ??= {};
+        state.entityListColumnsByEntityDefUuid[entityDefUuid] = columns;
+        return;
+      }
+      const columnsByEntityDefUuid = state.entityListColumnsByEntityDefUuid;
+      if (!columnsByEntityDefUuid) return;
+      delete columnsByEntityDefUuid[entityDefUuid];
+      if (Object.keys(columnsByEntityDefUuid).length === 0) {
+        delete state.entityListColumnsByEntityDefUuid;
+      }
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(SurveySliceActions.currentSurveySet, () => ({
+      ...initialState,
+    }));
+  },
 });
+
+export const SurveyOptionsSliceActions = surveyOptionsSlice.actions;
+export const SurveyOptionsReducer = surveyOptionsSlice.reducer;

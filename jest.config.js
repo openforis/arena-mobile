@@ -1,10 +1,11 @@
-// dependencies of @openforis/arena-core published as ES modules only
+// dependencies (of @openforis/arena-core, geotiff) published as ES modules only
 const esModules = [
   "@jsep-plugin/regex",
   "@turf/[^/]+",
   "change-case",
   "jsep",
   "n2words",
+  "quick-lru",
   "uuid",
   "wkt-parser",
 ].join("|");
@@ -12,6 +13,8 @@ const esModules = [
 module.exports = {
   testEnvironment: "node",
   modulePaths: ["<rootDir>/src"],
+  setupFiles: ["<rootDir>/jest/setup.js"],
+  clearMocks: true,
   moduleNameMapper: {
     [String.raw`\.(jpg|png)$`]: "<rootDir>/jest/fileStub.js",
   },

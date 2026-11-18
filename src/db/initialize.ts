@@ -1,4 +1,4 @@
-import SQLiteClient from "./SQLiteClient";
+import SQLiteClient, { DbMigration } from "./SQLiteClient";
 import { migration_001_base } from "./migrations/001";
 import { migration_002 } from "./migrations/002";
 import { migration_003_position_track } from "./migrations/003";
@@ -10,7 +10,7 @@ import { migration_008_record_validation_counts } from "./migrations/008";
 
 const dbName = "arena_mobile.db";
 const debug = true;
-export const dbMigrations: ((client: SQLiteClient) => Promise<void>)[] = [
+export const dbMigrations: DbMigration[] = [
   migration_001_base,
   migration_002,
   migration_003_position_track,

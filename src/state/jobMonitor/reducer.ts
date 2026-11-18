@@ -1,7 +1,6 @@
 import { JobStatus } from "@openforis/arena-core";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { ActionHandlers, StoreUtils } from "../storeUtils";
-import { JobMonitorActions } from "./actions";
 import type { JobMonitorState } from "./types";
 
 const initialState: JobMonitorState = {
@@ -23,22 +22,21 @@ const initialState: JobMonitorState = {
   etaSeconds: null,
 };
 
-const actionHandlers: ActionHandlers<JobMonitorState> = {
-  [JobMonitorActions.JOB_MONITOR_START]: ({ action }) => ({
-    ...initialState,
-    ...action.payload,
-    isOpen: true,
-  }),
-  [JobMonitorActions.JOB_MONITOR_UPDATE]: ({ state, action }) => ({
-    ...state,
-    ...action.payload,
-  }),
-  [JobMonitorActions.JOB_MONITOR_END]: () => ({
-    ...initialState,
-  }),
-};
-
-export const JobMonitorReducer = StoreUtils.exportReducer({
-  actionHandlers,
+const jobMonitorSlice = createSlice({
+  name: "jobMonitor",
   initialState,
+  reducers: {
+    start: (_state, action: PayloadAction<Partial<JobMonitorState>>) => ({
+      ...initialState,
+      ...action.payload,
+      isOpen: true,
+    }),
+    update: (state, action: PayloadAction<Partial<JobMonitorState>>) => {
+      Object.assign(state, action.payload);
+    },
+    end: () => initialState,
+  },
 });
+
+export const JobMonitorSliceActions = jobMonitorSlice.actions;
+export const JobMonitorReducer = jobMonitorSlice.reducer;

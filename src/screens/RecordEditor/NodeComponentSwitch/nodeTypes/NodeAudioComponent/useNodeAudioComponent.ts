@@ -12,7 +12,6 @@ import { useToast } from "hooks";
 import { useTranslation } from "localization";
 import { useNodeComponentLocalState } from "screens/RecordEditor/useNodeComponentLocalState";
 import { RecordFileService } from "service/recordFileService";
-import { useConfirm } from "state/confirm";
 import { SurveySelectors } from "state/survey/selectors";
 import { Files, Permissions } from "utils";
 
@@ -22,14 +21,18 @@ const extractFileNameFromAsset = (
   return asset.name ?? Files.getNameFromUri(asset.uri);
 };
 
-export const useNodeAudioComponent = ({ nodeUuid }: any) => {
+export const useNodeAudioComponent = ({ nodeUuid }: { nodeUuid?: string }) => {
   const { t } = useTranslation();
   const toaster = useToast();
-  const confirm = useConfirm();
   const surveyId = SurveySelectors.useCurrentSurveyId();
 
-  const { value, updateNodeValue } = useNodeComponentLocalState({
+  const {
+    value,
+    updateNodeValue,
+    onClearPress: onDeletePress,
+  } = useNodeComponentLocalState({
     nodeUuid,
+    clearConfirmMessageKey: "dataEntry:fileAttribute.deleteConfirmMessage",
   });
 
   const audioRecorder = useAudioRecorder({
@@ -170,16 +173,6 @@ export const useNodeAudioComponent = ({ nodeUuid }: any) => {
       });
     }
   }, [audioRecorder, toaster, updateNodeValue, t]);
-
-  const onDeletePress = useCallback(async () => {
-    if (
-      await confirm({
-        messageKey: "dataEntry:fileAttribute.deleteConfirmMessage",
-      })
-    ) {
-      await updateNodeValue({ value: null });
-    }
-  }, [confirm, updateNodeValue]);
 
   return {
     audioRecorder,

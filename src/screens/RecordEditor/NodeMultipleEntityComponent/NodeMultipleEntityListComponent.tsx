@@ -22,11 +22,11 @@ import {
   SurveyOptionsSelectors,
   SurveySelectors,
   useAppDispatch,
-  useConfirm,
 } from "state";
 import { ArrayUtils, log } from "utils";
 
 import { NewNodeButton } from "../NewNodeButton";
+import { useConfirmDeleteNodes } from "../useConfirmDeleteNodes";
 import { EntityListColumnsDialog } from "./EntityListColumnsDialog";
 import { EntityRowsCache } from "./entityRowsCache";
 import { NodeValidationIcon } from "../NodeValidationIcon";
@@ -57,7 +57,7 @@ export const NodeMultipleEntityListComponent = (
 
   const dispatch = useAppDispatch();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
-  const confirm = useConfirm();
+  const confirmDeleteNodes = useConfirmDeleteNodes();
   const { t } = useTranslation();
   const [sort, setSort] = useState(undefined as SortObject | undefined);
   const [columnsDialogVisible, setColumnsDialogVisible] = useState(false);
@@ -175,18 +175,12 @@ export const NodeMultipleEntityListComponent = (
   );
 
   const onDeleteSelectedNodeUuids = useCallback(
-    async (nodeUuids: any) => {
-      if (
-        await confirm({
-          messageKey: "dataEntry:confirmDeleteSelectedItems.message",
-        })
-      ) {
-        dispatch(DataEntryActions.deleteNodes(nodeUuids));
-        return true;
-      }
-      return false;
-    },
-    [confirm, dispatch],
+    (nodeUuids: string[]) =>
+      confirmDeleteNodes({
+        messageKey: "dataEntry:confirmDeleteSelectedItems.message",
+        nodeUuids,
+      }),
+    [confirmDeleteNodes],
   );
 
   const onSortChange = useCallback((sortNext: SortObject) => {

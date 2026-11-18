@@ -1,36 +1,29 @@
+import { Survey } from "@openforis/arena-core";
+
 import {
+  RecordWithSyncStatus,
   computeAutoSyncStatus,
   hasConflictingKeysWithMergeNotAllowed,
 } from "./autoSyncStatusUtils";
+import { AutoSyncSliceActions } from "./reducer";
 import { AutoSyncStatus } from "./types";
 import type { AppDispatch, AppGetState } from "../store";
-
-const AUTO_SYNC_CHECK_START = "AUTO_SYNC_CHECK_START";
-const AUTO_SYNC_CHECK_END = "AUTO_SYNC_CHECK_END";
-const AUTO_SYNC_CHECK_ABORTED = "AUTO_SYNC_CHECK_ABORTED";
-const AUTO_SYNC_AUTH_ERROR = "AUTO_SYNC_AUTH_ERROR";
-const AUTO_SYNC_CHECK_ERROR = "AUTO_SYNC_CHECK_ERROR";
-const AUTO_SYNC_RESET = "AUTO_SYNC_RESET";
-const AUTO_SYNC_STATUS_MESSAGE_SET = "AUTO_SYNC_STATUS_MESSAGE_SET";
-const AUTO_SYNC_STATUS_MARKED_PENDING = "AUTO_SYNC_STATUS_MARKED_PENDING";
-const AUTO_SYNC_DIALOG_OPEN_SET = "AUTO_SYNC_DIALOG_OPEN_SET";
 
 // dispatched whenever records are about to be checked against the server (a manual "check
 // status"/"send data" or a background auto-sync tick), so any screen can show a "checking..."
 // state; also clears any message left over from the previous check (see setStatusMessage)
-const checkStart = () => ({ type: AUTO_SYNC_CHECK_START });
+const checkStart = AutoSyncSliceActions.checkStart;
 
 // dispatched once fresh sync statuses have been fetched, so any screen can show an up to date
 // synced/pending/error summary without re-fetching it itself; the survey is needed to tell
 // whether records with conflicting keys can be merged, the auto-sync setting to tell whether
 // records modified on the server too get merged automatically (see computeAutoSyncStatus)
 const checkEnd =
-  ({ records, survey }: { records: any[]; survey: any }) =>
+  ({ records, survey }: { records: RecordWithSyncStatus[]; survey: Survey }) =>
   (dispatch: AppDispatch, getState: AppGetState) => {
     const autoSyncEnabled = !!getState().settings?.autoSyncEnabled;
-    dispatch({
-      type: AUTO_SYNC_CHECK_END,
-      payload: {
+    dispatch(
+      AutoSyncSliceActions.checkEnd({
         status: computeAutoSyncStatus({ records, survey, autoSyncEnabled }),
         conflictingKeysWithMergeNotAllowed:
           hasConflictingKeysWithMergeNotAllowed({
@@ -38,51 +31,42 @@ const checkEnd =
             survey,
           }),
         lastCheckedAt: new Date().toISOString(),
-      },
-    });
+      }),
+    );
   };
 
 // dispatched when a check couldn't even start (e.g. not logged in - already surfaced through
 // its own dialog by the caller): clears the "checking" flag without claiming to know the up to
 // date status, and without changing the status shown - see checkError for a check that did run
 // but failed
-const checkAborted = () => ({ type: AUTO_SYNC_CHECK_ABORTED });
+const checkAborted = AutoSyncSliceActions.checkAborted;
 
 // dispatched when a background auto-sync tick fails because its stored credentials are no
 // longer valid (e.g. an expired session): further ticks are skipped (see runAutoSync) until the
 // user logs in again, which resets this (see RemoteConnectionActions' login/loginAndSetUser,
 // which dispatch AutoSyncActions.reset() on success)
-const authError = () => ({
-  type: AUTO_SYNC_AUTH_ERROR,
-  payload: { status: AutoSyncStatus.authError },
-});
+const authError = AutoSyncSliceActions.authError;
 
 // dispatched when a status check runs but fails for a reason other than an expired session (e.g.
 // a server error): shown through the sync status icon instead of a blocking popup - avoids
 // popping the same error dialog again every time an automatic re-check is triggered (screen
 // focus, cycle change, ...). Further automatic checks are skipped (see
-// useRecordsList.checkAutoSyncStatusIfNeeded) until the user retries manually (any explicit
+// useRecordsListLoad.checkAutoSyncStatusIfNeeded) until the user retries manually (any explicit
 // "check status"/"send data" action dispatches checkStart/checkEnd/checkError again regardless)
-const checkError = () => ({
-  type: AUTO_SYNC_CHECK_ERROR,
-  payload: { status: AutoSyncStatus.checkError },
-});
+const checkError = AutoSyncSliceActions.checkError;
 
 // dispatched whenever the logged-in user (re)sets, e.g. after a fresh login: drops any
 // previously remembered auth error so the next tick gets a fresh attempt instead of being
 // skipped forever (see runAutoSync)
-const reset = () => ({ type: AUTO_SYNC_RESET });
+const reset = AutoSyncSliceActions.reset;
 
 // a short, supplementary note about the outcome of the last completed tick/check - shown
 // alongside (not instead of) the main status text, e.g. "nothing to send right now" after a
 // check that found no record safe to auto-upload. Cleared by the next checkStart.
 const setStatusMessage = (
   textKey: string,
-  textParams?: Record<string, any>,
-) => ({
-  type: AUTO_SYNC_STATUS_MESSAGE_SET,
-  payload: { message: { textKey, textParams } },
-});
+  textParams?: Record<string, unknown>,
+) => AutoSyncSliceActions.setStatusMessage({ textKey, textParams });
 
 // dispatched right after a record is created or its content changes locally, so the status
 // icon stops claiming "synced" the instant there's something new to upload, instead of only
@@ -100,31 +84,16 @@ const markPending = () => (dispatch: AppDispatch, getState: AppGetState) => {
   ) {
     return;
   }
-  dispatch({
-    type: AUTO_SYNC_STATUS_MARKED_PENDING,
-    payload: {
-      status: AutoSyncStatus.pending,
+  dispatch(
+    AutoSyncSliceActions.markPending({
       lastLocalChangeAt: new Date().toISOString(),
-    },
-  });
+    }),
+  );
 };
 
-const setDialogOpen = (dialogOpen: boolean) => ({
-  type: AUTO_SYNC_DIALOG_OPEN_SET,
-  payload: { dialogOpen },
-});
+const setDialogOpen = AutoSyncSliceActions.setDialogOpen;
 
 export const AutoSyncActions = {
-  AUTO_SYNC_CHECK_START,
-  AUTO_SYNC_CHECK_END,
-  AUTO_SYNC_CHECK_ABORTED,
-  AUTO_SYNC_AUTH_ERROR,
-  AUTO_SYNC_CHECK_ERROR,
-  AUTO_SYNC_RESET,
-  AUTO_SYNC_STATUS_MESSAGE_SET,
-  AUTO_SYNC_STATUS_MARKED_PENDING,
-  AUTO_SYNC_DIALOG_OPEN_SET,
-
   checkStart,
   checkEnd,
   checkAborted,

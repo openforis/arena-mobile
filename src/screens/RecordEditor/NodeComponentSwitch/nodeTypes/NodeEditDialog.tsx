@@ -1,11 +1,13 @@
 import * as React from "react";
 
+import { NodeDef } from "@openforis/arena-core";
+
 import { CloseIconButton, Modal } from "components";
 
 import { NodeDefFormItem } from "screens/RecordEditor/NodeDefFormItem";
 
 type Props = {
-  nodeDef: any;
+  nodeDef: NodeDef<any>;
   onDismiss: () => void;
   parentNodeUuid?: string;
 };

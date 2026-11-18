@@ -3,6 +3,11 @@ export default {
   since: "Seit Version {{version}}",
   dontShowAgain: "Nicht mehr anzeigen",
   items: {
+    geoTiffMaps: {
+      title: "GeoTIFF-Karten",
+      description:
+        "In **Offline-Karten** kann der Tab **Importierte Karten** (früher **PDF-Karten**) jetzt auch **GeoTIFF**-Dateien importieren, z. B. Orthofotos oder gescannte Kartenblätter: Verwende **Karte importieren** und wähle eine PDF- oder GeoTIFF-Datei.\n\nDie Karte wird in allen Karten der App über der Basiskarte angezeigt, auch ohne Internetverbindung.",
+    },
     mapLayers: {
       title: "Karte: Interessengebiete und Kartenebenen",
       description:
@@ -16,7 +21,7 @@ export default {
     offlineMaps: {
       title: "Offline-Karten",
       description:
-        "Öffne **Offline-Karten** im Hauptmenü und lade mit **Gebiet hinzufügen** die Karte deines Interessengebiets herunter, bevor du ins Feld gehst: Sie ist auch ohne Internetverbindung verfügbar.\n\nIm Tab **PDF-Karten** kannst du außerdem georeferenzierte PDF-Karten importieren: Sie werden über der Basiskarte angezeigt.",
+        "Öffne **Offline-Karten** im Hauptmenü und lade mit **Gebiet hinzufügen** die Karte deines Interessengebiets herunter, bevor du ins Feld gehst: Sie ist auch ohne Internetverbindung verfügbar.\n\nIm Tab **Importierte Karten** kannst du außerdem georeferenzierte PDF- oder GeoTIFF-Karten importieren: Sie werden über der Basiskarte angezeigt.",
     },
     recordsMap: {
       title: "Datensätze auf der Karte",

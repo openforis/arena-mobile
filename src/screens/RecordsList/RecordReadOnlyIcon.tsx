@@ -3,9 +3,13 @@ import React from "react";
 import { DataVisualizerCellProps, Icon, Tooltip } from "components";
 import { RemoteConnectionSelectors } from "state";
 
+import type { RecordListItem } from "./recordsVisualizerFields";
+
 // records of other user groups (they can be viewed or cloned, but not edited or uploaded)
 // or of a survey where the user role cannot edit records (e.g. survey guest)
-export const RecordReadOnlyIcon = ({ item }: DataVisualizerCellProps) => {
+export const RecordReadOnlyIcon = ({
+  item,
+}: DataVisualizerCellProps<RecordListItem>) => {
   const canCreateRecords =
     RemoteConnectionSelectors.useLoggedInUserCanCreateRecords();
   if (!item.readOnly) return null;

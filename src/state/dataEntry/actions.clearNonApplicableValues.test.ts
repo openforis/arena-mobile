@@ -17,6 +17,7 @@ import { ConfirmUtils } from "../confirm";
 import { RecordService } from "service/recordService";
 import { DataEntrySelectors } from "./selectors";
 import { DataEntryActions } from "./actions";
+import { DataEntrySliceActions } from "./reducer";
 
 // isolate the actions from native modules, storage and UI: only arena-core runs for real
 jest.mock("react-native", () => ({ Keyboard: { dismiss: jest.fn() } }));
@@ -192,10 +193,6 @@ const getStoredRecord = (): ArenaRecord =>
   updateRecordMock.mock.calls[0][0].record;
 
 describe("DataEntryActions: clear values of attributes becoming non-applicable", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   describe("deleteNodes", () => {
     const deleteLastIndividual = async () => {
       const survey = await buildSurvey("count(individual) >= 5");
@@ -258,8 +255,8 @@ describe("DataEntryActions: clear values of attributes becoming non-applicable",
       await dispatch(DataEntryActions.deleteNodes([individualToDelete.uuid]));
 
       expect(updateRecordMock).toHaveBeenCalledTimes(1);
-      const recordSetDispatched = dispatch.mock.calls.some(
-        ([action]: any[]) => action?.type === "RECORD_SET",
+      const recordSetDispatched = dispatch.mock.calls.some(([action]: any[]) =>
+        DataEntrySliceActions.recordSet.match(action),
       );
       expect(recordSetDispatched).toBe(false);
     });

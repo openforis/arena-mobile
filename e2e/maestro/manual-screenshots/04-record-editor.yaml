@@ -13,14 +13,13 @@ appId: ${APP_ID}
       NAME: record-new
 
 # closest sampling point (Test Point 1)
-- setLocation:
-    latitude: 3.9768
-    longitude: 42.10738
+- runFlow: ../common/set-location-near-test-point-1.yaml
 - tapOn: ${output.t.findClosestSamplingPoint}
-- runFlow:
-    file: _wait.yaml
-    env:
-      SECONDS: 8
+# the closest item is listed once the location is fetched
+- extendedWaitUntil:
+    visible: ".*Test Point 1.*"
+    timeout: 20000
+    optional: true
 - runFlow:
     file: _shot.yaml
     env:
@@ -86,6 +85,7 @@ appId: ${APP_ID}
     file: _shot.yaml
     env:
       NAME: coordinate-getting-location
+# fixed wait: the location accuracy keeps improving and the value may be scrolled out of view
 - runFlow:
     file: _wait.yaml
     env:
@@ -96,6 +96,7 @@ appId: ${APP_ID}
       NAME: coordinate
 - tapOn:
     id: "coordinate-navigate-to-target-button"
+# fixed wait: compass and distance are updated continuously, no element marks them as ready
 - runFlow:
     file: _wait.yaml
     env:

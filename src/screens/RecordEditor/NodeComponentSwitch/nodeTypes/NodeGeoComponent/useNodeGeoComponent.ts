@@ -6,7 +6,7 @@ import {
 } from "components/GeoPolygonEditor/polygonEditorUtils";
 import MapView from "react-native-maps";
 
-import { Records } from "@openforis/arena-core";
+import { NodeDefGeo, Records } from "@openforis/arena-core";
 
 import { useTranslation } from "localization";
 import { LatLng, PositionTracks, RecordUtils } from "model";
@@ -17,7 +17,6 @@ import {
   SurveySelectors,
   store,
   useAppDispatch,
-  useConfirm,
 } from "state";
 import { Files, GeoUtils } from "utils";
 
@@ -61,14 +60,19 @@ const nodeValueToPolygon = (nodeValue: any): MapPolygonExtendedProps | null => {
 export const useNodeGeoComponent = ({
   nodeDef,
   nodeUuid,
-}: NodeComponentProps) => {
+}: NodeComponentProps<NodeDefGeo>) => {
   const dispatch = useAppDispatch();
-  const confirm = useConfirm();
   const { t } = useTranslation();
   const survey = SurveySelectors.useCurrentSurvey();
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
 
-  const { value: nodeValue } = useNodeComponentLocalState({ nodeUuid });
+  const [editable, setEditable] = useState(false);
+  const onClearConfirmed = useCallback(() => setEditable(false), []);
+
+  const { value: nodeValue, onClearPress } = useNodeComponentLocalState({
+    nodeUuid,
+    onClearConfirmed,
+  });
 
   const nodeValuePolygons = useMemo(() => {
     const polygon = nodeValueToPolygon(nodeValue);
@@ -76,8 +80,6 @@ export const useNodeGeoComponent = ({
   }, [nodeValue]);
 
   const mapRef = useRef<MapView | null>(null);
-
-  const [editable, setEditable] = useState(false);
 
   const initialRegion = useMemo(() => {
     const polygon = nodeValueToPolygon(nodeValue);
@@ -116,21 +118,6 @@ export const useNodeGeoComponent = ({
   const onCancelDrawing = useCallback(() => {
     setEditable(false);
   }, []);
-
-  const onClearPress = useCallback(async () => {
-    if (
-      await confirm({
-        messageKey: "dataEntry:confirmDeleteValue.message",
-      })
-    ) {
-      setEditable(false);
-      if (nodeUuid) {
-        dispatch(
-          DataEntryActions.updateAttribute({ uuid: nodeUuid, value: null }),
-        );
-      }
-    }
-  }, [confirm, dispatch, nodeUuid]);
 
   const onDownloadGeoJsonPress = useCallback(async () => {
     if (!nodeUuid || !nodeValue || !survey) return;

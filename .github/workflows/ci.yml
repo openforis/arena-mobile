@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: yarn
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        # no dependency needs lifecycle (install/postinstall) scripts: skip them
+        run: yarn install --immutable --mode=skip-build
+
+      - name: Lint
+        run: yarn lint:check
+
+      - name: Format check
+        run: yarn format:check
+
+      - name: Type check
+        run: yarn test:types
+
+      - name: Unit tests
+        run: yarn test --ci

@@ -62,6 +62,14 @@ install_app() {
   adb install -r -t -g "${APK_PATH:-android/app/build/outputs/apk/debug/app-debug.apk}"
 }
 
+# files picked by the tests with the system file picker (Maestro addMedia supports only photos and videos)
+push_test_files() {
+  echo "Copying the test files to the Download folder..."
+  adb push e2e/maestro/assets/geotiff-test-map.tif /sdcard/Download/geotiff-test-map.tif
+  # index the file so that the file picker lists it
+  adb shell content call --method scan_volume --uri content://media --arg external_primary || true
+}
+
 run_maestro() {
   echo "Running Maestro..."
   # Give the OS a short window after installation to settle
@@ -97,6 +105,7 @@ recover_device() {
 }
 
 install_app
+push_test_files
 
 for attempt in $(seq 0 "$MAX_DEVICE_OFFLINE_RETRIES"); do
   if [[ "$attempt" -gt 0 ]]; then
@@ -104,6 +113,7 @@ for attempt in $(seq 0 "$MAX_DEVICE_OFFLINE_RETRIES"); do
     recover_device
     adb uninstall "$APP_ID" || true
     install_app
+    push_test_files
   fi
   if run_maestro; then
     exit 0

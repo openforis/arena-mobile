@@ -1,7 +1,5 @@
-import * as Keychain from "react-native-keychain";
-
-import { AsyncStorageUtils } from "./asyncStorage/AsyncStorageUtils";
 import { asyncStorageKeys } from "./asyncStorage/asyncStorageKeys";
+import { StoredObject } from "./asyncStorage/StoredItem";
 import { API } from "./api";
 import { GpsSourceSetting } from "model/GpsSourceSettings";
 import { ThemesSettings } from "model/Themes";
@@ -9,7 +7,6 @@ import { LanguageConstants } from "model/LanguageSettings";
 import { MapLayers, MapProvider } from "model/MapLayers";
 import { SettingKey, SettingsObject } from "model/SettingsModel";
 import { AMConstants } from "utils/AMConstants";
-import { PromiseUtils } from "utils/PromiseUtils";
 import { SystemUtils } from "utils/SystemUtils";
 
 const defaultSettings: Partial<SettingsObject> = {
@@ -38,8 +35,6 @@ const defaultSettings: Partial<SettingsObject> = {
   theme: ThemesSettings.auto,
 };
 
-let INSTANCE: SettingsObject | null = null;
-
 type SystemSettingApplier = ({
   key,
   value,
@@ -56,14 +51,36 @@ const systemSettingApplierByKey: Partial<
     SystemUtils.setKeepScreenAwake(value),
 };
 
-const fetchSettings = async (): Promise<SettingsObject> =>
-  (INSTANCE ??= {
-    ...defaultSettings,
-    ...(await AsyncStorageUtils.getItem(asyncStorageKeys.settings)),
-  });
+// key of the imported maps up to version 2.11.3 (PDF maps only)
+const LEGACY_IMPORTED_MAPS_KEY = "pdfMaps";
 
-// read-modify-write updates run one at a time, otherwise the last write would drop the others
-const enqueueUpdate = PromiseUtils.createSerialQueue();
+const migrateStoredSettings = (
+  stored: SettingsObject | null,
+): SettingsObject | null => {
+  if (!stored || !(LEGACY_IMPORTED_MAPS_KEY in stored)) return stored;
+  const { [LEGACY_IMPORTED_MAPS_KEY]: legacyImportedMaps, ...rest } =
+    stored as SettingsObject & Record<string, unknown>;
+  return {
+    ...rest,
+    importedMaps:
+      rest.importedMaps ??
+      (legacyImportedMaps as SettingsObject["importedMaps"]),
+  };
+};
+
+// settings stored by previous versions are migrated when read (and saved at the next update)
+class SettingsStore extends StoredObject<SettingsObject> {
+  protected override fromStored(stored: SettingsObject | null): SettingsObject {
+    return super.fromStored(migrateStoredSettings(stored));
+  }
+}
+
+const settingsStore = new SettingsStore(
+  asyncStorageKeys.settings,
+  defaultSettings as SettingsObject,
+);
+
+const fetchSettings = (): Promise<SettingsObject> => settingsStore.fetch();
 
 const updateSetting = async ({
   key,
@@ -72,28 +89,18 @@ const updateSetting = async ({
   key: SettingKey;
   value: any;
 }): Promise<SettingsObject> => {
-  const settingsNext = await enqueueUpdate(async () => {
-    const settingsPrev = await fetchSettings();
-    const next = { ...settingsPrev, [key]: value };
-    await saveSettings(next);
-    return next;
-  });
+  const settingsNext = await settingsStore.updateValue(key, value);
   await systemSettingApplierByKey[key]?.({ key, value });
   return settingsNext;
 };
 
-const saveSettings = async (settings: SettingsObject) => {
-  await AsyncStorageUtils.setItem(asyncStorageKeys.settings, settings);
-  INSTANCE = settings;
-};
+// prefer it to fetchSettings + saveSettings: it runs after the pending updates, so none gets lost
+const updateSettings = (
+  updateFn: (settings: SettingsObject) => SettingsObject,
+): Promise<SettingsObject> => settingsStore.update(updateFn);
 
-const getCredentials = (server: any) => Keychain.getInternetCredentials(server);
-
-const setCredentials = (server: any, email: any, password: any) =>
-  Keychain.setInternetCredentials(server, email, password);
-
-const resetCredentials = (server: string) =>
-  Keychain.resetInternetCredentials({ server });
+const saveSettings = (settings: SettingsObject): Promise<SettingsObject> =>
+  settingsStore.save(settings);
 
 const testServerUrl = async (serverUrl: any) => {
   try {
@@ -108,11 +115,8 @@ const testServerUrl = async (serverUrl: any) => {
 export const SettingsService = {
   fetchSettings,
   updateSetting,
+  updateSettings,
   saveSettings,
-
-  getCredentials,
-  setCredentials,
-  resetCredentials,
 
   testServerUrl,
 };

@@ -25,18 +25,11 @@ import { SurveySelectors } from "../survey";
 import { ToastActions } from "../toast";
 
 import { RemoteConnectionSelectors } from "state/remoteConnection";
-import { DataEntryActionTypes } from "./actionTypes";
+import { DataEntrySliceActions } from "./reducer";
 import { fetchRecordsFromServer } from "./actionsRecordsImport";
 import { DataEntrySelectors } from "./selectors";
 import { AreaOfInterestProviderDefault } from "service/areaOfInterestProvider";
 import type { AppDispatch, AppGetState } from "../store";
-
-const {
-  PREVIOUS_CYCLE_PAGE_ENTITY_SET,
-  RECORD_PREVIOUS_CYCLE_LOAD,
-  RECORD_PREVIOUS_CYCLE_SET,
-  RECORD_PREVIOUS_CYCLE_RESET,
-} = DataEntryActionTypes;
 
 const updateCurrentRecordWithPrevCycleValues = async ({
   dispatch,
@@ -71,10 +64,9 @@ const updateCurrentRecordWithPrevCycleValues = async ({
       timezoneOffset: Dates.getTimezoneOffset(),
       sideEffect: false,
     });
-  await dispatch({
-    type: DataEntryActionTypes.RECORD_SET,
-    record: currentCycleRecordUpdated,
-  });
+  await dispatch(
+    DataEntrySliceActions.recordSet({ record: currentCycleRecordUpdated }),
+  );
 };
 
 const _fetchRecordFromPreviousCycleAndLinkItInternal = async ({
@@ -90,7 +82,7 @@ const _fetchRecordFromPreviousCycleAndLinkItInternal = async ({
   currentCycleRecord: ArenaRecord;
   recordId: number;
 }) => {
-  dispatch({ type: RECORD_PREVIOUS_CYCLE_LOAD, loading: true });
+  dispatch(DataEntrySliceActions.previousCycleRecordLoadingSet(true));
 
   const recordSummary = await RecordService.fetchRecordSummary({
     survey,
@@ -121,14 +113,13 @@ const _fetchRecordFromPreviousCycleAndLinkItInternal = async ({
         prevCycleRecord,
       });
     }
-    await dispatch({
-      type: RECORD_PREVIOUS_CYCLE_SET,
-      record: prevCycleRecord,
-    });
+    await dispatch(
+      DataEntrySliceActions.previousCycleRecordSet(prevCycleRecord),
+    );
     dispatch(ToastActions.show("dataEntry:recordInPreviousCycle.foundMessage"));
     dispatch(updatePreviousCyclePageEntity);
   }
-  dispatch({ type: RECORD_PREVIOUS_CYCLE_LOAD, loading: false });
+  dispatch(DataEntrySliceActions.previousCycleRecordLoadingSet(false));
   return loaded;
 };
 
@@ -151,7 +142,7 @@ const _fetchRecordFromPreviousCycleAndLinkIt = async ({
   prevCycleRecordIds: number[];
 } | null> => {
   try {
-    dispatch({ type: RECORD_PREVIOUS_CYCLE_LOAD, loading: true });
+    dispatch(DataEntrySliceActions.previousCycleRecordLoadingSet(true));
 
     const prevCycleString = Cycles.labelFunction(prevCycle);
 
@@ -232,7 +223,7 @@ const _fetchRecordFromPreviousCycleAndLinkIt = async ({
     log.error(error);
     return null;
   } finally {
-    dispatch({ type: RECORD_PREVIOUS_CYCLE_LOAD, loading: false });
+    dispatch(DataEntrySliceActions.previousCycleRecordLoadingSet(false));
   }
 };
 
@@ -312,15 +303,17 @@ const linkToRecordInPreviousCycle =
         await fetchRecordFromPreviousCycleInternal();
       }
     } catch (error: any) {
-      const details = `${error.toString()} - ${error.stack}`;
-      ToastActions.show("dataEntry:recordInPreviousCycleFetchError", {
-        details,
-      });
+      log.error(`${error} - ${error?.stack}`);
+      dispatch(
+        ToastActions.show("dataEntry:recordInPreviousCycle.fetchError", {
+          details: String(error),
+        }),
+      );
     }
   };
 
 const unlinkFromRecordInPreviousCycle = () => (dispatch: AppDispatch) => {
-  dispatch({ type: RECORD_PREVIOUS_CYCLE_RESET });
+  dispatch(DataEntrySliceActions.previousCycleRecordReset());
 };
 
 const updatePreviousCyclePageEntity = (
@@ -340,13 +333,12 @@ const updatePreviousCyclePageEntity = (
       entityUuid,
     })(state);
 
-  dispatch({
-    type: PREVIOUS_CYCLE_PAGE_ENTITY_SET,
-    payload: {
+  dispatch(
+    DataEntrySliceActions.previousCyclePageEntitySet({
       previousCycleParentEntityUuid: previousCycleParentEntity?.uuid,
       previousCycleEntityUuid: previousCycleEntity?.uuid,
-    },
-  });
+    }),
+  );
 };
 
 export const DataEntryActionsRecordPreviousCycle = {

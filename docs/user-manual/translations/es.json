@@ -116,8 +116,8 @@
   "target": "<s1>Seguimiento de posición: se puede registrar el recorrido realizado mientras se completa un registro;</s1>"
  },
  {
-  "source": "<s1>Maps: offline map areas, georeferenced PDF maps, custom map layers and records shown on a map, together with the areas of interest and the map layers of the survey;</s1>",
-  "target": "<s1>Mapas: áreas de mapa sin conexión, mapas PDF georreferenciados, capas de mapa personalizadas y registros mostrados en un mapa, junto con las áreas de interés y las capas de mapa de la encuesta;</s1>"
+  "source": "<s1>Maps: offline map areas, imported maps (georeferenced PDF and GeoTIFF files), custom map layers and records shown on a map, together with the areas of interest and the map layers of the survey;</s1>",
+  "target": "<s1>Mapas: áreas de mapa sin conexión, mapas importados (archivos PDF y GeoTIFF georreferenciados), capas de mapa personalizadas y registros mostrados en un mapa, junto con las áreas de interés y las capas de mapa de la encuesta;</s1>"
  },
  {
   "source": "<s1>Access to the Arena server using the user’s credentials or a QR code, with support for two-factor authentication;</s1>",
@@ -524,8 +524,8 @@
   "target": "<s1>Position tracking accuracy threshold</s1><s2>, </s2><s3>Position tracking min distance</s3><s4> y </s4><s5>Position tracking battery saver</s5><s6>: consulte </s6><s7>Seguimiento de posición</s7><s8>.</s8>"
  },
  {
-  "source": "<s1>Maps</s1><s2>: map provider, default map layer, custom map layers, offline maps and PDF maps (see </s2><s3>Maps</s3><s4>).</s4>",
-  "target": "<s1>Maps</s1><s2>: proveedor de mapas, capa de mapa predeterminada, capas de mapa personalizadas, mapas sin conexión y mapas PDF (consulte </s2><s3>Mapas</s3><s4>).</s4>"
+  "source": "<s1>Maps</s1><s2>: map provider, default map layer, custom map layers, offline maps and imported maps (see </s2><s3>Maps</s3><s4>).</s4>",
+  "target": "<s1>Maps</s1><s2>: proveedor de mapas, capa de mapa predeterminada, capas de mapa personalizadas, mapas sin conexión y mapas importados (consulte </s2><s3>Mapas</s3><s4>).</s4>"
  },
  {
   "source": "<s1>Images</s1><s2>: maximum size (0.5–10 MB) images are resized to before being saved, unless the survey defines a smaller limit for a specific attribute; choose </s2><s3>Images size not limited</s3><s4> to store images in the maximum resolution provided by the device.</s4>",
@@ -1868,24 +1868,24 @@
   "target": "<s1>La pantalla muestra el espacio ocupado por las teselas de mapa y el espacio libre del dispositivo. </s1><s2>Borrar caché de mapas</s2><s3> elimina las teselas guardadas en caché al explorar los mapas (no las áreas descargadas); </s3><s4>Eliminar todo</s4><s5> lo elimina todo.</s5>"
  },
  {
-  "source": "<s1>10.4\tPDF maps (georeferenced PDF files)</s1>",
-  "target": "<s1>10.4\tMapas PDF (archivos PDF georreferenciados)</s1>"
+  "source": "<s1>10.4\tImported maps (PDF and GeoTIFF files)</s1>",
+  "target": "<s1>10.4\tMapas importados (archivos PDF y GeoTIFF)</s1>"
  },
  {
-  "source": "<s1>Maps in geospatial (georeferenced) PDF format stored on the device can be imported and shown on top of the base map in all the maps of the app, also offline.</s1>",
-  "target": "<s1>Los mapas en formato PDF geoespacial (georreferenciado) almacenados en el dispositivo se pueden importar y mostrar sobre el mapa base en todos los mapas de la aplicación, también sin conexión.</s1>"
+  "source": "<s1>Maps in geospatial (georeferenced) PDF or GeoTIFF format stored on the device can be imported and shown on top of the base map in all the maps of the app, also offline.</s1>",
+  "target": "<s1>Los mapas en formato PDF o GeoTIFF geoespacial (georreferenciado) almacenados en el dispositivo se pueden importar y mostrar sobre el mapa base en todos los mapas de la aplicación, también sin conexión.</s1>"
  },
  {
-  "source": "<s1>Open </s1><s2>Offline maps</s2><s3> > </s3><s4>PDF maps</s4><s5> (or </s5><s6>Settings</s6><s7> > </s7><s8>Maps</s8><s9> > </s9><s10>PDF maps</s10><s11>) and tap </s11><s12>Import PDF</s12><s13>.</s13>",
-  "target": "<s1>Abra </s1><s2>Mapas sin conexión</s2><s3> > </s3><s4>Mapas PDF</s4><s5> (o </s5><s6>Ajustes</s6><s7> > </s7><s8>Maps</s8><s9> > </s9><s10>Mapas PDF</s10><s11>) y toque </s11><s12>Importar PDF</s12><s13>.</s13>"
+  "source": "<s1>Open </s1><s2>Offline maps</s2><s3> > </s3><s4>Imported maps</s4><s5> (or </s5><s6>Settings</s6><s7> > </s7><s8>Maps</s8><s9> > </s9><s10>Imported maps</s10><s11>) and tap </s11><s12>Import map</s12><s13>. The supported files are listed below the button.</s13>",
+  "target": "<s1>Abra </s1><s2>Mapas sin conexión</s2><s3> > </s3><s4>Mapas importados</s4><s5> (o </s5><s6>Ajustes</s6><s7> > </s7><s8>Maps</s8><s9> > </s9><s10>Mapas importados</s10><s11>) y toque </s11><s12>Importar mapa</s12><s13>. Los archivos admitidos se indican debajo del botón.</s13>"
  },
  {
-  "source": "<s1>Select the PDF file. The app reads its georeferencing and shows a preview on the map.</s1>",
-  "target": "<s1>Seleccione el archivo PDF. La aplicación lee su georreferenciación y muestra una vista previa en el mapa.</s1>"
+  "source": "<s1>Select the PDF or GeoTIFF file (the file type is recognized from its content). The app reads its georeferencing and shows a preview on the map.</s1>",
+  "target": "<s1>Seleccione el archivo PDF o GeoTIFF (el tipo de archivo se reconoce por su contenido). La aplicación lee su georreferenciación y muestra una vista previa en el mapa.</s1>"
  },
  {
-  "source": "<s1>Choose the </s1><s2>Page</s2><s3> (for multi-page files), the </s3><s4>Name</s4><s5> and the </s5><s6>Max zoom</s6><s7>. Zoom levels above the resolution of the PDF will look blurred. The number of tiles and the space needed are estimated.</s7>",
-  "target": "<s1>Elija la </s1><s2>Página</s2><s3> (en archivos de varias páginas), el </s3><s4>Nombre</s4><s5> y el </s5><s6>Zoom máximo</s6><s7>. Los niveles de zoom superiores a la resolución del PDF se verán borrosos. Se estiman el número de teselas y el espacio necesario.</s7>"
+  "source": "<s1>Choose the </s1><s2>Page</s2><s3> (for multi-page PDF files), the </s3><s4>Name</s4><s5> and the </s5><s6>Max zoom</s6><s7>. Zoom levels above the resolution of the map will look blurred. The number of tiles and the space needed are estimated.</s7>",
+  "target": "<s1>Elija la </s1><s2>Página</s2><s3> (en archivos PDF de varias páginas), el </s3><s4>Nombre</s4><s5> y el </s5><s6>Zoom máximo</s6><s7>. Los niveles de zoom superiores a la resolución del mapa se verán borrosos. Se estiman el número de teselas y el espacio necesario.</s7>"
  },
  {
   "source": "<s1>Tap </s1><s2>Import</s2><s3>.</s3>",
@@ -1896,16 +1896,20 @@
   "target": "<s1>Cada mapa importado se puede mostrar u ocultar en los mapas (</s1><s2>Mostrar en los mapas</s2><s3>) y se puede ajustar su </s3><s4>Opacidad</s4><s5>.</s5>"
  },
  {
-  "source": "<s1>Only PDF</s1><s2> hides the base map, so only the PDF map is shown.</s2>",
-  "target": "<s1>Solo PDF</s1><s2> oculta el mapa base, de modo que solo se muestra el mapa PDF.</s2>"
+  "source": "<s1>Only imported map</s1><s2> hides the base map, so only the imported map is shown.</s2>",
+  "target": "<s1>Solo mapa importado</s1><s2> oculta el mapa base, de modo que solo se muestra el mapa importado.</s2>"
  },
  {
-  "source": "<s1>If the datum of the map is not WGS84, a warning is shown: the map could be shifted by some meters.</s1>",
-  "target": "<s1>Si el datum del mapa no es WGS84, se muestra una advertencia: el mapa podría estar desplazado algunos metros.</s1>"
+  "source": "<s1>If the datum of the map is not WGS84 (or, for GeoTIFF files, its shift to WGS84 is not known), a warning is shown: the map could be shifted by some meters.</s1>",
+  "target": "<s1>Si el datum del mapa no es WGS84 (o, en los archivos GeoTIFF, no se conoce su transformación a WGS84), se muestra una advertencia: el mapa podría estar desplazado algunos metros.</s1>"
  },
  {
   "source": "<s1>Note:</s1><s2> Only PDF files with georeferencing in the ISO 32000 (Adobe) geospatial PDF format are supported (e.g. exported from QGIS, ArcGIS, GDAL or Avenza); the OGC GeoPDF encoding is not supported yet. Files without georeferencing cannot be imported.</s2>",
   "target": "<s1>Nota:</s1><s2> Solo se admiten archivos PDF con georreferenciación en el formato PDF geoespacial ISO 32000 (Adobe) (por ejemplo, exportados desde QGIS, ArcGIS, GDAL o Avenza); la codificación OGC GeoPDF aún no es compatible. Los archivos sin georreferenciación no se pueden importar.</s2>"
+ },
+ {
+  "source": "<s1>Note:</s1><s2> GeoTIFF files with images with 8 bits per sample (RGB, RGBA, grayscale or with a color palette) are supported, with any compression except LERC and Zstandard; elevation models and other images with 16 or 32 bits per sample are not supported. Big files are imported faster when they contain overviews (e.g. Cloud Optimized GeoTIFF). After the import, only the map tiles are kept on the device, not the GeoTIFF file.</s2>",
+  "target": "<s1>Nota:</s1><s2> Se admiten archivos GeoTIFF con imágenes de 8 bits por muestra (RGB, RGBA, escala de grises o con paleta de colores), con cualquier compresión excepto LERC y Zstandard; los modelos digitales de elevación y otras imágenes de 16 o 32 bits por muestra no son compatibles. Los archivos grandes se importan más rápido cuando contienen vistas generales (overviews, por ejemplo Cloud Optimized GeoTIFF). Después de la importación, solo se conservan en el dispositivo las teselas del mapa, no el archivo GeoTIFF.</s2>"
  },
  {
   "source": "<s1>10.5\tRecords map</s1>",
@@ -1956,8 +1960,8 @@
   "target": "<s1>Mantenga la aplicación actualizada:</s1><s2> compruebe siempre si hay una versión actualizada de la aplicación cada vez que empiece a usarla. Las actualizaciones incluyen nuevas funciones y correcciones.\n</s2><s3>Nota:</s3><s4> Al actualizar la aplicación, sus datos se conservan en el dispositivo. No se eliminarán.</s4>"
  },
  {
-  "source": "<s1>Prepare the maps before going to the field:</s1><s2> download the offline map areas (and PDF maps) you will need while you still have a good internet connection.</s2>",
-  "target": "<s1>Prepare los mapas antes de ir al campo:</s1><s2> descargue las áreas de mapa sin conexión (y los mapas PDF) que vaya a necesitar mientras todavía disponga de una buena conexión a Internet.</s2>"
+  "source": "<s1>Prepare the maps before going to the field:</s1><s2> download the offline map areas (and import the maps) you will need while you still have a good internet connection.</s2>",
+  "target": "<s1>Prepare los mapas antes de ir al campo:</s1><s2> descargue las áreas de mapa sin conexión (e importe los mapas) que vaya a necesitar mientras todavía disponga de una buena conexión a Internet.</s2>"
  },
  {
   "source": "<s1>Keep the device memory as clean as possible</s1><s2>: Try to keep the device’s RAM as clean as possible, and avoid running heavy applications while collecting data with the Arena Mobile app.</s2>",
@@ -2040,15 +2044,15 @@
   "target": "<s1>Arena Mobile en GitHub</s1><s2>: </s2><s3>https://github.com/openforis/arena-mobile</s3>"
  },
  {
-  "source": "<x1/><s2> Mobile device’s compass typically points to the magnetic north, not true north. The magnetic north is based on the Earth’s magnetic field, while true north refers to the geographic North Pole. You might be able to calibrate your device’s compass with a known declination value. This means that, depending on your location, your device can adjust readings to provide more accurate direction relative to true north.</s2>",
-  "target": "<x1/><s2> La brújula de los dispositivos móviles suele apuntar al norte magnético, no al norte verdadero. El norte magnético se basa en el campo magnético de la Tierra, mientras que el norte verdadero se refiere al Polo Norte geográfico. Es posible que pueda calibrar la brújula de su dispositivo con un valor de declinación conocido. Esto significa que, según su ubicación, su dispositivo puede ajustar las lecturas para ofrecer una dirección más precisa respecto al norte verdadero.</s2>"
+  "source": "<x1/><x2/><x3/><s4>56</s4><x5/>",
+  "target": "<x1/><x2/><x3/><s4>56</s4><x5/>"
  },
  {
   "source": "<x1/><s2>   Open Foris Arena Mobile - User Manual</s2>",
   "target": "<x1/><s2>   Open Foris Arena Mobile - Manual del usuario</s2>"
  },
  {
-  "source": "<x1/><x2/><x3/><s4>56</s4><x5/>",
-  "target": "<x1/><x2/><x3/><s4>56</s4><x5/>"
+  "source": "<x1/><s2> Mobile device’s compass typically points to the magnetic north, not true north. The magnetic north is based on the Earth’s magnetic field, while true north refers to the geographic North Pole. You might be able to calibrate your device’s compass with a known declination value. This means that, depending on your location, your device can adjust readings to provide more accurate direction relative to true north.</s2>",
+  "target": "<x1/><s2> La brújula de los dispositivos móviles suele apuntar al norte magnético, no al norte verdadero. El norte magnético se basa en el campo magnético de la Tierra, mientras que el norte verdadero se refiere al Polo Norte geográfico. Es posible que pueda calibrar la brújula de su dispositivo con un valor de declinación conocido. Esto significa que, según su ubicación, su dispositivo puede ajustar las lecturas para ofrecer una dirección más precisa respecto al norte verdadero.</s2>"
  }
 ]

@@ -1,6 +1,6 @@
 import { memo } from "react";
 
-import { NodeDefFileType } from "@openforis/arena-core";
+import { NodeDefFile, NodeDefFileType, NodeDefs } from "@openforis/arena-core";
 
 import { Text } from "components";
 import { log } from "utils";
@@ -15,10 +15,12 @@ const supportedFileTypes = new Set([
   NodeDefFileType.video,
 ]);
 
-export const NodeFileComponent = memo((props: NodeComponentProps) => {
+type Props = NodeComponentProps<NodeDefFile>;
+
+export const NodeFileComponent = memo((props: Props) => {
   const { nodeDef } = props;
 
-  log.debug(`rendering NodeFileComponent for ${nodeDef.props.name}`);
+  log.debug(`rendering NodeFileComponent for ${NodeDefs.getName(nodeDef)}`);
 
   const { fileType = NodeDefFileType.other } = nodeDef.props;
 

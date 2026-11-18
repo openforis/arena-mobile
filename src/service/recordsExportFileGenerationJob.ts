@@ -4,6 +4,7 @@ import {
   ArenaExportInfoFactory,
   DateFormats,
   Dates,
+  NodeDef,
   NodeDefType,
   NodeDefs,
   Objects,
@@ -13,7 +14,7 @@ import {
   Surveys,
 } from "@openforis/arena-core";
 
-import { JobMobile } from "model";
+import { ArenaMobileRecord, JobMobile, RecordSummary } from "model";
 import { RecordUtils } from "model/utils/RecordUtils";
 import { Files, SystemUtils } from "utils";
 
@@ -24,11 +25,27 @@ import { JobMobileContext } from "model/JobMobile";
 
 const recordsExportFileNamePrefix = "arena_mobile_data_";
 
+type ExportSurvey = Survey & { remoteId?: number };
+
+type FileNodeDef = NodeDef<NodeDefType>;
+
+// entry of the files summary file of the export
+type ExportedRecordFile = {
+  uuid: string;
+  props: {
+    name?: string;
+    size?: number;
+    nodeUuid: string;
+    recordUuid: string;
+  };
+};
+
 type RecordsExportFileGenerationJobContext = JobMobileContext & {
-  survey: Survey;
+  survey: ExportSurvey;
   cycle: string;
   recordUuids: string[];
-  user: any;
+  // logged in user (empty when exporting only locally)
+  user: { uuid?: string };
   // true only when this export is guaranteed to go straight to the remote server (e.g. the
   // "Send data" button, or an auto-sync upload) - see the already-uploaded-files skip below.
   // A locally exported/shared zip must always be self-contained, so it must always include
@@ -36,35 +53,30 @@ type RecordsExportFileGenerationJobContext = JobMobileContext & {
   onlyRemote?: boolean;
 };
 
-export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileGenerationJobContext> {
-  outputFileUri: any;
-  recordsWithMissingFiles: { uuid: string; keysText: string }[] = [];
+type RecordWithMissingFiles = { uuid: string; keysText: string };
 
-  constructor({ survey, cycle, recordUuids, user, onlyRemote = false }: any) {
-    super({ survey, cycle, recordUuids, user, onlyRemote });
+export type RecordsExportFileGenerationJobResult = {
+  outputFileUri?: string;
+  recordsWithMissingFiles: RecordWithMissingFiles[];
+};
+
+export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileGenerationJobContext> {
+  outputFileUri?: string;
+  recordsWithMissingFiles: RecordWithMissingFiles[] = [];
+
+  constructor(context: RecordsExportFileGenerationJobContext) {
+    super({ ...context, onlyRemote: context.onlyRemote ?? false });
   }
 
   override async execute() {
-    const {
-      survey,
-      cycle,
-      recordUuids,
-      user,
-      onlyRemote,
-    }: {
-      survey: Survey;
-      cycle: string;
-      recordUuids: string[];
-      user: any;
-      onlyRemote?: boolean;
-    } = this.context;
+    const { survey, cycle, recordUuids, user, onlyRemote } = this.context;
     const recordUuidsSet = new Set(recordUuids);
 
     this.logger.debug(
       `RecordsExportFileGenerationJob: starting (recordUuids=${recordUuids.length}, onlyRemote=${onlyRemote})`,
     );
 
-    const tempFolderUri = await Files.createTempFolder();
+    const tempFolderUri = await this.createTempFolder();
     this.logger.debug(
       `RecordsExportFileGenerationJob: temp folder created at ${tempFolderUri}`,
     );
@@ -82,7 +94,7 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
         cycle,
       });
 
-      const recordsToExport = recordsSummary.filter((recordSummary: any) =>
+      const recordsToExport = recordsSummary.filter((recordSummary) =>
         recordUuidsSet.has(recordSummary.uuid),
       );
 
@@ -98,7 +110,7 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
         ArenaExportFile.records,
       );
       await Files.writeJsonToFile({
-        content: recordsToExport.map(({ uuid, cycle }: any) => ({
+        content: recordsToExport.map(({ uuid, cycle }) => ({
           uuid,
           cycle,
         })),
@@ -121,10 +133,10 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
       // guaranteed to go straight to that same remote server: a zip that might instead be
       // shared or kept as a local backup must always be self-contained.
       const filesAlreadyOnServerByRecordUuid: Record<string, string[]> =
-        onlyRemote && !Objects.isEmpty(nodeDefsFile) && (survey as any).remoteId
+        onlyRemote && !Objects.isEmpty(nodeDefsFile) && survey.remoteId
           ? await RecordRemoteService.fetchFileUuidsByRecordUuid({
-              surveyRemoteId: (survey as any).remoteId,
-              recordUuids: recordsToExport.map((r: any) => r.uuid),
+              surveyRemoteId: survey.remoteId,
+              recordUuids: recordsToExport.map((r) => r.uuid),
             })
           : {};
 
@@ -132,7 +144,7 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
         `RecordsExportFileGenerationJob: ${nodeDefsFile.length} file node def(s), already-on-server lookup done for ${Object.keys(filesAlreadyOnServerByRecordUuid).length} record(s)`,
       );
 
-      const files: any[] = [];
+      const files: ExportedRecordFile[] = [];
 
       await Promises.each(
         recordsToExport,
@@ -205,8 +217,6 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
     } catch (error) {
       this.logger.error(`RecordsExportFileGenerationJob: failed: ${error}`);
       throw error;
-    } finally {
-      await Files.del(tempFolderUri);
     }
   }
 
@@ -219,10 +229,17 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
     tempFolderUri,
     nodeDefsFile,
     filesAlreadyOnServerByRecordUuid,
-  }: any): Promise<any[]> {
+  }: {
+    recordSummary: RecordSummary;
+    survey: ExportSurvey;
+    user: { uuid?: string };
+    tempFolderUri: string;
+    nodeDefsFile: FileNodeDef[];
+    filesAlreadyOnServerByRecordUuid: Record<string, string[]>;
+  }): Promise<ExportedRecordFile[]> {
     const { id: recordId, uuid } = recordSummary;
     const record = await RecordService.fetchRecord({ survey, recordId });
-    if (!record.ownerUuid && user) {
+    if (!record.ownerUuid && user.uuid) {
       record.ownerUuid = user.uuid;
     }
 
@@ -281,43 +298,44 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
     nodeDefsFile,
     record,
     alreadyUploadedFileUuids = new Set<string>(),
-  }: any): Promise<{ recordFiles: any[]; hasMissingFiles: boolean }> {
+  }: {
+    tempFolderUri: string;
+    nodeDefsFile: FileNodeDef[];
+    record: ArenaMobileRecord;
+    alreadyUploadedFileUuids?: Set<string>;
+  }): Promise<{ recordFiles: ExportedRecordFile[]; hasMissingFiles: boolean }> {
     const { survey } = this.context;
     const surveyId = survey.id!;
 
-    const nodesFile = nodeDefsFile.reduce((acc: any, nodeDefFile: any) => {
-      const nodeDefFileUuid = nodeDefFile.uuid;
-      acc.push(...Records.getNodesByDefUuid(nodeDefFileUuid)(record));
-      return acc;
-    }, []);
+    const nodesFile = nodeDefsFile.flatMap((nodeDefFile) =>
+      Records.getNodesByDefUuid(nodeDefFile.uuid)(record),
+    );
 
-    const recordFiles = nodesFile.reduce((acc: any, nodeFile: any) => {
-      if (!nodeFile.value) return acc;
-
-      const { fileName: name, fileSize: size, fileUuid } = nodeFile.value;
-
-      acc.push({
-        uuid: fileUuid,
-        props: {
-          name,
-          size,
-          nodeUuid: nodeFile.uuid,
-          recordUuid: record.uuid,
-        },
+    const recordFiles: ExportedRecordFile[] = nodesFile
+      .filter((nodeFile) => !!nodeFile.value)
+      .map((nodeFile) => {
+        const { fileName: name, fileSize: size, fileUuid } = nodeFile.value;
+        return {
+          uuid: fileUuid,
+          props: {
+            name,
+            size,
+            nodeUuid: nodeFile.uuid,
+            recordUuid: record.uuid,
+          },
+        };
       });
-      return acc;
-    }, []);
 
     let hasMissingFiles = false;
-    const exportedRecordFiles: any[] = [];
+    const exportedRecordFiles: ExportedRecordFile[] = [];
 
     // the server already has these exact file uuids stored: leave them out of the zip entirely
     // (record.json still references them) to save re-uploading unchanged file content
     const recordFilesToExport = recordFiles.filter(
-      (recordFile: any) => !alreadyUploadedFileUuids.has(recordFile.uuid),
+      (recordFile) => !alreadyUploadedFileUuids.has(recordFile.uuid),
     );
 
-    await Promises.each(recordFilesToExport, async (recordFile: any) => {
+    await Promises.each(recordFilesToExport, async (recordFile) => {
       const { uuid: fileUuid } = recordFile;
 
       const fileUri = RecordFileService.getRecordFileUri({
@@ -342,7 +360,7 @@ export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileG
     return { recordFiles: exportedRecordFiles, hasMissingFiles };
   }
 
-  override generateResult() {
+  override generateResult(): Promise<RecordsExportFileGenerationJobResult> {
     const { outputFileUri, recordsWithMissingFiles } = this;
     return Promise.resolve({ outputFileUri, recordsWithMissingFiles });
   }

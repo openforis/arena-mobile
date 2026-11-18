@@ -154,14 +154,14 @@ export const SettingsScreen = () => {
               )}
               {isMapsGroup && (
                 <Button
-                  icon="file-pdf-box"
+                  icon="map-legend"
                   onPress={() =>
                     navigator.navigateToOfflineMaps({
-                      initialTab: OfflineMapsTab.pdfMaps,
+                      initialTab: OfflineMapsTab.importedMaps,
                     })
                   }
                   style={styles.offlineMapsButton}
-                  textKey="pdfMaps:title"
+                  textKey="importedMaps:title"
                 />
               )}
             </FieldSet>

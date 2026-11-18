@@ -1,67 +1,35 @@
 import NetInfo from "@react-native-community/netinfo";
 
-import { Surveys } from "@openforis/arena-core";
+import { Survey, Surveys } from "@openforis/arena-core";
 
-import {
-  RecordSyncStatus,
-  RecordUpdateConflictResolutionStrategy as ConflictResolutionStrategy,
-} from "model";
+import { RecordUpdateConflictResolutionStrategy as ConflictResolutionStrategy } from "model";
 import { RecordService } from "service";
 import { log } from "utils";
+import { HttpErrors } from "utils/HttpErrors";
 
-import {
-  AutoSyncActions,
-  AutoSyncStatus,
-  isAuthError,
-  hasOnlyRemoteChanges,
-  isAutoMergeAllowed,
-  sameRecordMergeableStatuses,
-} from "../autoSync";
+import { AutoSyncActions, AutoSyncStatus } from "../autoSync";
 import { SurveySelectors } from "../survey";
 import { ToastActions } from "../toast";
 import { exportRecords } from "./actionsDataExport";
 import { fetchRecordsChangedRemotely } from "./actionsMergedRecords";
 import { DataEntryActionsRecordSync } from "./actionsRecordSync";
+import {
+  AutoSyncRecord,
+  getAutoSyncIntervalsMs,
+  isAlreadyUpToDate,
+  selectAutoFetchCandidates,
+  selectAutoMergeCandidates,
+  selectAutoSyncCandidates,
+} from "./autoSyncCandidates";
 import { DataEntrySelectors } from "./selectors";
 import type { AppDispatch, AppGetState } from "../store";
 
-// the record currently open in the editor gets an idle threshold instead of being excluded
-// outright: otherwise a record edited slowly (a field every minute or two) would never leave
-// "pending", however long it stays open - see selectAutoSyncCandidates. Any other record isn't
-// being actively edited (whether it never was, or the user has since navigated away from it),
-// so it's a candidate as soon as it's otherwise eligible - no extra waiting period. The actual
-// value is user-configurable (settings:autoSyncOpenRecordIntervalMinutes), this is only the
-// fallback used if the setting is somehow missing.
-const AUTO_SYNC_OPEN_RECORD_IDLE_THRESHOLD_MS_DEFAULT = 5 * 60_000; // 5 minutes
+type ThunkApi = { dispatch: AppDispatch; getState: AppGetState };
 
-// a tick's real cost is RecordService.syncRecordSummaries, which asks the server about every
-// local+remote record in the cycle (bandwidth/battery that scales with record count - can be a
-// few thousand records for some surveys). Once nothing is known to be pending (status ===
-// synced, or needsManualFix: only records no sync can resolve are left - kept fresh the
-// instant something changes by AutoSyncActions.markPending, dispatched on every record
-// create/edit), there's nothing new to upload, so ticks are throttled down to
-// this much longer interval - just often enough to notice a record changed server-side (e.g.
-// from another device) - instead of re-running that full check every AUTO_SYNC_INTERVAL_MS
-// (see useAutoSyncMonitor) for nothing. A local edit breaks out of this immediately, since
-// markPending flips the status away from "synced"/"needsManualFix" as soon as it happens. The actual value is
-// user-configurable (settings:autoSyncSlowCheckIntervalMinutes), this is only the fallback
-// used if the setting is somehow missing.
-const AUTO_SYNC_SLOW_CHECK_INTERVAL_MS_DEFAULT = 30 * 60_000; // 30 minutes
-
-// syncStatus values that are safe to upload without any user confirmation: no merge, no
-// overwrite of someone else's edit (mirrors the default "overwriteIfUpdated" bucket the
-// manual "Send data" flow uses). Records modified on the server too are handled separately
-// (see selectAutoMergeCandidates); records with conflicting keys are deliberately left out -
-// those need the explicit merge confirmation the manual flow already has.
-const autoSyncSafeStatuses = new Set([
-  RecordSyncStatus.new,
-  RecordSyncStatus.modifiedLocally,
-]);
-
-// the record open in the editor is merged only if it hasn't been modified for at least this long,
-// even when the user-configurable idle threshold is bypassed ("Sync now"): an edit could still be
-// on its way to the device storage
-const OPEN_RECORD_MERGE_MIN_IDLE_MS = 5000;
+type UploadParams = ThunkApi & {
+  cycle: string;
+  candidates: AutoSyncRecord[];
+};
 
 // guards against overlapping ticks (e.g. a slow network making one tick outlive the interval)
 let tickInProgress = false;
@@ -75,43 +43,10 @@ const isTickBlockedByPreviousError = (autoSyncStatus: AutoSyncStatus) =>
   autoSyncStatus === AutoSyncStatus.authError ||
   autoSyncStatus === AutoSyncStatus.checkError;
 
-const isUploadAllowedForSurvey = (survey: any) =>
+const isUploadAllowedForSurvey = (survey: Survey) =>
   Surveys.isRecordsUploadFromMobileAllowed(survey);
 
-const getAutoSyncIntervalsMs = (settings: any = {}) => {
-  const {
-    autoSyncOpenRecordIntervalMinutes,
-    autoSyncSlowCheckIntervalMinutes,
-  } = settings;
-  return {
-    openRecordIdleThresholdMs: autoSyncOpenRecordIntervalMinutes
-      ? autoSyncOpenRecordIntervalMinutes * 60_000
-      : AUTO_SYNC_OPEN_RECORD_IDLE_THRESHOLD_MS_DEFAULT,
-    slowCheckIntervalMs: autoSyncSlowCheckIntervalMinutes
-      ? autoSyncSlowCheckIntervalMinutes * 60_000
-      : AUTO_SYNC_SLOW_CHECK_INTERVAL_MS_DEFAULT,
-  };
-};
-
-// nothing is known to be pending, and the last check was recent enough: the expensive full
-// status check (RecordService.syncRecordSummaries) can be skipped - see slowCheckIntervalMs
-// needsManualFix counts as up to date too: the records behind it can't be uploaded until the
-// user edits them (which dispatches markPending, breaking out of this right away), so a full
-// check every tick would only find the same unresolvable records again
-const upToDateStatuses = new Set([
-  AutoSyncStatus.synced,
-  AutoSyncStatus.needsManualFix,
-]);
-
-const isAlreadyUpToDate = ({ autoSyncState, slowCheckIntervalMs }: any) => {
-  if (!upToDateStatuses.has(autoSyncState.status)) return false;
-  const lastCheckedAtMs = autoSyncState.lastCheckedAt
-    ? new Date(autoSyncState.lastCheckedAt).getTime()
-    : 0;
-  return Date.now() - lastCheckedAtMs < slowCheckIntervalMs;
-};
-
-const refreshAutoSyncStatus = async ({ dispatch, getState }: any) => {
+const refreshAutoSyncStatus = async ({ dispatch, getState }: ThunkApi) => {
   try {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state);
@@ -135,9 +70,12 @@ const uploadAutoSyncCandidates = async ({
   candidates,
   conflictResolutionStrategy = ConflictResolutionStrategy.overwriteIfUpdated,
   onUploadComplete = undefined,
-}: any) => {
+}: UploadParams & {
+  conflictResolutionStrategy?: string;
+  onUploadComplete?: () => void;
+}) => {
   log.debug(
-    `auto-sync: uploading ${candidates.length} record(s) (${conflictResolutionStrategy}): ${candidates.map((r: any) => r.uuid).join(", ")}`,
+    `auto-sync: uploading ${candidates.length} record(s) (${conflictResolutionStrategy}): ${candidates.map((r) => r.uuid).join(", ")}`,
   );
 
   const onJobComplete = () => {
@@ -162,7 +100,7 @@ const uploadAutoSyncCandidates = async ({
   await dispatch(
     exportRecords({
       cycle,
-      recordUuids: candidates.map((record: any) => record.uuid),
+      recordUuids: candidates.map((record) => record.uuid),
       conflictResolutionStrategy,
       onlyRemote: true,
       onJobComplete,
@@ -174,9 +112,15 @@ const uploadAutoSyncCandidates = async ({
   );
 };
 
-const handleAutoSyncTickError = ({ dispatch, error }: any) => {
+const handleAutoSyncTickError = ({
+  dispatch,
+  error,
+}: {
+  dispatch: AppDispatch;
+  error: unknown;
+}) => {
   log.warn(`auto-sync: tick failed: ${error}`);
-  if (isAuthError(error)) {
+  if (HttpErrors.isUnauthorized(error)) {
     // stop retrying until the user logs in again - see the guard at the top of runAutoSync
     dispatch(AutoSyncActions.authError());
   } else {
@@ -185,94 +129,6 @@ const handleAutoSyncTickError = ({ dispatch, error }: any) => {
     dispatch(AutoSyncActions.checkError());
   }
 };
-
-const hasErrors = (record: any) => record.errors > 0;
-
-const isRecordIdle = ({ record, now, idleThresholdMs }: any) => {
-  const dateModified = record.dateModified
-    ? new Date(record.dateModified)
-    : null;
-  if (!dateModified) return idleThresholdMs < 0;
-
-  return now - dateModified.getTime() > idleThresholdMs;
-};
-
-const selectAutoSyncCandidates = ({
-  records,
-  survey,
-  currentlyEditedRecordUuid,
-  openRecordIdleThresholdMs,
-}: any) => {
-  const errorsAllowed =
-    Surveys.isRecordsWithErrorsUploadFromMobileAllowed(survey);
-  const now = Date.now();
-
-  return records.filter((record: any) => {
-    // records of other user groups cannot be uploaded
-    if (record.readOnly) return false;
-    if (!autoSyncSafeStatuses.has(record.syncStatus)) return false;
-    if (!errorsAllowed && hasErrors(record)) return false;
-
-    // only the record currently open in the editor needs an idle grace period (it may still be
-    // mid-edit); any other record isn't being actively edited right now, so it's a candidate
-    // regardless of how recently it was last modified
-    if (record.uuid !== currentlyEditedRecordUuid) return true;
-
-    return isRecordIdle({
-      record,
-      now,
-      idleThresholdMs: openRecordIdleThresholdMs,
-    });
-  });
-};
-
-// records modified on the server too since this device last synced them (e.g. by another user):
-// instead of being left for the user to merge explicitly through "Send data", they're sent to be
-// merged with their own server copy (same record uuid), then replaced in the device by the merged
-// version (see exportRecords' onJobComplete). The record open in the editor is a candidate only
-// once idle, same as for a plain upload (see selectAutoSyncCandidates): it's then made read-only
-// until the merged version is loaded in the editor (see uploadAutoMergeCandidates).
-const selectAutoMergeCandidates = ({
-  records,
-  survey,
-  autoSyncEnabled,
-  currentlyEditedRecordUuid,
-  openRecordIdleThresholdMs,
-}: any) => {
-  if (!isAutoMergeAllowed({ autoSyncEnabled, survey })) return [];
-  const errorsAllowed =
-    Surveys.isRecordsWithErrorsUploadFromMobileAllowed(survey);
-  const now = Date.now();
-  const idleThresholdMs = Math.max(
-    openRecordIdleThresholdMs,
-    OPEN_RECORD_MERGE_MIN_IDLE_MS,
-  );
-
-  return records.filter(
-    (record: any) =>
-      !record.readOnly &&
-      sameRecordMergeableStatuses.has(record.syncStatus) &&
-      !hasOnlyRemoteChanges(record) &&
-      (errorsAllowed || !hasErrors(record)) &&
-      (record.uuid !== currentlyEditedRecordUuid ||
-        isRecordIdle({ record, now, idleThresholdMs })),
-  );
-};
-
-// the open record is picked up by a later tick, once closed
-const selectAutoFetchCandidates = ({
-  records,
-  survey,
-  autoSyncEnabled,
-  currentlyEditedRecordUuid,
-}: any) =>
-  isAutoMergeAllowed({ autoSyncEnabled, survey })
-    ? records.filter(
-        (record: any) =>
-          hasOnlyRemoteChanges(record) &&
-          record.uuid !== currentlyEditedRecordUuid,
-      )
-    : [];
 
 // the record open in the editor, when among the records to merge, can't be edited from now until
 // its merged version is loaded in the editor (done by exportRecords' onJobComplete, which runs
@@ -285,9 +141,9 @@ const uploadAutoMergeCandidates = async ({
   cycle,
   candidates,
   currentlyEditedRecordUuid,
-}: any) => {
+}: UploadParams & { currentlyEditedRecordUuid?: string }) => {
   const openRecordIncluded = candidates.some(
-    (record: any) => record.uuid === currentlyEditedRecordUuid,
+    (record) => record.uuid === currentlyEditedRecordUuid,
   );
   if (openRecordIncluded) {
     dispatch(
@@ -327,7 +183,7 @@ const runAutoSync =
     prefetchedRecords,
   }: {
     ignoreOpenRecordIdleThreshold?: boolean;
-    prefetchedRecords?: any[];
+    prefetchedRecords?: AutoSyncRecord[];
   } = {}) =>
   async (dispatch: AppDispatch, getState: AppGetState) => {
     if (tickInProgress) {
@@ -364,9 +220,9 @@ const runAutoSync =
 
     const survey = SurveySelectors.selectCurrentSurvey(state);
     const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
-    if (!survey || !isUploadAllowedForSurvey(survey)) {
+    if (!survey || !cycle || !isUploadAllowedForSurvey(survey)) {
       log.debug(
-        "auto-sync: no survey selected, or uploads not allowed for it, skipping",
+        "auto-sync: no survey or cycle selected, or uploads not allowed for the survey, skipping",
       );
       return;
     }
@@ -436,7 +292,7 @@ const runAutoSync =
         await dispatch(
           fetchRecordsChangedRemotely({
             cycle,
-            recordUuids: fetchCandidates.map((record: any) => record.uuid),
+            recordUuids: fetchCandidates.map((record) => record.uuid),
           }),
         );
       }

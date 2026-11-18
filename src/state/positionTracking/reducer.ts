@@ -1,9 +1,6 @@
-import { ActionHandlers, StoreUtils } from "../storeUtils";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { PositionTrackingState, PositionTrackingStatus } from "./types";
-
-export const POSITION_TRACKING_UPDATE = "POSITION_TRACKING_UPDATE";
-export const POSITION_TRACKING_RESET = "POSITION_TRACKING_RESET";
 
 export const positionTrackingInitialState: PositionTrackingState = {
   status: PositionTrackingStatus.idle,
@@ -18,15 +15,16 @@ export const positionTrackingInitialState: PositionTrackingState = {
   errorKey: null,
 };
 
-const actionHandlers: ActionHandlers<PositionTrackingState> = {
-  [POSITION_TRACKING_UPDATE]: ({ state, action }) => ({
-    ...state,
-    ...action.payload,
-  }),
-  [POSITION_TRACKING_RESET]: () => ({ ...positionTrackingInitialState }),
-};
-
-export const PositionTrackingReducer = StoreUtils.exportReducer({
-  actionHandlers,
+const positionTrackingSlice = createSlice({
+  name: "positionTracking",
   initialState: positionTrackingInitialState,
+  reducers: {
+    update: (state, action: PayloadAction<Partial<PositionTrackingState>>) => {
+      Object.assign(state, action.payload);
+    },
+    reset: () => ({ ...positionTrackingInitialState }),
+  },
 });
+
+export const PositionTrackingSliceActions = positionTrackingSlice.actions;
+export const PositionTrackingReducer = positionTrackingSlice.reducer;

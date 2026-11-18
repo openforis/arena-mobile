@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import { NodeDefCode, NodeDefs } from "@openforis/arena-core";
+import { CategoryItem, NodeDefCode, NodeDefs } from "@openforis/arena-core";
 
 import { Button, HView } from "components";
 import { useIsTextDirectionRtl } from "localization";
@@ -25,7 +25,7 @@ type OpenDropdownButtonProps = {
   onPress: () => void;
   textIsI18nKey?: boolean;
   textKey?: string;
-  textParams?: any;
+  textParams?: Record<string, unknown>;
 };
 
 const OpenDropdownButton = (props: OpenDropdownButtonProps) => {
@@ -69,11 +69,11 @@ const OpenDropdownButton = (props: OpenDropdownButtonProps) => {
 };
 
 type NodeCodePreviewProps = {
-  itemLabelFunction: (item: any) => string;
+  itemLabelFunction: (item: CategoryItem | undefined) => string;
   nodeDef: NodeDefCode;
   openEditDialog: () => void;
   openFindClosestSamplingPointDialog: () => void;
-  selectedItems?: any[];
+  selectedItems?: CategoryItem[];
 };
 
 export const NodeCodePreview = (props: NodeCodePreviewProps) => {
@@ -105,7 +105,7 @@ export const NodeCodePreview = (props: NodeCodePreviewProps) => {
     <HView style={styles.container}>
       {multiple ? (
         <>
-          {selectedItems.map((item: any) => (
+          {selectedItems.map((item) => (
             <Button
               key={item.uuid}
               color="secondary"

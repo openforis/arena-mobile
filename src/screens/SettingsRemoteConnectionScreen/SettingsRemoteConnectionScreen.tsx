@@ -1,7 +1,5 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React from "react";
 import { useNavigator } from "navigation/navigator";
-
-import { Objects } from "@openforis/arena-core";
 
 import { TextInput as RNPTextInput } from "react-native-paper";
 
@@ -24,77 +22,27 @@ import {
   VView,
 } from "components";
 import { useTranslation } from "localization";
-import { SettingsService } from "service";
-import { invalidTwoFactorCodeError } from "service/authService";
-import {
-  MessageActions,
-  RemoteConnectionActions,
-  RemoteConnectionSelectors,
-  useAppDispatch,
-} from "state";
-import { useEffectiveTheme, useIsNetworkConnected } from "hooks";
+import { useEffectiveTheme } from "hooks";
 import { AMConstants } from "utils";
 
 import { LoggedInUserSummary } from "./LoggedInUserSummary";
-import {
-  twoFactorCodeLength,
-  TwoFactorVerification,
-} from "./TwoFactorVerification";
+import { ServerUrlType } from "./remoteConnectionUtils";
+import { TwoFactorVerification } from "./TwoFactorVerification";
+import { useSettingsRemoteConnection } from "./useSettingsRemoteConnection";
 import styles from "./styles";
 
-const serverUrlTypes = {
-  default: "default",
-  custom: "custom",
-};
-
-const twoFactorInitialState = {
-  twoFactorRequired: false,
-  backupCodeMode: false,
-  twoFactorCode: "",
-  twoFactorCodeNotValid: false,
-};
-
-const parseLoginQrCodeData = (data: string) => {
-  try {
-    const parsedData = JSON.parse(data);
-    const { serverUrl, token } = parsedData;
-    if (
-      typeof serverUrl === "string" &&
-      typeof token === "string" &&
-      Objects.isNotEmpty(serverUrl) &&
-      Objects.isNotEmpty(token)
-    ) {
-      return { serverUrl, token };
-    }
-  } catch {
-    // ignore error
-  }
-  throw new Error("Invalid QR code data structure");
-};
-
 export const SettingsRemoteConnectionScreen = () => {
-  const dispatch = useAppDispatch();
   const navigator = useNavigator();
   const { t } = useTranslation();
-  const networkAvailable = useIsNetworkConnected();
   const theme = useEffectiveTheme();
-  const user = RemoteConnectionSelectors.useLoggedInUser();
-
-  const [state, setState] = useState({
-    loading: false,
-    serverUrl: AMConstants.defaultServerUrl,
-    serverUrlType: serverUrlTypes.default,
-    serverUrlVerified: false,
-    email: "",
-    password: "",
-    qrScannerVisible: false,
-    ...twoFactorInitialState,
-  });
 
   const {
     loading,
     email,
     password,
+    loginDisabled,
+    networkAvailable,
+    user,
     serverUrl,
     serverUrlType,
     serverUrlVerified,
@@ -103,212 +51,21 @@ export const SettingsRemoteConnectionScreen = () => {
     backupCodeMode,
     twoFactorCode,
     twoFactorCodeNotValid,
-  } = state;
-
-  const initialize = useCallback(
-    () =>
-      SettingsService.fetchSettings().then((settings) => {
-        const serverUrlNext =
-          settings.serverUrl ?? AMConstants.defaultServerUrl;
-
-        const serverUrlTypeNext =
-          serverUrlNext === AMConstants.defaultServerUrl
-            ? serverUrlTypes.default
-            : serverUrlTypes.custom;
-
-        setState((statePrev) => ({
-          ...statePrev,
-          serverUrl: serverUrlNext,
-          serverUrlType: serverUrlTypeNext,
-          email: settings.email ?? "",
-          password: settings.password ?? "",
-        }));
-      }),
-    [],
-  );
-
-  // initialize form on load and reset form on logout
-  useEffect(() => {
-    initialize();
-  }, [initialize, user]);
-
-  const onServerUrlTypeChange = useCallback(
-    (type: any) =>
-      setState((statePrev) => ({
-        ...statePrev,
-        serverUrlType: type,
-        serverUrl:
-          type === serverUrlTypes.default
-            ? AMConstants.defaultServerUrl
-            : serverUrl,
-        serverUrlVerified: false,
-      })),
-    [serverUrl],
-  );
-
-  const onServerUrlChange = useCallback(
-    (serverUrlUpdated: any) =>
-      setState((statePrev) => ({
-        ...statePrev,
-        serverUrl: serverUrlUpdated.trim(),
-        serverUrlVerified: false,
-      })),
-    [],
-  );
-
-  const onTestUrlPress = useCallback(async () => {
-    const valid = await SettingsService.testServerUrl(serverUrl);
-    setState((statePrev) => ({ ...statePrev, serverUrlVerified: valid }));
-    if (!valid) {
-      dispatch(
-        MessageActions.setMessage({
-          content: "settingsRemoteConnection:serverUrlNotValid",
-        }),
-      );
-    }
-  }, [dispatch, serverUrl]);
-
-  const onEmailChange = useCallback(
-    (text: any) =>
-      setState((statePrev) => ({
-        ...statePrev,
-        email: text,
-      })),
-    [],
-  );
-
-  const onPasswordChange = useCallback(
-    (text: any) => setState((statePrev) => ({ ...statePrev, password: text })),
-    [],
-  );
-
-  const login = useCallback(
-    async (twoFactorToken?: string) => {
-      // normalize email
-      const emailNew = email.trim().toLocaleLowerCase();
-      setState((statePrev) => ({
-        ...statePrev,
-        email: emailNew,
-        loading: true,
-      }));
-      const res = await dispatch(
-        RemoteConnectionActions.login({
-          serverUrl,
-          email: emailNew,
-          password,
-          twoFactorToken,
-          navigator,
-          showBack: true,
-        }),
-      );
-      setState((statePrev) => {
-        if (res.user) {
-          return { ...statePrev, ...twoFactorInitialState, loading: false };
-        }
-        const codeNotValid = res.error === invalidTwoFactorCodeError;
-        return {
-          ...statePrev,
-          loading: false,
-          // stay in the two-step verification on other errors (e.g. network errors)
-          twoFactorRequired:
-            statePrev.twoFactorRequired || Boolean(res.twoFactorRequired),
-          twoFactorCode: codeNotValid ? "" : statePrev.twoFactorCode,
-          twoFactorCodeNotValid: codeNotValid,
-        };
-      });
-    },
-    [dispatch, email, navigator, password, serverUrl],
-  );
-
-  const onLogin = useCallback(() => login(), [login]);
-
-  const onTwoFactorCodeChange = useCallback(
-    (code: string) => {
-      if (loading) return;
-      setState((statePrev) => ({
-        ...statePrev,
-        twoFactorCode: code,
-        twoFactorCodeNotValid: false,
-      }));
-      if (!backupCodeMode && code.length === twoFactorCodeLength) {
-        login(code);
-      }
-    },
-    [backupCodeMode, loading, login],
-  );
-
-  const onTwoFactorVerify = useCallback(
-    () =>
-      login(
-        backupCodeMode ? twoFactorCode.trim().toUpperCase() : twoFactorCode,
-      ),
-    [backupCodeMode, login, twoFactorCode],
-  );
-
-  const onTwoFactorGoBack = useCallback(
-    () => setState((statePrev) => ({ ...statePrev, ...twoFactorInitialState })),
-    [],
-  );
-
-  const onBackupCodeModeToggle = useCallback(
-    () =>
-      setState((statePrev) => ({
-        ...statePrev,
-        backupCodeMode: !statePrev.backupCodeMode,
-        twoFactorCode: "",
-        twoFactorCodeNotValid: false,
-      })),
-    [],
-  );
-
-  const onScanQrCode = useCallback(() => {
-    setState((statePrev) => ({ ...statePrev, qrScannerVisible: true }));
-  }, []);
-
-  const onQrScannerData = useCallback(
-    async (data: string) => {
-      setState((statePrev) => ({
-        ...statePrev,
-        qrScannerVisible: false,
-        loading: true,
-      }));
-      await new Promise<void>((resolve) => setTimeout(resolve, 500)); // wait for modal to close
-
-      try {
-        const { serverUrl: serverUrlScanned, token } =
-          parseLoginQrCodeData(data);
-        await dispatch(
-          RemoteConnectionActions.loginWithTempAuthToken({
-            token,
-            serverUrl: serverUrlScanned,
-            navigator,
-            showBack: true,
-          }),
-        );
-      } catch {
-        dispatch(
-          MessageActions.setMessage({
-            content: "settingsRemoteConnection:qrCodeNotValid",
-          }),
-        );
-      } finally {
-        setState((statePrev) => ({ ...statePrev, loading: false }));
-      }
-    },
-    [dispatch, navigator],
-  );
-
-  const onQrScannerDismiss = useCallback(() => {
-    setState((statePrev) => ({ ...statePrev, qrScannerVisible: false }));
-  }, []);
-
-  const onLogout = useCallback(() => {
-    if (networkAvailable) {
-      dispatch(RemoteConnectionActions.logout());
-    } else {
-      dispatch(RemoteConnectionActions.clearUserCredentials());
-    }
-  }, [dispatch, networkAvailable]);
+    onEmailChange,
+    onPasswordChange,
+    onLogin,
+    onLogout,
+    onServerUrlTypeChange,
+    onServerUrlChange,
+    onTestUrlPress,
+    onScanQrCode,
+    onQrScannerData,
+    onQrScannerDismiss,
+    onTwoFactorCodeChange,
+    onTwoFactorVerify,
+    onTwoFactorGoBack,
+    onBackupCodeModeToggle,
+  } = useSettingsRemoteConnection();
 
   // the two-step verification shows its own progress
   if (loading && !twoFactorRequired) {
@@ -369,11 +126,6 @@ export const SettingsRemoteConnectionScreen = () => {
     );
   }
 
-  const loginDisabled =
-    !networkAvailable ||
-    Objects.isEmpty(email?.trim()) ||
-    Objects.isEmpty(password);
-
   return (
     <ScreenView>
       <VView style={styles.container}>
@@ -432,14 +184,14 @@ export const SettingsRemoteConnectionScreen = () => {
         />
         <CollapsiblePanel
           headerKey="settingsRemoteConnection:serverUrl"
-          initiallyCollapsed={serverUrlType === serverUrlTypes.default}
+          initiallyCollapsed={serverUrlType === ServerUrlType.default}
         >
           <RadioButtonGroup
             onValueChange={onServerUrlTypeChange}
             value={serverUrlType}
           >
             <HView>
-              {Object.values(serverUrlTypes).map((type) => (
+              {Object.values(ServerUrlType).map((type) => (
                 <RadioButton
                   key={type}
                   disabled={!networkAvailable}
@@ -452,7 +204,7 @@ export const SettingsRemoteConnectionScreen = () => {
           <HView style={styles.serverUrlRow}>
             <TextInput
               disabled={
-                serverUrlType === serverUrlTypes.default || !networkAvailable
+                serverUrlType === ServerUrlType.default || !networkAvailable
               }
               onChange={onServerUrlChange}
               style={styles.serverUrlTextInput}

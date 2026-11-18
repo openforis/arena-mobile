@@ -2,7 +2,7 @@ export default {
   title: "Mapas sin conexión",
   tabs: {
     areas: "Áreas descargadas",
-    pdfMaps: "Mapas PDF",
+    importedMaps: "Mapas importados",
   },
   description:
     "Descarga el mapa de tu área de interés antes de ir al campo: estará disponible incluso sin conexión a internet al dibujar o visualizar atributos geográficos.",

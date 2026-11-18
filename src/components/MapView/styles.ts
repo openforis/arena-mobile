@@ -11,28 +11,61 @@ export default StyleSheet.create({
     right: 8,
     zIndex: 1,
   },
-  pdfMapItems: {
+  importedMapItems: {
     rowGap: 8,
     paddingVertical: 8,
   },
-  pdfMapItem: {
+  importedMapItem: {
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 8,
     paddingVertical: 4,
   },
-  pdfMapItemHeader: {
+  importedMapItemHeader: {
     alignItems: "center",
   },
-  pdfMapItemCheckbox: {
+  importedMapItemCheckbox: {
     flex: 1,
   },
-  pdfMapOpacityRow: {
+  importedMapOpacityRow: {
     alignItems: "center",
     columnGap: 8,
   },
-  pdfMapOpacitySlider: {
+  importedMapOpacitySlider: {
     flex: 1,
+  },
+  surveyLayerGroup: {
+    marginBottom: 12,
+  },
+  surveyLayerGroupTitle: {
+    marginBottom: 6,
+  },
+  surveyLayerItems: {
+    gap: 6,
+  },
+  surveyLayerItem: {
+    borderRadius: 8,
+    paddingVertical: 4,
+    paddingRight: 8,
+  },
+  surveyLayerItemContent: {
+    alignItems: "center",
+    gap: 4,
+  },
+  surveyLayerLabel: {
+    flex: 1,
+  },
+  surveyLayerColor: {
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+  },
+  surveyLayerPoint: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: "#ffffff",
   },
   attribution: {
     position: "absolute",

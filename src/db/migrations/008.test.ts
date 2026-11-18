@@ -8,7 +8,6 @@ import { migration_006_record_indexes } from "./006";
 import { migration_007_record_fixed_for } from "./007";
 import { migration_008_record_validation_counts } from "./008";
 
-jest.mock("expo-sqlite", () => ({}));
 jest.mock("utils", () => ({ log: { debug: jest.fn() } }));
 
 const migrationsBefore = [

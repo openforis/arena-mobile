@@ -4,7 +4,21 @@ import { Arrays } from "@openforis/arena-core";
 
 const noItemIds: string[] = [];
 
-export const useSelectableList = (props: any) => {
+type UseSelectableListProps<T extends { key: string }> = {
+  items?: T[];
+  onItemPress?: (item: T) => void;
+  onItemLongPress?: (item: T) => void;
+  onSelectionChange?: (selectedIds: string[]) => void;
+  onDeleteSelectedItemIds?: (
+    ids: string[],
+  ) => Promise<boolean | void> | boolean | void;
+  selectable?: boolean;
+  selectedItemIds?: string[];
+};
+
+export const useSelectableList = <T extends { key: string }>(
+  props: UseSelectableListProps<T>,
+) => {
   const {
     items,
     onItemPress: onItemPressProp,
@@ -42,7 +56,7 @@ export const useSelectableList = (props: any) => {
   }, [items, onSelectionChange, selectable]);
 
   const onItemSelect = useCallback(
-    (item: any) => {
+    (item: T) => {
       const { key } = item;
       const selected = !selectedItemIds.includes(key);
       const selectedItemIdsNext = selected
@@ -66,7 +80,11 @@ export const useSelectableList = (props: any) => {
       // deleted: keep the selection in that case, so the user can still choose another
       // action for the items they selected. Any other result (true, undefined/void, for
       // handlers that don't report cancellation) is treated as "deleted".
-      onDeleteSelectedItemIds(selectedItemIds)
+      // handlers are expected to return a promise (or nothing)
+      (
+        onDeleteSelectedItemIds(selectedItemIds) as
+          Promise<boolean | void> | undefined
+      )
         ?.then((deleted: boolean | void) => {
           if (deleted !== false) performDelete();
         })
@@ -84,7 +102,7 @@ export const useSelectableList = (props: any) => {
   ]);
 
   const onItemPress = useCallback(
-    (item: any) => {
+    (item: T) => {
       if (selectionEnabled) {
         onItemSelect(item);
       } else {
@@ -95,7 +113,7 @@ export const useSelectableList = (props: any) => {
   );
 
   const onItemLongPress = useCallback(
-    (item: any) => {
+    (item: T) => {
       if (selectable) {
         onItemSelect(item);
       } else {

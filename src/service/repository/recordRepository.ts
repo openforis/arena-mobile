@@ -1,13 +1,22 @@
 import {
+  ArenaRecord,
   Dates,
+  NodeDef,
   NodeDefType,
   Objects,
   Promises,
+  Survey,
   Surveys,
+  Validation,
 } from "@openforis/arena-core";
 
-import { DbUtils, dbClient } from "db";
-import { RecordLoadStatus, RecordOrigin } from "model";
+import { DbUtils, dbClient, SQLiteClient, SqlParams, SqlValue } from "db";
+import {
+  RecordLoadStatus,
+  RecordOrigin,
+  RecordSummary,
+  RemoteRecordSummary,
+} from "model";
 import { ArenaMobileRecord } from "model/ArenaMobileRecord";
 import { log, SystemUtils } from "utils";
 import {
@@ -31,35 +40,60 @@ import {
   toKeyOrSummaryColValue,
   validationCountsColumnsSet,
 } from "./recordRowMapper";
+import { RecordRow } from "./recordRow";
 
-const getPlaceholders = (count: any) =>
-  Array.from(new Array(count).keys())
-    .map(() => "?")
-    .join(", ");
+type SurveyParam = { survey: Survey };
+type SurveyId = Survey["id"];
+type RecordId = ArenaRecord["id"];
+type SurveyAndRecordParams = SurveyParam & { record: ArenaMobileRecord };
+type SurveyIdAndRecordUuidsParams = {
+  surveyId: SurveyId;
+  recordUuids: string[];
+};
+type ClientParam = { client?: SQLiteClient };
+// value of a key attribute: code attribute values have an itemUuid
+export type RecordKeyValue =
+  | string
+  | number
+  | boolean
+  | { itemUuid?: string; [key: string]: unknown }
+  | null
+  | undefined;
 
 const fetchRecord = async ({
   survey,
   recordId,
   includeContent = true,
-}: any): Promise<ArenaMobileRecord> => {
+}: SurveyParam & {
+  recordId: RecordId;
+  includeContent?: boolean;
+}): Promise<RecordSummary> => {
   const { id: surveyId } = survey;
-  const row = await dbClient.one(
+  const row = await dbClient.one<RecordRow>(
     `SELECT ${summarySelectFieldsJointWithValidation}${includeContent ? ", content, fixed_for" : ""}
     FROM record
     WHERE survey_id = ? AND id = ?`,
     [surveyId, recordId],
   );
   const fixKey = getRecordFixKey(survey);
-  const toBeFixed = isRowToBeFixed({ row, fixKey });
-  const record = rowToRecord({ survey })(row);
+  const toBeFixed = isRowToBeFixed({ row: row!, fixKey });
+  const record = rowToRecord({ survey })(row!);
   if (toBeFixed && fixKey) {
-    await storeFixedRecordContent({ row, record, fixKey });
+    await storeFixedRecordContent({ row: row!, record, fixKey });
   }
   return record;
 };
 
 // stored once: the next fetches skip the fixes until the survey or the app are updated
-const storeFixedRecordContent = async ({ row, record, fixKey }: any) => {
+const storeFixedRecordContent = async ({
+  row,
+  record,
+  fixKey,
+}: {
+  row: RecordRow;
+  record: RecordSummary;
+  fixKey: string;
+}) => {
   try {
     // only if the content hasn't changed since it was read
     await dbClient.runSql(
@@ -79,17 +113,23 @@ const storeFixedRecordContent = async ({ row, record, fixKey }: any) => {
   }
 };
 
-const fetchRecordSummary = async ({ survey, recordId }: any) =>
+const fetchRecordSummary = async ({
+  survey,
+  recordId,
+}: SurveyParam & { recordId: RecordId }) =>
   fetchRecord({ survey, recordId, includeContent: false });
 
 const fetchRecords = async ({
   survey,
   cycle = null,
   onlyLocal = true,
-}: any) => {
+}: SurveyParam & {
+  cycle?: string | null;
+  onlyLocal?: boolean;
+}): Promise<RecordSummary[]> => {
   const { id: surveyId } = survey;
   const whereConditions = ["merged_into_record_uuid IS NULL", "survey_id = ?"];
-  const queryParams = [surveyId];
+  const queryParams: SqlParams = [surveyId];
 
   if (!Objects.isEmpty(cycle)) {
     whereConditions.push("cycle = ?");
@@ -103,16 +143,25 @@ const fetchRecords = async ({
     FROM record
     WHERE ${whereConditions.join(" AND ")}
     ORDER BY date_modified DESC`;
-  const rows = await dbClient.many(query, queryParams);
+  const rows = await dbClient.many<RecordRow>(query, queryParams);
   return rows.map(rowToRecord({ survey }));
 };
 
-const getKeyColCondition = ({ keyCol, keyDef, val }: any) => {
-  if (Objects.isNil(val)) {
+type KeyColParams = {
+  keyDef: NodeDef<NodeDefType> | undefined;
+  val: RecordKeyValue;
+};
+
+const getKeyColCondition = ({
+  keyCol,
+  keyDef,
+  val,
+}: KeyColParams & { keyCol: string }) => {
+  if (val === null || val === undefined) {
     return `${keyCol} IS NULL`;
   }
   const conditions = [`${keyCol} = ?`];
-  if (keyDef.type === NodeDefType.code) {
+  if (keyDef?.type === NodeDefType.code) {
     // key value could be a text (code) or a json object with itemUuid
     conditions.push(
       `(json_valid(${keyCol}) AND json(${keyCol}) ->> 'itemUuid' = ?)`,
@@ -121,20 +170,27 @@ const getKeyColCondition = ({ keyCol, keyDef, val }: any) => {
   return `(${conditions.join(" OR ")})`;
 };
 
-const getKeyColParams = ({ keyDef, val }: any) => {
-  const params: any = [];
-  if (Objects.isNil(val)) {
+const getKeyColParams = ({ keyDef, val }: KeyColParams): SqlParams => {
+  const params: SqlParams = [];
+  if (val === null || val === undefined) {
     return params;
   }
   const keyColumnParam = toKeyOrSummaryColValue(val);
   params.push(keyColumnParam);
-  if (keyDef.type === NodeDefType.code) {
-    params.push(val.itemUuid);
+  if (keyDef?.type === NodeDefType.code) {
+    params.push(typeof val === "object" ? val.itemUuid : undefined);
   }
   return params;
 };
 
-const findRecordSummariesByKeys = async ({ survey, cycle, keyValues }: any) => {
+const findRecordSummariesByKeys = async ({
+  survey,
+  cycle,
+  keyValues,
+}: SurveyParam & {
+  cycle: string;
+  keyValues: RecordKeyValue[];
+}): Promise<RecordSummary[]> => {
   const { id: surveyId } = survey;
   const keyDefs = Surveys.getRootKeys({ survey, cycle });
   const keyColsConditions = keyColumnNames
@@ -149,7 +205,7 @@ const findRecordSummariesByKeys = async ({ survey, cycle, keyValues }: any) => {
     const val = keyValues[index];
     acc.push(...getKeyColParams({ keyDef, val }));
     return acc;
-  }, [] as any[]);
+  }, [] as SqlParams);
 
   // records merged into another one are hidden (see fetchRecords): the record they were merged
   // into has the same key(s), so they must not be counted as duplicates of it
@@ -158,16 +214,16 @@ const findRecordSummariesByKeys = async ({ survey, cycle, keyValues }: any) => {
     WHERE merged_into_record_uuid IS NULL AND survey_id = ? AND cycle = ? AND ${keyColsConditions}`;
 
   const queryParams = [surveyId, cycle, ...keyColsParams];
-  const rows = await dbClient.many(query, queryParams);
+  const rows = await dbClient.many<RecordRow>(query, queryParams);
   return rows.map(rowToRecord({ survey }));
 };
 
 const fetchRecordsWithEmptyCycle = async ({
   survey,
-}: any): Promise<ArenaMobileRecord[]> => {
+}: SurveyParam): Promise<RecordSummary[]> => {
   const { id: surveyId } = survey;
 
-  const rows = await dbClient.many(
+  const rows = await dbClient.many<RecordRow>(
     `SELECT ${summarySelectFieldsJoint}
     FROM record
     WHERE survey_id = ? AND cycle IS NULL
@@ -181,7 +237,9 @@ const insertRecord = async ({
   survey,
   record,
   loadStatus = RecordLoadStatus.complete,
-}: any) => {
+}: SurveyAndRecordParams & {
+  loadStatus?: RecordLoadStatus;
+}): Promise<ArenaMobileRecord> => {
   const { id: surveyId } = survey;
   const keyColumnsValues = extractKeyColumnsValues({ survey, record });
   const summaryAttributesColumnValues = extractSummaryAttributesValues({
@@ -193,7 +251,7 @@ const insertRecord = async ({
 
   const { insertId } = await dbClient.runSql(
     `INSERT INTO record (${insertColumnsJoint})
-    VALUES (${getPlaceholders(insertColumns.length)})`,
+    VALUES (${DbUtils.placeholders(insertColumns)})`,
     [
       uuid,
       surveyId,
@@ -220,13 +278,16 @@ const insertRecordSummaries = async ({
   survey,
   cycle,
   recordSummaries,
-}: any) => {
+}: SurveyParam & {
+  cycle: string | null | undefined;
+  recordSummaries: RemoteRecordSummary[];
+}): Promise<number[]> => {
   const { id: surveyId } = survey;
   const loadStatus = RecordLoadStatus.summary;
   const origin = RecordOrigin.remote;
-  const insertedIds: any = [];
+  const insertedIds: number[] = [];
   await dbClient.transaction(async (tx) => {
-    await Promises.each(recordSummaries, async (recordSummary: any) => {
+    await Promises.each(recordSummaries, async (recordSummary) => {
       const { dateCreated, dateModified, ownerUuid, ownerName, uuid } =
         recordSummary;
       const keyColumnsValues = extractRemoteRecordSummaryKeyColumnsValues({
@@ -240,7 +301,7 @@ const insertRecordSummaries = async ({
         });
       const { insertId } = await tx.runSql(
         `INSERT INTO record (${insertColumnsJoint})
-        VALUES (${getPlaceholders(insertColumns.length)})`,
+        VALUES (${DbUtils.placeholders(insertColumns)})`,
         [
           uuid,
           surveyId,
@@ -269,7 +330,7 @@ const updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely = ({
   survey,
   recordSummary,
   client = dbClient,
-}: any) => {
+}: SurveyParam & ClientParam & { recordSummary: RemoteRecordSummary }) => {
   const { dateModified, ownerUuid, ownerName, uuid } = recordSummary;
   const keyColumnsValues = extractRemoteRecordSummaryKeyColumnsValues({
     survey,
@@ -307,9 +368,9 @@ const updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely = ({
 const updateRecordsKeysAndDateModifiedWithSummariesFetchedRemotely = ({
   survey,
   recordSummaries,
-}: any): Promise<void> =>
+}: SurveyParam & { recordSummaries: RemoteRecordSummary[] }): Promise<void> =>
   dbClient.transaction(async (tx) => {
-    await Promises.each(recordSummaries, async (recordSummary: any) => {
+    await Promises.each(recordSummaries, async (recordSummary) => {
       try {
         await updateRecordKeysAndDateModifiedWithSummaryFetchedRemotely({
           survey,
@@ -333,7 +394,13 @@ const updateRecordKeysAndContent = async ({
   updateDateSynced = false,
   keepFixedFor = false,
   client = dbClient,
-}: any) => {
+}: SurveyAndRecordParams &
+  ClientParam & {
+    updateOrigin?: boolean;
+    origin?: RecordOrigin;
+    updateDateSynced?: boolean;
+    keepFixedFor?: boolean;
+  }) => {
   const keyColumnsValues = extractKeyColumnsValues({ survey, record });
   const summaryAttributesValues = extractSummaryAttributesValues({
     survey,
@@ -369,7 +436,7 @@ const updateRecordKeysAndContent = async ({
   );
 };
 
-const updateRecord = async ({ survey, record }: any) => {
+const updateRecord = async ({ survey, record }: SurveyAndRecordParams) => {
   const recordUpdated = Objects.assocPath({
     obj: record,
     path: ["info", "modifiedWith"],
@@ -393,7 +460,11 @@ const updateRecordValidation = async ({
   surveyId,
   recordUuid,
   validation,
-}: any) =>
+}: {
+  surveyId: SurveyId;
+  recordUuid: string;
+  validation: Validation;
+}) =>
   dbClient.runSql(
     `UPDATE record SET content = json_set(content, '$.validation', json(?)), ${validationCountsColumnsSet}
      WHERE survey_id = ? AND uuid = ?`,
@@ -408,7 +479,7 @@ const updateRecordValidation = async ({
 const updateRecordWithContentFetchedRemotely = async ({
   survey,
   record,
-}: any) =>
+}: SurveyAndRecordParams) =>
   dbClient.transaction(async (tx) => {
     await updateRecordKeysAndContent({
       survey,
@@ -432,7 +503,7 @@ const updateRecordWithContentFetchedRemotely = async ({
 const updateRecordWithContentMergedFromRemote = async ({
   survey,
   record,
-}: any) =>
+}: SurveyAndRecordParams) =>
   dbClient.transaction(async (tx) => {
     await updateRecordKeysAndContent({
       survey,
@@ -459,7 +530,7 @@ const updateRecordsReadOnly = async ({
   recordUuids,
   readOnly,
 }: {
-  surveyId: number;
+  surveyId: SurveyId;
   recordUuids: string[];
   readOnly: boolean;
 }) => {
@@ -467,16 +538,46 @@ const updateRecordsReadOnly = async ({
   const sql = `UPDATE record
   SET read_only = ?
   WHERE survey_id = ?
-    AND uuid IN (${DbUtils.quoteValues(recordUuids)})`;
-  return dbClient.runSql(sql, [readOnly ? 1 : 0, surveyId]);
+    AND uuid IN (${DbUtils.placeholders(recordUuids)})`;
+  return dbClient.runSql(sql, [readOnly ? 1 : 0, surveyId, ...recordUuids]);
 };
 
-const updateRecordsDateSync = async ({ surveyId, recordUuids }: any) => {
+const updateRecordsDateSync = async ({
+  surveyId,
+  recordUuids,
+}: SurveyIdAndRecordUuidsParams) => {
+  if (recordUuids.length === 0) return;
   const sql = `UPDATE record
   SET date_synced = ?
   WHERE survey_id = ?
-    AND uuid IN (${DbUtils.quoteValues(recordUuids)})`;
-  return dbClient.runSql(sql, [Dates.nowFormattedForStorage(), surveyId]);
+    AND uuid IN (${DbUtils.placeholders(recordUuids)})`;
+  return dbClient.runSql(sql, [
+    Dates.nowFormattedForStorage(),
+    surveyId,
+    ...recordUuids,
+  ]);
+};
+
+// one UPDATE per record, in a single transaction
+const updateRecordsColumnByUuid = async ({
+  surveyId,
+  column,
+  valueByUuid,
+  client,
+}: {
+  surveyId: SurveyId;
+  column: "date_modified_remote" | "date_modified_synced";
+  valueByUuid: Record<string, SqlValue>;
+  client: SQLiteClient;
+}) => {
+  await client.transaction(async (tx) => {
+    await Promises.each(Object.entries(valueByUuid), async ([uuid, value]) => {
+      await tx.runSql(
+        `UPDATE record SET ${column} = ? WHERE survey_id = ? AND uuid = ?`,
+        [value, surveyId, uuid],
+      );
+    });
+  });
 };
 
 /**
@@ -489,28 +590,33 @@ const updateRecordsDateModifiedRemote = async ({
   surveyId,
   dateModifiedRemoteByUuid,
   client = dbClient,
-}: any) => {
-  await client.transaction(async (tx: any) => {
-    await Promises.each(
-      Object.entries(dateModifiedRemoteByUuid),
-      async ([uuid, dateModifiedRemote]) => {
-        await tx.runSql(
-          `UPDATE record SET date_modified_remote = ? WHERE survey_id = ? AND uuid = ?`,
-          [fixDatetime(dateModifiedRemote), surveyId, uuid],
-        );
-      },
-    );
+}: ClientParam & {
+  surveyId: SurveyId;
+  dateModifiedRemoteByUuid: Record<string, string | number | null | undefined>;
+}) =>
+  updateRecordsColumnByUuid({
+    surveyId,
+    column: "date_modified_remote",
+    valueByUuid: Object.fromEntries(
+      Object.entries(dateModifiedRemoteByUuid).map(([uuid, value]) => [
+        uuid,
+        fixDatetime(value),
+      ]),
+    ),
+    client,
   });
-};
 
 const fetchRecordsDateModifiedByUuid = async ({
   surveyId,
   recordUuids,
-}: any): Promise<Record<string, any>> => {
-  const rows: any[] = await dbClient.many(
+}: SurveyIdAndRecordUuidsParams): Promise<
+  Record<string, string | null | undefined>
+> => {
+  if (recordUuids.length === 0) return {};
+  const rows = await dbClient.many<Pick<RecordRow, "uuid" | "date_modified">>(
     `SELECT uuid, date_modified FROM record
-     WHERE survey_id = ? AND uuid IN (${DbUtils.quoteValues(recordUuids)})`,
-    [surveyId],
+     WHERE survey_id = ? AND uuid IN (${DbUtils.placeholders(recordUuids)})`,
+    [surveyId, ...recordUuids],
   );
   return Object.fromEntries(rows.map((row) => [row.uuid, row.date_modified]));
 };
@@ -519,39 +625,40 @@ const updateRecordsDateModifiedSynced = async ({
   surveyId,
   dateModifiedByUuid,
   client = dbClient,
-}: any) => {
-  await client.transaction(async (tx: any) => {
-    await Promises.each(
-      Object.entries(dateModifiedByUuid),
-      async ([uuid, dateModified]) => {
-        await tx.runSql(
-          `UPDATE record SET date_modified_synced = ? WHERE survey_id = ? AND uuid = ?`,
-          [dateModified, surveyId, uuid],
-        );
-      },
-    );
+}: ClientParam & {
+  surveyId: SurveyId;
+  dateModifiedByUuid: Record<string, SqlValue>;
+}) =>
+  updateRecordsColumnByUuid({
+    surveyId,
+    column: "date_modified_synced",
+    valueByUuid: dateModifiedByUuid,
+    client,
   });
-};
 
 // uuids of the files referenced by the content stored in the device for the given records
 // (all records if not specified)
 const fetchRecordsFileUuids = async ({
   surveyId,
   recordUuids,
-}: any): Promise<string[]> => {
+}: {
+  surveyId: SurveyId;
+  recordUuids?: string[];
+}): Promise<string[]> => {
+  if (recordUuids?.length === 0) return [];
   const recordsCondition = recordUuids
-    ? `AND record.uuid IN (${DbUtils.quoteValues(recordUuids)})`
+    ? `AND record.uuid IN (${DbUtils.placeholders(recordUuids)})`
     : "";
-  const rows = await dbClient.many(
+  const rows = await dbClient.many<{ file_uuid: string }>(
     `SELECT DISTINCT json_extract(node.value, '$.value.fileUuid') AS file_uuid
      FROM record, json_each(record.content, '$.nodes') AS node
      WHERE record.survey_id = ? 
        ${recordsCondition}
        AND json_valid(record.content)
        AND json_extract(node.value, '$.value.fileUuid') IS NOT NULL`,
-    [surveyId],
+    [surveyId, ...(recordUuids ?? [])],
   );
-  return rows.map((row: any) => row.file_uuid);
+  return rows.map((row) => row.file_uuid);
 };
 
 // values of the nodes of the given defs stored in the device, without parsing the whole records
@@ -560,12 +667,16 @@ const fetchNodeValuesByDefUuids = async ({
   cycle,
   nodeDefUuids,
 }: {
-  surveyId: number;
+  surveyId: SurveyId;
   cycle: string;
   nodeDefUuids: string[];
-}): Promise<{ recordUuid: string; nodeDefUuid: string; value: any }[]> => {
+}): Promise<{ recordUuid: string; nodeDefUuid: string; value: unknown }[]> => {
   if (nodeDefUuids.length === 0) return [];
-  const rows = await dbClient.many(
+  const rows = await dbClient.many<{
+    record_uuid: string;
+    node_def_uuid: string;
+    value: unknown;
+  }>(
     `SELECT record.uuid AS record_uuid,
        json_extract(node.value, '$.nodeDefUuid') AS node_def_uuid,
        json_extract(node.value, '$.value') AS value
@@ -574,18 +685,24 @@ const fetchNodeValuesByDefUuids = async ({
        AND record.cycle = ?
        AND record.merged_into_record_uuid IS NULL
        AND json_valid(record.content)
-       AND json_extract(node.value, '$.nodeDefUuid') IN (${getPlaceholders(nodeDefUuids.length)})
+       AND json_extract(node.value, '$.nodeDefUuid') IN (${DbUtils.placeholders(nodeDefUuids)})
        AND json_extract(node.value, '$.value') IS NOT NULL`,
     [surveyId, cycle, ...nodeDefUuids],
   );
-  return rows.map((row: any) => ({
+  return rows.map((row) => ({
     recordUuid: row.record_uuid,
     nodeDefUuid: row.node_def_uuid,
     value: extractKeyOrSummaryColValue({ row, col: "value" }),
   }));
 };
 
-const updateRecordsMergedInto = async ({ surveyId, mergedRecordsMap }: any) => {
+const updateRecordsMergedInto = async ({
+  surveyId,
+  mergedRecordsMap,
+}: {
+  surveyId: SurveyId;
+  mergedRecordsMap: Record<string, string>;
+}) => {
   await dbClient.transaction(async (tx) => {
     await Promises.each(
       Object.entries(mergedRecordsMap),
@@ -602,7 +719,10 @@ const updateRecordsMergedInto = async ({ surveyId, mergedRecordsMap }: any) => {
   });
 };
 
-const fixRecordCycle = async ({ survey, recordId }: any) => {
+const fixRecordCycle = async ({
+  survey,
+  recordId,
+}: SurveyParam & { recordId: RecordId }) => {
   const record = await fetchRecord({ survey, recordId });
   // cycle is null (not undefined) in the records to fix: a destructuring default wouldn't apply
   const cycle = record.cycle ?? Surveys.getDefaultCycleKey(survey);
@@ -612,10 +732,14 @@ const fixRecordCycle = async ({ survey, recordId }: any) => {
   ]);
 };
 
-const deleteRecords = async ({ surveyId, recordUuids }: any) => {
+const deleteRecords = async ({
+  surveyId,
+  recordUuids,
+}: SurveyIdAndRecordUuidsParams) => {
+  if (recordUuids.length === 0) return;
   const sql = `DELETE FROM record 
-    WHERE survey_id = ? AND uuid IN (${DbUtils.quoteValues(recordUuids)})`;
-  return dbClient.runSql(sql, [surveyId]);
+    WHERE survey_id = ? AND uuid IN (${DbUtils.placeholders(recordUuids)})`;
+  return dbClient.runSql(sql, [surveyId, ...recordUuids]);
 };
 
 export const RecordRepository = {

@@ -6,10 +6,6 @@ import { RecordFileService } from "../recordFileService";
 import { RecordsAndFilesImportJobContext } from "./RecordsAndFilesImportJobContext";
 
 export class FilesImportJob extends JobMobile<RecordsAndFilesImportJobContext> {
-  constructor({ survey, recordUuids, user, fileUri }: any) {
-    super({ survey, recordUuids, user, fileUri });
-  }
-
   override async execute() {
     const { survey, unzippedFolderUri } = this.context;
 

@@ -6,6 +6,16 @@ import { RecordsUploadAndProcessJobContext } from "./RecordsUploadAndProcessJobC
 import { RecordsUploadJob } from "./recordsUploadJob";
 import { RemoteJobWatcherJob } from "./remoteJobWatcherJob";
 
+// result of the server-side records import job
+export type RecordsUploadResult = {
+  // local record uuid => uuid of the server record (same keys) it was merged into
+  mergedRecordsMap?: Record<string, string>;
+  // records merged with their own server copy (same uuid)
+  mergedSameRecordUuids?: string[];
+  skippedRecordsUuids?: string[];
+  missingFiles?: number;
+};
+
 // uploads the records zip, then watches the server-side job it kicks off, as ONE job: this only
 // merges the upload and server-side processing phases (not the zip-preparation phase before
 // them) because those two never have a user-facing gate in between them (unlike zip preparation,
@@ -16,38 +26,16 @@ import { RemoteJobWatcherJob } from "./remoteJobWatcherJob";
 // progress bar for free from JobBase's own inner-job progress weighting, instead of needing to
 // fake it the way the zip-preparation -> this bridge still does.
 export class RecordsUploadAndProcessJob extends JobMobile<RecordsUploadAndProcessJobContext> {
-  constructor({
-    user,
-    survey,
-    cycle,
-    fileUri,
-    conflictResolutionStrategy,
-    skipMissingFiles = false,
-    uploadState,
-  }: any) {
-    super(
-      {
-        user,
-        survey,
-        cycle,
-        fileUri,
-        conflictResolutionStrategy,
-        skipMissingFiles,
-        uploadState,
-      },
-      [
-        new RecordsUploadJob({
-          user,
-          survey,
-          cycle,
-          fileUri,
-          conflictResolutionStrategy,
-          skipMissingFiles,
-          uploadState,
-        }),
-        new RemoteJobWatcherJob({ user, survey }),
-      ],
-    );
+  constructor(context: RecordsUploadAndProcessJobContext) {
+    const { user, survey } = context;
+    const contextWithDefaults = {
+      ...context,
+      skipMissingFiles: context.skipMissingFiles ?? false,
+    };
+    super(contextWithDefaults, [
+      new RecordsUploadJob(contextWithDefaults),
+      new RemoteJobWatcherJob({ user, survey }),
+    ]);
   }
 
   override onInnerJobEvent(event: JobEvent): Promise<void> {
@@ -62,7 +50,7 @@ export class RecordsUploadAndProcessJob extends JobMobile<RecordsUploadAndProces
     return super.onInnerJobEvent(event);
   }
 
-  override generateResult() {
+  override generateResult(): Promise<RecordsUploadResult | undefined> {
     const watcherJob = this.innerJobs?.[1];
     return Promise.resolve(watcherJob?.result);
   }

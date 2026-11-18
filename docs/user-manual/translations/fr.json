@@ -116,8 +116,8 @@
   "target": "<s1>Suivi de position : le trajet parcouru pendant le remplissage d’un enregistrement peut être enregistré ;</s1>"
  },
  {
-  "source": "<s1>Maps: offline map areas, georeferenced PDF maps, custom map layers and records shown on a map, together with the areas of interest and the map layers of the survey;</s1>",
-  "target": "<s1>Cartes : zones de carte hors ligne, cartes PDF géoréférencées, couches de carte personnalisées et enregistrements affichés sur une carte, avec les zones d’intérêt et les couches de carte de l’enquête ;</s1>"
+  "source": "<s1>Maps: offline map areas, imported maps (georeferenced PDF and GeoTIFF files), custom map layers and records shown on a map, together with the areas of interest and the map layers of the survey;</s1>",
+  "target": "<s1>Cartes : zones de carte hors ligne, cartes importées (fichiers PDF et GeoTIFF géoréférencés), couches de carte personnalisées et enregistrements affichés sur une carte, avec les zones d’intérêt et les couches de carte de l’enquête ;</s1>"
  },
  {
   "source": "<s1>Access to the Arena server using the user’s credentials or a QR code, with support for two-factor authentication;</s1>",
@@ -524,8 +524,8 @@
   "target": "<s1>Position tracking accuracy threshold</s1><s2>, </s2><s3>Position tracking min distance</s3><s4> et </s4><s5>Position tracking battery saver</s5><s6> : voir </s6><s7>Suivi de position</s7><s8>.</s8>"
  },
  {
-  "source": "<s1>Maps</s1><s2>: map provider, default map layer, custom map layers, offline maps and PDF maps (see </s2><s3>Maps</s3><s4>).</s4>",
-  "target": "<s1>Maps</s1><s2> : fournisseur de cartes, couche de carte par défaut, couches de carte personnalisées, cartes hors ligne et cartes PDF (voir </s2><s3>Cartes</s3><s4>).</s4>"
+  "source": "<s1>Maps</s1><s2>: map provider, default map layer, custom map layers, offline maps and imported maps (see </s2><s3>Maps</s3><s4>).</s4>",
+  "target": "<s1>Maps</s1><s2> : fournisseur de cartes, couche de carte par défaut, couches de carte personnalisées, cartes hors ligne et cartes importées (voir </s2><s3>Cartes</s3><s4>).</s4>"
  },
  {
   "source": "<s1>Images</s1><s2>: maximum size (0.5–10 MB) images are resized to before being saved, unless the survey defines a smaller limit for a specific attribute; choose </s2><s3>Images size not limited</s3><s4> to store images in the maximum resolution provided by the device.</s4>",
@@ -1868,24 +1868,24 @@
   "target": "<s1>L’écran affiche l’espace utilisé par les tuiles de carte et l’espace libre sur l’appareil. </s1><s2>Vider le cache des cartes</s2><s3> supprime les tuiles mises en cache lors de la consultation des cartes (pas les zones téléchargées) ; </s3><s4>Tout supprimer</s4><s5> supprime tout.</s5>"
  },
  {
-  "source": "<s1>10.4\tPDF maps (georeferenced PDF files)</s1>",
-  "target": "<s1>10.4\tCartes PDF (fichiers PDF géoréférencés)</s1>"
+  "source": "<s1>10.4\tImported maps (PDF and GeoTIFF files)</s1>",
+  "target": "<s1>10.4\tCartes importées (fichiers PDF et GeoTIFF)</s1>"
  },
  {
-  "source": "<s1>Maps in geospatial (georeferenced) PDF format stored on the device can be imported and shown on top of the base map in all the maps of the app, also offline.</s1>",
-  "target": "<s1>Les cartes au format PDF géospatial (géoréférencé) stockées sur l’appareil peuvent être importées et affichées par-dessus le fond de carte dans toutes les cartes de l’application, y compris hors ligne.</s1>"
+  "source": "<s1>Maps in geospatial (georeferenced) PDF or GeoTIFF format stored on the device can be imported and shown on top of the base map in all the maps of the app, also offline.</s1>",
+  "target": "<s1>Les cartes au format PDF ou GeoTIFF géospatial (géoréférencé) stockées sur l’appareil peuvent être importées et affichées par-dessus le fond de carte dans toutes les cartes de l’application, y compris hors ligne.</s1>"
  },
  {
-  "source": "<s1>Open </s1><s2>Offline maps</s2><s3> > </s3><s4>PDF maps</s4><s5> (or </s5><s6>Settings</s6><s7> > </s7><s8>Maps</s8><s9> > </s9><s10>PDF maps</s10><s11>) and tap </s11><s12>Import PDF</s12><s13>.</s13>",
-  "target": "<s1>Ouvrez </s1><s2>Cartes hors ligne</s2><s3> > </s3><s4>Cartes PDF</s4><s5> (ou </s5><s6>Paramètres</s6><s7> > </s7><s8>Maps</s8><s9> > </s9><s10>Cartes PDF</s10><s11>) et touchez </s11><s12>Importer un PDF</s12><s13>.</s13>"
+  "source": "<s1>Open </s1><s2>Offline maps</s2><s3> > </s3><s4>Imported maps</s4><s5> (or </s5><s6>Settings</s6><s7> > </s7><s8>Maps</s8><s9> > </s9><s10>Imported maps</s10><s11>) and tap </s11><s12>Import map</s12><s13>. The supported files are listed below the button.</s13>",
+  "target": "<s1>Ouvrez </s1><s2>Cartes hors ligne</s2><s3> > </s3><s4>Cartes importées</s4><s5> (ou </s5><s6>Paramètres</s6><s7> > </s7><s8>Maps</s8><s9> > </s9><s10>Cartes importées</s10><s11>) et touchez </s11><s12>Importer une carte</s12><s13>. Les fichiers pris en charge sont indiqués sous le bouton.</s13>"
  },
  {
-  "source": "<s1>Select the PDF file. The app reads its georeferencing and shows a preview on the map.</s1>",
-  "target": "<s1>Sélectionnez le fichier PDF. L’application lit son géoréférencement et affiche un aperçu sur la carte.</s1>"
+  "source": "<s1>Select the PDF or GeoTIFF file (the file type is recognized from its content). The app reads its georeferencing and shows a preview on the map.</s1>",
+  "target": "<s1>Sélectionnez le fichier PDF ou GeoTIFF (le type de fichier est reconnu à partir de son contenu). L’application lit son géoréférencement et affiche un aperçu sur la carte.</s1>"
  },
  {
-  "source": "<s1>Choose the </s1><s2>Page</s2><s3> (for multi-page files), the </s3><s4>Name</s4><s5> and the </s5><s6>Max zoom</s6><s7>. Zoom levels above the resolution of the PDF will look blurred. The number of tiles and the space needed are estimated.</s7>",
-  "target": "<s1>Choisissez la </s1><s2>Page</s2><s3> (pour les fichiers de plusieurs pages), le </s3><s4>Nom</s4><s5> et le </s5><s6>Zoom max</s6><s7>. Les niveaux de zoom supérieurs à la résolution du PDF apparaîtront flous. Le nombre de tuiles et l’espace nécessaire sont estimés.</s7>"
+  "source": "<s1>Choose the </s1><s2>Page</s2><s3> (for multi-page PDF files), the </s3><s4>Name</s4><s5> and the </s5><s6>Max zoom</s6><s7>. Zoom levels above the resolution of the map will look blurred. The number of tiles and the space needed are estimated.</s7>",
+  "target": "<s1>Choisissez la </s1><s2>Page</s2><s3> (pour les fichiers PDF de plusieurs pages), le </s3><s4>Nom</s4><s5> et le </s5><s6>Zoom max</s6><s7>. Les niveaux de zoom supérieurs à la résolution de la carte apparaîtront flous. Le nombre de tuiles et l’espace nécessaire sont estimés.</s7>"
  },
  {
   "source": "<s1>Tap </s1><s2>Import</s2><s3>.</s3>",
@@ -1896,16 +1896,20 @@
   "target": "<s1>Chaque carte importée peut être affichée ou masquée sur les cartes (</s1><s2>Afficher sur les cartes</s2><s3>), et son </s3><s4>Opacité</s4><s5> peut être réglée.</s5>"
  },
  {
-  "source": "<s1>Only PDF</s1><s2> hides the base map, so only the PDF map is shown.</s2>",
-  "target": "<s1>PDF seul</s1><s2> masque le fond de carte, de sorte que seule la carte PDF est affichée.</s2>"
+  "source": "<s1>Only imported map</s1><s2> hides the base map, so only the imported map is shown.</s2>",
+  "target": "<s1>Carte importée seule</s1><s2> masque le fond de carte, de sorte que seule la carte importée est affichée.</s2>"
  },
  {
-  "source": "<s1>If the datum of the map is not WGS84, a warning is shown: the map could be shifted by some meters.</s1>",
-  "target": "<s1>Si le système géodésique de la carte n’est pas WGS84, un avertissement s’affiche : la carte pourrait être décalée de quelques mètres.</s1>"
+  "source": "<s1>If the datum of the map is not WGS84 (or, for GeoTIFF files, its shift to WGS84 is not known), a warning is shown: the map could be shifted by some meters.</s1>",
+  "target": "<s1>Si le système géodésique de la carte n’est pas WGS84 (ou, pour les fichiers GeoTIFF, si sa transformation vers WGS84 n’est pas connue), un avertissement s’affiche : la carte pourrait être décalée de quelques mètres.</s1>"
  },
  {
   "source": "<s1>Note:</s1><s2> Only PDF files with georeferencing in the ISO 32000 (Adobe) geospatial PDF format are supported (e.g. exported from QGIS, ArcGIS, GDAL or Avenza); the OGC GeoPDF encoding is not supported yet. Files without georeferencing cannot be imported.</s2>",
   "target": "<s1>Remarque :</s1><s2> seuls les fichiers PDF géoréférencés au format PDF géospatial ISO 32000 (Adobe) sont pris en charge (par exemple exportés depuis QGIS, ArcGIS, GDAL ou Avenza) ; l’encodage OGC GeoPDF n’est pas encore pris en charge. Les fichiers sans géoréférencement ne peuvent pas être importés.</s2>"
+ },
+ {
+  "source": "<s1>Note:</s1><s2> GeoTIFF files with images with 8 bits per sample (RGB, RGBA, grayscale or with a color palette) are supported, with any compression except LERC and Zstandard; elevation models and other images with 16 or 32 bits per sample are not supported. Big files are imported faster when they contain overviews (e.g. Cloud Optimized GeoTIFF). After the import, only the map tiles are kept on the device, not the GeoTIFF file.</s2>",
+  "target": "<s1>Remarque :</s1><s2> les fichiers GeoTIFF dont les images ont 8 bits par échantillon (RVB, RVBA, niveaux de gris ou avec une palette de couleurs) sont pris en charge, avec toute compression sauf LERC et Zstandard ; les modèles numériques de terrain et les autres images à 16 ou 32 bits par échantillon ne sont pas pris en charge. Les fichiers volumineux sont importés plus rapidement lorsqu’ils contiennent des aperçus (overviews, par exemple Cloud Optimized GeoTIFF). Après l’importation, seules les tuiles de la carte sont conservées sur l’appareil, pas le fichier GeoTIFF.</s2>"
  },
  {
   "source": "<s1>10.5\tRecords map</s1>",
@@ -1956,8 +1960,8 @@
   "target": "<s1>Maintenez l’application à jour :</s1><s2> vérifiez toujours si une nouvelle version de l’application est disponible lorsque vous commencez à l’utiliser. Les mises à jour apportent de nouvelles fonctionnalités et des corrections.\n</s2><s3>Remarque :</s3><s4> la mise à jour de l’application conserve vos données sur l’appareil. Elle ne les supprime pas.</s4>"
  },
  {
-  "source": "<s1>Prepare the maps before going to the field:</s1><s2> download the offline map areas (and PDF maps) you will need while you still have a good internet connection.</s2>",
-  "target": "<s1>Préparez les cartes avant de partir sur le terrain :</s1><s2> téléchargez les zones de carte hors ligne (et les cartes PDF) dont vous aurez besoin tant que vous disposez d’une bonne connexion internet.</s2>"
+  "source": "<s1>Prepare the maps before going to the field:</s1><s2> download the offline map areas (and import the maps) you will need while you still have a good internet connection.</s2>",
+  "target": "<s1>Préparez les cartes avant de partir sur le terrain :</s1><s2> téléchargez les zones de carte hors ligne (et importez les cartes) dont vous aurez besoin tant que vous disposez d’une bonne connexion internet.</s2>"
  },
  {
   "source": "<s1>Keep the device memory as clean as possible</s1><s2>: Try to keep the device’s RAM as clean as possible, and avoid running heavy applications while collecting data with the Arena Mobile app.</s2>",
@@ -2040,15 +2044,15 @@
   "target": "<s1>Arena Mobile sur GitHub</s1><s2> : </s2><s3>https://github.com/openforis/arena-mobile</s3>"
  },
  {
-  "source": "<x1/><s2> Mobile device’s compass typically points to the magnetic north, not true north. The magnetic north is based on the Earth’s magnetic field, while true north refers to the geographic North Pole. You might be able to calibrate your device’s compass with a known declination value. This means that, depending on your location, your device can adjust readings to provide more accurate direction relative to true north.</s2>",
-  "target": "<x1/><s2> La boussole d’un appareil mobile indique généralement le nord magnétique, et non le nord géographique. Le nord magnétique est déterminé par le champ magnétique terrestre, tandis que le nord géographique correspond au pôle Nord géographique. Vous pouvez éventuellement étalonner la boussole de votre appareil avec une valeur de déclinaison connue. Ainsi, selon votre position, votre appareil peut ajuster ses relevés pour fournir une direction plus précise par rapport au nord géographique.</s2>"
+  "source": "<x1/><x2/><x3/><s4>56</s4><x5/>",
+  "target": "<x1/><x2/><x3/><s4>56</s4><x5/>"
  },
  {
   "source": "<x1/><s2>   Open Foris Arena Mobile - User Manual</s2>",
   "target": "<x1/><s2>   Open Foris Arena Mobile - Manuel d’utilisation</s2>"
  },
  {
-  "source": "<x1/><x2/><x3/><s4>56</s4><x5/>",
-  "target": "<x1/><x2/><x3/><s4>56</s4><x5/>"
+  "source": "<x1/><s2> Mobile device’s compass typically points to the magnetic north, not true north. The magnetic north is based on the Earth’s magnetic field, while true north refers to the geographic North Pole. You might be able to calibrate your device’s compass with a known declination value. This means that, depending on your location, your device can adjust readings to provide more accurate direction relative to true north.</s2>",
+  "target": "<x1/><s2> La boussole d’un appareil mobile indique généralement le nord magnétique, et non le nord géographique. Le nord magnétique est déterminé par le champ magnétique terrestre, tandis que le nord géographique correspond au pôle Nord géographique. Vous pouvez éventuellement étalonner la boussole de votre appareil avec une valeur de déclinaison connue. Ainsi, selon votre position, votre appareil peut ajuster ses relevés pour fournir une direction plus précise par rapport au nord géographique.</s2>"
  }
 ]

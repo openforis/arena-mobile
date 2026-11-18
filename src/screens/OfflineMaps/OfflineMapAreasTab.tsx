@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useNavigator } from "navigation/navigator";
 
 import { DateFormats, Dates } from "@openforis/arena-core";
@@ -12,16 +12,11 @@ import {
   Text,
   VView,
 } from "components";
-import { useNavigationFocus } from "hooks";
+import { useConfirmedAction, useFocusLoad } from "hooks";
 import { useTranslation } from "localization";
 import { MapLayers, MapProvider, OfflineMapArea, SettingsModel } from "model";
 import { OfflineMapsService } from "service";
-import {
-  SettingsActions,
-  SettingsSelectors,
-  useAppDispatch,
-  useConfirm,
-} from "state";
+import { SettingsActions, SettingsSelectors, useAppDispatch } from "state";
 import { useAppTheme } from "theme";
 import { Files, GeoUtils, log } from "utils";
 
@@ -31,7 +26,6 @@ import styles from "./styles";
 type State = {
   areas: OfflineMapArea[];
   loading: boolean;
-  deleting: boolean;
   tilesStorageSize: number | null;
   freeDiskStorage: number | null;
 };
@@ -129,18 +123,17 @@ export const OfflineMapAreasTab = () => {
 
   const navigator = useNavigator();
   const dispatch = useAppDispatch();
-  const confirm = useConfirm();
+  const { confirmAndRun, running: deleting } = useConfirmedAction();
   const downloadArea = useOfflineMapAreaDownload();
   const settings = SettingsSelectors.useSettings();
 
   const [state, setState] = useState<State>({
     areas: [],
     loading: true,
-    deleting: false,
     tilesStorageSize: null,
     freeDiskStorage: null,
   });
-  const { areas, loading, deleting, tilesStorageSize, freeDiskStorage } = state;
+  const { areas, loading, tilesStorageSize, freeDiskStorage } = state;
 
   const fetchAreas = useCallback(
     () =>
@@ -166,16 +159,12 @@ export const OfflineMapAreasTab = () => {
     [],
   );
 
-  const loadAreas = useCallback(async () => {
+  const resetLoading = useCallback(() => {
     setState((prev) => ({ ...prev, loading: true }));
-    await fetchAreas();
-  }, [fetchAreas]);
+  }, []);
 
-  // tabs are mounted when the screen is already focused: load on mount too (loading is initially true)
-  useEffect(() => {
-    void fetchAreas();
-  }, [fetchAreas]);
-  useNavigationFocus(loadAreas);
+  // loading is initially true
+  const loadAreas = useFocusLoad({ fetch: fetchAreas, reset: resetLoading });
 
   const onAddAreaPress = useCallback(() => {
     navigator.navigateToOfflineMapAreaEditor();
@@ -191,21 +180,18 @@ export const OfflineMapAreasTab = () => {
   const onDeletePress = useCallback(
     async (area: OfflineMapArea) => {
       if (
-        await confirm({
-          messageKey: "offlineMaps:area.deleteConfirm",
-          messageParams: { name: area.name },
-        })
+        await confirmAndRun(
+          {
+            messageKey: "offlineMaps:area.deleteConfirm",
+            messageParams: { name: area.name },
+          },
+          () => OfflineMapsService.deleteArea(area.id),
+        )
       ) {
-        setState((prev) => ({ ...prev, deleting: true }));
-        try {
-          await OfflineMapsService.deleteArea(area.id);
-        } finally {
-          setState((prev) => ({ ...prev, deleting: false }));
-        }
         await loadAreas();
       }
     },
-    [confirm, loadAreas],
+    [confirmAndRun, loadAreas],
   );
 
   const hasAreas = areas.length > 0;
@@ -216,16 +202,14 @@ export const OfflineMapAreasTab = () => {
     const messageKey = hasAreas
       ? "offlineMaps:deleteAllConfirm"
       : "offlineMaps:clearCacheConfirm";
-    if (await confirm({ messageKey })) {
-      setState((prev) => ({ ...prev, deleting: true }));
-      try {
-        await OfflineMapsService.deleteAllAreas();
-      } finally {
-        setState((prev) => ({ ...prev, deleting: false }));
-      }
+    if (
+      await confirmAndRun({ messageKey }, () =>
+        OfflineMapsService.deleteAllAreas(),
+      )
+    ) {
       await loadAreas();
     }
-  }, [confirm, hasAreas, loadAreas]);
+  }, [confirmAndRun, hasAreas, loadAreas]);
 
   const onResumePress = useCallback(
     async (area: OfflineMapArea) => {

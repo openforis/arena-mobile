@@ -3,7 +3,10 @@ import React from "react";
 import { useTranslation } from "localization";
 import { ScreenViewMode } from "model";
 
-import { DataVisualizerField } from "../DataVisualizer/types";
+import {
+  DataVisualizerField,
+  DataVisualizerItem,
+} from "../DataVisualizer/types";
 import { FlexWrapView } from "../FlexWrapView";
 import { HView } from "../HView";
 import { Text } from "../Text";
@@ -15,14 +18,14 @@ const emptyValuePlaceholder = "—";
 
 type TextVariant = "bodySmall" | "bodyMedium" | "titleMedium";
 
-type FieldsProps = {
-  fields: DataVisualizerField[];
-  item: any;
+type FieldsProps<T extends DataVisualizerItem> = {
+  fields: DataVisualizerField<T>[];
+  item: T;
   styles: DataCardsStyles;
   viewMode: ScreenViewMode;
 };
 
-const FieldValue = ({
+const FieldValue = <T extends DataVisualizerItem>({
   emphasized = false,
   field,
   item,
@@ -30,9 +33,9 @@ const FieldValue = ({
   styles,
   variant = "bodyMedium",
   viewMode,
-}: Omit<FieldsProps, "fields"> & {
+}: Omit<FieldsProps<T>, "fields"> & {
   emphasized?: boolean;
-  field: DataVisualizerField;
+  field: DataVisualizerField<T>;
   numberOfLines?: number;
   variant?: TextVariant;
 }) => {
@@ -55,10 +58,10 @@ const FieldValue = ({
   );
 };
 
-export const CardTitle = ({
+export const CardTitle = <T extends DataVisualizerItem>({
   fields,
   item,
-}: Omit<FieldsProps, "styles" | "viewMode">) => {
+}: Omit<FieldsProps<T>, "styles" | "viewMode">) => {
   const text = fields
     .map((field) => getFieldValueText(item, field))
     .filter(Boolean)
@@ -71,11 +74,11 @@ export const CardTitle = ({
   );
 };
 
-export const CardSubtitle = ({
+export const CardSubtitle = <T extends DataVisualizerItem>({
   fields,
   item,
   styles,
-}: Omit<FieldsProps, "viewMode">) => {
+}: Omit<FieldsProps<T>, "viewMode">) => {
   const text = fields
     .map((field) => getFieldValueText(item, field))
     .filter(Boolean)
@@ -88,7 +91,12 @@ export const CardSubtitle = ({
   );
 };
 
-export const CardBadges = ({ fields, item, styles, viewMode }: FieldsProps) => {
+export const CardBadges = <T extends DataVisualizerItem>({
+  fields,
+  item,
+  styles,
+  viewMode,
+}: FieldsProps<T>) => {
   if (fields.length === 0) return null;
   return (
     <FlexWrapView style={styles.badges}>
@@ -105,7 +113,12 @@ export const CardBadges = ({ fields, item, styles, viewMode }: FieldsProps) => {
   );
 };
 
-export const CardBody = ({ fields, item, styles, viewMode }: FieldsProps) => (
+export const CardBody = <T extends DataVisualizerItem>({
+  fields,
+  item,
+  styles,
+  viewMode,
+}: FieldsProps<T>) => (
   <>
     {fields.map((field) => (
       <FieldValue
@@ -120,7 +133,10 @@ export const CardBody = ({ fields, item, styles, viewMode }: FieldsProps) => (
   </>
 );
 
-type FieldRowsProps = Omit<FieldsProps, "styles"> & {
+type FieldRowsProps<T extends DataVisualizerItem> = Omit<
+  FieldsProps<T>,
+  "styles"
+> & {
   columns?: number;
   emphasized?: boolean;
   labelWidth: number;
@@ -129,7 +145,9 @@ type FieldRowsProps = Omit<FieldsProps, "styles"> & {
 
 // one field per line, label and value side by side, never wrapping: labels line up in a
 // fixed-width column so values can be scanned vertically
-export const FieldRows = (props: FieldRowsProps) => {
+export const FieldRows = <T extends DataVisualizerItem>(
+  props: FieldRowsProps<T>,
+) => {
   const {
     columns = 1,
     emphasized = false,

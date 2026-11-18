@@ -1,10 +1,13 @@
-import { Surveys, UUIDs } from "@openforis/arena-core";
+import { JobSerialized, Surveys, UUIDs } from "@openforis/arena-core";
 
 import { AppCompatibilityOperation, SettingsService } from "service";
 
 import { JobCancelError } from "model";
 import type { RecordsUploadState } from "service/RecordsUploadAndProcessJobContext";
-import { RecordsUploadAndProcessJob } from "service/recordsUploadAndProcessJob";
+import {
+  RecordsUploadAndProcessJob,
+  RecordsUploadResult,
+} from "service/recordsUploadAndProcessJob";
 import { RECORDS_UPLOAD_JOB_TYPE } from "service/recordsUploadJob";
 import { REMOTE_JOB_WATCHER_JOB_TYPE } from "service/remoteJobWatcherJob";
 import {
@@ -20,12 +23,17 @@ import { JobMonitorActions } from "../jobMonitor";
 import { SurveySelectors } from "../survey";
 import {
   errorOrJobToString,
-  isAuthError,
+  isAuthErrorOrFailedJobAuthError,
   REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES,
 } from "./dataExportUtils";
 import { i18n } from "localization";
 
 const { t } = i18n;
+
+// a failed job rejects with its summary (see JobMonitorActions.startAsync)
+type FailedJobSummary = Partial<
+  Pick<JobSerialized<unknown>, "errors" | "innerJobs" | "currentInnerJobIndex">
+>;
 
 /**
  * Helper to handle a job error and prompt the user for a retry.
@@ -35,7 +43,7 @@ const handleUploadJobError = async ({
   dispatch,
   error,
 }: {
-  error: any;
+  error: unknown;
   dispatch: AppDispatch;
 }): Promise<boolean> => {
   if (error instanceof JobCancelError) {
@@ -43,7 +51,7 @@ const handleUploadJobError = async ({
     return false;
   }
   // error occurred
-  const { errors } = error;
+  const { errors } = (error ?? {}) as FailedJobSummary;
   const errorMessage = errors
     ? Jobs.extractErrorMessage({ errors, t })
     : String(error);
@@ -62,8 +70,12 @@ const handleUploadJobError = async ({
 // was current on - see JobBase's own `innerJobs`/`currentInnerJobIndex` (both part of
 // toJSON(), which is what startAsync rejects with on failure). A JobCancelError (the user
 // canceled either phase) never has these fields, so this correctly returns undefined for it too.
-const getFailedInnerJobType = (error: any): string | undefined =>
-  error?.innerJobs?.[error?.currentInnerJobIndex]?.type;
+const getFailedInnerJobType = (error: unknown): string | undefined => {
+  const { innerJobs, currentInnerJobIndex } = (error ?? {}) as FailedJobSummary;
+  return currentInnerJobIndex == null
+    ? undefined
+    : innerJobs?.[currentInnerJobIndex]?.type;
+};
 
 // static: doesn't depend on any per-call value, so it's built once instead of on every retry
 // attempt - see JobMonitorActions.startAsync's innerJobUiConfigByType
@@ -88,7 +100,7 @@ const handleUploadAndProcessError = async ({
   silent,
 }: {
   dispatch: AppDispatch;
-  error: any;
+  error: unknown;
   silent: boolean;
 }): Promise<boolean> => {
   if (silent) {
@@ -99,7 +111,7 @@ const handleUploadAndProcessError = async ({
       `auto-sync: upload/processing failed: ${errorOrJobToString(error)}`,
     );
     dispatch(
-      isAuthError(error)
+      isAuthErrorOrFailedJobAuthError(error)
         ? AutoSyncActions.authError()
         : AutoSyncActions.checkError(),
     );
@@ -126,7 +138,18 @@ export const startUploadDataToRemoteServer =
     // REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES) - so this phase can keep filling the same overall
     // progress bar the zip-generation phase already started, instead of resetting it back to 0%
     chained = false,
-  }: any) =>
+  }: {
+    outputFileUri: string;
+    conflictResolutionStrategy?: string;
+    skipMissingFiles?: boolean;
+    onJobComplete?:
+      | ((
+          jobComplete: JobSerialized<RecordsUploadResult | undefined>,
+        ) => void | Promise<void>)
+      | null;
+    silent?: boolean;
+    chained?: boolean;
+  }) =>
   async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
@@ -161,7 +184,7 @@ export const startUploadDataToRemoteServer =
     // RecordsUploadAndProcessJob for why (and why only these two, not zip-generation too)
     const createUploadAndProcessJob = () =>
       new RecordsUploadAndProcessJob({
-        user,
+        user: user!,
         survey,
         cycle,
         fileUri: outputFileUri,
@@ -174,8 +197,12 @@ export const startUploadDataToRemoteServer =
       : {};
 
     // runs the job, starting it again while the user chooses to retry it
-    const runUploadAndProcessJob = async (): Promise<any> => {
-      let jobComplete: any = null;
+    const runUploadAndProcessJob = async (): Promise<
+      JobSerialized<RecordsUploadResult | undefined> | null | undefined
+    > => {
+      let jobComplete:
+        JobSerialized<RecordsUploadResult | undefined> | null | undefined =
+        null;
       let shouldRetry: boolean;
       try {
         jobComplete = await JobMonitorActions.startAsync({
@@ -190,12 +217,12 @@ export const startUploadDataToRemoteServer =
           transferSpeedTextKey: "dataEntry:uploadingData.speed",
           transferEtaTextKey: "dataEntry:uploadingData.eta",
           innerJobUiConfigByType: UPLOAD_AND_PROCESS_INNER_JOB_UI_CONFIG,
-          onJobComplete,
+          onJobComplete: onJobComplete ?? undefined,
           silent,
           ...progressRange,
         });
         shouldRetry = !jobComplete;
-      } catch (error: any) {
+      } catch (error) {
         shouldRetry = await handleUploadAndProcessError({
           dispatch,
           error,

@@ -2,7 +2,7 @@ export default {
   title: "Offline-Karten",
   tabs: {
     areas: "Heruntergeladene Gebiete",
-    pdfMaps: "PDF-Karten",
+    importedMaps: "Importierte Karten",
   },
   description:
     "Laden Sie die Karte Ihres Interessengebiets herunter, bevor Sie ins Feld gehen: Sie ist dann beim Zeichnen oder Anzeigen geografischer Attribute auch ohne Internetverbindung verfügbar.",

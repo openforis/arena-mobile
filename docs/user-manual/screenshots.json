@@ -123,5 +123,15 @@
   {
     "media": "image74.jpeg",
     "screenshot": "records-list"
+  },
+  {
+    "media": "image89.png",
+    "screenshot": "imported-maps-list",
+    "crop": [0, 0, 1, 0.665]
+  },
+  {
+    "media": "image94.png",
+    "screenshot": "imported-map-import",
+    "crop": [0, 0, 1, 0.27]
   }
 ]

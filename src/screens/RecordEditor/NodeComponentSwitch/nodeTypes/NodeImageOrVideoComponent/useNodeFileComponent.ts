@@ -1,26 +1,34 @@
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import {
+  NodeDefFile,
   NodeDefFileType,
   NodeDefs,
   Objects,
   UUIDs,
 } from "@openforis/arena-core";
 
-import { useRequestCameraPermission, useToast } from "hooks";
+import {
+  useAsyncValueEffect,
+  useRequestCameraPermission,
+  useToast,
+} from "hooks";
 import { useNodeComponentLocalState } from "screens/RecordEditor/useNodeComponentLocalState";
 import { RecordFileService } from "service/recordFileService";
-import { useConfirm } from "state/confirm";
 import { SettingsSelectors } from "state/settings";
 import { SurveySelectors } from "state/survey/selectors";
 import { ExifUtils, Files, ImageUtils, log, Permissions } from "utils";
 
 import { useCheckCanAccessMediaLibrary } from "./useCheckCanAccessMediaLibrary";
+import { NodeComponentProps } from "../nodeComponentPropTypes";
 
 const logPrefix = "NodeFileComponent:";
+
+// result of the check of the file being missing in the device storage
+type FileMissingCheck = { fileUuid: string | undefined; missing: boolean };
 
 const logDebug = (message: string) => {
   log.debug(`${logPrefix} ${message}`);
@@ -31,13 +39,21 @@ const mediaTypeByFileType: Record<string, ImagePicker.MediaType> = {
   [NodeDefFileType.video]: "videos",
 };
 
-const determineFileMaxSize = ({ nodeDef, settings }: any) => {
+const determineFileMaxSize = ({
+  nodeDef,
+  settings,
+}: {
+  nodeDef: NodeDefFile;
+  settings: { imageSizeLimit?: number; imageSizeUnlimited?: boolean };
+}) => {
   const { imageSizeLimit, imageSizeUnlimited } = settings;
   const nodeDefFileMaxSize = NodeDefs.getFileMaxSize(nodeDef);
   if (imageSizeUnlimited) {
     return nodeDefFileMaxSize;
   }
-  const limits = [nodeDefFileMaxSize, imageSizeLimit].filter(Boolean);
+  const limits = [nodeDefFileMaxSize, imageSizeLimit].filter(
+    (limit): limit is number => !!limit,
+  );
   return limits.length > 0 ? Math.min(...limits) : undefined;
 };
 
@@ -115,9 +131,11 @@ const resizeImage = async (
   }
 };
 
-export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
+export const useNodeFileComponent = ({
+  nodeDef,
+  nodeUuid,
+}: Pick<NodeComponentProps<NodeDefFile>, "nodeDef" | "nodeUuid">) => {
   const toaster = useToast();
-  const confirm = useConfirm();
   const imageSizeLimit = SettingsSelectors.useImageSizeLimit();
   const imageSizeUnlimited = SettingsSelectors.useImageSizeUnlimited();
   const surveyId = SurveySelectors.useCurrentSurveyId();
@@ -147,44 +165,45 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
     [mediaTypes],
   );
 
-  const { value, updateNodeValue } = useNodeComponentLocalState({
+  const {
+    value,
+    updateNodeValue,
+    onClearPress: onDeletePress,
+  } = useNodeComponentLocalState({
     nodeUuid,
+    clearConfirmMessageKey: "dataEntry:fileAttribute.deleteConfirmMessage",
   });
   const [resizing, setResizing] = useState(false);
   const [rotating, setRotating] = useState(false);
-  const [fileMissing, setFileMissing] = useState(false);
 
   const { fileUuid } = value ?? {};
 
-  useEffect(() => {
-    let cancelled = false;
-
-    const checkFileMissing = async () => {
-      setFileMissing(false);
-      if (!fileUuid) return;
-
-      try {
-        const missing = await RecordFileService.recordFileMissing({
-          surveyId,
-          fileUuid,
-        });
-        if (!cancelled) setFileMissing(missing);
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : String(error);
-        log.error(
-          `${logPrefix} Error checking if file is missing: ${errorMessage}`,
-        );
-        if (!cancelled) setFileMissing(false);
-      }
-    };
-
-    void checkFileMissing();
-
-    return () => {
-      cancelled = true;
-    };
+  const fetchFileMissing = useCallback(async (): Promise<FileMissingCheck> => {
+    if (!fileUuid) return { fileUuid, missing: false };
+    try {
+      const missing = await RecordFileService.recordFileMissing({
+        surveyId,
+        fileUuid,
+      });
+      return { fileUuid, missing };
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      log.error(
+        `${logPrefix} Error checking if file is missing: ${errorMessage}`,
+      );
+      return { fileUuid, missing: false };
+    }
   }, [surveyId, fileUuid]);
+
+  const [fileMissingCheck] = useAsyncValueEffect(
+    fetchFileMissing,
+    [fetchFileMissing],
+    { initialValue: { fileUuid: undefined, missing: false } },
+  );
+  // not missing while the file selected last is being checked
+  const fileMissing =
+    fileMissingCheck.fileUuid === fileUuid && fileMissingCheck.missing;
 
   const onFileSelected = useCallback(
     async (
@@ -341,16 +360,6 @@ export const useNodeFileComponent = ({ nodeDef, nodeUuid }: any) => {
       setRotating(false);
     }
   }, [surveyId, toaster, updateNodeValue, fileUuid, value, rotating]);
-
-  const onDeletePress = useCallback(async () => {
-    if (
-      await confirm({
-        messageKey: "dataEntry:fileAttribute.deleteConfirmMessage",
-      })
-    ) {
-      updateNodeValue({ value: null });
-    }
-  }, [confirm, updateNodeValue]);
 
   return {
     nodeValue: value,

@@ -20,6 +20,7 @@ import { FieldRows } from "../DataCards/DataCardParts";
 import { getFieldRowsLayout } from "../DataCards/dataCardsUtils";
 import {
   DataVisualizerField,
+  DataVisualizerItem,
   DataVisualizerProps,
 } from "../DataVisualizer/types";
 import { Icon } from "../Icon";
@@ -49,24 +50,26 @@ const ExpandToggle = ({
   </Pressable>
 );
 
-type DataTableRowProps = {
-  detailFields: DataVisualizerField[];
+type DataTableRowProps<T extends DataVisualizerItem> = {
+  detailFields: DataVisualizerField<T>[];
   expandable: boolean;
   expanded: boolean;
   expandedRowLayout: { columns: number; labelWidth: number };
   expandedRowStyle: StyleProp<ViewStyle>;
-  item: any;
-  onLongPress: (item: any) => void;
-  onPress: (item: any) => void;
-  onSelect: (item: any) => void;
-  onToggleExpanded: (key: any) => void;
+  item: T;
+  onLongPress: (item: T) => void;
+  onPress: (item: T) => void;
+  onSelect: (item: T) => void;
+  onToggleExpanded: (key: string) => void;
   selected: boolean;
   selectionEnabled: boolean;
   toggleColor: string;
-  visibleFields: DataVisualizerField[];
+  visibleFields: DataVisualizerField<T>[];
 };
 
-const DataTableRow = memo(function DataTableRow(props: DataTableRowProps) {
+const DataTableRow = memo(function DataTableRow<T extends DataVisualizerItem>(
+  props: DataTableRowProps<T>,
+) {
   const {
     detailFields,
     expandable,
@@ -95,7 +98,7 @@ const DataTableRow = memo(function DataTableRow(props: DataTableRowProps) {
             key: fKey,
             style,
             cellRenderer: CellRenderer,
-          }: DataVisualizerField) => (
+          }: DataVisualizerField<T>) => (
             <RNPDataTable.Cell
               key={fKey}
               style={style}
@@ -137,11 +140,15 @@ const DataTableRow = memo(function DataTableRow(props: DataTableRowProps) {
       )}
     </>
   );
-});
+}) as <T extends DataVisualizerItem>(
+  props: DataTableRowProps<T>,
+) => React.ReactElement;
 
-const rowKeyExtractor = (item: any) => String(item.key);
+const rowKeyExtractor = (item: DataVisualizerItem) => String(item.key);
 
-export const DataTable = (props: DataVisualizerProps) => {
+export const DataTable = <T extends DataVisualizerItem>(
+  props: DataVisualizerProps<T>,
+) => {
   const {
     canDelete = true,
     fields,
@@ -190,7 +197,7 @@ export const DataTable = (props: DataVisualizerProps) => {
     onPageChange,
   } = usePagination({ items, initialItemsPerPage });
 
-  const rowsListRef = useRef<FlatList>(null);
+  const rowsListRef = useRef<FlatList<T>>(null);
 
   const isTablet = DeviceInfoSelectors.useIsTablet();
   const isLandscape = DeviceInfoSelectors.useOrientationIsLandscape();
@@ -226,11 +233,11 @@ export const DataTable = (props: DataVisualizerProps) => {
   }, [fields, isLandscape, isTablet]);
   const expandable = detailFields.length > 0;
 
-  const [expandedKeys, setExpandedKeys] = useState<any[]>([]);
+  const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
   const allExpanded = items.length > 0 && expandedKeys.length === items.length;
 
   const toggleExpanded = useCallback(
-    (key: any) =>
+    (key: string) =>
       setExpandedKeys((keysPrev) =>
         keysPrev.includes(key)
           ? Arrays.removeItem(key)(keysPrev)
@@ -273,7 +280,7 @@ export const DataTable = (props: DataVisualizerProps) => {
   const onRowSelect = useStableCallback(onItemSelect);
 
   const renderRow = useCallback(
-    ({ item }: { item: any }) => (
+    ({ item }: { item: T }) => (
       <DataTableRow
         detailFields={detailFields}
         expandable={expandable}
@@ -311,7 +318,7 @@ export const DataTable = (props: DataVisualizerProps) => {
   const table = (
     <RNPDataTable style={styles.table}>
       <RNPDataTable.Header>
-        {visibleFields.map((field: DataVisualizerField) => (
+        {visibleFields.map((field: DataVisualizerField<T>) => (
           <RNPDataTable.Title
             key={field.key}
             onPress={() =>

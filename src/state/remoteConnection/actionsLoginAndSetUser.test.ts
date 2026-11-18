@@ -1,19 +1,15 @@
+import { User } from "@openforis/arena-core";
+
 import { SecureStoreService, UserService } from "service";
-import { AsyncStorageUtils } from "service/asyncStorage/AsyncStorageUtils";
 
 import { loginAndSetUser } from "./actionsLoginAndSetUser";
+import { RemoteConnectionSliceActions } from "./reducer";
 
 jest.mock("service", () => ({
   SecureStoreService: { getAuthRefreshToken: jest.fn() },
-  UserService: { fetchUser: jest.fn() },
+  UserService: { fetchUser: jest.fn(), fetchLastLoggedInUser: jest.fn() },
 }));
-jest.mock("service/asyncStorage/AsyncStorageUtils", () => ({
-  AsyncStorageUtils: { getItem: jest.fn() },
-}));
-jest.mock("service/asyncStorage/asyncStorageKeys", () => ({
-  asyncStorageKeys: { loggedInUser: "loggedInUser" },
-}));
-jest.mock("utils/Logger", () => ({ log: { error: jest.fn() } }));
+jest.mock("utils/Logger");
 jest.mock("../autoSync", () => ({
   AutoSyncActions: { reset: () => ({ type: "autoSyncReset" }) },
 }));
@@ -24,8 +20,8 @@ jest.mock("./selectors", () => ({
   RemoteConnectionSelectors: { selectLoggedUser: (state: any) => state.user },
 }));
 
-const cachedUser = { uuid: "cached" };
-const remoteUser = { uuid: "remote" };
+const cachedUser = { uuid: "cached" } as unknown as User;
+const remoteUser = { uuid: "remote" } as unknown as User;
 
 const getState = () => ({
   deviceInfo: { isNetworkConnected: true },
@@ -34,11 +30,12 @@ const getState = () => ({
 
 describe("loginAndSetUser", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
     (SecureStoreService.getAuthRefreshToken as jest.Mock).mockResolvedValue(
       "token",
     );
-    (AsyncStorageUtils.getItem as jest.Mock).mockResolvedValue(cachedUser);
+    (UserService.fetchLastLoggedInUser as jest.Mock).mockResolvedValue(
+      cachedUser,
+    );
     (UserService.fetchUser as jest.Mock).mockResolvedValue(remoteUser);
   });
 
@@ -48,8 +45,10 @@ describe("loginAndSetUser", () => {
     await loginAndSetUser()(dispatch, getState as any);
 
     const types = dispatch.mock.calls.map(([action]) => action);
-    expect(types[0]).toEqual({ type: "USER_LOADING", user: cachedUser });
-    expect(types[1]).toEqual({ type: "USER_SET", user: remoteUser });
+    expect(types[0]).toEqual(
+      RemoteConnectionSliceActions.userLoading(cachedUser),
+    );
+    expect(types[1]).toEqual(RemoteConnectionSliceActions.userSet(remoteUser));
   });
 
   it("shares the request between concurrent calls", async () => {

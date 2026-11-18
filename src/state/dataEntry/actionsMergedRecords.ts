@@ -140,7 +140,7 @@ export const fetchMergedSameRecordsSilently = async ({
 };
 
 export const fetchRecordsChangedRemotely =
-  ({ cycle, recordUuids }: any) =>
+  ({ cycle, recordUuids }: { cycle?: string | null; recordUuids: string[] }) =>
   async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state)!;

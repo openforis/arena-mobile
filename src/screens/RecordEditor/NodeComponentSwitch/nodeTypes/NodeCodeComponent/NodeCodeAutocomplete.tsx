@@ -1,20 +1,27 @@
 import React, { useCallback } from "react";
 
+import { CategoryItem, Labels } from "@openforis/arena-core";
+
 import { SelectableListWithFilter } from "components";
 
 import { SurveySelectors } from "state/survey";
 
-const itemKeyExtractor = (item: any) => item?.uuid;
+// descriptions are not declared in arena-core CategoryItemProps
+type CategoryItemWithDescriptions = CategoryItem & {
+  props: { descriptions?: Labels };
+};
+
+const itemKeyExtractor = (item: CategoryItem) => item?.uuid;
 
 type NodeCodeAutocompleteProps = {
   editable?: boolean;
-  itemLabelFunction: (item: any) => string;
-  items?: any[];
+  itemLabelFunction: (item: CategoryItem) => string;
+  items?: CategoryItem[];
   multiple?: boolean;
   onItemAdd: (uuid: string) => void;
   onItemRemove: (uuid: string) => void;
-  onSingleValueChange: (uuid: string) => void;
-  selectedItems?: any[];
+  onSingleValueChange: (uuid: string | undefined) => void;
+  selectedItems?: CategoryItem[];
 };
 
 export const NodeCodeAutocomplete = (props: NodeCodeAutocompleteProps) => {
@@ -32,13 +39,13 @@ export const NodeCodeAutocomplete = (props: NodeCodeAutocompleteProps) => {
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
 
   const onSelectedItemsChange = useCallback(
-    (selectedItemsUpdated: any) => {
+    (selectedItemsUpdated: CategoryItem[]) => {
       if (multiple) {
         const newItem = selectedItemsUpdated.find(
-          (item: any) => !selectedItems.includes(item),
+          (item) => !selectedItems.includes(item),
         );
         const removedItem = selectedItems.find(
-          (item: any) => !selectedItemsUpdated.includes(item),
+          (item) => !selectedItemsUpdated.includes(item),
         );
         if (removedItem) {
           onItemRemove(removedItem.uuid);
@@ -55,7 +62,8 @@ export const NodeCodeAutocomplete = (props: NodeCodeAutocompleteProps) => {
   );
 
   const itemDescriptionExtractor = useCallback(
-    (item: any) => item?.props?.descriptions?.[lang],
+    (item: CategoryItemWithDescriptions | undefined) =>
+      item?.props?.descriptions?.[lang],
     [lang],
   );
 

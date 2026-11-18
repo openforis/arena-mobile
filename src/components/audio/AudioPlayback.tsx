@@ -1,11 +1,11 @@
 import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useMemo, useRef } from "react";
 import { Pressable } from "react-native";
 import type { GestureResponderEvent, LayoutChangeEvent } from "react-native";
 
 import { Dates } from "@openforis/arena-core";
 
-import { useToast } from "hooks";
+import { useAsyncValueEffect, useToast } from "hooks";
 import { useTranslation } from "localization";
 import { HView, IconButton, ProgressBar, Text } from "components";
 import { Files } from "utils";
@@ -21,7 +21,14 @@ export const AudioPlayback = memo((props: AudioPlaybackProps) => {
   const { fileUri } = props;
   const toaster = useToast();
   const { t } = useTranslation();
-  const [fileSizeBytes, setFileSizeBytes] = useState<number | null>(null);
+  const [fileSizeBytes] = useAsyncValueEffect(
+    () =>
+      fileUri
+        ? Files.getSize(fileUri).catch(() => null)
+        : Promise.resolve(null),
+    [fileUri],
+    { initialValue: null as number | null },
+  );
 
   const audioPlayer = useAudioPlayer(fileUri ?? null);
   const playerStatus = useAudioPlayerStatus(audioPlayer);
@@ -99,34 +106,6 @@ export const AudioPlayback = memo((props: AudioPlaybackProps) => {
   }, [currentTime, duration]);
 
   const canStopPlayback = playing || currentTime > 0;
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const fetchFileSize = async () => {
-      if (!fileUri) {
-        setFileSizeBytes(null);
-        return;
-      }
-
-      try {
-        const size = await Files.getSize(fileUri);
-        if (!cancelled) {
-          setFileSizeBytes(size);
-        }
-      } catch {
-        if (!cancelled) {
-          setFileSizeBytes(null);
-        }
-      }
-    };
-
-    void fetchFileSize();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [fileUri]);
 
   const fileSize = useMemo(
     () =>

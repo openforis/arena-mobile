@@ -8,6 +8,7 @@ import {
 } from "react-native";
 
 import {
+  NodeDef,
   NodeDefs,
   Validations,
   ValidationSeverity,
@@ -119,7 +120,7 @@ const ValidationIcon = (props: ValidationIconProps) => {
 };
 
 type NodeValidationIconProps = {
-  nodeDef: any;
+  nodeDef: NodeDef<any>;
   parentNodeUuid?: string;
 };
 

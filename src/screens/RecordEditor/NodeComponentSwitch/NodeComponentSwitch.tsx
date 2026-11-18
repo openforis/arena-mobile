@@ -1,6 +1,6 @@
 import { createElement, memo } from "react";
 
-import { NodeDefType, NodeDefs } from "@openforis/arena-core";
+import { NodeDefs } from "@openforis/arena-core";
 
 import { RecordEditViewMode } from "model";
 import { SurveyOptionsSelectors } from "state";
@@ -29,7 +29,7 @@ const getNodeMultipleEntityComponent = () =>
 export const NodeComponentSwitch = memo((props: NodeComponentProps) => {
   const { nodeDef, parentNodeUuid } = props;
 
-  log.debug(`rendering NodeComponentSwitch for ${nodeDef.props.name}`);
+  log.debug(`rendering NodeComponentSwitch for ${NodeDefs.getName(nodeDef)}`);
 
   const viewMode = SurveyOptionsSelectors.useRecordEditViewMode();
 
@@ -63,7 +63,7 @@ export const NodeComponentSwitch = memo((props: NodeComponentProps) => {
     );
   }
 
-  if (nodeDef.type === NodeDefType.code) {
+  if (NodeDefs.isCode(nodeDef)) {
     return (
       <NodeCodeComponent nodeDef={nodeDef} parentNodeUuid={parentNodeUuid} />
     );

@@ -5,7 +5,6 @@ import {
   invalidTwoFactorCodeError,
 } from "./authService";
 import { SecureStoreService } from "./SecureStoreService";
-import { SettingsService } from "./settingsService";
 
 jest.mock("./api", () => ({ API: { post: jest.fn() } }));
 
@@ -13,19 +12,19 @@ jest.mock("./SecureStoreService", () => ({
   SecureStoreService: {
     getAuthRefreshToken: jest.fn(),
     setAuthRefreshToken: jest.fn(),
+    getServerCredentials: jest.fn(),
+    setServerCredentials: jest.fn(),
+    resetServerCredentials: jest.fn(),
   },
 }));
 
 jest.mock("./settingsService", () => ({
   SettingsService: {
     fetchSettings: async () => ({ serverUrl: "https://arena.test" }),
-    getCredentials: jest.fn(),
-    setCredentials: jest.fn(),
-    resetCredentials: jest.fn(),
   },
 }));
 
-jest.mock("utils/Logger", () => ({ log: { warn: jest.fn() } }));
+jest.mock("utils/Logger");
 
 jest.mock("utils/SystemUtils", () => ({
   SystemUtils: { getApplicationInfo: async () => ({ appId: "am" }) },
@@ -34,9 +33,10 @@ jest.mock("utils/SystemUtils", () => ({
 const postMock = API.post as jest.Mock;
 const setAuthRefreshTokenMock =
   SecureStoreService.setAuthRefreshToken as jest.Mock;
-const getCredentialsMock = SettingsService.getCredentials as jest.Mock;
-const setCredentialsMock = SettingsService.setCredentials as jest.Mock;
-const resetCredentialsMock = SettingsService.resetCredentials as jest.Mock;
+const getCredentialsMock = SecureStoreService.getServerCredentials as jest.Mock;
+const setCredentialsMock = SecureStoreService.setServerCredentials as jest.Mock;
+const resetCredentialsMock =
+  SecureStoreService.resetServerCredentials as jest.Mock;
 
 const user = { uuid: "user-uuid" };
 
@@ -50,7 +50,6 @@ const loginSuccessResponse = {
 
 describe("AuthService.refreshAuthTokens", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
     (SecureStoreService.getAuthRefreshToken as jest.Mock).mockResolvedValue(
       "refresh-token",
     );
@@ -129,10 +128,6 @@ describe("AuthService.refreshAuthTokens", () => {
 });
 
 describe("AuthService.login", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it("stores the credentials after a successful login", async () => {
     postMock.mockResolvedValue(loginSuccessResponse);
     const res = await AuthService.login({ email: "a@b.c", password: "pwd" });
@@ -156,10 +151,6 @@ describe("AuthService.login", () => {
 });
 
 describe("AuthService login errors", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it("returns the error message as a string on server errors", async () => {
     postMock.mockRejectedValue(
       Object.assign(new Error("Request failed with status code 500"), {
@@ -204,7 +195,6 @@ describe("AuthService login errors", () => {
 
 describe("AuthService.logout", () => {
   beforeEach(async () => {
-    jest.clearAllMocks();
     postMock.mockResolvedValue(loginSuccessResponse);
     await AuthService.login({ email: "a@b.c", password: "pwd" });
   });
@@ -225,7 +215,6 @@ describe("AuthService.logout", () => {
 
 describe("AuthService.refreshAuthTokens with stored credentials", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
     (SecureStoreService.getAuthRefreshToken as jest.Mock).mockResolvedValue(
       "refresh-token",
     );

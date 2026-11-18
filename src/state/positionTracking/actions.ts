@@ -16,7 +16,7 @@ import { SettingsSelectors } from "../settings/selectors";
 import { SurveySelectors } from "../survey/selectors";
 import { ToastActions } from "../toast";
 
-import { POSITION_TRACKING_RESET, POSITION_TRACKING_UPDATE } from "./reducer";
+import { PositionTrackingSliceActions } from "./reducer";
 import { PositionTrackingSelectors } from "./selectors";
 import { PositionTrackingStatus } from "./types";
 import type { AppDispatch, AppGetState, RootState } from "../store";
@@ -29,7 +29,7 @@ let flushInterval: ReturnType<typeof setInterval> | null = null;
 let unsubscribeFromService: (() => void) | null = null;
 let flushInProgress: Promise<boolean> | null = null;
 
-const update = (payload: any) => ({ type: POSITION_TRACKING_UPDATE, payload });
+const { reset, update } = PositionTrackingSliceActions;
 
 const getTrackingSettings = (state: RootState): PositionTrackingSettings => {
   const settings = SettingsSelectors.selectSettings(state);
@@ -78,7 +78,7 @@ const _discard = async (dispatch: AppDispatch) => {
   stopFlushTimer();
   stopListeningToServiceUpdates();
   await PositionTrackingService.discard();
-  dispatch({ type: POSITION_TRACKING_RESET });
+  dispatch(reset());
 };
 
 const _flush = async (
@@ -142,7 +142,7 @@ const _startNew =
     const node = Records.getNodeByUuid(nodeUuid)(record);
     if (!node) return;
 
-    dispatch({ type: POSITION_TRACKING_RESET });
+    dispatch(reset());
     dispatch(
       update({
         status: PositionTrackingStatus.starting,
@@ -231,7 +231,7 @@ const stopTracking =
   ({ confirm = true }: { confirm?: boolean } = {}) =>
   async (dispatch: AppDispatch, getState: AppGetState) => {
     if (!PositionTrackingService.getTrack()) {
-      dispatch({ type: POSITION_TRACKING_RESET });
+      dispatch(reset());
       return true;
     }
     if (
@@ -356,7 +356,7 @@ const autoStartTracking =
 const closeTrack =
   () => async (dispatch: AppDispatch, getState: AppGetState) => {
     if (!PositionTrackingService.getTrack()) {
-      dispatch({ type: POSITION_TRACKING_RESET });
+      dispatch(reset());
       return;
     }
     if (!(await _stop(dispatch, getState))) {
@@ -364,7 +364,7 @@ const closeTrack =
       stopFlushTimer();
       stopListeningToServiceUpdates();
       await PositionTrackingService.unload();
-      dispatch({ type: POSITION_TRACKING_RESET });
+      dispatch(reset());
       await setKeepScreenAwake(getState, false);
     }
   };

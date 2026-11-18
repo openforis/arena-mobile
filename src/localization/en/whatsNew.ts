@@ -3,6 +3,11 @@ export default {
   since: "Since version {{version}}",
   dontShowAgain: "Don't show these again",
   items: {
+    geoTiffMaps: {
+      title: "GeoTIFF maps",
+      description:
+        "In **Offline maps**, the **Imported maps** tab (formerly **PDF maps**) can now import **GeoTIFF** files too, e.g. orthophotos or scanned map sheets: use **Import map** and choose a PDF or a GeoTIFF file.\n\nThe map is shown on top of the base map in all the maps of the app, even without an internet connection.",
+    },
     mapLayers: {
       title: "Map: areas of interest and map layers",
       description:
@@ -16,7 +21,7 @@ export default {
     offlineMaps: {
       title: "Offline maps",
       description:
-        "Open **Offline maps** from the main menu and use **Add area** to download the map of your area of interest before going to the field: it will be available even without an internet connection.\n\nIn the **PDF maps** tab you can also import georeferenced PDF maps: they are shown on top of the base map.",
+        "Open **Offline maps** from the main menu and use **Add area** to download the map of your area of interest before going to the field: it will be available even without an internet connection.\n\nIn the **Imported maps** tab you can also import georeferenced PDF or GeoTIFF maps: they are shown on top of the base map.",
     },
     recordsMap: {
       title: "Records on the map",

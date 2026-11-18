@@ -24,6 +24,10 @@ export default StyleSheet.create({
   buttonsRow: {
     justifyContent: "space-evenly",
   },
+  supportedFormatsText: {
+    textAlign: "center",
+    opacity: 0.8,
+  },
   emptyText: {
     textAlign: "center",
     marginTop: 20,

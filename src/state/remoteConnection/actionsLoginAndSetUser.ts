@@ -1,18 +1,12 @@
 import { SecureStoreService, UserService } from "service";
-import { AsyncStorageUtils } from "service/asyncStorage/AsyncStorageUtils";
-import { asyncStorageKeys } from "service/asyncStorage/asyncStorageKeys";
+import { HttpErrors } from "utils/HttpErrors";
 import { log } from "utils/Logger";
 
 import { AutoSyncActions } from "../autoSync";
 import { DeviceInfoSelectors } from "../deviceInfo/selectors";
-import { RemoteConnectionActionTypes } from "./actionTypes";
+import { RemoteConnectionSliceActions } from "./reducer";
 import { RemoteConnectionSelectors } from "./selectors";
 import type { AppDispatch, AppGetState } from "../store";
-
-const { USER_LOADING, USER_SET } = RemoteConnectionActionTypes;
-
-const getUserInAsyncStorage = () =>
-  AsyncStorageUtils.getItem(asyncStorageKeys.loggedInUser);
 
 const fetchUser = async () => {
   try {
@@ -20,9 +14,9 @@ const fetchUser = async () => {
   } catch (error: any) {
     log.error("Error fetching user", error);
     // session no longer valid: a new login is required
-    if (error?.response?.status === 401) return null;
+    if (HttpErrors.isUnauthorizedResponse(error)) return null;
     // server not reachable (e.g. network connected but no internet): keep the last logged in user
-    return getUserInAsyncStorage();
+    return UserService.fetchLastLoggedInUser();
   }
 };
 
@@ -61,20 +55,20 @@ const _loginAndSetUser =
         return;
       }
       // the last logged in user is used (e.g. for permissions) until the server answers
-      const userInAsyncStorage = await getUserInAsyncStorage();
-      dispatch({ type: USER_LOADING, user: userInAsyncStorage });
+      const lastLoggedInUser = await UserService.fetchLastLoggedInUser();
+      dispatch(RemoteConnectionSliceActions.userLoading(lastLoggedInUser));
       const user = await fetchUser();
-      dispatch({ type: USER_SET, user });
+      dispatch(RemoteConnectionSliceActions.userSet(user));
       if (user) {
         // credentials just proved valid again: drop any auto-sync auth error remembered from
         // before (see AutoSyncActions.reset)
         dispatch(AutoSyncActions.reset());
       }
     } else {
-      // retrieve user from async storage (if any)
-      const userInAsyncStorage = await getUserInAsyncStorage();
-      if (userInAsyncStorage) {
-        dispatch({ type: USER_SET, user: userInAsyncStorage });
+      // use the last logged in user (if any)
+      const lastLoggedInUser = await UserService.fetchLastLoggedInUser();
+      if (lastLoggedInUser) {
+        dispatch(RemoteConnectionSliceActions.userSet(lastLoggedInUser));
       }
     }
   };

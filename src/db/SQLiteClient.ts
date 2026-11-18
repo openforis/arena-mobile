@@ -4,6 +4,16 @@ import { Promises } from "@openforis/arena-core";
 
 import { log } from "utils";
 
+// expo-sqlite binds undefined as null
+export type SqlValue = SQLite.SQLiteBindValue | undefined;
+export type SqlParams = SqlValue[];
+
+export type SqlRunResult = { insertId: number; rowsAffected: number };
+
+export type DbMigration = (client: SQLiteClient) => Promise<void>;
+
+const toBindParams = (params?: SqlParams) => params as SQLite.SQLiteBindValue[];
+
 export class DowngradeError extends Error {
   constructor() {
     super();
@@ -12,12 +22,12 @@ export class DowngradeError extends Error {
 }
 
 export default class SQLiteClient {
-  migrations: any[];
-  name: any;
+  migrations: DbMigration[];
+  name: string;
   privateConnected: boolean;
   privateDb: SQLite.SQLiteDatabase | null;
   private transactionsQueue: Promise<unknown> = Promise.resolve();
-  constructor(name: any, migrations: any[], _debug = false) {
+  constructor(name: string, migrations: DbMigration[], _debug = false) {
     this.name = name;
     this.migrations = migrations;
     this.privateDb = null;
@@ -43,15 +53,15 @@ export default class SQLiteClient {
     return result;
   }
 
-  runSql(sql: any, params?: any) {
+  runSql(sql: string, params?: SqlParams): Promise<SqlRunResult> {
     return this.enqueue(async () => {
-      const result = await this.privateDb!.runAsync(sql, params);
+      const result = await this.privateDb!.runAsync(sql, toBindParams(params));
       const { lastInsertRowId: insertId, changes: rowsAffected } = result;
       return { insertId, rowsAffected };
     });
   }
 
-  executeSql(sql: any) {
+  executeSql(sql: string): Promise<void> {
     return this.enqueue(() => this.privateDb!.execAsync(sql));
   }
 
@@ -77,12 +87,12 @@ export default class SQLiteClient {
     );
   }
 
-  one(sql: any, params?: any) {
-    return this.privateDb!.getFirstAsync(sql, params);
+  one<T = unknown>(sql: string, params?: SqlParams): Promise<T | null> {
+    return this.privateDb!.getFirstAsync<T>(sql, toBindParams(params));
   }
 
-  many(sql: any, params?: any) {
-    return this.privateDb!.getAllAsync(sql, params);
+  many<T = unknown>(sql: string, params?: SqlParams): Promise<T[]> {
+    return this.privateDb!.getAllAsync<T>(sql, toBindParams(params));
   }
 
   async connect() {
@@ -113,8 +123,10 @@ export default class SQLiteClient {
   }
 
   async runMigrationsIfNecessary() {
-    const dbUserVersionRow: any = await this.one("PRAGMA user_version");
-    const prevDbVersion = dbUserVersionRow.user_version;
+    const dbUserVersionRow = await this.one<{ user_version: number }>(
+      "PRAGMA user_version",
+    );
+    const prevDbVersion = dbUserVersionRow!.user_version;
     log.debug(`==== current DB version: ${prevDbVersion}`);
     const nextDbVersion = this.migrations.length;
     log.debug(`==== next DB version: ${nextDbVersion}`);

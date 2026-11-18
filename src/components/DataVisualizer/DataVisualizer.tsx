@@ -6,23 +6,29 @@ import { DataCardList } from "../DataCards";
 import { DataTable } from "../DataTable";
 import { DataList } from "../DataList";
 import { VView } from "../VView";
-import { DataVisualizerProps } from "./types";
+import { DataVisualizerItem, DataVisualizerProps } from "./types";
 
-type Props = DataVisualizerProps & {
+type Props<T extends DataVisualizerItem> = DataVisualizerProps<T> & {
   mode: string;
 };
 
-const componentByMode: Record<ScreenViewMode, any> = {
+type DataVisualizerComponent = <T extends DataVisualizerItem>(
+  props: DataVisualizerProps<T>,
+) => React.ReactElement;
+
+const componentByMode: Record<ScreenViewMode, DataVisualizerComponent> = {
   [ScreenViewMode.table]: DataTable,
   [ScreenViewMode.list]: DataList,
   [ScreenViewMode.cards]: DataCardList,
 };
 
-export const DataVisualizer = (props: Props) => {
+export const DataVisualizer = <T extends DataVisualizerItem>(
+  props: Props<T>,
+) => {
   const { mode } = props;
   return (
     <VView fullFlex>
-      {createElement(
+      {createElement<DataVisualizerProps<T>>(
         componentByMode[mode as ScreenViewMode] ?? DataTable,
         props,
       )}

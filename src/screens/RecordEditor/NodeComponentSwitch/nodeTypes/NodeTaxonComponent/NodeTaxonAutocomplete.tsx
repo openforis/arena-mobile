@@ -1,32 +1,32 @@
 import { useCallback, useMemo } from "react";
 
-import { NodeDefs, NodeDefTaxon } from "@openforis/arena-core";
+import { NodeDefs, NodeDefTaxon, NodeValueTaxon } from "@openforis/arena-core";
 
 import { SelectableListWithFilter } from "components";
 import { Taxa } from "model";
 import { log } from "utils";
 
-import { buildTaxonLabel, filterTaxa } from "./taxaSearch";
+import { buildTaxonLabel, filterTaxa, TaxonSearchItem } from "./taxaSearch";
 import { useTaxaFiltered } from "./useTaxaFiltered";
 
 const maxDisplayedItems = 50;
-const noTaxa: any[] = [];
+const noTaxa: TaxonSearchItem[] = [];
 
-const itemKeyExtractor = (item: any) =>
+const itemKeyExtractor = (item: TaxonSearchItem | undefined) =>
   `${item?.uuid}_${item?.vernacularNameUuid}`;
 
-const itemLabelExtractorWithCode = (taxon: any) =>
+const itemLabelExtractorWithCode = (taxon: TaxonSearchItem) =>
   buildTaxonLabel({ codeVisible: true, taxon });
 
-const itemLabelExtractorWithoutCode = (taxon: any) =>
+const itemLabelExtractorWithoutCode = (taxon: TaxonSearchItem) =>
   buildTaxonLabel({ codeVisible: false, taxon });
 
-const isCodeVisible = (nodeDef: any): boolean => {
+const isCodeVisible = (nodeDef: NodeDefTaxon): boolean => {
   const visibleFields = NodeDefs.getVisibleFields(nodeDef);
   return !visibleFields || visibleFields.includes("code");
 };
 
-const itemDescriptionExtractor = (taxon: any) => {
+const itemDescriptionExtractor = (taxon: TaxonSearchItem) => {
   const { vernacularNamesJoint, vernacularName, vernacularNameLangCode } =
     taxon;
   if (vernacularNamesJoint) {
@@ -44,10 +44,10 @@ const createTaxonValue = ({
   inputValue,
 }: {
   nodeDef: NodeDefTaxon;
-  taxon: any;
-  inputValue: string;
+  taxon: TaxonSearchItem | undefined;
+  inputValue: string | null | undefined;
 }) => {
-  let value: any = null;
+  let value: NodeValueTaxon | null = null;
   if (taxon) {
     value = { taxonUuid: taxon.uuid };
     if (
@@ -55,7 +55,7 @@ const createTaxonValue = ({
       (NodeDefs.isVernacularNameAlwaysIncludedIfSingle(nodeDef) &&
         taxon.singleVernacularNameUuid)
     ) {
-      value["vernacularNameUuid"] =
+      value.vernacularNameUuid =
         taxon.vernacularNameUuid ?? taxon.singleVernacularNameUuid;
     }
     if (
@@ -63,17 +63,17 @@ const createTaxonValue = ({
       [Taxa.unknownCode, Taxa.unlistedCode].includes(taxon.props.code)
     ) {
       // keep scientific name for unlisted/unknown taxa
-      value["scientificName"] = inputValue;
+      value.scientificName = inputValue;
     }
   }
   return value;
 };
 
 type NodeTaxonAutocompleteProps = {
-  nodeDef: any;
+  nodeDef: NodeDefTaxon;
   parentNodeUuid?: string;
-  selectedTaxon?: any;
-  updateNodeValue: (params: { value: any }) => void;
+  selectedTaxon?: TaxonSearchItem | null;
+  updateNodeValue: (params: { value: NodeValueTaxon | null }) => void;
 };
 
 export const NodeTaxonAutocomplete = (props: NodeTaxonAutocompleteProps) => {
@@ -87,7 +87,7 @@ export const NodeTaxonAutocomplete = (props: NodeTaxonAutocompleteProps) => {
   });
 
   const onSelectedItemsChange = useCallback(
-    (selection: any, inputValue: any) => {
+    (selection: TaxonSearchItem[], inputValue?: string | null) => {
       const taxon = selection[0];
       const valueNext = createTaxonValue({ nodeDef, taxon, inputValue });
       updateNodeValue({ value: valueNext });
@@ -98,7 +98,13 @@ export const NodeTaxonAutocomplete = (props: NodeTaxonAutocompleteProps) => {
   const codeVisible = isCodeVisible(nodeDef);
 
   const filterItems = useCallback(
-    ({ items, filterInputValue }: any) =>
+    ({
+      items,
+      filterInputValue,
+    }: {
+      items: TaxonSearchItem[];
+      filterInputValue: string | null;
+    }) =>
       filterTaxa({
         codeVisible,
         filterInputValue,

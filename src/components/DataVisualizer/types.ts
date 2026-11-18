@@ -3,25 +3,32 @@ import type { StyleProp, ViewStyle } from "react-native";
 import type { SelectedItemsAction } from "../SelectableList";
 import { ScreenViewMode, SortObject } from "model";
 
-export type DataVisualizerCellProps = {
-  item: any;
+// items are identified (e.g. in the selection) by their key
+export type DataVisualizerItem = { key: string };
+
+export type DataVisualizerCellProps<
+  T extends DataVisualizerItem = DataVisualizerItem,
+> = {
+  item: T;
   viewMode?: ScreenViewMode;
 };
 
-export type DataVisualizerCellRenderer = (
-  props: DataVisualizerCellProps,
-) => React.ReactElement | null;
+export type DataVisualizerCellRenderer<
+  T extends DataVisualizerItem = DataVisualizerItem,
+> = (props: DataVisualizerCellProps<T>) => React.ReactElement | null;
 
 // where a field is shown in the cards/compact views (default: detail)
 export type DataVisualizerCardRole =
   "title" | "subtitle" | "badge" | "body" | "detail" | "footer";
 
-export type DataVisualizerField = {
+export type DataVisualizerField<
+  T extends DataVisualizerItem = DataVisualizerItem,
+> = {
   key: string;
   cardRole?: DataVisualizerCardRole;
   // show the header next to the value in the card title (e.g. record keys)
   cardShowLabel?: boolean;
-  cellRenderer?: DataVisualizerCellRenderer;
+  cellRenderer?: DataVisualizerCellRenderer<T>;
   header: string;
   // shown instead of the (translated) header text in the table header, to save horizontal
   // space on columns whose meaning is already clear from an icon (e.g. sync status); `header`
@@ -37,15 +44,17 @@ export type DataVisualizerField = {
   textVariant?: string;
 };
 
-export type DataVisualizerProps = {
+export type DataVisualizerProps<
+  T extends DataVisualizerItem = DataVisualizerItem,
+> = {
   canDelete?: boolean;
-  fields: DataVisualizerField[];
+  fields: DataVisualizerField<T>[];
   horizontalScroll?: boolean;
-  items: any[];
+  items: T[];
   // initial page size of the table view (with showPagination)
   itemsPerPage?: number;
-  onItemPress?: (item: any) => void;
-  onItemLongPress?: (item: any) => void;
+  onItemPress?: (item: T) => void;
+  onItemLongPress?: (item: T) => void;
   onSelectionChange?: (selectedIds: string[]) => void;
   onSortChange?: (sort: SortObject) => void;
   // Resolving to `false` means nothing was deleted (e.g. the user canceled a confirm

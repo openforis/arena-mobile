@@ -12,9 +12,7 @@ jest.mock("utils/SystemUtils", () => ({
   SystemUtils: { getRecordAppInfo: () => ({ appId: "am", version: "2.5.0" }) },
 }));
 
-jest.mock("utils/Logger", () => ({
-  log: { warn: jest.fn() },
-}));
+jest.mock("utils/Logger");
 
 const mockServerVersionInfo = (data: any) =>
   (RemoteService.get as jest.Mock).mockResolvedValue({ data });

@@ -1,0 +1,75 @@
+export default {
+  title: "Importierte Karten",
+  description:
+    "Importiere Karten aus raumbezogenen (georeferenzierten) PDF- oder GeoTIFF-Dateien, die auf diesem Gerät gespeichert sind: Sie werden in allen Karten der App über der Basiskarte angezeigt, auch ohne Internetverbindung.",
+  rendererNotAvailable:
+    "Importierte Karten werden von dieser App-Version nicht unterstützt: Aktualisiere sie auf die neueste Version",
+  importMap: "Karte importieren",
+  supportedFormats:
+    "Unterstützte Dateien: Geospatial-PDF (.pdf) und GeoTIFF (.tif, .tiff)",
+  noMaps: "Noch keine Karten importiert",
+  storage: {
+    used: "Von importierten Karten belegter Speicher:",
+  },
+  opacity: "Deckkraft: {{value}} %",
+  hideBaseMap: "Nur importierte Karte",
+  map: {
+    fileName: "Datei: {{fileName}}",
+    page: "Seite: {{page}}",
+    zoomLevels: "Zoomstufen: {{minZoom}} - {{maxZoom}}",
+    tiles: "Kacheln: {{count}}",
+    size: "Größe: {{size}} (PDF-Datei: {{sourceSize}})",
+    sizeTilesOnly: "Größe: {{size}}",
+    datumWarning:
+      "Das Datum der Karte ist nicht WGS84: Die Karte kann um einige Meter verschoben sein",
+    visible: "Auf Karten anzeigen",
+    deleteConfirm: "Karte '{{name}}' löschen?",
+    notFound: "Karte nicht gefunden",
+    viewerTitle: "Importierte Karte",
+  },
+  import: {
+    title: "Karte importieren",
+    analyzing: "Georeferenzierung der Datei wird gelesen...",
+    errorReading: "Fehler beim Lesen der Datei: {{details}}",
+    notGeoreferenced:
+      "Die Datei ist nicht georeferenziert: Sie enthält nicht die geografischen Koordinaten der Karte",
+    unsupportedGeoreference:
+      "Die Georeferenzierung dieser PDF-Datei (OGC-GeoPDF-Kodierung) wird noch nicht unterstützt",
+    unsupportedFile: "Die Datei ist weder eine PDF- noch eine GeoTIFF-Datei",
+    unsupportedGeoTiffFormat:
+      "Die Bilder dieser GeoTIFF-Datei werden nicht unterstützt ({{details}}): Nur Bilder mit 8 Bit pro Sample (RGB, RGBA, Graustufen oder mit Farbpalette) können importiert werden",
+    page: "Seite",
+    pageItem: "Seite {{page}}",
+    name: "Name",
+    maxZoom: "Max. Zoom: {{value}}",
+    nativeZoom: "(Kartenauflösung: {{value}})",
+    maxZoomAboveNative:
+      "Zoomstufen oberhalb der Auflösung der Karte werden unscharf dargestellt",
+    estimate: "{{tiles}} Kacheln · ~{{size}} (freier Speicher: {{freeSpace}})",
+    estimateTooManyTiles:
+      "{{tiles}} Kacheln: zu viele (max. {{maxTiles}}); verringere den max. Zoom",
+    tooManyTiles:
+      "Zu viele Kacheln: Es können höchstens {{maxTiles}} Kacheln erzeugt werden; verringere den max. Zoom",
+    notEnoughSpace: "Nicht genügend freier Speicher auf dem Gerät",
+    lowSpaceConfirm: {
+      title: "Wenig freier Speicher",
+      message:
+        "Die Karte belegt etwa {{size}}, {{percent}} % des freien Speichers auf dem Gerät ({{freeSpace}}). Fortfahren?",
+    },
+    preview: {
+      rendering: "Vorschau wird erstellt...",
+      lowResolution:
+        "Vorschau in niedriger Auflösung (Zoomstufen {{minZoom}} - {{maxZoom}})",
+      error: "Vorschau nicht verfügbar: {{details}}",
+    },
+    importButton: "Importieren",
+    jobTitle: "Karte wird importiert",
+    complete: "Karte importiert ({{size}})",
+    error: "Fehler beim Importieren der Karte: {{details}}",
+  },
+  validation: {
+    nameRequired: "Name ist erforderlich",
+    nameDuplicate:
+      "Name wird bereits von einer anderen importierten Karte verwendet",
+  },
+};

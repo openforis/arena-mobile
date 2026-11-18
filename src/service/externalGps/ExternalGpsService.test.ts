@@ -139,7 +139,6 @@ describe("ExternalGpsService.watchPosition silent stream recovery", () => {
 
   beforeEach(() => {
     jest.useFakeTimers();
-    jest.clearAllMocks();
     (createNmeaLocationPointAssembler as jest.Mock).mockReturnValue({
       ingest: jest.fn().mockReturnValue(null),
     });
@@ -296,10 +295,6 @@ describe("ExternalGpsService.watchPosition silent stream recovery", () => {
 });
 
 describe("ExternalGpsService discovery/pairing delegation", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   it("startGpsDeviceDiscovery delegates to the transport with both callbacks", async () => {
     const stopHandle = { stop: jest.fn() };
     (bluetoothClassicTransport.startDiscovery as jest.Mock).mockResolvedValue(

@@ -1,6 +1,7 @@
 import { Dictionary } from "@openforis/arena-core";
 import { CanceledError } from "axios";
 
+import { HttpErrors } from "utils/HttpErrors";
 import { SystemUtils } from "utils/SystemUtils";
 
 import { API } from "./api";
@@ -44,9 +45,8 @@ const withRetry = async (
   try {
     return await callback();
   } catch (error: any) {
-    const status = Number(error?.response?.status);
     // the token refresh request doesn't go through here (see AuthService)
-    if (status === 401 && maxRetries > 0) {
+    if (HttpErrors.isUnauthorizedResponse(error) && maxRetries > 0) {
       try {
         await AuthService.refreshAuthTokens();
       } catch {
@@ -61,52 +61,35 @@ const withRetry = async (
   }
 };
 
-const get = async (uri: string, data?: Dictionary<any>, config = {}) => {
-  const serverUrl = await getServerUrl();
-  const sendRequest = async () =>
-    API.get({
-      serverUrl,
-      uri,
-      data,
-      config: attachHeaders(config),
-    });
-  return withRetry(sendRequest);
+type ApiRequestOptions = {
+  serverUrl: string;
+  uri: string;
+  data?: Dictionary<any>;
+  // axios config or download options, depending on the request
+  config?: any;
 };
 
-const getFileOrThrow = async (uri: string, data?: Dictionary<any>) => {
+// headers are attached on every attempt: a retry must use the refreshed token
+const sendRequest = async (
+  apiRequest: (options: ApiRequestOptions) => Promise<any>,
+  { uri, data, config }: Omit<ApiRequestOptions, "serverUrl">,
+) => {
   const serverUrl = await getServerUrl();
-  const sendRequest = async () =>
-    API.getFileOrThrow({
-      serverUrl,
-      uri,
-      data,
-      config: attachHeaders(),
-    });
-  return withRetry(sendRequest);
+  return withRetry(() =>
+    apiRequest({ serverUrl, uri, data, config: attachHeaders(config) }),
+  );
 };
 
-const post = async (uri: string, data?: Dictionary<any>) => {
-  const serverUrl = await getServerUrl();
-  const sendRequest = async () =>
-    API.post({
-      serverUrl,
-      uri,
-      data,
-      config: attachHeaders(),
-    });
-  return withRetry(sendRequest);
-};
+const get = (uri: string, data?: Dictionary<any>, config = {}) =>
+  sendRequest(API.get, { uri, data, config });
 
-const del = async (uri: string) => {
-  const serverUrl = await getServerUrl();
-  const sendRequest = async () =>
-    API.del({
-      serverUrl,
-      uri,
-      config: attachHeaders(),
-    });
-  return withRetry(sendRequest);
-};
+const getFileOrThrow = (uri: string, data?: Dictionary<any>) =>
+  sendRequest(API.getFileOrThrow, { uri, data });
+
+const post = (uri: string, data?: Dictionary<any>) =>
+  sendRequest(API.post, { uri, data });
+
+const del = (uri: string) => sendRequest(API.del, { uri });
 
 const postCancelableMultipartData = async (
   uri: string,

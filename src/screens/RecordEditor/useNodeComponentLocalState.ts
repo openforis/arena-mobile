@@ -5,7 +5,6 @@ import {
   type AppDispatch,
   DataEntryActions,
   DataEntrySelectors,
-  StoreUtils,
   useAppDispatch,
   useConfirm,
 } from "state";
@@ -22,6 +21,8 @@ export const useNodeComponentLocalState = ({
   uiValueToNodeValue = Functions.identity,
   nodeValueToUiValue = Functions.identity,
   isNodeValueEqual = isNodeValueEqualDefault,
+  clearConfirmMessageKey = "dataEntry:confirmDeleteValue.message",
+  onClearConfirmed = undefined,
 }: any) => {
   const dispatch = useAppDispatch();
   const debouncedUpdateRef = useRef(null as any);
@@ -140,10 +141,7 @@ export const useNodeComponentLocalState = ({
         }));
       }
       if (!ignoreDelay && updateDelay) {
-        debouncedUpdateRef.current = StoreUtils.debounceAction(
-          action,
-          updateDelay,
-        );
+        debouncedUpdateRef.current = Functions.debounce(action, updateDelay);
         dispatch(debouncedUpdateRef.current);
         return Promise.resolve();
       }
@@ -162,14 +160,11 @@ export const useNodeComponentLocalState = ({
   );
 
   const onClearPress = useCallback(async () => {
-    if (
-      await confirm({
-        messageKey: "dataEntry:confirmDeleteValue.message",
-      })
-    ) {
-      updateNodeValue({ value: null, ignoreDelay: true });
+    if (await confirm({ messageKey: clearConfirmMessageKey })) {
+      onClearConfirmed?.();
+      await updateNodeValue({ value: null, ignoreDelay: true });
     }
-  }, [confirm, updateNodeValue]);
+  }, [clearConfirmMessageKey, confirm, onClearConfirmed, updateNodeValue]);
 
   return {
     applicable,

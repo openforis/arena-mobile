@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 
 import {
+  NodeDefCoordinate,
   NodeDefs,
   NodeValueCoordinate,
   Numbers,
@@ -25,6 +26,7 @@ import {
 import { log } from "utils";
 import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState";
 import { useCoordinateDistanceTarget } from "./useCoordinateDistanceTarget";
+import { NodeComponentProps } from "../nodeComponentPropTypes";
 
 const stringToNumber = (str: any) => Numbers.toNumber(str);
 const numberToString = (num: any, roundToDecimals = Number.NaN) => {
@@ -51,7 +53,7 @@ const locationToUiValue = ({
   srsIndex,
 }: {
   location: LocationPoint;
-  nodeDef: any;
+  nodeDef: NodeDefCoordinate;
   srsTo: string;
   srsIndex?: SRSIndex;
 }): LocationUiValue | null => {
@@ -86,7 +88,9 @@ const locationToUiValue = ({
 
 const nonNumericFields = new Set(["srs"]);
 
-export const useNodeCoordinateComponent = (props: any) => {
+export const useNodeCoordinateComponent = (
+  props: Pick<NodeComponentProps<NodeDefCoordinate>, "nodeDef" | "nodeUuid">,
+) => {
   const { nodeDef, nodeUuid } = props;
 
   const dispatch = useAppDispatch();
@@ -275,7 +279,10 @@ export const useNodeCoordinateComponent = (props: any) => {
     [onSelectGpsSource, refreshAvailableGpsSources],
   );
 
-  const distanceTarget = useCoordinateDistanceTarget({ nodeDef, nodeUuid });
+  const distanceTarget = useCoordinateDistanceTarget({
+    nodeDef,
+    nodeUuid: nodeUuid!,
+  });
 
   const onChangeSrs = useCallback(
     (srsTo: any) => {

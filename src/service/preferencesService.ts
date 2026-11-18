@@ -1,62 +1,94 @@
-import { Objects, Promises } from "@openforis/arena-core";
+import { Objects, Promises, UserGroup } from "@openforis/arena-core";
 import { asyncStorageKeys } from "./asyncStorage/asyncStorageKeys";
-import StoredObjectManager from "./storedObjectManager";
+import { StoredObject } from "./asyncStorage/StoredItem";
+
+// record editor page stored to resume editing a record
+export type RecordLastEditedPage = {
+  parentEntityUuid?: string;
+  entityDefUuid: string;
+  entityUuid?: string | null;
+  locked?: boolean;
+};
+
+export type SurveyPreferences = {
+  language?: string;
+  lastEditedPageByRecordId?: Record<string, RecordLastEditedPage>;
+  entityListColumnsByEntityDefUuid?: Record<string, string[]>;
+  userGroup?: UserGroup | null;
+};
+
+type Preferences = {
+  currentSurveyId?: number;
+  lastUsedMapAppId?: string;
+  preferencesBySurveyId?: Record<string, SurveyPreferences>;
+  whatsNewSeenIds?: string[];
+};
+
+type SurveyPreferencesUpdateFn = (
+  surveyPreferences: SurveyPreferences,
+) => SurveyPreferences;
 
 const keys = {
   currentSurveyId: "currentSurveyId",
   lastUsedMapAppId: "lastUsedMapAppId",
   preferencesBySurveyId: "preferencesBySurveyId",
   whatsNewSeenIds: "whatsNewSeenIds",
-};
+} as const satisfies Record<string, keyof Preferences>;
 
 const surveyPreferencesKeys = {
   language: "language",
   lastEditedPageByRecordId: "lastEditedPageByRecordId",
   entityListColumnsByEntityDefUuid: "entityListColumnsByEntityDefUuid",
   userGroup: "userGroup",
-};
+} as const satisfies Record<string, keyof SurveyPreferences>;
 
-const preferencesStoredObjectManager = new StoredObjectManager(
+// record id used as key in the stored preferences
+type RecordId = number | undefined;
+
+const preferencesStore = new StoredObject<Preferences>(
   asyncStorageKeys.preferences,
+  {},
 );
 
 const getCurrentSurveyId = async () =>
-  await preferencesStoredObjectManager.getValue(keys.currentSurveyId);
+  await preferencesStore.getValue(keys.currentSurveyId);
 
-const setCurrentSurveyId = async (surveyId: any) => {
-  await preferencesStoredObjectManager.updateValue(
-    keys.currentSurveyId,
-    surveyId,
-  );
+const setCurrentSurveyId = async (surveyId: number) => {
+  await preferencesStore.updateValue(keys.currentSurveyId, surveyId);
 };
 
-const getPrereferencesBySurveyId = async (surveyId: any) => {
-  const preferencesBySurveyId = await preferencesStoredObjectManager.getValue(
+const getPrereferencesBySurveyId = async (
+  surveyId: number,
+): Promise<SurveyPreferences> => {
+  const preferencesBySurveyId = await preferencesStore.getValue(
     keys.preferencesBySurveyId,
   );
   return preferencesBySurveyId?.[surveyId] || {};
 };
 
-const getSurveyPreferredLanguage = async (surveyId: any) => {
+const getSurveyPreferredLanguage = async (surveyId: number) => {
   const surveyPreferences = await getPrereferencesBySurveyId(surveyId);
   return surveyPreferences[surveyPreferencesKeys.language];
 };
 
-const getSurveyUserGroup = async (surveyId: any) => {
+const getSurveyUserGroup = async (surveyId: number) => {
   const surveyPreferences = await getPrereferencesBySurveyId(surveyId);
   return surveyPreferences[surveyPreferencesKeys.userGroup] ?? null;
 };
 
-const getSurveyRecordLastEditedPage = async (surveyId: any, recordId: any) => {
+const getSurveyRecordLastEditedPage = async (
+  surveyId: number,
+  recordId: RecordId,
+): Promise<RecordLastEditedPage | undefined> => {
   const surveyPreferences = await getPrereferencesBySurveyId(surveyId);
   return Objects.path([
     surveyPreferencesKeys.lastEditedPageByRecordId,
-    recordId,
+    String(recordId),
   ])(surveyPreferences);
 };
 
 const getSurveyEntityListColumns = async (
-  surveyId: any,
+  surveyId: number,
 ): Promise<Record<string, string[]>> => {
   const surveyPreferences = await getPrereferencesBySurveyId(surveyId);
   return (
@@ -66,77 +98,84 @@ const getSurveyEntityListColumns = async (
 };
 
 const getLastUsedMapAppId = async (): Promise<string | undefined> =>
-  await preferencesStoredObjectManager.getValue(keys.lastUsedMapAppId);
+  await preferencesStore.getValue(keys.lastUsedMapAppId);
 
 const setLastUsedMapAppId = async (appId: string) => {
-  await preferencesStoredObjectManager.updateValue(
-    keys.lastUsedMapAppId,
-    appId,
-  );
+  await preferencesStore.updateValue(keys.lastUsedMapAppId, appId);
 };
 
 const getWhatsNewSeenIds = async (): Promise<string[]> =>
-  (await preferencesStoredObjectManager.getValue(keys.whatsNewSeenIds)) ?? [];
+  (await preferencesStore.getValue(keys.whatsNewSeenIds)) ?? [];
 
 const setWhatsNewSeenIds = async (ids: string[]) => {
-  await preferencesStoredObjectManager.updateValue(keys.whatsNewSeenIds, ids);
+  await preferencesStore.updateValue(keys.whatsNewSeenIds, ids);
 };
 
 const clearCurrentSurveyId = async () =>
-  await preferencesStoredObjectManager.deleteValue(keys.currentSurveyId);
+  await preferencesStore.deleteValue(keys.currentSurveyId);
 
-const updateSurveyPreferences = async (surveyId: any, updateFn: any) => {
-  const preferencesBySurveyId =
-    (await preferencesStoredObjectManager.getValue(
-      keys.preferencesBySurveyId,
-    )) ?? {};
-  const preferencesBySurveyIdUpdated = { ...preferencesBySurveyId };
-  const surveyPreferences = preferencesBySurveyIdUpdated[surveyId] ?? {};
+const updateSurveyPreferences = async (
+  surveyId: number,
+  updateFn: SurveyPreferencesUpdateFn,
+) => {
+  await preferencesStore.update((preferences) => {
+    const preferencesBySurveyIdUpdated = {
+      ...preferences[keys.preferencesBySurveyId],
+    };
+    const surveyPreferences = preferencesBySurveyIdUpdated[surveyId] ?? {};
 
-  const surveyPreferencesUpdated = updateFn(surveyPreferences);
+    const surveyPreferencesUpdated = updateFn(surveyPreferences);
 
-  if (Objects.isEmpty(surveyPreferencesUpdated)) {
-    delete preferencesBySurveyIdUpdated[surveyId];
-  } else {
-    preferencesBySurveyIdUpdated[surveyId] = surveyPreferencesUpdated;
-  }
-  await preferencesStoredObjectManager.updateValue(
-    keys.preferencesBySurveyId,
-    preferencesBySurveyIdUpdated,
-  );
+    if (Objects.isEmpty(surveyPreferencesUpdated)) {
+      delete preferencesBySurveyIdUpdated[surveyId];
+    } else {
+      preferencesBySurveyIdUpdated[surveyId] = surveyPreferencesUpdated;
+    }
+    return {
+      ...preferences,
+      [keys.preferencesBySurveyId]: preferencesBySurveyIdUpdated,
+    };
+  });
 };
 
-const updateSurveyPreference = async (surveyId: any, key: any, value: any) =>
-  updateSurveyPreferences(surveyId, (surveyPreferences: any) => ({
+const updateSurveyPreference = async <K extends keyof SurveyPreferences>(
+  surveyId: number,
+  key: K,
+  value: SurveyPreferences[K],
+) =>
+  updateSurveyPreferences(surveyId, (surveyPreferences) => ({
     ...surveyPreferences,
     [key]: value,
   }));
 
-const setSurveyPreferredLanguage = async (surveyId: any, lang: any) =>
+const setSurveyPreferredLanguage = async (surveyId: number, lang: string) =>
   updateSurveyPreference(surveyId, surveyPreferencesKeys.language, lang);
 
-const setSurveyUserGroup = async (surveyId: any, userGroup: any) =>
+const setSurveyUserGroup = async (
+  surveyId: number,
+  userGroup: UserGroup | null,
+) =>
   updateSurveyPreference(surveyId, surveyPreferencesKeys.userGroup, userGroup);
 
 const setSurveyRecordLastEditedPage = async (
-  surveyId: any,
-  recordId: any,
-  page: any,
+  surveyId: number,
+  recordId: RecordId,
+  page: RecordLastEditedPage,
 ) =>
-  updateSurveyPreferences(surveyId, (surveyPreferences: any) =>
+  updateSurveyPreferences(surveyId, (surveyPreferences) =>
     Objects.assocPath({
       obj: surveyPreferences,
-      path: [surveyPreferencesKeys.lastEditedPageByRecordId, recordId],
+      path: [surveyPreferencesKeys.lastEditedPageByRecordId, String(recordId)],
       value: page,
     }),
   );
 
 const setSurveyEntityListColumns = async (
-  surveyId: any,
+  surveyId: number,
   entityDefUuid: string,
   columns: string[] | null,
 ) =>
-  updateSurveyPreferences(surveyId, (surveyPreferences: any) => {
+  updateSurveyPreferences(surveyId, (surveyPreferences) => {
     const path = [
       surveyPreferencesKeys.entityListColumnsByEntityDefUuid,
       entityDefUuid,
@@ -146,35 +185,38 @@ const setSurveyEntityListColumns = async (
       : Objects.dissocPath({ obj: surveyPreferences, path });
   });
 
-const clearSurveyRecordLastEditedPage = async (surveyId: any, recordId: any) =>
-  updateSurveyPreferences(surveyId, (surveyPreferences: any) =>
+const clearSurveyRecordLastEditedPage = async (
+  surveyId: number,
+  recordId: RecordId,
+) =>
+  updateSurveyPreferences(surveyId, (surveyPreferences) =>
     Objects.dissocPath({
       obj: surveyPreferences,
-      path: [surveyPreferencesKeys.lastEditedPageByRecordId, recordId],
+      path: [surveyPreferencesKeys.lastEditedPageByRecordId, String(recordId)],
     }),
   );
 
 // Cleared on logout (see RemoteConnectionActions logout), so the next user logging in on the
 // same device doesn't get the previous user's group/qualifiers as an offline fallback.
-const clearSurveyUserGroup = async (surveyId: any) =>
-  updateSurveyPreferences(surveyId, (surveyPreferences: any) =>
+const clearSurveyUserGroup = async (surveyId: number) =>
+  updateSurveyPreferences(surveyId, (surveyPreferences) =>
     Objects.dissocPath({
       obj: surveyPreferences,
       path: [surveyPreferencesKeys.userGroup],
     }),
   );
 
-const clearSurveyUserGroups = async (surveyIds: any) => {
+const clearSurveyUserGroups = async (surveyIds: number[]) => {
   await Promises.each(surveyIds, async (surveyId) => {
     await clearSurveyUserGroup(surveyId);
   });
 };
 
-const clearPreferencesBySurveyId = async (surveyId: any) => {
+const clearPreferencesBySurveyId = async (surveyId: number) => {
   await updateSurveyPreferences(surveyId, () => ({}));
 };
 
-const clearPreferencesBySurveyIds = async (surveyIds: any) => {
+const clearPreferencesBySurveyIds = async (surveyIds: number[]) => {
   await Promises.each(surveyIds, async (surveyId) => {
     await clearPreferencesBySurveyId(surveyId);
   });

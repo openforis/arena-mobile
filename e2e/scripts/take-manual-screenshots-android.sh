@@ -32,6 +32,9 @@ adb shell settings put global show_restart_in_crash_dialog 0 || true
 echo "Waiting for system services to stabilize..."
 sleep 30
 adb install -r -t -g "$APK"
+# GeoTIFF imported by 09-imported-maps.yaml with the system file picker
+adb push "$ROOT_DIR/e2e/maestro/assets/geotiff-test-map.tif" /sdcard/Download/geotiff-test-map.tif
+adb shell content call --method scan_volume --uri content://media --arg external_primary || true
 sleep 5
 
 # fail fast if the screenshots of the app are blank (e.g. emulator image or GPU mode not supported)
@@ -57,7 +60,7 @@ for lang in $LANGS; do
     echo "=== $lang: $(basename "$flow")"
     test_output="$(mktemp -d)"
     if ! maestro test "$flow" --test-output-dir "$test_output" \
-      -e APP_ID="$APP_ID" \
+      -e APP_ID="$APP_ID" -e DEV_BUNDLE=false \
       -e APP_LANG="$lang" -e APP_LANG_LABEL="${LANG_LABELS[$lang]}"; then
       echo "::warning::Flow $(basename "$flow") failed ($lang)"
       failures=$((failures + 1))

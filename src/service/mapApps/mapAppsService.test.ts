@@ -23,7 +23,6 @@ const mockLastChoice = (id: string | undefined) =>
 
 describe("MapAppsService", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
     (MapAppsAdapter.getInstalledMapApps as jest.Mock).mockResolvedValue(apps);
   });
 

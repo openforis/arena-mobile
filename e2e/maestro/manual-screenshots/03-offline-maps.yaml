@@ -9,14 +9,14 @@ appId: ${APP_ID}
     file: _shot.yaml
     env:
       NAME: offline-maps
-- tapOn: ${output.t.pdfMaps}
+- tapOn: ${output.t.importedMaps}
 - runFlow:
     file: _shot.yaml
     env:
       NAME: pdf-maps
 - tapOn: ${output.t.downloadedAreas}
 - tapOn: ${output.t.addArea}
-# map tiles downloaded from the internet
+# map tiles downloaded from the internet (no element marks them as loaded)
 - runFlow:
     file: _wait.yaml
     env:

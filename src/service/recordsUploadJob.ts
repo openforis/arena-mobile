@@ -13,23 +13,10 @@ export const RECORDS_UPLOAD_JOB_TYPE = "RecordsUploadJob";
 export class RecordsUploadJob extends JobMobile<RecordsUploadAndProcessJobContext> {
   cancelUpload: any;
   remoteJob: any;
-  constructor({
-    user,
-    survey,
-    cycle,
-    fileUri,
-    conflictResolutionStrategy,
-    skipMissingFiles = false,
-    uploadState,
-  }: any) {
+  constructor(context: RecordsUploadAndProcessJobContext) {
     super({
-      user,
-      survey,
-      cycle,
-      fileUri,
-      conflictResolutionStrategy,
-      skipMissingFiles,
-      uploadState,
+      ...context,
+      skipMissingFiles: context.skipMissingFiles ?? false,
       type: RECORDS_UPLOAD_JOB_TYPE,
     });
     this.cancelUpload = null; // cancels upload request

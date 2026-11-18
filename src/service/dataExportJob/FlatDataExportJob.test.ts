@@ -8,9 +8,9 @@ import { FlatDataExportJob } from "./FlatDataExportJob";
 
 jest.mock("model", () => jest.requireActual("model/JobMobile"));
 
-jest.mock("utils/Logger", () => ({
-  log: { debug: jest.fn(), error: jest.fn(), info: jest.fn() },
-}));
+jest.mock("utils/Logger");
+// used by JobMobile for the temp folder
+jest.mock("utils/Files", () => jest.requireMock("utils"));
 
 jest.mock("service", () => ({
   RecordFileService: { getRecordFileUri: jest.fn() },
@@ -48,7 +48,6 @@ const emptyRecord = { uuid: "record-uuid", nodes: {} };
 
 describe("FlatDataExportJob", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
     fetchRecordsMock.mockResolvedValue([{ id: 1 }, { id: 2 }, { id: 3 }]);
   });
 
@@ -60,6 +59,7 @@ describe("FlatDataExportJob", () => {
     expect(job.status).toBe(JobStatus.succeeded);
     expect(fetchRecordMock).toHaveBeenCalledTimes(3);
     expect(Files.zip).toHaveBeenCalledTimes(1);
+    expect(Files.del).toHaveBeenCalledWith("temp", true);
   });
 
   it("stops exporting records when canceled", async () => {
@@ -75,5 +75,6 @@ describe("FlatDataExportJob", () => {
     expect(job.status).toBe(JobStatus.canceled);
     expect(fetchRecordMock).toHaveBeenCalledTimes(1);
     expect(Files.zip).not.toHaveBeenCalled();
+    expect(Files.del).toHaveBeenCalledWith("temp", true);
   });
 });
