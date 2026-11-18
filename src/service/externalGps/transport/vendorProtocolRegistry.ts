@@ -71,6 +71,12 @@ const vendorRegistry: VendorRegistryEntry[] = [
     // "DUAL XGPS150A - XXXX". Unconfirmed against real hardware.
     matchesName: (name) => /\bx\s*gps\s*1[56]0\b/i.test(name),
   },
+  {
+    vendor: "Juniper Geode",
+    // Geode receivers (e.g. GNS3S) report names like "Geode 123456" (confirmed by a user
+    // on Android). iosProtocolString not confirmed yet - do not guess (see file header).
+    matchesName: (name) => /\bgeode\b/i.test(name),
+  },
 ];
 
 const findVendorEntry = (deviceName: string): VendorRegistryEntry | undefined =>

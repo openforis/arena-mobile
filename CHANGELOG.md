@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Amharic and Swedish languages;
+- External GPS: support for Juniper Systems Geode receivers (Android);
 - Offline maps: import of GeoTIFF maps (e.g. orthophotos, scanned map sheets); the "PDF maps" tab is now "Imported maps";
 
 ### Changed
