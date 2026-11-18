@@ -9,8 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Amharic and Swedish languages;
 - Offline maps: import of GeoTIFF maps (e.g. orthophotos, scanned map sheets); the "PDF maps" tab is now "Imported maps";
+
+### Fixed
+
+- Send data to server: records with errors not detected when the survey doesn't allow sending them;
+- General improvements and bug fixing;
+
+## [2.11.3] - 2026-11-15
+
+### Added
+
+- Amharic and Swedish languages;
 
 ### Changed
 
@@ -21,7 +31,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Value typed in a field sometimes lost when moving quickly to another entity;
 - Data export (CSV): cancel not working;
-- Send data to server: records with errors not detected when the survey doesn't allow sending them;
 - General improvements and bug fixing;
 
 ## [2.11.2] - 2026-11-11
