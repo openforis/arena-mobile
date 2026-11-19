@@ -38,6 +38,9 @@ export default {
       "Silakan masukkan kode yang dihasilkan oleh aplikasi autentikator Anda.",
     descriptionBackupCode:
       "Masukkan salah satu kode cadangan yang Anda simpan saat menyiapkan verifikasi dua langkah.",
+    arenaAccountRequiresCode:
+      "Akun Arena Anda juga menggunakan verifikasi dua langkah.",
+    signedInWith: "Masuk dengan {{provider}}",
     title: "Verifikasi dua langkah",
     useAuthenticatorApp: "Gunakan aplikasi autentikator",
     useBackupCode: "Gunakan kode cadangan",

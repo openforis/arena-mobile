@@ -37,6 +37,9 @@ export default {
     description: "Vänligen ange koden som genererats av din autentiseringsapp.",
     descriptionBackupCode:
       "Ange en av de reservkoder som du sparade när du konfigurerade tvåstegsverifiering.",
+    arenaAccountRequiresCode:
+      "Ditt Arena-konto använder också tvåstegsverifiering.",
+    signedInWith: "Inloggad med {{provider}}",
     title: "Tvåstegsverifiering",
     useAuthenticatorApp: "Använd autentiseringsappen",
     useBackupCode: "Använd en reservkod",

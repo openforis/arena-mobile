@@ -36,6 +36,8 @@ export default {
     description: "በማረጋገጫ መተግበሪያዎ የተፈጠረውን ኮድ ያስገቡ።",
     descriptionBackupCode:
       "ባለሁለት ደረጃ ማረጋገጫን ሲያዋቅሩ ካስቀመጧቸው የመጠባበቂያ ኮዶች አንዱን ያስገቡ።",
+    arenaAccountRequiresCode: "የArena መለያዎ ባለሁለት ደረጃ ማረጋገጫንም ይጠቀማል።",
+    signedInWith: "በ{{provider}} ገብተዋል",
     title: "ባለሁለት ደረጃ ማረጋገጫ",
     useAuthenticatorApp: "የማረጋገጫ መተግበሪያውን ተጠቀም",
     useBackupCode: "የመጠባበቂያ ኮድ ተጠቀም",

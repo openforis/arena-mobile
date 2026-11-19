@@ -38,6 +38,9 @@ export default {
       "Bitte geben Sie den von Ihrer Authentifizierungs-App generierten Code ein.",
     descriptionBackupCode:
       "Geben Sie einen der Backup-Codes ein, die Sie bei der Einrichtung der Bestätigung in zwei Schritten gespeichert haben.",
+    arenaAccountRequiresCode:
+      "Ihr Arena-Konto verwendet außerdem die Bestätigung in zwei Schritten.",
+    signedInWith: "Angemeldet mit {{provider}}",
     title: "Bestätigung in zwei Schritten",
     useAuthenticatorApp: "Authentifizierungs-App verwenden",
     useBackupCode: "Backup-Code verwenden",

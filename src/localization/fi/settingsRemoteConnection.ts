@@ -37,6 +37,9 @@ export default {
     description: "Syötä todentajasovelluksesi tuottama koodi.",
     descriptionBackupCode:
       "Anna jokin varakoodeista, jotka tallensit kaksivaiheisen vahvistuksen käyttöönoton yhteydessä.",
+    arenaAccountRequiresCode:
+      "Arena-tilisi käyttää myös kaksivaiheista vahvistusta.",
+    signedInWith: "Kirjauduttu palvelulla {{provider}}",
     title: "Kaksivaiheinen vahvistus",
     useAuthenticatorApp: "Käytä todentajasovellusta",
     useBackupCode: "Käytä varakoodia",

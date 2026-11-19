@@ -39,6 +39,9 @@ export default {
       "Por favor, insira o código gerado pelo seu aplicativo autenticador.",
     descriptionBackupCode:
       "Insira um dos códigos de backup que você salvou ao configurar a verificação em duas etapas.",
+    arenaAccountRequiresCode:
+      "Sua conta do Arena também usa a verificação em duas etapas.",
+    signedInWith: "Conectado com {{provider}}",
     title: "Verificação em duas etapas",
     useAuthenticatorApp: "Usar o aplicativo autenticador",
     useBackupCode: "Usar um código de backup",

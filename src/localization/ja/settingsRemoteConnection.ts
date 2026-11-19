@@ -37,6 +37,9 @@ export default {
     description: "認証アプリが生成したコードを入力してください。",
     descriptionBackupCode:
       "2段階認証の設定時に保存したバックアップコードのいずれかを入力してください。",
+    arenaAccountRequiresCode:
+      "Arena アカウントでは 2 段階認証も使用しています。",
+    signedInWith: "{{provider}} でサインインしました",
     title: "2段階認証",
     useAuthenticatorApp: "認証アプリを使用する",
     useBackupCode: "バックアップコードを使用する",

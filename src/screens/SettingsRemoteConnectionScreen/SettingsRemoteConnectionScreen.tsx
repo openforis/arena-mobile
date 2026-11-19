@@ -119,7 +119,8 @@ export const SettingsRemoteConnectionScreen = () => {
             code={twoFactorCode}
             codeNotValid={twoFactorCodeNotValid}
             disabled={!networkAvailable}
-            email={externalLoginProviderLabel ?? email}
+            email={email}
+            externalLoginProvider={externalLoginProviderLabel}
             loading={loading}
             onBackupCodeModeToggle={onBackupCodeModeToggle}
             onCodeChange={onTwoFactorCodeChange}

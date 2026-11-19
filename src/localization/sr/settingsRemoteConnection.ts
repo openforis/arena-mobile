@@ -38,6 +38,9 @@ export default {
       "Unesite kod koji je generisala vaša aplikacija za autentifikaciju.",
     descriptionBackupCode:
       "Unesite jedan od rezervnih kodova koje ste sačuvali prilikom podešavanja verifikacije u dva koraka.",
+    arenaAccountRequiresCode:
+      "Vaš Arena nalog takođe koristi verifikaciju u dva koraka.",
+    signedInWith: "Prijavljeni ste putem {{provider}}",
     title: "Verifikacija u dva koraka",
     useAuthenticatorApp: "Koristi aplikaciju za autentifikaciju",
     useBackupCode: "Koristi rezervni kod",
