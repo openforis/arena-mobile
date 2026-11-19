@@ -8,6 +8,8 @@ import {
   getExternalLoginProviderIconUri,
 } from "service/externalLoginUtils";
 
+import { GoogleSignInButton } from "./GoogleSignInButton";
+
 const styles = StyleSheet.create({
   container: { alignSelf: "stretch", gap: 8 },
   centeredText: { alignSelf: "center", textAlign: "center" },
@@ -15,7 +17,6 @@ const styles = StyleSheet.create({
 
 // Material Design icons of the provider presets
 const iconByProviderType: Record<string, string> = {
-  google: "google",
   microsoft: "microsoft",
 };
 
@@ -53,18 +54,27 @@ export const ExternalLoginButtons = ({
   return (
     <VView style={styles.container}>
       <Text style={styles.centeredText} textKey="settingsRemoteConnection:or" />
-      {providers.map((provider) => (
-        <Button
-          key={provider.id}
-          color="secondary"
-          disabled={disabled}
-          icon={getProviderIcon({ provider, serverUrl })}
-          onPress={() => onPress(provider)}
-          testID={`remote-connection-external-login-${provider.id}`}
-          textKey="settingsRemoteConnection:signInWith"
-          textParams={{ provider: provider.label }}
-        />
-      ))}
+      {providers.map((provider) =>
+        provider.type === "google" ? (
+          <GoogleSignInButton
+            key={provider.id}
+            disabled={disabled}
+            onPress={() => onPress(provider)}
+            testID={`remote-connection-external-login-${provider.id}`}
+          />
+        ) : (
+          <Button
+            key={provider.id}
+            color="secondary"
+            disabled={disabled}
+            icon={getProviderIcon({ provider, serverUrl })}
+            onPress={() => onPress(provider)}
+            testID={`remote-connection-external-login-${provider.id}`}
+            textKey="settingsRemoteConnection:signInWith"
+            textParams={{ provider: provider.label }}
+          />
+        ),
+      )}
       <Text
         style={[styles.centeredText, { color: theme.colors.onSurfaceVariant }]}
         textKey="settingsRemoteConnection:registeredUsersOnly"
