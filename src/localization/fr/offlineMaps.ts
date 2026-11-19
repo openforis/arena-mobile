@@ -7,7 +7,7 @@ export default {
   description:
     "Téléchargez la carte de votre zone d'intérêt avant d'aller sur le terrain : elle sera disponible même sans connexion internet lors du dessin ou de l'affichage des attributs géographiques.",
   freeLayersNotInUse:
-    "Les cartes hors ligne ne sont utilisées que lorsque le fournisseur de cartes dans les paramètres est 'Free map layers'.",
+    "Les cartes hors ligne ne sont utilisées que lorsque le fournisseur de cartes dans les paramètres est 'Couches de carte gratuites'.",
   useFreeLayers: "Utiliser les couches de carte gratuites",
   offlineMode: "Hors ligne",
   addArea: "Ajouter une zone",

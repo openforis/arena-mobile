@@ -164,6 +164,8 @@ Sus valores serán borrados.
   syncStatusHeader: "Estado",
   syncStatus: {
     conflictingKeys: "Ya existe un registro con la(s) misma(s) clave(s)",
+    deviceDateBehindServer:
+      "No cargado: la fecha del dispositivo es anterior a la del servidor (configura la fecha y hora correctas y luego vuelve a editar el registro)",
     keysNotSpecified: "Clave(s) no especificada(s)",
     new: "Nuevo (sin subir aún)",
     notModified: "Sin modificar (sin cambios para subir)",
@@ -179,7 +181,9 @@ Sus valores serán borrados.
   },
   uploadingData: {
     title: "Cargando datos",
-    size: "Tamano del archivo: {{size}}",
+    size: "Tamaño del archivo: {{size}}",
+    speed: "Velocidad de carga: {{speed}}/s",
+    eta: "Tiempo restante estimado: {{eta}}",
   },
   validationReport: {
     title: "Informe de validación",
@@ -242,23 +246,23 @@ Sus valores serán borrados.
     viewModeCompass: "Brújula",
     viewModeRadar: "Radar",
     locationNavigatorInfo: {
-      title: "Location Navigator",
+      title: "Navegador de ubicación",
       description:
-        "Guides you toward a target coordinate using your device's GPS and sensors. It shows a target location relative to your current position and lets you navigate to it in the field.",
-      viewModesTitle: "View Modes",
-      compassTitle: "Compass",
+        "Te guía hacia una coordenada objetivo usando el GPS y los sensores del dispositivo. Muestra la ubicación objetivo en relación con tu posición actual y te permite navegar hasta ella en el campo.",
+      viewModesTitle: "Modos de vista",
+      compassTitle: "Brújula",
       compassDesc:
-        "Displays a rotating compass rose aligned to North. An arrow points toward the target. When very close to the target (proximity mode), the arrow is replaced with a dot on the accuracy circle showing the target's relative position.",
+        "Muestra una rosa de los vientos giratoria orientada al norte. Una flecha apunta hacia el objetivo. Cuando estás muy cerca del objetivo (modo de proximidad), la flecha se sustituye por un punto en el círculo de precisión que indica la posición relativa del objetivo.",
       radarTitle: "Radar",
       radarDesc:
-        "Shows a top-down radar view with your position fixed at the center. The target dot moves around you in real time to reflect its actual direction and distance.",
-      headingSourcesTitle: "Heading Sources",
-      sensorTitle: "Sensor (Magnetometer)",
+        "Muestra una vista de radar desde arriba con tu posición fija en el centro. El punto objetivo se mueve a tu alrededor en tiempo real para reflejar su dirección y distancia reales.",
+      headingSourcesTitle: "Fuentes de rumbo",
+      sensorTitle: "Sensor (magnetómetro)",
       sensorDesc:
-        "Uses the device's built-in magnetometer (compass chip). Works while standing still, but can be affected by nearby metal objects or magnetic interference.",
+        "Usa el magnetómetro integrado del dispositivo (chip de brújula). Funciona estando quieto, pero puede verse afectado por objetos metálicos cercanos o interferencias magnéticas.",
       gpsTitle: "GPS",
       gpsDesc:
-        "Derives heading from GPS movement. More accurate in open spaces, but requires you to be walking and may not be available on all devices.",
+        "Obtiene el rumbo a partir del movimiento GPS. Es más preciso en espacios abiertos, pero requiere que estés caminando y puede no estar disponible en todos los dispositivos.",
     },
   },
   geo: {
@@ -275,6 +279,54 @@ Presiona '$t(common:stop)' cuando hayas terminado.`,
     addCurrentLocationPoint: "Agregar ubicación actual",
     addCurrentLocationPointInstructions:
       "Pulsa '$t(dataEntry:geo.addCurrentLocationPoint)' para agregar la ubicación actual al polígono",
+  },
+  positionTracking: {
+    title: "Seguimiento de posición",
+    start: "Iniciar seguimiento",
+    resume: "Reanudar",
+    restart: "Reiniciar",
+    restartConfirm: {
+      title: "¿Eliminar el recorrido grabado?",
+      message:
+        "Se eliminarán todos los puntos grabados hasta ahora en este atributo y el seguimiento empezará desde cero. Esta acción no se puede deshacer.",
+    },
+    delete: "Eliminar recorrido",
+    deleteConfirm: {
+      title: "¿Eliminar el recorrido grabado?",
+      message:
+        "Se eliminarán todos los puntos grabados en este atributo y el atributo quedará vacío. Esta acción no se puede deshacer.",
+    },
+    stop: "Detener",
+    showTrack: "Mostrar recorrido",
+    retry: "Reintentar",
+    status: {
+      idle: "Sin seguimiento",
+      stopped: "Seguimiento detenido",
+      starting: "Iniciando seguimiento…",
+      tracking: "Seguimiento en curso",
+      paused: "Seguimiento en pausa",
+    },
+    waitingForFix: "Esperando GPS…",
+    accuracy: "±{{accuracy}} m",
+    pointsCount: "{{count}} puntos",
+    trackSummary: "{{length}} · {{pointsCount}} puntos · {{duration}}",
+    attributeNotEditable:
+      "El valor de este atributo se registra mediante el seguimiento de posición",
+    stopConfirm:
+      "¿Detener el seguimiento? El recorrido grabado se guarda en el atributo y se puede continuar más tarde.",
+    stopCurrentConfirm:
+      "Se está siguiendo otro atributo: ¿detener su seguimiento e iniciar el seguimiento de este?",
+    interrupted:
+      "El seguimiento de posición se interrumpió: el recorrido grabado se ha guardado. Reanuda el seguimiento para continuar.",
+    error: {
+      generic: "No se puede iniciar el seguimiento de posición",
+      permissionDenied:
+        "No se puede seguir la posición: acceso a la ubicación no concedido",
+      locationServicesOff:
+        "No se puede seguir la posición: los servicios de ubicación están desactivados",
+      notSaved:
+        "El recorrido aún no se pudo guardar en el atributo: se guardará más tarde",
+    },
   },
   taxon: {
     search: "Buscar taxón",

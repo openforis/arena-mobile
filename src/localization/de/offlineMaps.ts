@@ -7,7 +7,7 @@ export default {
   description:
     "Laden Sie die Karte Ihres Interessengebiets herunter, bevor Sie ins Feld gehen: Sie ist dann beim Zeichnen oder Anzeigen geografischer Attribute auch ohne Internetverbindung verfügbar.",
   freeLayersNotInUse:
-    "Offline-Karten werden nur verwendet, wenn der Kartenanbieter in den Einstellungen auf 'Free map layers' gesetzt ist.",
+    "Offline-Karten werden nur verwendet, wenn der Kartenanbieter in den Einstellungen auf 'Kostenlose Kartenebenen' gesetzt ist.",
   useFreeLayers: "Kostenlose Kartenebenen verwenden",
   offlineMode: "Offline",
   addArea: "Gebiet hinzufügen",

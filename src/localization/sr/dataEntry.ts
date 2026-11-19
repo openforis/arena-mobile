@@ -226,6 +226,8 @@ Preuzeti listu zapisa sa servera i pokušati ponovo?`,
   syncStatusHeader: "Status",
   syncStatus: {
     conflictingKeys: "Zapis sa istim ključevima već postoji",
+    deviceDateBehindServer:
+      "Nije otpremljen: datum na uređaju je iza datuma na serveru (podesite tačan datum i vrijeme, pa ponovo izmijenite zapis)",
     keysNotSpecified: `Ključevi nisu navedeni`,
     new: "Novi (još nije otpremljen)",
     notModified: "Nije izmijenjen (nema izmjena za otpremanje)",

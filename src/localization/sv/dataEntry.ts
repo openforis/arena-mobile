@@ -167,6 +167,8 @@ Vill du hämta den igen från servern?`,
   syncStatusHeader: "Status",
   syncStatus: {
     conflictingKeys: "Post med samma nyckel/nycklar finns redan",
+    deviceDateBehindServer:
+      "Inte uppladdad: enhetens datum ligger efter serverns (ställ in rätt datum och tid och redigera sedan posten igen)",
     keysNotSpecified: `Nyckel/nycklar inte angivna`,
     new: "Ny (inte uppladdad än)",
     notModified: "Inte ändrad (inga ändringar att ladda upp)",
@@ -183,6 +185,8 @@ Vill du hämta den igen från servern?`,
   uploadingData: {
     title: "Laddar upp data",
     size: "Filstorlek: {{size}}",
+    speed: "Uppladdningshastighet: {{speed}}/s",
+    eta: "Beräknad återstående tid: {{eta}}",
   },
   validationReport: {
     title: "Valideringsrapport",
@@ -248,23 +252,23 @@ Vill du hämta den igen från servern?`,
     viewModeCompass: "Kompass",
     viewModeRadar: "Radar",
     locationNavigatorInfo: {
-      title: "Location Navigator",
+      title: "Platsnavigator",
       description:
-        "Guides you toward a target coordinate using your device's GPS and sensors. It shows a target location relative to your current position and lets you navigate to it in the field.",
-      viewModesTitle: "View Modes",
-      compassTitle: "Compass",
+        "Vägleder dig mot en målkoordinat med hjälp av enhetens GPS och sensorer. Den visar målplatsen i förhållande till din aktuella position och låter dig navigera dit i fält.",
+      viewModesTitle: "Visningslägen",
+      compassTitle: "Kompass",
       compassDesc:
-        "Displays a rotating compass rose aligned to North. An arrow points toward the target. When very close to the target (proximity mode), the arrow is replaced with a dot on the accuracy circle showing the target's relative position.",
+        "Visar en roterande kompassros riktad mot norr. En pil pekar mot målet. När målet är mycket nära (närhetsläge) ersätts pilen av en punkt på noggrannhetscirkeln som visar målets relativa position.",
       radarTitle: "Radar",
       radarDesc:
-        "Shows a top-down radar view with your position fixed at the center. The target dot moves around you in real time to reflect its actual direction and distance.",
-      headingSourcesTitle: "Heading Sources",
-      sensorTitle: "Sensor (Magnetometer)",
+        "Visar en radarvy ovanifrån med din position fast i mitten. Målpunkten rör sig runt dig i realtid och återspeglar dess faktiska riktning och avstånd.",
+      headingSourcesTitle: "Riktningskällor",
+      sensorTitle: "Sensor (magnetometer)",
       sensorDesc:
-        "Uses the device's built-in magnetometer (compass chip). Works while standing still, but can be affected by nearby metal objects or magnetic interference.",
+        "Använder enhetens inbyggda magnetometer (kompasschip). Fungerar även när du står still, men kan påverkas av metallföremål i närheten eller magnetiska störningar.",
       gpsTitle: "GPS",
       gpsDesc:
-        "Derives heading from GPS movement. More accurate in open spaces, but requires you to be walking and may not be available on all devices.",
+        "Beräknar riktningen utifrån GPS-rörelse. Mer exakt i öppen terräng, men kräver att du går och är kanske inte tillgänglig på alla enheter.",
     },
   },
   geo: {
@@ -281,6 +285,53 @@ Tryck '$t(common:stop)' när du är klar.`,
     addCurrentLocationPoint: "Lägg till aktuell plats",
     addCurrentLocationPointInstructions:
       "Tryck på '$t(dataEntry:geo.addCurrentLocationPoint)' för att lägga till aktuell plats i polygonen",
+  },
+  positionTracking: {
+    title: "Positionsspårning",
+    start: "Starta spårning",
+    resume: "Återuppta",
+    restart: "Starta om",
+    restartConfirm: {
+      title: "Ta bort det inspelade spåret?",
+      message:
+        "Alla punkter som hittills registrerats i detta attribut tas bort och spårningen börjar om från början. Detta kan inte ångras.",
+    },
+    delete: "Ta bort spår",
+    deleteConfirm: {
+      title: "Ta bort det inspelade spåret?",
+      message:
+        "Alla punkter som registrerats i detta attribut tas bort och attributet lämnas tomt. Detta kan inte ångras.",
+    },
+    stop: "Stoppa",
+    showTrack: "Visa spår",
+    retry: "Försök igen",
+    status: {
+      idle: "Ingen spårning",
+      stopped: "Spårning stoppad",
+      starting: "Startar spårning…",
+      tracking: "Spårar",
+      paused: "Spårning pausad",
+    },
+    waitingForFix: "Väntar på GPS…",
+    accuracy: "±{{accuracy}} m",
+    pointsCount: "{{count}} punkter",
+    trackSummary: "{{length}} · {{pointsCount}} punkter · {{duration}}",
+    attributeNotEditable:
+      "Värdet för detta attribut registreras av positionsspårningen",
+    stopConfirm:
+      "Stoppa spårningen? Det inspelade spåret sparas i attributet och kan fortsättas senare.",
+    stopCurrentConfirm:
+      "Ett annat attribut spåras: stoppa spårningen av det och börja spåra detta?",
+    interrupted:
+      "Positionsspårningen avbröts: det inspelade spåret har sparats. Återuppta spårningen för att fortsätta.",
+    error: {
+      generic: "Kan inte starta positionsspårning",
+      permissionDenied:
+        "Kan inte spåra positionen: åtkomst till platsen inte beviljad",
+      locationServicesOff:
+        "Kan inte spåra positionen: platstjänsterna är avstängda",
+      notSaved: "Spåret kunde inte sparas i attributet ännu: det sparas senare",
+    },
   },
   taxon: {
     search: "Sök taxon",

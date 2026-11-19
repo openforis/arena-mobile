@@ -16,9 +16,6 @@ export default {
     confirm: {
       message: "Continuar a editar de onde parou?",
     },
-    commands: {
-      message: "Continuar a editar de onde parou?",
-    },
   },
   dateModifiedRemotely: "Data de modificação remota",
   deleteRecordsConfirm: {
