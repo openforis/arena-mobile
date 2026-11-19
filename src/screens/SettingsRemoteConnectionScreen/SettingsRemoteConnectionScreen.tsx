@@ -25,7 +25,9 @@ import { useTranslation } from "localization";
 import { useEffectiveTheme } from "hooks";
 import { AMConstants } from "utils";
 
+import { ExternalLoginButtons } from "./ExternalLoginButtons";
 import { LoggedInUserSummary } from "./LoggedInUserSummary";
+import { RequestAccessBanner } from "./RequestAccessBanner";
 import { ServerUrlType } from "./remoteConnectionUtils";
 import { TwoFactorVerification } from "./TwoFactorVerification";
 import { useSettingsRemoteConnection } from "./useSettingsRemoteConnection";
@@ -39,6 +41,9 @@ export const SettingsRemoteConnectionScreen = () => {
   const {
     loading,
     email,
+    externalLoginEmail,
+    externalLoginProviderLabel,
+    externalLoginProviders,
     password,
     loginDisabled,
     networkAvailable,
@@ -53,6 +58,7 @@ export const SettingsRemoteConnectionScreen = () => {
     twoFactorCodeNotValid,
     onEmailChange,
     onPasswordChange,
+    onExternalLogin,
     onLogin,
     onLogout,
     onServerUrlTypeChange,
@@ -114,7 +120,11 @@ export const SettingsRemoteConnectionScreen = () => {
             code={twoFactorCode}
             codeNotValid={twoFactorCodeNotValid}
             disabled={!networkAvailable}
-            email={email}
+            // the email typed in the form is not the account of an external sign-in
+            email={
+              externalLoginProviderLabel ? (externalLoginEmail ?? "") : email
+            }
+            externalLoginProvider={externalLoginProviderLabel}
             loading={loading}
             onBackupCodeModeToggle={onBackupCodeModeToggle}
             onCodeChange={onTwoFactorCodeChange}
@@ -130,6 +140,7 @@ export const SettingsRemoteConnectionScreen = () => {
     <ScreenView>
       <VView style={styles.container}>
         {offlineBanner}
+        <RequestAccessBanner />
         <Card contentStyle={styles.cardContent}>
           <AppLogo style={styles.logo} />
           <TextInput
@@ -174,6 +185,12 @@ export const SettingsRemoteConnectionScreen = () => {
             textKey="settingsRemoteConnection:login"
           />
         </HView>
+        <ExternalLoginButtons
+          disabled={!networkAvailable}
+          onPress={onExternalLogin}
+          providers={externalLoginProviders}
+          serverUrl={serverUrl}
+        />
         <Button
           disabled={!networkAvailable}
           icon="qrcode-scan"
@@ -238,11 +255,6 @@ export const SettingsRemoteConnectionScreen = () => {
             textKey="settingsRemoteConnection:clearCredentials"
           />
         )}
-        <Link
-          labelKey="settingsRemoteConnection:requestAccess"
-          style={styles.requestAccessLink}
-          url={AMConstants.requestAccessUrl}
-        />
       </VView>
       {qrScannerVisible && (
         <QrScannerModal

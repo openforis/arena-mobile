@@ -8,6 +8,8 @@ export default {
   loginUsingQrCode: "QRコードでログイン",
   logout: "ログアウト",
   logoutConfirmMessage: "ログアウトしてユーザー認証情報を削除しますか？",
+  newToArena: "Arenaを初めてご利用ですか？",
+  or: "または",
   password: "パスワード",
   qrCodeNotValid: "QRコードが有効ではありません",
   loginUsingQrCodeInstructions: `QRコードでログインするには：
@@ -15,7 +17,10 @@ export default {
 2. 右上のボタンを押してユーザーメニューを開く
 3. **QRコードを使用してArena Mobileからログイン**を選択
 4. 表示されたQRコードをスキャン`,
-  requestAccess: "Arenaを初めてご利用ですか？アクセスを要求",
+  registerBeforeLoggingIn:
+    "まずアクセスを申請してください。登録済みのユーザーのみがログインできます。",
+  registeredUsersOnly: "登録済みユーザーのみ",
+  requestAccess: "アクセスを要求",
   scanQrCode: "QRコードをスキャン",
   serverUrl: "サーバーURL",
   serverUrlNotValid: "サーバーURLが有効ではありません",
@@ -23,6 +28,7 @@ export default {
     default: "デフォルト",
     custom: "カスタム",
   },
+  signInWith: "{{provider}} でサインイン",
   testUrl: "URLをテスト",
   title: "サーバーへの接続",
   twoFactor: {
@@ -31,6 +37,9 @@ export default {
     description: "認証アプリが生成したコードを入力してください。",
     descriptionBackupCode:
       "2段階認証の設定時に保存したバックアップコードのいずれかを入力してください。",
+    arenaAccountRequiresCode:
+      "Arena アカウントでは 2 段階認証も使用しています。",
+    signedInWith: "{{provider}} でサインインしました",
     title: "2段階認証",
     useAuthenticatorApp: "認証アプリを使用する",
     useBackupCode: "バックアップコードを使用する",

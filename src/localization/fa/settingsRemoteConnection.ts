@@ -9,6 +9,8 @@ export default {
   loginUsingQrCode: "ورود با استفاده از کد QR",
   logout: "خروج",
   logoutConfirmMessage: "خروج و پاک کردن اعتبارنامه های کاربر؟",
+  newToArena: "در Arena جدید هستید؟",
+  or: "یا",
   password: "رمز عبور",
   qrCodeNotValid: "کد QR معتبر نیست",
   loginUsingQrCodeInstructions: `برای ورود با استفاده از کد QR:
@@ -16,7 +18,10 @@ export default {
 2. دکمه گوشه بالا سمت راست را فشار دهید و منوی کاربر را باز کنید
 3. **ورود از Arena Mobile با استفاده از کد QR** را انتخاب کنید
 4. کد QR نمایش داده شده را اسکن کنید`,
-  requestAccess: "در Arena جدید هستید؟ درخواست دسترسی",
+  registerBeforeLoggingIn:
+    "ابتدا درخواست دسترسی دهید: فقط کاربران ثبت‌نام‌شده می‌توانند وارد شوند.",
+  registeredUsersOnly: "فقط کاربران ثبت‌نام‌شده",
+  requestAccess: "درخواست دسترسی",
   scanQrCode: "اسکن کد QR",
   serverUrl: "آدرس سرور",
   serverUrlNotValid: "آدرس سرور معتبر نیست",
@@ -24,6 +29,7 @@ export default {
     default: "پیش فرض",
     custom: "سفارشی",
   },
+  signInWith: "ورود با {{provider}}",
   testUrl: "آزمایش آدرس",
   title: "اتصال به سرور",
   twoFactor: {
@@ -33,6 +39,9 @@ export default {
       "لطفاً کدی را که توسط برنامه احراز هویت شما ایجاد شده است وارد کنید.",
     descriptionBackupCode:
       "یکی از کدهای پشتیبانی را که هنگام راه‌اندازی تأیید دو مرحله‌ای ذخیره کرده‌اید وارد کنید.",
+    arenaAccountRequiresCode:
+      "حساب Arena شما نیز از تأیید دو مرحله‌ای استفاده می‌کند.",
+    signedInWith: "با {{provider}} وارد شدید",
     title: "تأیید دو مرحله‌ای",
     useAuthenticatorApp: "استفاده از برنامه احراز هویت",
     useBackupCode: "استفاده از کد پشتیبان",
