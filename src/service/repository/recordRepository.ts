@@ -1,13 +1,13 @@
 import {
   ArenaRecord,
   Dates,
-  ArenaNodeDef,
   NodeDefType,
   Objects,
   Promises,
   ArenaSurvey,
   Surveys,
   ArenaValidation,
+  ArenaAnyNodeDef,
 } from "@openforis/arena-core";
 
 import { DbUtils, dbClient, SQLiteClient, SqlParams, SqlValue } from "db";
@@ -148,7 +148,7 @@ const fetchRecords = async ({
 };
 
 type KeyColParams = {
-  keyDef: ArenaNodeDef<NodeDefType> | undefined;
+  keyDef: ArenaAnyNodeDef | undefined;
   val: RecordKeyValue;
 };
 

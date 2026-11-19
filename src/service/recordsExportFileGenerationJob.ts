@@ -4,7 +4,6 @@ import {
   ArenaExportInfoFactory,
   DateFormats,
   Dates,
-  ArenaNodeDef,
   NodeDefType,
   NodeDefs,
   Objects,
@@ -12,6 +11,7 @@ import {
   Records,
   ArenaSurvey,
   Surveys,
+  ArenaAnyNodeDef,
 } from "@openforis/arena-core";
 
 import { ArenaMobileRecord, JobMobile, RecordSummary } from "model";
@@ -27,7 +27,7 @@ const recordsExportFileNamePrefix = "arena_mobile_data_";
 
 type ExportSurvey = ArenaSurvey & { remoteId?: number };
 
-type FileNodeDef = ArenaNodeDef<NodeDefType>;
+type FileNodeDef = ArenaAnyNodeDef;
 
 // entry of the files summary file of the export
 type ExportedRecordFile = {

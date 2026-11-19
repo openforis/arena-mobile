@@ -3,7 +3,6 @@ import {
   Arrays,
   DateFormats,
   Dates,
-  ArenaNodeDef,
   NodeDefs,
   NodeDefType,
   Objects,
@@ -13,6 +12,7 @@ import {
   Surveys,
   ArenaValidation,
   Validations,
+  ArenaAnyNodeDef,
 } from "@openforis/arena-core";
 
 import {
@@ -262,7 +262,7 @@ const fixRowKeyOrSummaryAttributeColumns = ({
   result: RecordFromRow;
   row: RecordRow;
   columnNames: RecordKeyOrSummaryColumn[];
-  defs: ArenaNodeDef<NodeDefType>[];
+  defs: ArenaAnyNodeDef[];
   wrapperProp: "keysObj" | "summaryAttributesObj";
 }) => {
   const values: RecordSummaryValues = {};

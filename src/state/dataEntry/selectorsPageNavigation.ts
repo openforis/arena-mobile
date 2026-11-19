@@ -1,11 +1,10 @@
 import {
-  ArenaNodeDef,
   ArenaNodeDefEntity,
-  NodeDefType,
   RecordNodes,
   Objects,
   Records,
   Surveys,
+  ArenaAnyNodeDef,
 } from "@openforis/arena-core";
 
 import { createSelector } from "@reduxjs/toolkit";
@@ -78,7 +77,7 @@ const selectCurrentPageEntityRelevantChildDefs = createSelector(
     selectRecordUnsafe,
     selectCurrentPageEntity,
   ],
-  (survey, record, currentPageEntity): ArenaNodeDef<NodeDefType>[] => {
+  (survey, record, currentPageEntity): ArenaAnyNodeDef[] => {
     const { parentEntityUuid, entityDef, entityUuid } = currentPageEntity;
     const actualEntityUuid = entityUuid ?? parentEntityUuid;
     if (!actualEntityUuid || !record) {
@@ -111,9 +110,7 @@ const selectCurrentPageEntityActiveChildDefUuid = createSelector(
     childDefs[activeChildDefIndex]?.uuid,
 );
 
-const useIsNodeDefCurrentActiveChild = (
-  nodeDef: ArenaNodeDef<NodeDefType>,
-): boolean =>
+const useIsNodeDefCurrentActiveChild = (nodeDef: ArenaAnyNodeDef): boolean =>
   useAppSelector(
     (state) =>
       // the record may be closed while the editor is being unmounted

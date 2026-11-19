@@ -3,15 +3,14 @@ import {
   ArenaRecordNode,
   ArenaDictionary,
   LanguageCode,
-  ArenaNodeDef,
   ArenaNodeDefEntity,
   NodeDefs,
-  NodeDefType,
   RecordNodeValueFormatter,
   Objects,
   Records,
   ArenaSurvey,
   Surveys,
+  ArenaAnyNodeDef,
 } from "@openforis/arena-core";
 
 import {
@@ -93,7 +92,7 @@ const getEntitySummaryValuesByNameFormatted = ({
   entity: ArenaRecordNode;
   onlyKeys?: boolean;
   lang?: string;
-  summaryDefs?: ArenaNodeDef<NodeDefType>[] | null;
+  summaryDefs?: ArenaAnyNodeDef[] | null;
   emptyValue?: string | null;
   t: SimpleTranslateFunction;
 }): ArenaDictionary<string> => {

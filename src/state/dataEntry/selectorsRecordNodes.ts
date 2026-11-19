@@ -1,10 +1,8 @@
 import {
   ArenaRecordNode,
-  ArenaNodeDef,
   ArenaNodeDefCode,
   ArenaNodeDefEntity,
   NodeDefs,
-  NodeDefType,
   RecordNodes,
   RecordNodeValues,
   Objects,
@@ -13,6 +11,7 @@ import {
   ArenaSurvey,
   Surveys,
   ArenaValidation,
+  ArenaAnyNodeDef,
 } from "@openforis/arena-core";
 
 import { SurveyDefs } from "model";
@@ -162,7 +161,7 @@ const selectIsRecordAttributeFilled =
 // child defs depend only on survey, cycle and entity def: cached per survey (selected by every form field)
 const childDefsCacheBySurvey = new WeakMap<
   object,
-  Map<string, ArenaNodeDef<NodeDefType>[]>
+  Map<string, ArenaAnyNodeDef[]>
 >();
 
 export const getChildDefs = ({
@@ -173,7 +172,7 @@ export const getChildDefs = ({
   survey: ArenaSurvey;
   cycle: string;
   nodeDef: ArenaNodeDefEntity;
-}): ArenaNodeDef<NodeDefType>[] => {
+}): ArenaAnyNodeDef[] => {
   let cache = childDefsCacheBySurvey.get(survey);
   if (!cache) {
     cache = new Map();
@@ -196,7 +195,7 @@ export const getChildDefs = ({
 
 const selectChildDefs =
   ({ nodeDef }: { nodeDef: ArenaNodeDefEntity }) =>
-  (state: RootState): ArenaNodeDef<NodeDefType>[] =>
+  (state: RootState): ArenaAnyNodeDef[] =>
     getChildDefs({
       survey: SurveySelectors.selectCurrentSurvey(state)!,
       cycle: selectRecordCycle(state),
@@ -294,7 +293,7 @@ export const RecordNodesSelectors = {
     nodeDef,
   }: {
     parentEntityUuid: string | undefined;
-    nodeDef: ArenaNodeDef<NodeDefType>;
+    nodeDef: ArenaAnyNodeDef;
   }) =>
     useAppSelector(
       selectRecordChildNodes({ parentNodeUuid: parentEntityUuid, nodeDef }),

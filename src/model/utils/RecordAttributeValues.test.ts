@@ -1,4 +1,4 @@
-import { ArenaNodeDef, NodeDefType } from "@openforis/arena-core";
+import { NodeDefType, ArenaAnyNodeDef } from "@openforis/arena-core";
 
 import { RecordAttributeValues } from "./RecordAttributeValues";
 
@@ -9,14 +9,14 @@ const coordinateDef = (props: Record<string, unknown> = {}) =>
   ({
     type: NodeDefType.coordinate,
     props: { name: "location", ...props },
-  }) as unknown as ArenaNodeDef<NodeDefType>;
+  }) as unknown as ArenaAnyNodeDef;
 
 const defWithValidation = (expression: string) =>
   ({
     type: NodeDefType.coordinate,
     props: { name: "site_location" },
     propsAdvanced: { validations: { expressions: [{ expression }] } },
-  }) as unknown as ArenaNodeDef<NodeDefType>;
+  }) as unknown as ArenaAnyNodeDef;
 
 describe("RecordAttributeValues.cleanupAttributeValue", () => {
   test("removes extra coordinate fields and converts numbers", () => {
@@ -53,7 +53,7 @@ describe("RecordAttributeValues.cleanupAttributeValue", () => {
     const attributeDef = {
       type: NodeDefType.text,
       props: {},
-    } as unknown as ArenaNodeDef<NodeDefType>;
+    } as unknown as ArenaAnyNodeDef;
     expect(cleanupAttributeValue({ value, attributeDef })).toBe(value);
   });
 });

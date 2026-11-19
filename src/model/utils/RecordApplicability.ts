@@ -1,14 +1,13 @@
 import {
   ArenaRecord,
   ArenaRecordNode,
-  ArenaNodeDef,
   ArenaNodeDefEntity,
   NodeDefs,
-  NodeDefType,
   RecordNodes,
   Objects,
   Records,
   ArenaSurvey,
+  ArenaAnyNodeDef,
 } from "@openforis/arena-core";
 
 import { SurveyDefs } from "./SurveyDefs";
@@ -42,7 +41,7 @@ const hasDescendantApplicableNodes = ({
 }: {
   record: ArenaRecord;
   parentEntity: ArenaRecordNode;
-  nodeDef: ArenaNodeDef<NodeDefType>;
+  nodeDef: ArenaAnyNodeDef;
 }): boolean => {
   const descendants = Records.getDescendantsOrSelf(
     parentEntity,
@@ -63,7 +62,7 @@ const getApplicableDescendantDefs = ({
   record: ArenaRecord;
   parentEntity: ArenaRecordNode;
   onlyAttributes?: boolean;
-}): ArenaNodeDef<NodeDefType>[] => {
+}): ArenaAnyNodeDef[] => {
   const cycle = record.cycle!;
   const defs = SurveyDefs.getDescendantsInSingleEntities({
     survey: survey!,
@@ -92,7 +91,7 @@ const getApplicableSummaryDefs = ({
   parentEntity: ArenaRecordNode;
   onlyKeys?: boolean;
   maxSummaryDefs?: number;
-}): ArenaNodeDef<NodeDefType>[] => {
+}): ArenaAnyNodeDef[] => {
   const cycle = record.cycle!;
   const summaryDefs = SurveyDefs.getEntitySummaryDefs({
     survey: survey!,
