@@ -2,7 +2,6 @@ import {
   ArenaRecord,
   ArenaRecordNode,
   ArenaDictionary,
-  ArenaNodeDef,
   ArenaNodeDefCoordinate,
   ArenaNodeDefExpression,
   NodeDefs,
@@ -13,6 +12,7 @@ import {
   RecordExpressionEvaluator,
   ArenaSurvey,
   ArenaUser,
+  ArenaAnyNodeDef,
 } from "@openforis/arena-core";
 
 const coordinateAttributeMandatoryFields: Set<string> = new Set([
@@ -35,7 +35,7 @@ const cleanupAttributeValue = ({
   sideEffect = false,
 }: {
   value: any;
-  attributeDef: ArenaNodeDef<NodeDefType>;
+  attributeDef: ArenaAnyNodeDef;
   sideEffect?: boolean;
 }) => {
   if (NodeDefs.getType(attributeDef) === NodeDefType.coordinate) {
@@ -86,7 +86,7 @@ const distanceFunctionRegExp = (
 const extractDistanceTargetExpression = ({
   nodeDef,
 }: {
-  nodeDef: ArenaNodeDef<NodeDefType>;
+  nodeDef: ArenaAnyNodeDef;
 }): string | null => {
   const validations = NodeDefs.getValidations(nodeDef);
   const distanceCallRegExp = new RegExp(distanceFunctionCallPattern);
@@ -133,7 +133,7 @@ const getCoordinateDistanceTarget = async ({
   node,
 }: {
   survey: ArenaSurvey;
-  nodeDef: ArenaNodeDef<NodeDefType>;
+  nodeDef: ArenaAnyNodeDef;
   record: ArenaRecord;
   node: ArenaRecordNode | undefined;
 }) => {

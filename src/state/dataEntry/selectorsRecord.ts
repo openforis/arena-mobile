@@ -1,10 +1,9 @@
 import {
   ArenaRecord,
   ArenaRecordNode,
-  ArenaNodeDef,
-  NodeDefType,
   Records,
   Surveys,
+  ArenaAnyNodeDef,
 } from "@openforis/arena-core";
 
 import { RecordUtils } from "model";
@@ -23,7 +22,7 @@ export type NodePointerParams = {
 
 export type ParentNodeUuidNodeDefParams = {
   parentNodeUuid: string | undefined;
-  nodeDef: ArenaNodeDef<NodeDefType>;
+  nodeDef: ArenaAnyNodeDef;
 };
 
 export const getDataEntryState = (state: RootState): DataEntryState =>

@@ -2,13 +2,13 @@ import {
   ArenaRecordNode,
   FileNames,
   LanguageCode,
-  ArenaNodeDef,
   ArenaNodeDefBoolean,
   NodeDefType,
   Numbers,
   Objects,
   ArenaSurvey,
   Surveys,
+  ArenaAnyNodeDef,
 } from "@openforis/arena-core";
 
 import { FileSizes } from "utils/FileSizes";
@@ -22,7 +22,7 @@ export type SimpleTranslateFunction = (key: string) => string;
 export type SummaryValueFormatterParams = {
   survey: ArenaSurvey;
   cycle: string;
-  nodeDef: ArenaNodeDef<NodeDefType>;
+  nodeDef: ArenaAnyNodeDef;
   node?: ArenaRecordNode;
   value: any;
   showLabel?: boolean;
