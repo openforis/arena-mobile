@@ -4,6 +4,7 @@ export default {
     appearance: "መልክ",
     dataEntry: "ውሂብ ማስገባት",
     location: "አካባቢ እና ጂፒኤስ",
+    maps: "ካርታዎች",
     images: "ምስሎች",
   },
   animationsEnabled: {
@@ -76,6 +77,19 @@ export default {
       "ማስጠንቀቂያ፡ የባትሪ ፍጆታ ይጨምራል!\nመተግበሪያው በሚሠራበት ጊዜ የጂፒኤስ ምልክት ይቆለፋል።\nይህም በተቀናጀ ባህሪያት ውስጥ የተሻለ ትክክለኛነት ለማግኘት ይረዳል።",
     error: "የጂፒኤስ መቆለፊያን መጀመር አልተቻለም፡ የአካባቢ አቅራቢ የለም ወይም ወደ አካባቢው መዳረሻ አልተሰጠም",
   },
+  positionTrackingAccuracyThreshold: {
+    label: "የቦታ ክትትል ትክክለኛነት ገደብ: {{value}} ሜ",
+    description: "ከዚህ ያነሰ ትክክለኛነት ያላቸው ቦታዎች በሚቀዳው መስመር ላይ አይጨመሩም",
+  },
+  positionTrackingBatterySaver: {
+    label: "የቦታ ክትትል ባትሪ ቆጣቢ",
+    description: "ሲነቃ፣ መስመሩ ያነሰ ትክክለኛ ይሆናል ነገር ግን የባትሪ ፍጆታ ይቀንሳል",
+  },
+  positionTrackingMinDistance: {
+    label: "የቦታ ክትትል ዝቅተኛ ርቀት: {{value}} ሜ",
+    description:
+      "በሚቀዳው መስመር ሁለት ነጥቦች መካከል ያለው ዝቅተኛ ርቀት (ቦታው ያነሰ ትክክለኛ ከሆነ ይበልጣል)",
+  },
   gpsDevicePairing: {
     title: "የጂፒኤስ መሣሪያ ማጣመር",
     scanButton: "መሣሪያዎችን ፈልግ",
@@ -105,6 +119,19 @@ export default {
     pairNewDevice: "አዲስ መሣሪያ አጣምር…",
   },
 
+  mapLayer: {
+    label: "ነባሪ የካርታ ንብርብር",
+    description: "ካርታ ሲከፈት የሚታየው ንብርብር (አሁንም በካርታው ላይ በንብርብሮች አዝራር መቀየር ይቻላል)",
+  },
+  mapProvider: {
+    label: "የካርታ አቅራቢ",
+    description:
+      "ጂኦግራፊያዊ ባህሪያትን ሲሳሉ ወይም ሲመለከቱ የሚጠቀሙበት ካርታ። ነፃ የካርታ ንብርብሮችን ከመስመር ውጭ ለመጠቀም አስቀድመው ማውረድ ይቻላል (ከመስመር ውጭ ካርታዎችን ይመልከቱ)",
+    options: {
+      default: "Google Maps (በiOS ላይ Apple Maps)",
+      freeLayers: "ነፃ የካርታ ንብርብሮች (ሳተላይት፣ ቶፖግራፊያዊ) - ከመስመር ውጭ የሚሰሩ",
+    },
+  },
   showRecordCompletion: {
     label: "የመዝገብ ማጠናቀቅ እድገትን አሳይ",
     description: "ለአሁኑ መዝገብ የተሟሉ መስፈርቶች መቶኛን የሚያሳይ የእድገት አሞሌ ያሳያል",

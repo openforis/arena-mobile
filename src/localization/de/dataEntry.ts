@@ -170,6 +170,8 @@ Möchten Sie sie erneut vom Server abrufen?`,
   syncStatus: {
     conflictingKeys:
       "Datensatz mit demselben Schlüssel/denselben Schlüsseln ist bereits vorhanden",
+    deviceDateBehindServer:
+      "Nicht hochgeladen: Das Gerätedatum liegt hinter dem des Servers (stellen Sie Datum und Uhrzeit richtig ein und bearbeiten Sie den Datensatz dann erneut)",
     keysNotSpecified: `Schlüssel nicht angegeben`,
     new: "Neu (noch nicht hochgeladen)",
     notModified: "Nicht geändert (keine Änderungen zum Hochladen)",
@@ -185,7 +187,9 @@ Möchten Sie sie erneut vom Server abrufen?`,
   },
   uploadingData: {
     title: "Daten werden hochgeladen",
-    size: "Dateigroesse: {{size}}",
+    size: "Dateigröße: {{size}}",
+    speed: "Upload-Geschwindigkeit: {{speed}}/s",
+    eta: "Geschätzte Restzeit: {{eta}}",
   },
   validationReport: {
     title: "Validierungsbericht",
@@ -251,23 +255,23 @@ Möchten Sie sie erneut vom Server abrufen?`,
     viewModeCompass: "Kompass",
     viewModeRadar: "Radar",
     locationNavigatorInfo: {
-      title: "Location Navigator",
+      title: "Standort-Navigator",
       description:
-        "Guides you toward a target coordinate using your device's GPS and sensors. It shows a target location relative to your current position and lets you navigate to it in the field.",
-      viewModesTitle: "View Modes",
-      compassTitle: "Compass",
+        "Führt Sie mithilfe von GPS und Sensoren Ihres Geräts zu einer Zielkoordinate. Er zeigt den Zielstandort relativ zu Ihrer aktuellen Position an und ermöglicht Ihnen, im Gelände dorthin zu navigieren.",
+      viewModesTitle: "Ansichtsmodi",
+      compassTitle: "Kompass",
       compassDesc:
-        "Displays a rotating compass rose aligned to North. An arrow points toward the target. When very close to the target (proximity mode), the arrow is replaced with a dot on the accuracy circle showing the target's relative position.",
+        "Zeigt eine nach Norden ausgerichtete, sich drehende Kompassrose an. Ein Pfeil zeigt in Richtung des Ziels. In unmittelbarer Nähe des Ziels (Annäherungsmodus) wird der Pfeil durch einen Punkt auf dem Genauigkeitskreis ersetzt, der die relative Position des Ziels anzeigt.",
       radarTitle: "Radar",
       radarDesc:
-        "Shows a top-down radar view with your position fixed at the center. The target dot moves around you in real time to reflect its actual direction and distance.",
-      headingSourcesTitle: "Heading Sources",
+        "Zeigt eine Radaransicht von oben, in der Ihre Position in der Mitte fixiert ist. Der Zielpunkt bewegt sich in Echtzeit um Sie herum und gibt seine tatsächliche Richtung und Entfernung wieder.",
+      headingSourcesTitle: "Quellen der Ausrichtung",
       sensorTitle: "Sensor (Magnetometer)",
       sensorDesc:
-        "Uses the device's built-in magnetometer (compass chip). Works while standing still, but can be affected by nearby metal objects or magnetic interference.",
+        "Verwendet das eingebaute Magnetometer (Kompass-Chip) des Geräts. Funktioniert auch im Stillstand, kann aber durch Metallgegenstände in der Nähe oder magnetische Störungen beeinträchtigt werden.",
       gpsTitle: "GPS",
       gpsDesc:
-        "Derives heading from GPS movement. More accurate in open spaces, but requires you to be walking and may not be available on all devices.",
+        "Ermittelt die Ausrichtung aus der GPS-Bewegung. Im offenen Gelände genauer, erfordert aber, dass Sie gehen, und ist möglicherweise nicht auf allen Geräten verfügbar.",
     },
   },
   geo: {
@@ -284,6 +288,54 @@ Drücken Sie '$t(common:stop)', wenn Sie fertig sind.`,
     addCurrentLocationPoint: "Aktuellen Standort hinzufügen",
     addCurrentLocationPointInstructions:
       "Drücken Sie '$t(dataEntry:geo.addCurrentLocationPoint)', um die aktuelle Position zum Polygon hinzuzufügen",
+  },
+  positionTracking: {
+    title: "Positionsverfolgung",
+    start: "Verfolgung starten",
+    resume: "Fortsetzen",
+    restart: "Neu starten",
+    restartConfirm: {
+      title: "Aufgezeichneten Track löschen?",
+      message:
+        "Alle bisher in diesem Attribut aufgezeichneten Punkte werden gelöscht und die Verfolgung beginnt von vorn. Dies kann nicht rückgängig gemacht werden.",
+    },
+    delete: "Track löschen",
+    deleteConfirm: {
+      title: "Aufgezeichneten Track löschen?",
+      message:
+        "Alle in diesem Attribut aufgezeichneten Punkte werden gelöscht und das Attribut bleibt leer. Dies kann nicht rückgängig gemacht werden.",
+    },
+    stop: "Stoppen",
+    showTrack: "Track anzeigen",
+    retry: "Erneut versuchen",
+    status: {
+      idle: "Keine Verfolgung",
+      stopped: "Verfolgung gestoppt",
+      starting: "Verfolgung wird gestartet…",
+      tracking: "Verfolgung läuft",
+      paused: "Verfolgung pausiert",
+    },
+    waitingForFix: "Warten auf GPS…",
+    accuracy: "±{{accuracy}} m",
+    pointsCount: "{{count}} Punkte",
+    trackSummary: "{{length}} · {{pointsCount}} Punkte · {{duration}}",
+    attributeNotEditable:
+      "Der Wert dieses Attributs wird durch die Positionsverfolgung aufgezeichnet",
+    stopConfirm:
+      "Verfolgung stoppen? Der aufgezeichnete Track wird im Attribut gespeichert und kann später fortgesetzt werden.",
+    stopCurrentConfirm:
+      "Ein anderes Attribut wird gerade verfolgt: dessen Verfolgung stoppen und die Verfolgung dieses Attributs starten?",
+    interrupted:
+      "Die Positionsverfolgung wurde unterbrochen: Der aufgezeichnete Track wurde gespeichert. Setzen Sie die Verfolgung fort, um weiterzumachen.",
+    error: {
+      generic: "Positionsverfolgung kann nicht gestartet werden",
+      permissionDenied:
+        "Position kann nicht verfolgt werden: Zugriff auf den Standort nicht gewährt",
+      locationServicesOff:
+        "Position kann nicht verfolgt werden: Standortdienste sind ausgeschaltet",
+      notSaved:
+        "Der Track konnte noch nicht im Attribut gespeichert werden: Er wird später gespeichert",
+    },
   },
   taxon: {
     search: "Taxon suchen",

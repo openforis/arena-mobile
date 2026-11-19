@@ -170,6 +170,8 @@ Voulez-vous les récupérer à nouveau depuis le serveur ?`,
   syncStatusHeader: "État",
   syncStatus: {
     conflictingKeys: "Un enregistrement avec la/les même(s) clé(s) existe déjà",
+    deviceDateBehindServer:
+      "Non téléversé: la date de l'appareil est antérieure à celle du serveur (réglez la date et l'heure correctes, puis modifiez à nouveau l'enregistrement)",
     keysNotSpecified: "Clé(s) non spécifiée(s)",
     new: "Nouveau (pas encore téléchargé)",
     notModified: "Non modifié (aucune modification à télécharger)",
@@ -186,6 +188,8 @@ Voulez-vous les récupérer à nouveau depuis le serveur ?`,
   uploadingData: {
     title: "Téléchargement des données",
     size: "Taille du fichier: {{size}}",
+    speed: "Vitesse de téléversement: {{speed}}/s",
+    eta: "Temps restant estimé: {{eta}}",
   },
   validationReport: {
     title: "Rapport de validation",
@@ -250,23 +254,23 @@ Voulez-vous les récupérer à nouveau depuis le serveur ?`,
     viewModeCompass: "Boussole",
     viewModeRadar: "Radar",
     locationNavigatorInfo: {
-      title: "Location Navigator",
+      title: "Navigateur de position",
       description:
-        "Guides you toward a target coordinate using your device's GPS and sensors. It shows a target location relative to your current position and lets you navigate to it in the field.",
-      viewModesTitle: "View Modes",
-      compassTitle: "Compass",
+        "Vous guide vers une coordonnée cible à l'aide du GPS et des capteurs de votre appareil. Il affiche la position cible par rapport à votre position actuelle et vous permet de vous y rendre sur le terrain.",
+      viewModesTitle: "Modes d'affichage",
+      compassTitle: "Boussole",
       compassDesc:
-        "Displays a rotating compass rose aligned to North. An arrow points toward the target. When very close to the target (proximity mode), the arrow is replaced with a dot on the accuracy circle showing the target's relative position.",
+        "Affiche une rose des vents rotative orientée vers le nord. Une flèche pointe vers la cible. Lorsque vous êtes très proche de la cible (mode proximité), la flèche est remplacée par un point sur le cercle de précision indiquant la position relative de la cible.",
       radarTitle: "Radar",
       radarDesc:
-        "Shows a top-down radar view with your position fixed at the center. The target dot moves around you in real time to reflect its actual direction and distance.",
-      headingSourcesTitle: "Heading Sources",
-      sensorTitle: "Sensor (Magnetometer)",
+        "Affiche une vue radar de dessus avec votre position fixée au centre. Le point cible se déplace autour de vous en temps réel pour refléter sa direction et sa distance réelles.",
+      headingSourcesTitle: "Sources du cap",
+      sensorTitle: "Capteur (magnétomètre)",
       sensorDesc:
-        "Uses the device's built-in magnetometer (compass chip). Works while standing still, but can be affected by nearby metal objects or magnetic interference.",
+        "Utilise le magnétomètre intégré de l'appareil (puce boussole). Fonctionne à l'arrêt, mais peut être perturbé par des objets métalliques à proximité ou des interférences magnétiques.",
       gpsTitle: "GPS",
       gpsDesc:
-        "Derives heading from GPS movement. More accurate in open spaces, but requires you to be walking and may not be available on all devices.",
+        "Détermine le cap à partir du déplacement GPS. Plus précis en terrain dégagé, mais nécessite que vous marchiez et peut ne pas être disponible sur tous les appareils.",
     },
   },
   geo: {
@@ -283,6 +287,54 @@ Appuyez sur '$t(common:stop)' lorsque c'est fait.`,
     addCurrentLocationPoint: "Ajouter la position actuelle",
     addCurrentLocationPointInstructions:
       "Appuyez sur '$t(dataEntry:geo.addCurrentLocationPoint)' pour ajouter la position actuelle au polygone",
+  },
+  positionTracking: {
+    title: "Suivi de position",
+    start: "Démarrer le suivi",
+    resume: "Reprendre",
+    restart: "Recommencer",
+    restartConfirm: {
+      title: "Supprimer le tracé enregistré?",
+      message:
+        "Tous les points enregistrés jusqu'à présent dans cet attribut seront supprimés et le suivi recommencera depuis le début. Cette action est irréversible.",
+    },
+    delete: "Supprimer le tracé",
+    deleteConfirm: {
+      title: "Supprimer le tracé enregistré?",
+      message:
+        "Tous les points enregistrés dans cet attribut seront supprimés et l'attribut restera vide. Cette action est irréversible.",
+    },
+    stop: "Arrêter",
+    showTrack: "Afficher le tracé",
+    retry: "Réessayer",
+    status: {
+      idle: "Pas de suivi",
+      stopped: "Suivi arrêté",
+      starting: "Démarrage du suivi…",
+      tracking: "Suivi en cours",
+      paused: "Suivi en pause",
+    },
+    waitingForFix: "En attente du GPS…",
+    accuracy: "±{{accuracy}} m",
+    pointsCount: "{{count}} points",
+    trackSummary: "{{length}} · {{pointsCount}} points · {{duration}}",
+    attributeNotEditable:
+      "La valeur de cet attribut est enregistrée par le suivi de position",
+    stopConfirm:
+      "Arrêter le suivi? Le tracé enregistré est sauvegardé dans l'attribut et pourra être poursuivi plus tard.",
+    stopCurrentConfirm:
+      "Un autre attribut est en cours de suivi: arrêter son suivi et démarrer le suivi de celui-ci?",
+    interrupted:
+      "Le suivi de position a été interrompu: le tracé enregistré a été sauvegardé. Reprenez le suivi pour continuer.",
+    error: {
+      generic: "Impossible de démarrer le suivi de position",
+      permissionDenied:
+        "Impossible de suivre la position: accès à la localisation non accordé",
+      locationServicesOff:
+        "Impossible de suivre la position: les services de localisation sont désactivés",
+      notSaved:
+        "Le tracé n'a pas encore pu être sauvegardé dans l'attribut: il le sera plus tard",
+    },
   },
   taxon: {
     search: "Rechercher un taxon",

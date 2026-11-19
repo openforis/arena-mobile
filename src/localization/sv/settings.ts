@@ -4,6 +4,7 @@ export default {
     appearance: "Utseende",
     dataEntry: "Datainmatning",
     location: "Plats & GPS",
+    maps: "Kartor",
     images: "Bilder",
   },
   animationsEnabled: {
@@ -84,6 +85,21 @@ Det kommer att hjälpa till att få bättre noggrannhet i en koordinatattribut.`
     error:
       "Kan inte starta GPS-låsning: platsleverantören är inte tillgänglig eller åtkomst till platsen inte beviljad",
   },
+  positionTrackingAccuracyThreshold: {
+    label: "Noggrannhetströskel för positionsspårning: {{value}} m",
+    description:
+      "Platser som är mindre exakta än så läggs inte till i spåret som spelas in",
+  },
+  positionTrackingBatterySaver: {
+    label: "Batterisparläge för positionsspårning",
+    description:
+      "När aktiverat blir spåret mindre exakt, men batteriförbrukningen minskar",
+  },
+  positionTrackingMinDistance: {
+    label: "Minsta avstånd för positionsspårning: {{value}} m",
+    description:
+      "Minsta avstånd mellan två punkter i spåret som spelas in (större om platsen är mindre exakt)",
+  },
   gpsDevicePairing: {
     title: "Parkoppla en GPS-enhet",
     scanButton: "Sök efter enheter",
@@ -112,6 +128,21 @@ Det kommer att hjälpa till att få bättre noggrannhet i en koordinatattribut.`
     auto: "Auto (extern om tillgänglig)",
     internal: "Intern GPS",
     pairNewDevice: "Parkoppla en ny enhet…",
+  },
+  mapLayer: {
+    label: "Standardkartlager",
+    description:
+      "Lager som visas när en karta öppnas (det kan fortfarande ändras på kartan med lagerknappen)",
+  },
+  mapProvider: {
+    label: "Kartleverantör",
+    description:
+      "Karta som används när geografiska attribut ritas eller visas. Kostnadsfria kartlager kan hämtas i förväg för offlineanvändning (se Offlinekartor)",
+    options: {
+      default: "Google Maps (Apple Kartor på iOS)",
+      freeLayers:
+        "Kostnadsfria kartlager (satellit, topografisk) - fungerar offline",
+    },
   },
   showRecordCompletion: {
     label: "Visa postens ifyllnadsgrad",

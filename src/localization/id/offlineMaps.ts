@@ -7,7 +7,7 @@ export default {
   description:
     "Unduh peta area yang Anda minati sebelum pergi ke lapangan: peta akan tersedia bahkan tanpa koneksi internet saat menggambar atau melihat atribut geografis.",
   freeLayersNotInUse:
-    "Peta offline hanya digunakan jika penyedia peta di pengaturan adalah 'Free map layers'.",
+    "Peta offline hanya digunakan jika penyedia peta di pengaturan adalah 'Lapisan peta gratis'.",
   useFreeLayers: "Gunakan lapisan peta gratis",
   offlineMode: "Offline",
   addArea: "Tambah area",

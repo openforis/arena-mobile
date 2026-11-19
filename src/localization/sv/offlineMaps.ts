@@ -7,7 +7,7 @@ export default {
   description:
     "Ladda ner kartan över ditt intresseområde innan du går ut i fält: den är tillgänglig även utan internetanslutning när du ritar eller visar geografiska attribut.",
   freeLayersNotInUse:
-    "Offlinekartor används bara när kartleverantören i inställningarna är 'Free map layers'.",
+    "Offlinekartor används bara när kartleverantören i inställningarna är 'Kostnadsfria kartlager'.",
   useFreeLayers: "Använd kostnadsfria kartlager",
   offlineMode: "Offline",
   addArea: "Lägg till område",

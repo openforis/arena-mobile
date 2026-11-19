@@ -4,6 +4,7 @@ export default {
     appearance: "Aparência",
     dataEntry: "Introdução de dados",
     location: "Localização e GPS",
+    maps: "Mapas",
     images: "Imagens",
   },
   animationsEnabled: {
@@ -84,6 +85,21 @@ export default {
     error:
       "Não é possível iniciar o bloqueio de GPS: fornecedor de localização não disponível ou acesso à localização não concedido",
   },
+  positionTrackingAccuracyThreshold: {
+    label: "Limiar de precisão do seguimento de posição: {{value}} m",
+    description:
+      "As localizações menos precisas do que este valor não são adicionadas ao trajeto a ser registado",
+  },
+  positionTrackingBatterySaver: {
+    label: "Poupança de bateria no seguimento de posição",
+    description:
+      "Quando ativado, o trajeto será menos preciso, mas o consumo de bateria será reduzido",
+  },
+  positionTrackingMinDistance: {
+    label: "Distância mínima do seguimento de posição: {{value}} m",
+    description:
+      "Distância mínima entre dois pontos do trajeto a ser registado (maior se a localização for menos precisa)",
+  },
   gpsDevicePairing: {
     title: "Emparelhar um dispositivo GPS",
     scanButton: "Procurar dispositivos",
@@ -113,6 +129,21 @@ export default {
     auto: "Automático (externo se disponível)",
     internal: "GPS interno",
     pairNewDevice: "Emparelhar um novo dispositivo…",
+  },
+  mapLayer: {
+    label: "Camada de mapa predefinida",
+    description:
+      "Camada mostrada quando um mapa é aberto (pode ainda ser alterada no mapa com o botão de camadas)",
+  },
+  mapProvider: {
+    label: "Fornecedor de mapas",
+    description:
+      "Mapa usado ao desenhar ou visualizar atributos geográficos. As camadas de mapa gratuitas podem ser descarregadas previamente para utilização offline (ver Mapas offline)",
+    options: {
+      default: "Google Maps (Apple Maps no iOS)",
+      freeLayers:
+        "Camadas de mapa gratuitas (satélite, topográfica) - utilizáveis offline",
+    },
   },
   showRecordCompletion: {
     label: "Mostrar progresso de conclusão do registo",

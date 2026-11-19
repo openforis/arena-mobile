@@ -7,7 +7,7 @@ export default {
   description:
     "Lataa kiinnostuksen kohteena olevan alueen kartta ennen maastoon lähtöä: se on käytettävissä myös ilman internetyhteyttä, kun piirrät tai tarkastelet maantieteellisiä attribuutteja.",
   freeLayersNotInUse:
-    "Offline-karttoja käytetään vain, kun asetuksissa karttapalveluksi on valittu 'Free map layers'.",
+    "Offline-karttoja käytetään vain, kun asetuksissa karttapalveluksi on valittu 'Ilmaiset karttatasot'.",
   useFreeLayers: "Käytä ilmaisia karttatasoja",
   offlineMode: "Offline",
   addArea: "Lisää alue",

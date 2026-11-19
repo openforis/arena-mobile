@@ -166,6 +166,8 @@ export default {
   syncStatusHeader: "وضعیت",
   syncStatus: {
     conflictingKeys: "رکوردی با همان کلید(ها) از قبل وجود دارد",
+    deviceDateBehindServer:
+      "آپلود نشد: تاریخ دستگاه از تاریخ سرور عقب‌تر است (تاریخ و زمان صحیح را تنظیم کنید و سپس رکورد را دوباره ویرایش کنید)",
     keysNotSpecified: `کلید(ها) مشخص نشده اند`,
     new: "جدید (هنوز آپلود نشده)",
     notModified: "تغییر نکرده (هیچ تغییری برای آپلود وجود ندارد)",
@@ -181,6 +183,8 @@ export default {
   uploadingData: {
     title: "در حال بارگذاری داده",
     size: "اندازه فایل: {{size}}",
+    speed: "سرعت آپلود: {{speed}}/ثانیه",
+    eta: "زمان باقی‌مانده تخمینی: {{eta}}",
   },
   validationReport: {
     title: "گزارش اعتبارسنجی",
@@ -243,25 +247,25 @@ export default {
     x: "X",
     y: "Y",
     viewModeCompass: "Compass",
-    viewModeRadar: "Radar",
+    viewModeRadar: "رادار",
     locationNavigatorInfo: {
-      title: "Location Navigator",
+      title: "مسیریاب موقعیت",
       description:
-        "Guides you toward a target coordinate using your device's GPS and sensors. It shows a target location relative to your current position and lets you navigate to it in the field.",
-      viewModesTitle: "View Modes",
-      compassTitle: "Compass",
+        "با استفاده از GPS و حسگرهای دستگاه، شما را به سمت یک مختصات هدف راهنمایی می‌کند. موقعیت هدف را نسبت به موقعیت فعلی شما نشان می‌دهد و امکان می‌دهد در میدان به سمت آن حرکت کنید.",
+      viewModesTitle: "حالت‌های نمایش",
+      compassTitle: "قطب‌نما",
       compassDesc:
-        "Displays a rotating compass rose aligned to North. An arrow points toward the target. When very close to the target (proximity mode), the arrow is replaced with a dot on the accuracy circle showing the target's relative position.",
-      radarTitle: "Radar",
+        "یک گل‌باد چرخان قطب‌نما را که رو به شمال تنظیم شده نمایش می‌دهد. یک پیکان به سمت هدف اشاره می‌کند. هنگامی که بسیار نزدیک به هدف هستید (حالت نزدیکی)، پیکان با نقطه‌ای روی دایره دقت جایگزین می‌شود که موقعیت نسبی هدف را نشان می‌دهد.",
+      radarTitle: "رادار",
       radarDesc:
-        "Shows a top-down radar view with your position fixed at the center. The target dot moves around you in real time to reflect its actual direction and distance.",
-      headingSourcesTitle: "Heading Sources",
-      sensorTitle: "Sensor (Magnetometer)",
+        "نمای رادار از بالا را نشان می‌دهد که موقعیت شما در مرکز ثابت است. نقطه هدف به صورت بلادرنگ در اطراف شما حرکت می‌کند تا جهت و فاصله واقعی آن را نشان دهد.",
+      headingSourcesTitle: "منابع جهت",
+      sensorTitle: "حسگر (مغناطیس‌سنج)",
       sensorDesc:
-        "Uses the device's built-in magnetometer (compass chip). Works while standing still, but can be affected by nearby metal objects or magnetic interference.",
+        "از مغناطیس‌سنج داخلی دستگاه (تراشه قطب‌نما) استفاده می‌کند. در حالت ایستاده هم کار می‌کند، اما ممکن است تحت تأثیر اشیای فلزی نزدیک یا تداخل مغناطیسی قرار گیرد.",
       gpsTitle: "GPS",
       gpsDesc:
-        "Derives heading from GPS movement. More accurate in open spaces, but requires you to be walking and may not be available on all devices.",
+        "جهت را از حرکت GPS به دست می‌آورد. در فضاهای باز دقیق‌تر است، اما نیاز دارد که در حال راه رفتن باشید و ممکن است در همه دستگاه‌ها در دسترس نباشد.",
     },
   },
   geo: {
@@ -278,6 +282,52 @@ export default {
     addCurrentLocationPoint: "افزودن مکان فعلی",
     addCurrentLocationPointInstructions:
       "برای افزودن مکان فعلی به چندضلعی، '$t(dataEntry:geo.addCurrentLocationPoint)' را فشار دهید",
+  },
+  positionTracking: {
+    title: "ردیابی موقعیت",
+    start: "شروع ردیابی",
+    resume: "ادامه",
+    restart: "شروع مجدد",
+    restartConfirm: {
+      title: "مسیر ثبت‌شده حذف شود؟",
+      message:
+        "همه نقاطی که تاکنون در این ویژگی ثبت شده‌اند حذف می‌شوند و ردیابی از ابتدا شروع می‌شود. این کار قابل بازگشت نیست.",
+    },
+    delete: "حذف مسیر",
+    deleteConfirm: {
+      title: "مسیر ثبت‌شده حذف شود؟",
+      message:
+        "همه نقاط ثبت‌شده در این ویژگی حذف می‌شوند و ویژگی خالی می‌ماند. این کار قابل بازگشت نیست.",
+    },
+    stop: "توقف",
+    showTrack: "نمایش مسیر",
+    retry: "تلاش مجدد",
+    status: {
+      idle: "ردیابی انجام نمی‌شود",
+      stopped: "ردیابی متوقف شد",
+      starting: "در حال شروع ردیابی…",
+      tracking: "در حال ردیابی",
+      paused: "ردیابی موقتاً متوقف شده",
+    },
+    waitingForFix: "در انتظار GPS…",
+    accuracy: "±{{accuracy}} m",
+    pointsCount: "{{count}} نقطه",
+    trackSummary: "{{length}} · {{pointsCount}} نقطه · {{duration}}",
+    attributeNotEditable: "مقدار این ویژگی توسط ردیابی موقعیت ثبت می‌شود",
+    stopConfirm:
+      "ردیابی متوقف شود؟ مسیر ثبت‌شده در ویژگی ذخیره می‌شود و بعداً می‌توان آن را ادامه داد.",
+    stopCurrentConfirm:
+      "ویژگی دیگری در حال ردیابی است: ردیابی آن متوقف شود و ردیابی این ویژگی شروع شود؟",
+    interrupted:
+      "ردیابی موقعیت قطع شد: مسیر ثبت‌شده ذخیره شده است. برای ادامه، ردیابی را از سر بگیرید.",
+    error: {
+      generic: "امکان شروع ردیابی موقعیت وجود ندارد",
+      permissionDenied:
+        "امکان ردیابی موقعیت وجود ندارد: دسترسی به موقعیت مکانی داده نشده است",
+      locationServicesOff:
+        "امکان ردیابی موقعیت وجود ندارد: خدمات موقعیت مکانی خاموش است",
+      notSaved: "مسیر هنوز در ویژگی ذخیره نشده است: بعداً ذخیره خواهد شد",
+    },
   },
   taxon: {
     search: "جستجوی تاکسون",
