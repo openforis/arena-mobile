@@ -39,8 +39,6 @@ export const RequestAccessBanner = () => {
         />
       </VView>
       <Button
-        compact
-        mode="contained-tonal"
         onPress={openRequestAccessPage}
         textKey="settingsRemoteConnection:requestAccess"
       />

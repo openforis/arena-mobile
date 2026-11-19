@@ -8,17 +8,15 @@ import {
   getExternalLoginProviderIconUri,
 } from "service/externalLoginUtils";
 
-import { GoogleSignInButton } from "./GoogleSignInButton";
+import {
+  BrandedSignInButton,
+  isBrandedProviderType,
+} from "./BrandedSignInButton";
 
 const styles = StyleSheet.create({
   container: { alignSelf: "stretch", gap: 8 },
   centeredText: { alignSelf: "center", textAlign: "center" },
 });
-
-// Material Design icons of the provider presets
-const iconByProviderType: Record<string, string> = {
-  microsoft: "microsoft",
-};
 
 const getProviderIcon = ({
   provider,
@@ -27,8 +25,6 @@ const getProviderIcon = ({
   provider: ExternalLoginProvider;
   serverUrl: string;
 }) => {
-  const builtinIcon = iconByProviderType[provider.type];
-  if (builtinIcon) return builtinIcon;
   if (provider.iconKind === "uploaded") {
     const uri = getExternalLoginProviderIconUri(provider.id);
     return { uri: APIUtils.getUrl({ serverUrl, uri }) };
@@ -55,11 +51,12 @@ export const ExternalLoginButtons = ({
     <VView style={styles.container}>
       <Text style={styles.centeredText} textKey="settingsRemoteConnection:or" />
       {providers.map((provider) =>
-        provider.type === "google" ? (
-          <GoogleSignInButton
+        isBrandedProviderType(provider.type) ? (
+          <BrandedSignInButton
             key={provider.id}
             disabled={disabled}
             onPress={() => onPress(provider)}
+            providerType={provider.type}
             testID={`remote-connection-external-login-${provider.id}`}
           />
         ) : (
