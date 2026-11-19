@@ -41,6 +41,7 @@ export const SettingsRemoteConnectionScreen = () => {
   const {
     loading,
     email,
+    externalLoginEmail,
     externalLoginProviderLabel,
     externalLoginProviders,
     password,
@@ -119,7 +120,10 @@ export const SettingsRemoteConnectionScreen = () => {
             code={twoFactorCode}
             codeNotValid={twoFactorCodeNotValid}
             disabled={!networkAvailable}
-            email={email}
+            // the email typed in the form is not the account of an external sign-in
+            email={
+              externalLoginProviderLabel ? (externalLoginEmail ?? "") : email
+            }
             externalLoginProvider={externalLoginProviderLabel}
             loading={loading}
             onBackupCodeModeToggle={onBackupCodeModeToggle}

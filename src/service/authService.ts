@@ -92,6 +92,8 @@ export type LoginResponse = {
   error?: string;
   message?: string;
   twoFactorRequired?: boolean;
+  // email of the Arena account asking for the 2FA code (external login, not sent by older servers)
+  email?: string;
 };
 
 const onLoginSuccess = async ({
@@ -299,7 +301,8 @@ const loginWithExternalLoginCode = async ({
       data: { code, codeVerifier, twoFactorToken, appInfo },
     });
     if (data?.twoFactorRequired) {
-      return { twoFactorRequired: true };
+      const email = typeof data.email === "string" ? data.email : undefined;
+      return { twoFactorRequired: true, email };
     }
     const result = await onLoginSuccess({ data, response });
     if (result.user) {

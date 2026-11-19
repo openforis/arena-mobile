@@ -73,25 +73,36 @@ export const TwoFactorVerification = ({
           textKey="settingsRemoteConnection:twoFactor.title"
           variant="titleLarge"
         />
-        <Text
-          selectable
-          style={[
-            styles.centeredText,
-            { color: theme.colors.onSurfaceVariant },
-          ]}
-          variant="bodyMedium"
-        >
-          {externalLoginProvider
-            ? t("settingsRemoteConnection:twoFactor.signedInWith", {
-                provider: externalLoginProvider,
-              })
-            : email}
-        </Text>
-        {externalLoginProvider && (
+        {!!email && (
           <Text
-            style={styles.centeredText}
-            textKey="settingsRemoteConnection:twoFactor.arenaAccountRequiresCode"
-          />
+            selectable
+            style={[
+              styles.centeredText,
+              { color: theme.colors.onSurfaceVariant },
+            ]}
+            variant="bodyMedium"
+          >
+            {email}
+          </Text>
+        )}
+        {!!externalLoginProvider && (
+          <>
+            <Text
+              style={[
+                styles.centeredText,
+                { color: theme.colors.onSurfaceVariant },
+              ]}
+              variant="bodyMedium"
+            >
+              {t("settingsRemoteConnection:twoFactor.signedInWith", {
+                provider: externalLoginProvider,
+              })}
+            </Text>
+            <Text
+              style={styles.centeredText}
+              textKey="settingsRemoteConnection:twoFactor.arenaAccountRequiresCode"
+            />
+          </>
         )}
         <Text
           style={styles.centeredText}

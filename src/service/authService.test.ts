@@ -378,7 +378,20 @@ describe("AuthService external login", () => {
     expect(resetCredentialsMock).toHaveBeenCalledWith(serverUrl);
   });
 
-  it("asks for the 2FA code", async () => {
+  it("asks for the 2FA code, with the email of the Arena account", async () => {
+    postMock.mockResolvedValue({
+      data: { twoFactorRequired: true, email: "user@arena.test" },
+      response: {},
+    });
+    const res = await AuthService.loginWithExternalLoginCode({
+      serverUrl,
+      code: "the-code",
+      codeVerifier: "the-verifier",
+    });
+    expect(res).toEqual({ twoFactorRequired: true, email: "user@arena.test" });
+  });
+
+  it("asks for the 2FA code without email (older servers)", async () => {
     postMock.mockResolvedValue({
       data: { twoFactorRequired: true },
       response: {},
@@ -388,7 +401,8 @@ describe("AuthService external login", () => {
       code: "the-code",
       codeVerifier: "the-verifier",
     });
-    expect(res).toEqual({ twoFactorRequired: true });
+    expect(res.twoFactorRequired).toBe(true);
+    expect(res.email).toBeUndefined();
   });
 
   it("reports a wrong 2FA code and an expired sign-in", async () => {

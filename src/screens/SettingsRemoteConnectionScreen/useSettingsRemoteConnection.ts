@@ -76,9 +76,15 @@ export const useSettingsRemoteConnection = () => {
     string | null
   >(null);
 
+  // Arena account of the external sign-in, shown in the two-step verification
+  const [externalLoginEmail, setExternalLoginEmail] = useState<string | null>(
+    null,
+  );
+
   const clearPendingExternalLogin = useCallback(() => {
     pendingExternalLoginRef.current = null;
     setExternalLoginProviderLabel(null);
+    setExternalLoginEmail(null);
   }, []);
 
   const loginWithToken = useCallback(
@@ -91,6 +97,9 @@ export const useSettingsRemoteConnection = () => {
           codeVerifier,
           twoFactorToken,
         });
+        if (res.email) {
+          setExternalLoginEmail(res.email);
+        }
         // kept for the two-step verification
         if (res.user || (!twoFactorToken && !res.twoFactorRequired)) {
           clearPendingExternalLogin();
@@ -168,6 +177,7 @@ export const useSettingsRemoteConnection = () => {
     ...twoFactorLogin,
     ...qrCodeLogin,
     email,
+    externalLoginEmail,
     externalLoginProviderLabel,
     externalLoginProviders,
     password,
