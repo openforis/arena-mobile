@@ -4,6 +4,7 @@ export default {
     appearance: "Apariencia",
     dataEntry: "Entrada de datos",
     location: "Ubicación y GPS",
+    maps: "Mapas",
     images: "Imágenes",
   },
   animationsEnabled: {
@@ -85,6 +86,21 @@ export default {
     error:
       "No se puede iniciar el bloqueo del GPS: proveedor de ubicación no disponible o acceso a la ubicación no concedido",
   },
+  positionTrackingAccuracyThreshold: {
+    label: "Umbral de precisión del seguimiento de posición: {{value}} m",
+    description:
+      "Las ubicaciones con menor precisión no se añaden al recorrido que se está grabando",
+  },
+  positionTrackingBatterySaver: {
+    label: "Ahorro de batería del seguimiento de posición",
+    description:
+      "Si está activado, el recorrido será menos preciso pero se reducirá el consumo de batería",
+  },
+  positionTrackingMinDistance: {
+    label: "Distancia mínima del seguimiento de posición: {{value}} m",
+    description:
+      "Distancia mínima entre dos puntos del recorrido que se está grabando (mayor si la ubicación es menos precisa)",
+  },
   gpsDevicePairing: {
     title: "Emparejar un dispositivo GPS",
     scanButton: "Buscar dispositivos",
@@ -114,6 +130,21 @@ export default {
     auto: "Automático (externo si está disponible)",
     internal: "GPS interno",
     pairNewDevice: "Emparejar un nuevo dispositivo…",
+  },
+  mapLayer: {
+    label: "Capa de mapa predeterminada",
+    description:
+      "Capa que se muestra al abrir un mapa (se puede seguir cambiando en el mapa con el botón de capas)",
+  },
+  mapProvider: {
+    label: "Proveedor de mapas",
+    description:
+      "Mapa utilizado para dibujar o visualizar atributos geográficos. Las capas de mapa gratuitas se pueden descargar previamente para usarlas sin conexión (consulta Mapas sin conexión)",
+    options: {
+      default: "Google Maps (Apple Maps en iOS)",
+      freeLayers:
+        "Capas de mapa gratuitas (satélite, topográfico) - disponibles sin conexión",
+    },
   },
   showRecordCompletion: {
     label: "Mostrar progreso de finalización del registro",
