@@ -3,6 +3,11 @@ export default {
   since: "Since version {{version}}",
   dontShowAgain: "Don't show these again",
   items: {
+    googleSignIn: {
+      title: "Sign in with Google",
+      description:
+        "In **Connection to server** (press **Connect** on the home page), you can now log in with **Sign in with Google**, **Sign in with Microsoft** or the sign-in of your organization, when the Arena server supports it: the sign-in is completed in the web browser.\n\nOnly users with an Arena account can sign in this way: if you are new to Arena, press **Request access** first.",
+    },
     geoTiffMaps: {
       title: "GeoTIFF maps",
       description:

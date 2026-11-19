@@ -3,6 +3,11 @@ export default {
   since: "Sedan version {{version}}",
   dontShowAgain: "Visa inte dessa igen",
   items: {
+    googleSignIn: {
+      title: "Logga in med Google",
+      description:
+        "I **Anslutning till servern** (tryck på **Anslut** på startsidan) kan du nu logga in med **Logga in med Google**, **Logga in med Microsoft** eller din organisations inloggning, om Arena-servern stöder det: inloggningen slutförs i webbläsaren.\n\nEndast användare med ett Arena-konto kan logga in på detta sätt: om du är ny på Arena, tryck först på **Begär åtkomst**.",
+    },
     geoTiffMaps: {
       title: "GeoTIFF-kartor",
       description:

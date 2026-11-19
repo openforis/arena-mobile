@@ -3,6 +3,11 @@ export default {
   since: "Seit Version {{version}}",
   dontShowAgain: "Nicht mehr anzeigen",
   items: {
+    googleSignIn: {
+      title: "Anmelden mit Google",
+      description:
+        "In **Verbindung zum Server** (tippe auf der Startseite auf **Verbinden**) kannst du dich jetzt mit **Anmelden mit Google**, **Anmelden mit Microsoft** oder der Anmeldung deiner Organisation anmelden, sofern der Arena-Server dies unterstützt: Die Anmeldung wird im Webbrowser abgeschlossen.\n\nNur Benutzer mit einem Arena-Konto können sich so anmelden: Wenn du neu bei Arena bist, tippe zuerst auf **Zugriff anfordern**.",
+    },
     geoTiffMaps: {
       title: "GeoTIFF-Karten",
       description:

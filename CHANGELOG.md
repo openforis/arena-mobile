@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2026-11-19
+
+### Added
+
+- Connection to server: sign in with Google, Microsoft or the sign-in of your organization, if supported by the Arena server (registered users only);
+- Connection to server: "Request access" banner for new users;
+
+### Changed
+
+- New app logo;
+- Connection to server: two-step verification after a sign-in with Google or Microsoft, showing the email of the Arena account;
+- Translations: missing labels completed in all languages;
+- Android: the app can be installed on devices without portrait screen or Wi-Fi (e.g. some tablets and rugged devices);
+
+### Fixed
+
+- Logout: session not closed on the server;
+- General improvements and bug fixing;
+
 ## [2.11.4] - 2026-11-18
 
 ### Added

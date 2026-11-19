@@ -3,6 +3,11 @@ export default {
   since: "ከስሪት {{version}} ጀምሮ",
   dontShowAgain: "እነዚህን ዳግመኛ አታሳይ",
   items: {
+    googleSignIn: {
+      title: "በGoogle ይግቡ",
+      description:
+        "በ **ከአገልጋይ ጋር ግንኙነት** (በመነሻ ገጹ ላይ **ተገናኝ** ን ይጫኑ)፣ የአሬና አገልጋዩ የሚደግፈው ከሆነ አሁን በ **በGoogle ይግቡ**፣ **በMicrosoft ይግቡ** ወይም በድርጅትዎ መግቢያ መግባት ይችላሉ፦ መግባቱ በድር አሳሹ ውስጥ ይጠናቀቃል።\n\nበዚህ መንገድ መግባት የሚችሉት የአሬና መለያ ያላቸው ተጠቃሚዎች ብቻ ናቸው፦ በአሬና አዲስ ከሆኑ መጀመሪያ **መዳረሻ ይጠይቁ** ን ይጫኑ።",
+    },
     geoTiffMaps: {
       title: "GeoTIFF ካርታዎች",
       description:

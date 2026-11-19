@@ -3,6 +3,11 @@ export default {
   since: "バージョン {{version}} から",
   dontShowAgain: "今後表示しない",
   items: {
+    googleSignIn: {
+      title: "Googleでサインイン",
+      description:
+        "**サーバーへの接続**（ホームページで **接続** をタップ）で、Arenaサーバーが対応していれば、**Google でサインイン**、**Microsoft でサインイン**、または組織のサインインでログインできるようになりました。サインインはウェブブラウザで完了します。\n\nこの方法でサインインできるのはArenaアカウントを持つユーザーのみです。Arenaを初めてご利用の場合は、まず **アクセスを要求** をタップしてください。",
+    },
     geoTiffMaps: {
       title: "GeoTIFFマップ",
       description:
