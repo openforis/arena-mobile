@@ -8,6 +8,7 @@ export default {
   loginUsingQrCode: "Kirjaudu sisään QR-koodilla",
   logout: "Kirjaudu ulos",
   logoutConfirmMessage: "Kirjaudu ulos ja tyhjennä käyttäjän tunnistetiedot?",
+  or: "tai",
   password: "Salasana",
   qrCodeNotValid: "QR-koodi ei kelpaa",
   loginUsingQrCodeInstructions: `Kirjautuaksesi sisään QR-koodilla:
@@ -23,6 +24,7 @@ export default {
     default: "Oletus",
     custom: "Mukautettu",
   },
+  signInWith: "Kirjaudu palvelulla {{provider}}",
   testUrl: "Testaa URL-osoite",
   title: "Yhteys palvelimeen",
   twoFactor: {

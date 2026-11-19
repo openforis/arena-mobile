@@ -8,6 +8,7 @@ export default {
   loginUsingQrCode: "Logga in med QR-kod",
   logout: "Logga ut",
   logoutConfirmMessage: "Logga ut och rensa användarens inloggningsuppgifter?",
+  or: "eller",
   password: "Lösenord",
   qrCodeNotValid: "QR-koden är inte giltig",
   loginUsingQrCodeInstructions: `För att logga in med en QR-kod:
@@ -23,6 +24,7 @@ export default {
     default: "Standard",
     custom: "Anpassad",
   },
+  signInWith: "Logga in med {{provider}}",
   testUrl: "Testa URL",
   title: "Anslutning till servern",
   twoFactor: {

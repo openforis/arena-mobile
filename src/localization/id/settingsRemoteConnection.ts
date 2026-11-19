@@ -8,6 +8,7 @@ export default {
   loginUsingQrCode: "Masuk menggunakan kode QR",
   logout: "Keluar",
   logoutConfirmMessage: "Keluar dan hapus kredensial pengguna?",
+  or: "atau",
   password: "Kata sandi",
   qrCodeNotValid: "Kode QR tidak valid",
   loginUsingQrCodeInstructions: `Untuk masuk menggunakan kode QR:
@@ -23,6 +24,7 @@ export default {
     default: "Default",
     custom: "Kustom",
   },
+  signInWith: "Masuk dengan {{provider}}",
   testUrl: "Uji URL",
   title: "Koneksi ke server",
   twoFactor: {

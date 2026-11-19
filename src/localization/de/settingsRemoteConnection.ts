@@ -8,6 +8,7 @@ export default {
   loginUsingQrCode: "Mit QR-Code anmelden",
   logout: "Abmelden",
   logoutConfirmMessage: "Abmelden und Benutzeranmeldedaten löschen?",
+  or: "oder",
   password: "Passwort",
   qrCodeNotValid: "QR-Code ungültig",
   loginUsingQrCodeInstructions: `So melden Sie sich mit einem QR-Code an:
@@ -23,6 +24,7 @@ export default {
     default: "Standard",
     custom: "Benutzerdefiniert",
   },
+  signInWith: "Anmelden mit {{provider}}",
   testUrl: "URL testen",
   title: "Verbindung zum Server",
   twoFactor: {

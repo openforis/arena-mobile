@@ -9,6 +9,7 @@ export default {
   logout: "Terminar sessão",
   logoutConfirmMessage:
     "Terminar sessão e limpar as credenciais do utilizador?",
+  or: "ou",
   password: "Palavra-passe",
   qrCodeNotValid: "Código QR inválido",
   loginUsingQrCodeInstructions: `Para iniciar sessão usando um código QR:
@@ -24,6 +25,7 @@ export default {
     default: "Padrão",
     custom: "Personalizada",
   },
+  signInWith: "Entrar com {{provider}}",
   testUrl: "Testar URL",
   title: "Ligação ao servidor",
   twoFactor: {

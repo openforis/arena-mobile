@@ -25,6 +25,7 @@ import { useTranslation } from "localization";
 import { useEffectiveTheme } from "hooks";
 import { AMConstants } from "utils";
 
+import { ExternalLoginButtons } from "./ExternalLoginButtons";
 import { LoggedInUserSummary } from "./LoggedInUserSummary";
 import { ServerUrlType } from "./remoteConnectionUtils";
 import { TwoFactorVerification } from "./TwoFactorVerification";
@@ -39,6 +40,8 @@ export const SettingsRemoteConnectionScreen = () => {
   const {
     loading,
     email,
+    externalLoginProviderLabel,
+    externalLoginProviders,
     password,
     loginDisabled,
     networkAvailable,
@@ -53,6 +56,7 @@ export const SettingsRemoteConnectionScreen = () => {
     twoFactorCodeNotValid,
     onEmailChange,
     onPasswordChange,
+    onExternalLogin,
     onLogin,
     onLogout,
     onServerUrlTypeChange,
@@ -114,7 +118,7 @@ export const SettingsRemoteConnectionScreen = () => {
             code={twoFactorCode}
             codeNotValid={twoFactorCodeNotValid}
             disabled={!networkAvailable}
-            email={email}
+            email={externalLoginProviderLabel ?? email}
             loading={loading}
             onBackupCodeModeToggle={onBackupCodeModeToggle}
             onCodeChange={onTwoFactorCodeChange}
@@ -174,6 +178,12 @@ export const SettingsRemoteConnectionScreen = () => {
             textKey="settingsRemoteConnection:login"
           />
         </HView>
+        <ExternalLoginButtons
+          disabled={!networkAvailable}
+          onPress={onExternalLogin}
+          providers={externalLoginProviders}
+          serverUrl={serverUrl}
+        />
         <Button
           disabled={!networkAvailable}
           icon="qrcode-scan"

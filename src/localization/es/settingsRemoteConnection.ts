@@ -8,6 +8,7 @@ export default {
   loginUsingQrCode: "Iniciar sesión usando código QR",
   logout: "Cerrar sesión",
   logoutConfirmMessage: "¿Cerrar sesión y borrar las credenciales del usuario?",
+  or: "o",
   password: "Contraseña",
   qrCodeNotValid: "Código QR no válido",
   loginUsingQrCodeInstructions: `Para iniciar sesión usando un código QR:
@@ -23,6 +24,7 @@ export default {
     default: "Predeterminada",
     custom: "Personalizada",
   },
+  signInWith: "Iniciar sesión con {{provider}}",
   testUrl: "Probar URL",
   title: "Conexión al servidor",
   twoFactor: {

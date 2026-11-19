@@ -8,6 +8,7 @@ export default {
   loginUsingQrCode: "QRコードでログイン",
   logout: "ログアウト",
   logoutConfirmMessage: "ログアウトしてユーザー認証情報を削除しますか？",
+  or: "または",
   password: "パスワード",
   qrCodeNotValid: "QRコードが有効ではありません",
   loginUsingQrCodeInstructions: `QRコードでログインするには：
@@ -23,6 +24,7 @@ export default {
     default: "デフォルト",
     custom: "カスタム",
   },
+  signInWith: "{{provider}} でサインイン",
   testUrl: "URLをテスト",
   title: "サーバーへの接続",
   twoFactor: {

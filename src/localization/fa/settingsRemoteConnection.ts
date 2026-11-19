@@ -9,6 +9,7 @@ export default {
   loginUsingQrCode: "ورود با استفاده از کد QR",
   logout: "خروج",
   logoutConfirmMessage: "خروج و پاک کردن اعتبارنامه های کاربر؟",
+  or: "یا",
   password: "رمز عبور",
   qrCodeNotValid: "کد QR معتبر نیست",
   loginUsingQrCodeInstructions: `برای ورود با استفاده از کد QR:
@@ -24,6 +25,7 @@ export default {
     default: "پیش فرض",
     custom: "سفارشی",
   },
+  signInWith: "ورود با {{provider}}",
   testUrl: "آزمایش آدرس",
   title: "اتصال به سرور",
   twoFactor: {

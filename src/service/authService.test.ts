@@ -1,3 +1,6 @@
+import { createHash } from "node:crypto";
+import * as WebBrowser from "expo-web-browser";
+
 import { API } from "./api";
 import {
   AuthService,
@@ -6,7 +9,21 @@ import {
 } from "./authService";
 import { SecureStoreService } from "./SecureStoreService";
 
-jest.mock("./api", () => ({ API: { post: jest.fn() } }));
+jest.mock("./api", () => ({ API: { get: jest.fn(), post: jest.fn() } }));
+
+jest.mock("expo-crypto", () => {
+  const nodeCrypto = jest.requireActual("node:crypto");
+  return {
+    CryptoDigestAlgorithm: { SHA256: "SHA-256" },
+    CryptoEncoding: { BASE64: "base64" },
+    getRandomBytes: (count: number) =>
+      new Uint8Array(nodeCrypto.randomBytes(count)),
+    digestStringAsync: async (_algorithm: string, data: string) =>
+      nodeCrypto.createHash("sha256").update(data).digest("base64"),
+  };
+});
+
+jest.mock("expo-web-browser", () => ({ openAuthSessionAsync: jest.fn() }));
 
 jest.mock("./SecureStoreService", () => ({
   SecureStoreService: {
@@ -248,5 +265,135 @@ describe("AuthService.refreshAuthTokens with stored credentials", () => {
     postMock.mockRejectedValue({ response: { status: 401 } });
     await expect(AuthService.refreshAuthTokens()).rejects.toBeDefined();
     expect(postMock).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("AuthService external login", () => {
+  const getMock = API.get as jest.Mock;
+  const openAuthSessionMock = WebBrowser.openAuthSessionAsync as jest.Mock;
+  const serverUrl = "https://arena.test";
+  const redirectUri = "org.openforis.arena-mobile://external-login";
+
+  it("lists only the providers usable from the app", async () => {
+    getMock.mockResolvedValue({
+      data: [
+        { id: "google", type: "google", label: "Google", mobileLogin: true },
+        { id: "old", type: "oidc", label: "Old server" },
+      ],
+    });
+    const providers = await AuthService.fetchExternalLoginProviders({
+      serverUrl,
+    });
+    expect(providers.map((provider) => provider.id)).toEqual(["google"]);
+  });
+
+  it("lists no providers when the server doesn't support them", async () => {
+    getMock.mockRejectedValue(
+      Object.assign(new Error("Not found"), { response: { status: 404 } }),
+    );
+    expect(
+      await AuthService.fetchExternalLoginProviders({ serverUrl }),
+    ).toEqual([]);
+  });
+
+  it("starts the sign-in with a PKCE challenge of the returned verifier", async () => {
+    openAuthSessionMock.mockResolvedValue({
+      type: "success",
+      url: `${redirectUri}?code=the-code`,
+    });
+    const res = await AuthService.startExternalLogin({
+      serverUrl,
+      providerId: "google",
+    });
+    expect(res.code).toBe("the-code");
+    const [startUrl, redirectUrl] = openAuthSessionMock.mock.calls[0];
+    expect(redirectUrl).toBe(redirectUri);
+    const challenge = new URL(startUrl).searchParams.get("mobileCodeChallenge");
+    expect(startUrl.startsWith(`${serverUrl}/auth/oidc/google?`)).toBe(true);
+    expect(res.codeVerifier).toMatch(/^[\w-]{43}$/);
+    expect(challenge).toBe(
+      createHash("sha256").update(res.codeVerifier!).digest("base64url"),
+    );
+  });
+
+  it("translates the errors sent by the server", async () => {
+    openAuthSessionMock.mockResolvedValue({
+      type: "success",
+      url: `${redirectUri}?externalLoginError=externalLogin.userNotFound`,
+    });
+    const res = await AuthService.startExternalLogin({
+      serverUrl,
+      providerId: "google",
+    });
+    expect(res.error).toBe("authService:error.externalLogin.userNotFound");
+  });
+
+  it("reports a cancelled sign-in", async () => {
+    openAuthSessionMock.mockResolvedValue({ type: "cancel" });
+    const res = await AuthService.startExternalLogin({
+      serverUrl,
+      providerId: "google",
+    });
+    expect(res).toEqual({ cancelled: true });
+  });
+
+  it("exchanges the code for the session tokens and clears the stored credentials", async () => {
+    postMock.mockResolvedValue(loginSuccessResponse);
+    const res = await AuthService.loginWithExternalLoginCode({
+      serverUrl,
+      code: "the-code",
+      codeVerifier: "the-verifier",
+    });
+    expect(res.user).toEqual(user);
+    expect(postMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        uri: "/auth/oidc/_mobile-token",
+        data: expect.objectContaining({
+          code: "the-code",
+          codeVerifier: "the-verifier",
+        }),
+      }),
+    );
+    expect(setAuthRefreshTokenMock).toHaveBeenCalledWith("login-token");
+    expect(resetCredentialsMock).toHaveBeenCalledWith(serverUrl);
+  });
+
+  it("asks for the 2FA code", async () => {
+    postMock.mockResolvedValue({
+      data: { twoFactorRequired: true },
+      response: {},
+    });
+    const res = await AuthService.loginWithExternalLoginCode({
+      serverUrl,
+      code: "the-code",
+      codeVerifier: "the-verifier",
+    });
+    expect(res).toEqual({ twoFactorRequired: true });
+  });
+
+  it("reports a wrong 2FA code and an expired sign-in", async () => {
+    const unauthorized = (message: string) =>
+      Object.assign(new Error("Request failed with status code 401"), {
+        response: { status: 401, data: { message } },
+      });
+    postMock.mockRejectedValueOnce(
+      unauthorized("externalLogin.invalidTwoFactorCode"),
+    );
+    const resWrongCode = await AuthService.loginWithExternalLoginCode({
+      serverUrl,
+      code: "the-code",
+      codeVerifier: "the-verifier",
+      twoFactorToken: "000000",
+    });
+    expect(resWrongCode.error).toBe(invalidTwoFactorCodeError);
+    postMock.mockRejectedValueOnce(unauthorized("externalLogin.flowInvalid"));
+    const resExpired = await AuthService.loginWithExternalLoginCode({
+      serverUrl,
+      code: "the-code",
+      codeVerifier: "the-verifier",
+    });
+    expect(resExpired.error).toBe(
+      "authService:error.externalLogin.flowInvalid",
+    );
   });
 });

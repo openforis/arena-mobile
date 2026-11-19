@@ -1,6 +1,19 @@
+import * as Crypto from "expo-crypto";
+import * as WebBrowser from "expo-web-browser";
+
 import { Dictionary, User } from "@openforis/arena-core";
 
 import { API } from "./api";
+import { APIUtils } from "./api/apiUtils";
+import {
+  base64ToBase64Url,
+  bytesToBase64Url,
+  ExternalLoginProvider,
+  externalLoginRedirectUri,
+  extractUrlQueryParams,
+  filterMobileLoginProviders,
+  getExternalLoginStartUri,
+} from "./externalLoginUtils";
 import { SecureStoreService } from "./SecureStoreService";
 import { SettingsService } from "./settingsService";
 import { HttpErrors } from "utils/HttpErrors";
@@ -15,6 +28,18 @@ export const invalidServerUrlError = "authService:error.invalidServerUrl";
 export const invalidCredentialsError = "authService:error.invalidCredentials";
 export const invalidTwoFactorCodeError =
   "authService:error.invalidTwoFactorCode";
+
+// error keys sent by the server (externalLogin.*) with a translation in authService:error.externalLogin
+const externalLoginErrorKeys = [
+  "ambiguousEmail",
+  "emailDomainNotAllowed",
+  "emailNotVerified",
+  "flowInvalid",
+  "providerError",
+  "providerNotAvailable",
+  "userNotFound",
+];
+const externalLoginServerErrorKeyPrefix = "externalLogin.";
 
 const extractCookieValue = (
   headers: Dictionary<string>,
@@ -174,6 +199,127 @@ const loginWithTempAuthToken = async ({
   }
 };
 
+// ===== external providers (Google, Microsoft, OpenID Connect)
+
+const fetchExternalLoginProviders = async ({
+  serverUrl,
+}: {
+  serverUrl: string;
+}): Promise<ExternalLoginProvider[]> => {
+  try {
+    const { data } = await API.get({ serverUrl, uri: "/auth/providers" });
+    return filterMobileLoginProviders(data);
+  } catch (error) {
+    // not available in servers released before the external login providers
+    log.debug(`external login providers not available: ${String(error)}`);
+    return [];
+  }
+};
+
+const toExternalLoginError = (serverErrorKey?: unknown): string => {
+  const key =
+    typeof serverErrorKey === "string" &&
+    serverErrorKey.startsWith(externalLoginServerErrorKeyPrefix)
+      ? serverErrorKey.substring(externalLoginServerErrorKeyPrefix.length)
+      : null;
+  const knownKey =
+    key && externalLoginErrorKeys.includes(key) ? key : "generic";
+  return `authService:error.externalLogin.${knownKey}`;
+};
+
+export type ExternalLoginStartResult = {
+  // to be exchanged for the session tokens with loginWithExternalLoginCode
+  code?: string;
+  codeVerifier?: string;
+  cancelled?: boolean;
+  error?: string;
+};
+
+// PKCE: the code received on the app redirect URI can be exchanged only with this verifier
+const generateCodeVerifier = (): string =>
+  bytesToBase64Url(Crypto.getRandomBytes(32));
+
+const toCodeChallenge = async (codeVerifier: string): Promise<string> =>
+  base64ToBase64Url(
+    await Crypto.digestStringAsync(
+      Crypto.CryptoDigestAlgorithm.SHA256,
+      codeVerifier,
+      { encoding: Crypto.CryptoEncoding.BASE64 },
+    ),
+  );
+
+// signs in at the provider in the system browser, which then redirects to the app
+const startExternalLogin = async ({
+  serverUrl,
+  providerId,
+}: {
+  serverUrl: string;
+  providerId: string;
+}): Promise<ExternalLoginStartResult> => {
+  const codeVerifier = generateCodeVerifier();
+  const codeChallenge = await toCodeChallenge(codeVerifier);
+  const url = APIUtils.getUrl({
+    serverUrl,
+    uri: getExternalLoginStartUri({ providerId, codeChallenge }),
+  });
+  try {
+    const result = await WebBrowser.openAuthSessionAsync(
+      url,
+      externalLoginRedirectUri,
+    );
+    if (result.type !== "success") {
+      return { cancelled: true };
+    }
+    const { code, externalLoginError } = extractUrlQueryParams(result.url);
+    if (code) {
+      return { code, codeVerifier };
+    }
+    return { error: toExternalLoginError(externalLoginError) };
+  } catch (error) {
+    log.error(`error opening external login: ${String(error)}`);
+    return { error: toExternalLoginError() };
+  }
+};
+
+const loginWithExternalLoginCode = async ({
+  serverUrl,
+  code,
+  codeVerifier,
+  twoFactorToken,
+}: {
+  serverUrl: string;
+  code: string;
+  codeVerifier: string;
+  twoFactorToken?: string;
+}): Promise<LoginResponse> => {
+  try {
+    const appInfo = await SystemUtils.getApplicationInfo();
+    const { data, response } = await API.post({
+      serverUrl,
+      uri: "/auth/oidc/_mobile-token",
+      data: { code, codeVerifier, twoFactorToken, appInfo },
+    });
+    if (data?.twoFactorRequired) {
+      return { twoFactorRequired: true };
+    }
+    const result = await onLoginSuccess({ data, response });
+    if (result.user) {
+      // credentials of a previous password login would silently log in another user when the session expires
+      await clearStoredCredentials(serverUrl);
+    }
+    return result;
+  } catch (err: any) {
+    if (HttpErrors.isUnauthorizedResponse(err)) {
+      const message = err.response?.data?.message;
+      if (twoFactorToken && message === "externalLogin.invalidTwoFactorCode") {
+        return { error: invalidTwoFactorCodeError };
+      }
+      return { error: toExternalLoginError(message) };
+    }
+    return extractErrorMessageFromLoginError(err);
+  }
+};
+
 const logout = async () => {
   try {
     const { data } = await API.post({
@@ -256,10 +402,13 @@ const refreshAuthTokens = (): Promise<void> => {
 export const AuthService = {
   authTokenRefreshUrl,
   clearStoredCredentials,
+  fetchExternalLoginProviders,
   getAuthToken,
   generateAuthorizationHeaders,
   login,
+  loginWithExternalLoginCode,
   loginWithTempAuthToken,
   logout,
   refreshAuthTokens,
+  startExternalLogin,
 };

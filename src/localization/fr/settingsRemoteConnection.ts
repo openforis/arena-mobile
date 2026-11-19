@@ -9,6 +9,7 @@ export default {
   logout: "Se déconnecter",
   logoutConfirmMessage:
     "Se déconnecter et effacer les identifiants de l'utilisateur?",
+  or: "ou",
   password: "Mot de passe",
   qrCodeNotValid: "Code QR non valide",
   loginUsingQrCodeInstructions: `Pour vous connecter à l'aide d'un code QR:
@@ -24,6 +25,7 @@ export default {
     default: "Par défaut",
     custom: "Personnalisée",
   },
+  signInWith: "Se connecter avec {{provider}}",
   testUrl: "Tester l'URL",
   title: "Connexion au serveur",
   twoFactor: {

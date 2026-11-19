@@ -8,6 +8,7 @@ export default {
   loginUsingQrCode: "Prijava pomoću QR koda",
   logout: "Odjavi se",
   logoutConfirmMessage: "Odjaviti se i obrisati korisničke pristupne podatke?",
+  or: "ili",
   password: "Lozinka",
   qrCodeNotValid: "QR kod nije ispravan",
   loginUsingQrCodeInstructions: `Za prijavu pomoću QR koda:
@@ -23,6 +24,7 @@ export default {
     default: "Podrazumijevani",
     custom: "Prilagođeni",
   },
+  signInWith: "Prijavi se putem {{provider}}",
   testUrl: "Testiraj URL",
   title: "Veza sa serverom",
   twoFactor: {

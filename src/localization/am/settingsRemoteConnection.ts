@@ -8,6 +8,7 @@ export default {
   loginUsingQrCode: "የQR ኮድ በመጠቀም ይግቡ",
   logout: "ውጣ",
   logoutConfirmMessage: "ወጥተው የተጠቃሚ ማረጋገጫዎችን ያጽዱ?",
+  or: "ወይም",
   password: "የይለፍ ቃል",
   qrCodeNotValid: "የQR ኮድ ልክ አይደለም",
   loginUsingQrCodeInstructions: `በQR ኮድ በመጠቀም ለመግባት:
@@ -23,6 +24,7 @@ export default {
     default: "ነባሪ",
     custom: "ብጁ",
   },
+  signInWith: "በ{{provider}} ይግቡ",
   testUrl: "URL ይሞክሩ",
   title: "ከአገልጋይ ጋር ግንኙነት",
   twoFactor: {

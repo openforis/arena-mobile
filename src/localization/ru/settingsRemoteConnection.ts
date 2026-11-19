@@ -8,6 +8,7 @@ export default {
   loginUsingQrCode: "Войти с помощью QR-кода",
   logout: "Выйти",
   logoutConfirmMessage: "Выйти и очистить учетные данные пользователя?",
+  or: "или",
   password: "Пароль",
   qrCodeNotValid: "QR-код недействителен",
   loginUsingQrCodeInstructions: `Чтобы войти с помощью QR-кода:
@@ -23,6 +24,7 @@ export default {
     default: "По умолчанию",
     custom: "Пользователя",
   },
+  signInWith: "Войти через {{provider}}",
   testUrl: "Проверить URL",
   title: "Подключение к серверу",
   twoFactor: {

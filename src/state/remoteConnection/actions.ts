@@ -164,6 +164,37 @@ const login =
     return res;
   };
 
+// exchanges the code obtained by signing in with an external provider (see AuthService.startExternalLogin)
+const loginWithExternalLoginCode =
+  ({
+    navigator,
+    serverUrl,
+    code,
+    codeVerifier,
+    twoFactorToken,
+    showBack = false,
+  }: {
+    navigator: Navigator;
+    serverUrl: string;
+    code: string;
+    codeVerifier: string;
+    twoFactorToken?: string;
+    showBack?: boolean;
+  }) =>
+  async (dispatch: AppDispatch): Promise<LoginResponse> => {
+    const res = await AuthService.loginWithExternalLoginCode({
+      serverUrl,
+      code,
+      codeVerifier,
+      twoFactorToken,
+    });
+    // two-step verification is handled by the login form
+    if (!res.twoFactorRequired && res.error !== invalidTwoFactorCodeError) {
+      await onLoginResponse({ res, dispatch, navigator, serverUrl, showBack });
+    }
+    return res;
+  };
+
 const loginWithTempAuthToken =
   ({
     navigator,
@@ -288,6 +319,7 @@ export const RemoteConnectionActions = {
   confirmGoToConnectionToRemoteServer,
   loginAndSetUser,
   login,
+  loginWithExternalLoginCode,
   loginWithTempAuthToken,
   fetchLoggedInUserProfileIcon,
   clearUserCredentials,

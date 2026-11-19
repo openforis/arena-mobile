@@ -8,6 +8,7 @@ export default {
   loginUsingQrCode: "Login using QR code",
   logout: "Logout",
   logoutConfirmMessage: "Logout and clear user credentials?",
+  or: "or",
   password: "Password",
   qrCodeNotValid: "QR code not valid",
   loginUsingQrCodeInstructions: `To login using a QR code:
@@ -23,6 +24,7 @@ export default {
     default: "Default",
     custom: "Custom",
   },
+  signInWith: "Sign in with {{provider}}",
   testUrl: "Test URL",
   title: "Connection to server",
   twoFactor: {
