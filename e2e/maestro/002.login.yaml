@@ -42,6 +42,10 @@ appId: ${APP_ID}
 - tapOn: "Password"
 - inputText: ${ARENA_SERVER_PASSWORD}
 
+# the login button can be below the screen (request access banner, keyboard open)
+- scrollUntilVisible:
+    element:
+      id: "remote-connection-login-button"
 # workaround: the first tap may only hide the keyboard
 - tapOn:
     id: "remote-connection-login-button"

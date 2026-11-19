@@ -30,7 +30,7 @@ export const invalidTwoFactorCodeError =
   "authService:error.invalidTwoFactorCode";
 
 // error keys sent by the server (externalLogin.*) with a translation in authService:error.externalLogin
-const externalLoginErrorKeys = [
+const externalLoginErrorKeys = new Set([
   "ambiguousEmail",
   "emailDomainNotAllowed",
   "emailNotVerified",
@@ -38,7 +38,7 @@ const externalLoginErrorKeys = [
   "providerError",
   "providerNotAvailable",
   "userNotFound",
-];
+]);
 const externalLoginServerErrorKeyPrefix = "externalLogin.";
 
 const extractCookieValue = (
@@ -222,8 +222,7 @@ const toExternalLoginError = (serverErrorKey?: unknown): string => {
     serverErrorKey.startsWith(externalLoginServerErrorKeyPrefix)
       ? serverErrorKey.substring(externalLoginServerErrorKeyPrefix.length)
       : null;
-  const knownKey =
-    key && externalLoginErrorKeys.includes(key) ? key : "generic";
+  const knownKey = key && externalLoginErrorKeys.has(key) ? key : "generic";
   return `authService:error.externalLogin.${knownKey}`;
 };
 
