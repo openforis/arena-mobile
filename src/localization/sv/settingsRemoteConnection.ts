@@ -8,6 +8,7 @@ export default {
   loginUsingQrCode: "Logga in med QR-kod",
   logout: "Logga ut",
   logoutConfirmMessage: "Logga ut och rensa användarens inloggningsuppgifter?",
+  newToArena: "Ny på Arena?",
   or: "eller",
   password: "Lösenord",
   qrCodeNotValid: "QR-koden är inte giltig",
@@ -16,7 +17,10 @@ export default {
 2. tryck på knappen i övre högra hörnet och öppna användarmenyn
 3. välj **Logga in från Arena Mobile med QR-kod**
 4. skanna den visade QR-koden`,
-  requestAccess: "Ny på Arena? Begär åtkomst",
+  registerBeforeLoggingIn:
+    "Begär åtkomst först: endast registrerade användare kan logga in.",
+  registeredUsersOnly: "Endast registrerade användare",
+  requestAccess: "Begär åtkomst",
   scanQrCode: "Skanna QR-kod",
   serverUrl: "Server-URL",
   serverUrlNotValid: "Server-URL:en är inte giltig",

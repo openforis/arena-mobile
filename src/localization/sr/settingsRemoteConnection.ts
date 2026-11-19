@@ -8,6 +8,7 @@ export default {
   loginUsingQrCode: "Prijava pomoću QR koda",
   logout: "Odjavi se",
   logoutConfirmMessage: "Odjaviti se i obrisati korisničke pristupne podatke?",
+  newToArena: "Novi ste u aplikaciji Arena?",
   or: "ili",
   password: "Lozinka",
   qrCodeNotValid: "QR kod nije ispravan",
@@ -16,7 +17,10 @@ export default {
 2. pritisnite dugme u gornjem desnom uglu i otvorite korisnički meni
 3. izaberite **Prijava u Arena Mobile pomoću QR koda**
 4. skenirajte prikazani QR kod`,
-  requestAccess: "Novi ste u aplikaciji Arena? Zatražite pristup",
+  registerBeforeLoggingIn:
+    "Prvo zatražite pristup: samo registrovani korisnici mogu da se prijave.",
+  registeredUsersOnly: "Samo za registrovane korisnike",
+  requestAccess: "Zatražite pristup",
   scanQrCode: "Skeniraj QR kod",
   serverUrl: "URL servera",
   serverUrlNotValid: "URL servera nije ispravan",

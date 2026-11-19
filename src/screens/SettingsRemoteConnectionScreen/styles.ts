@@ -22,5 +22,4 @@ export default StyleSheet.create({
   centeredButton: { alignSelf: "center" },
   serverUrlRow: { alignItems: "center", gap: 8 },
   serverUrlTextInput: { flex: 1 },
-  requestAccessLink: { alignSelf: "center" },
 });

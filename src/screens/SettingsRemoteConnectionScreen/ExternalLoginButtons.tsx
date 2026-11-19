@@ -1,6 +1,7 @@
 import { StyleSheet } from "react-native";
 
 import { Button, Text, VView } from "components";
+import { useEffectiveTheme } from "hooks";
 import { APIUtils } from "service/api/apiUtils";
 import {
   ExternalLoginProvider,
@@ -9,7 +10,7 @@ import {
 
 const styles = StyleSheet.create({
   container: { alignSelf: "stretch", gap: 8 },
-  orText: { alignSelf: "center" },
+  centeredText: { alignSelf: "center", textAlign: "center" },
 });
 
 // Material Design icons of the provider presets
@@ -47,10 +48,11 @@ export const ExternalLoginButtons = ({
   providers,
   serverUrl,
 }: Props) => {
+  const theme = useEffectiveTheme();
   if (providers.length === 0) return null;
   return (
     <VView style={styles.container}>
-      <Text style={styles.orText} textKey="settingsRemoteConnection:or" />
+      <Text style={styles.centeredText} textKey="settingsRemoteConnection:or" />
       {providers.map((provider) => (
         <Button
           key={provider.id}
@@ -63,6 +65,11 @@ export const ExternalLoginButtons = ({
           textParams={{ provider: provider.label }}
         />
       ))}
+      <Text
+        style={[styles.centeredText, { color: theme.colors.onSurfaceVariant }]}
+        textKey="settingsRemoteConnection:registeredUsersOnly"
+        variant="bodySmall"
+      />
     </VView>
   );
 };

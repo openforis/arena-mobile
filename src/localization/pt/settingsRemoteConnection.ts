@@ -9,6 +9,7 @@ export default {
   logout: "Terminar sessão",
   logoutConfirmMessage:
     "Terminar sessão e limpar as credenciais do utilizador?",
+  newToArena: "Novo no Arena?",
   or: "ou",
   password: "Palavra-passe",
   qrCodeNotValid: "Código QR inválido",
@@ -17,7 +18,10 @@ export default {
 2. pressione o botão no canto superior direito e abra o menu do utilizador
 3. selecione **Iniciar sessão a partir do Arena Mobile usando código QR**
 4. digitalize o código QR exibido`,
-  requestAccess: "Novo no Arena? Solicitar acesso",
+  registerBeforeLoggingIn:
+    "Solicite acesso primeiro: apenas usuários registrados podem entrar.",
+  registeredUsersOnly: "Apenas usuários registrados",
+  requestAccess: "Solicitar acesso",
   scanQrCode: "Digitalizar código QR",
   serverUrl: "URL do servidor",
   serverUrlNotValid: "URL do servidor inválida",

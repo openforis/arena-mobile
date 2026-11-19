@@ -27,6 +27,7 @@ import { AMConstants } from "utils";
 
 import { ExternalLoginButtons } from "./ExternalLoginButtons";
 import { LoggedInUserSummary } from "./LoggedInUserSummary";
+import { RequestAccessBanner } from "./RequestAccessBanner";
 import { ServerUrlType } from "./remoteConnectionUtils";
 import { TwoFactorVerification } from "./TwoFactorVerification";
 import { useSettingsRemoteConnection } from "./useSettingsRemoteConnection";
@@ -134,6 +135,7 @@ export const SettingsRemoteConnectionScreen = () => {
     <ScreenView>
       <VView style={styles.container}>
         {offlineBanner}
+        <RequestAccessBanner />
         <Card contentStyle={styles.cardContent}>
           <AppLogo style={styles.logo} />
           <TextInput
@@ -248,11 +250,6 @@ export const SettingsRemoteConnectionScreen = () => {
             textKey="settingsRemoteConnection:clearCredentials"
           />
         )}
-        <Link
-          labelKey="settingsRemoteConnection:requestAccess"
-          style={styles.requestAccessLink}
-          url={AMConstants.requestAccessUrl}
-        />
       </VView>
       {qrScannerVisible && (
         <QrScannerModal

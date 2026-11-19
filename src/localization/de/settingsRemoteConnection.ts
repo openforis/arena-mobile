@@ -8,6 +8,7 @@ export default {
   loginUsingQrCode: "Mit QR-Code anmelden",
   logout: "Abmelden",
   logoutConfirmMessage: "Abmelden und Benutzeranmeldedaten löschen?",
+  newToArena: "Neu bei Arena?",
   or: "oder",
   password: "Passwort",
   qrCodeNotValid: "QR-Code ungültig",
@@ -16,7 +17,10 @@ export default {
 2. drücken Sie die Schaltfläche oben rechts und öffnen Sie das Benutzermenü
 3. wählen Sie **Von Arena Mobile mit QR-Code anmelden**
 4. scannen Sie den angezeigten QR-Code`,
-  requestAccess: "Neu bei Arena? Zugriff anfordern",
+  registerBeforeLoggingIn:
+    "Fordern Sie zuerst Zugriff an: Nur registrierte Benutzer können sich anmelden.",
+  registeredUsersOnly: "Nur für registrierte Benutzer",
+  requestAccess: "Zugriff anfordern",
   scanQrCode: "QR-Code scannen",
   serverUrl: "Server-URL",
   serverUrlNotValid: "Server-URL ungültig",

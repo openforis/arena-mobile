@@ -8,6 +8,7 @@ export default {
   loginUsingQrCode: "የQR ኮድ በመጠቀም ይግቡ",
   logout: "ውጣ",
   logoutConfirmMessage: "ወጥተው የተጠቃሚ ማረጋገጫዎችን ያጽዱ?",
+  newToArena: "በአሬና አዲስ ነዎት?",
   or: "ወይም",
   password: "የይለፍ ቃል",
   qrCodeNotValid: "የQR ኮድ ልክ አይደለም",
@@ -16,7 +17,9 @@ export default {
 2. በላይኛው ቀኝ ጥግ ያለውን አዝራር ይጫኑ እና የተጠቃሚውን ምናሌ ይክፈቱ
 3. **ከArena Mobile QR ኮድ በመጠቀም ይግቡ** ይምረጡ
 4. የታየውን QR ኮድ ይቃኙ`,
-  requestAccess: "በአሬና አዲስ ነዎት? መዳረሻ ይጠይቁ",
+  registerBeforeLoggingIn: "መጀመሪያ መዳረሻ ይጠይቁ፦ መግባት የሚችሉት የተመዘገቡ ተጠቃሚዎች ብቻ ናቸው።",
+  registeredUsersOnly: "ለተመዘገቡ ተጠቃሚዎች ብቻ",
+  requestAccess: "መዳረሻ ይጠይቁ",
   scanQrCode: "QR ኮድ ይቃኙ",
   serverUrl: "የአገልጋይ አድራሻ",
   serverUrlNotValid: "የአገልጋይ አድራሻ ልክ አይደለም",

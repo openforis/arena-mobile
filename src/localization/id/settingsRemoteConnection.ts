@@ -8,6 +8,7 @@ export default {
   loginUsingQrCode: "Masuk menggunakan kode QR",
   logout: "Keluar",
   logoutConfirmMessage: "Keluar dan hapus kredensial pengguna?",
+  newToArena: "Baru di Arena?",
   or: "atau",
   password: "Kata sandi",
   qrCodeNotValid: "Kode QR tidak valid",
@@ -16,7 +17,10 @@ export default {
 2. tekan tombol di sudut kanan atas dan buka menu pengguna
 3. pilih **Masuk dari Arena Mobile menggunakan kode QR**
 4. pindai kode QR yang ditampilkan`,
-  requestAccess: "Baru di Arena? Minta akses",
+  registerBeforeLoggingIn:
+    "Minta akses terlebih dahulu: hanya pengguna terdaftar yang dapat masuk.",
+  registeredUsersOnly: "Khusus pengguna terdaftar",
+  requestAccess: "Minta akses",
   scanQrCode: "Pindai kode QR",
   serverUrl: "URL Server",
   serverUrlNotValid: "URL Server tidak valid",

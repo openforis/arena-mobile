@@ -8,6 +8,7 @@ export default {
   loginUsingQrCode: "Login using QR code",
   logout: "Logout",
   logoutConfirmMessage: "Logout and clear user credentials?",
+  newToArena: "New to Arena?",
   or: "or",
   password: "Password",
   qrCodeNotValid: "QR code not valid",
@@ -16,7 +17,10 @@ export default {
 2. press the button in the top right corner and open the user menu
 3. select **Login from Arena Mobile using QR code**
 4. scan the QR code displayed`,
-  requestAccess: "New to Arena? Request access",
+  registerBeforeLoggingIn:
+    "Request access first: only registered users can log in.",
+  registeredUsersOnly: "Registered users only",
+  requestAccess: "Request access",
   scanQrCode: "Scan QR code",
   serverUrl: "Server URL",
   serverUrlNotValid: "Server URL not valid",
