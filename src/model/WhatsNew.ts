@@ -16,6 +16,7 @@ export type WhatsNewItem = {
 
 // newest first
 const items: WhatsNewItem[] = [
+  { id: "googleSignIn", version: "3.0.0", icon: "google" },
   { id: "geoTiffMaps", version: "2.11.4", icon: "map-legend" },
   { id: "mapLayers", version: "2.11.0", icon: "layers" },
   { id: "geoAttribute", version: "2.10.0", icon: "vector-polygon" },

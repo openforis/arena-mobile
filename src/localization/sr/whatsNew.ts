@@ -3,6 +3,11 @@ export default {
   since: "Od verzije {{version}}",
   dontShowAgain: "Ne prikazuj ponovo",
   items: {
+    googleSignIn: {
+      title: "Prijava putem Google naloga",
+      description:
+        "U **Veza sa serverom** (pritisnite **Poveži se** na početnoj stranici) sada možete da se prijavite pomoću **Prijavi se putem Google**, **Prijavi se putem Microsoft** ili prijave vaše organizacije, ako Arena server to podržava: prijava se završava u veb pregledaču.\n\nNa ovaj način mogu da se prijave samo korisnici sa Arena nalogom: ako ste novi u aplikaciji Arena, prvo pritisnite **Zatražite pristup**.",
+    },
     geoTiffMaps: {
       title: "GeoTIFF mape",
       description:
