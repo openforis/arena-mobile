@@ -2,9 +2,9 @@ import { memo, useCallback } from "react";
 
 import {
   ArenaRecordNode,
-  NodeDef,
+  ArenaNodeDef,
   NodeDefs,
-  Nodes,
+  RecordNodes,
 } from "@openforis/arena-core";
 
 import { HView, IconButton, VView } from "components";
@@ -26,7 +26,7 @@ import styles from "./multipleAttributeComponentWrapperStyles";
 
 type AttributeRowProps = {
   node: ArenaRecordNode;
-  nodeDef: NodeDef<any>;
+  nodeDef: ArenaNodeDef<any>;
   onDelete: (node: ArenaRecordNode) => void;
   parentNodeUuid?: string;
 };
@@ -75,7 +75,9 @@ export const MultipleAttributeComponentWrapper = memo(
     const nodeDefLabel = NodeDefs.getLabelOrName(nodeDef, lang);
 
     const onNewPress = useCallback(() => {
-      const hasEmptyNodes = nodes.some((node) => Nodes.isValueBlank(node));
+      const hasEmptyNodes = nodes.some((node) =>
+        RecordNodes.isValueBlank(node),
+      );
       if (hasEmptyNodes) {
         dispatch(
           MessageActions.setMessage({
@@ -93,7 +95,7 @@ export const MultipleAttributeComponentWrapper = memo(
         await confirmDeleteNodes({
           messageKey: "dataEntry:confirmDeleteValue.message",
           nodeUuids: [node.uuid],
-          skipConfirm: Nodes.isValueBlank(node),
+          skipConfirm: RecordNodes.isValueBlank(node),
         });
       },
       [confirmDeleteNodes],

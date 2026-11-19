@@ -1,20 +1,20 @@
 import {
   ArenaRecord,
   ArenaRecordNode,
-  NodeDef,
+  ArenaNodeDef,
   NodeDefs,
   NodeDefType,
   Records,
-  Survey,
+  ArenaSurvey,
 } from "@openforis/arena-core";
 
 export type CompletionStats = { total: number; filled: number };
 
 type ChildEntityCompletionParams = {
-  survey: Survey;
+  survey: ArenaSurvey;
   record: ArenaRecord;
   parentEntity: ArenaRecordNode;
-  childDef: NodeDef<NodeDefType>;
+  childDef: ArenaNodeDef<NodeDefType>;
   childEntity: ArenaRecordNode | null | undefined;
 };
 

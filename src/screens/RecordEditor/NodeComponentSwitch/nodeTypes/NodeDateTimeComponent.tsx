@@ -3,9 +3,9 @@ import { useCallback } from "react";
 import {
   DateFormats,
   Dates,
-  NodeDefDate,
+  ArenaNodeDefDate,
   NodeDefs,
-  NodeDefTime,
+  ArenaNodeDefTime,
   Objects,
 } from "@openforis/arena-core";
 
@@ -16,7 +16,7 @@ import { useNodeComponentLocalState } from "../../useNodeComponentLocalState";
 import { NodeComponentProps } from "./nodeComponentPropTypes";
 
 type NodeDateTimeComponentProps = NodeComponentProps<
-  NodeDefDate | NodeDefTime
+  ArenaNodeDefDate | ArenaNodeDefTime
 > & {
   mode?: "date" | "time";
 };

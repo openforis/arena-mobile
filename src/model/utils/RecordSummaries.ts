@@ -1,8 +1,8 @@
 import {
   NodeDefs,
-  NodeValueFormatter,
+  RecordNodeValueFormatter,
   Objects,
-  Validation,
+  ArenaValidation,
   Validations,
 } from "@openforis/arena-core";
 
@@ -30,7 +30,7 @@ const getKeyValuesFormatted = ({ survey, recordSummary }: any) => {
   const valuesByDefUuid = getKeyValuesByDefUuid({ survey, recordSummary });
   return rootKeyDefs.map((keyDef) => {
     const value = valuesByDefUuid[keyDef.uuid];
-    const valueFormatted = NodeValueFormatter.format({
+    const valueFormatted = RecordNodeValueFormatter.format({
       survey,
       cycle,
       nodeDef: keyDef,
@@ -41,7 +41,7 @@ const getKeyValuesFormatted = ({ survey, recordSummary }: any) => {
 };
 
 // summaries have only the validation counts (see validationFromCountsColumns)
-const hasErrors = (recordSummary: { validation?: Validation | null }) =>
+const hasErrors = (recordSummary: { validation?: ArenaValidation | null }) =>
   Validations.getErrorsCount(Validations.getValidation(recordSummary)) > 0;
 
 export const RecordSummaries = {

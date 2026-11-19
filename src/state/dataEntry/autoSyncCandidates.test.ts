@@ -1,4 +1,4 @@
-import type { Survey } from "@openforis/arena-core";
+import type { ArenaSurvey } from "@openforis/arena-core";
 
 import { RecordSyncStatus } from "../../model/RecordSyncStatus";
 import { AutoSyncStatus } from "../autoSync/types";
@@ -33,7 +33,7 @@ jest.mock("@openforis/arena-core", () => ({
 }));
 
 const surveyWithSecurity = (security: Record<string, boolean> = {}) =>
-  ({ props: { security } }) as unknown as Survey;
+  ({ props: { security } }) as unknown as ArenaSurvey;
 
 const survey = surveyWithSecurity();
 const surveyErrorsAllowed = surveyWithSecurity({

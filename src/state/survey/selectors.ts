@@ -1,10 +1,10 @@
 import {
   LanguageCode,
   Objects,
-  SRSIndex,
-  Survey,
+  ArenaSRSIndex,
+  ArenaSurvey,
   Surveys,
-  UserGroup,
+  ArenaUserGroup,
 } from "@openforis/arena-core";
 
 import { SurveyDefs } from "model";
@@ -18,7 +18,7 @@ const getSurveyState = (state: RootState) => state.survey;
 
 const selectCurrentSurvey = (
   state: RootState,
-): (Survey & { remoteId?: number }) | undefined =>
+): (ArenaSurvey & { remoteId?: number }) | undefined =>
   getSurveyState(state).currentSurvey ?? undefined;
 
 const selectIsCurrentSurveyDemo = (state: RootState): boolean =>
@@ -32,7 +32,7 @@ const selectCurrentSurveyId = (state: RootState): number =>
 
 const selectCurrentSurveySrsIndex = (
   state: RootState,
-): SRSIndex | undefined => {
+): ArenaSRSIndex | undefined => {
   const survey = selectCurrentSurvey(state);
   return survey ? Surveys.getSRSIndex(survey) : undefined;
 };
@@ -63,7 +63,9 @@ const selectCurrentSurveyPreferredLang = (state: RootState): LanguageCode => {
 const selectCurrentSurveyCycle = (state: RootState): string | undefined =>
   getSurveyState(state).currentSurveyCycle ?? undefined;
 
-const selectCurrentSurveyUserGroup = (state: RootState): UserGroup | null =>
+const selectCurrentSurveyUserGroup = (
+  state: RootState,
+): ArenaUserGroup | null =>
   getSurveyState(state).currentSurveyUserGroup ?? null;
 
 // True once fetchCurrentSurveyUserGroup has resolved (successfully or not) for the current survey.

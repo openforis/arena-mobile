@@ -1,4 +1,4 @@
-import { Dates, Objects, Survey } from "@openforis/arena-core";
+import { Dates, Objects, ArenaSurvey } from "@openforis/arena-core";
 
 import type { ArenaMobileRecord, RemoteRecordSummary } from "model";
 import {
@@ -12,7 +12,7 @@ import {
 export type RecordSummaryRemote = RemoteRecordSummary;
 
 type RecordSyncStatusParams = {
-  survey: Survey;
+  survey: ArenaSurvey;
   recordSummaryLocal: ArenaMobileRecord;
   recordSummaryRemote?: RecordSummaryRemote | null;
 };

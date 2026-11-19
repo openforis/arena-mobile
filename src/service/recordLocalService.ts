@@ -4,10 +4,10 @@ import {
   RecordCloner,
   Records,
   RecordValidator,
-  Survey,
+  ArenaSurvey,
   Surveys,
-  User,
-  UserGroup,
+  ArenaUser,
+  ArenaUserGroup,
   Validations,
 } from "@openforis/arena-core";
 
@@ -75,7 +75,7 @@ const findFileUuidsInDevice = async ({
   survey,
   recordUuids,
 }: {
-  survey: Survey | undefined;
+  survey: ArenaSurvey | undefined;
   recordUuids: string[];
 }): Promise<string[]> => {
   try {
@@ -109,7 +109,7 @@ const findRecordSummariesByKeys = async ({
   keyValues,
   keyValuesFormatted,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   cycle: string;
   keyValues: RecordKeyValue[];
   keyValuesFormatted: string[];
@@ -145,7 +145,7 @@ const findRecordSummariesWithSameKeys = async ({
   lang,
   cycle: cycleParam = null,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   record: ArenaRecord;
   lang?: string;
   cycle?: string | null;
@@ -172,9 +172,9 @@ const findRecordSummariesWithSameKeys = async ({
 };
 
 type RecordCloneParams = {
-  survey: Survey;
-  user: User;
-  userGroup?: UserGroup | null;
+  survey: ArenaSurvey;
+  user: ArenaUser;
+  userGroup?: ArenaUserGroup | null;
 };
 
 // the clone belongs to the cloning user and gets the qualifier values of the user's group (as a new record)
@@ -259,8 +259,8 @@ const revalidateRecords = async ({
   survey,
   recordIds,
 }: {
-  user: User;
-  survey: Survey;
+  user: ArenaUser;
+  survey: ArenaSurvey;
   recordIds: number[];
 }) => {
   await Promises.each(recordIds, async (recordId) => {

@@ -1,6 +1,6 @@
 import NetInfo from "@react-native-community/netinfo";
 
-import { Survey, Surveys } from "@openforis/arena-core";
+import { ArenaSurvey, Surveys } from "@openforis/arena-core";
 
 import { RecordUpdateConflictResolutionStrategy as ConflictResolutionStrategy } from "model";
 import { RecordService } from "service";
@@ -43,7 +43,7 @@ const isTickBlockedByPreviousError = (autoSyncStatus: AutoSyncStatus) =>
   autoSyncStatus === AutoSyncStatus.authError ||
   autoSyncStatus === AutoSyncStatus.checkError;
 
-const isUploadAllowedForSurvey = (survey: Survey) =>
+const isUploadAllowedForSurvey = (survey: ArenaSurvey) =>
   Surveys.isRecordsUploadFromMobileAllowed(survey);
 
 const refreshAutoSyncStatus = async ({ dispatch, getState }: ThunkApi) => {

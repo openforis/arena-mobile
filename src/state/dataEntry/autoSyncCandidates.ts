@@ -1,4 +1,4 @@
-import { Survey, Surveys, Validation } from "@openforis/arena-core";
+import { ArenaSurvey, Surveys, ArenaValidation } from "@openforis/arena-core";
 
 import { RecordSummaries, RecordSyncStatus } from "model";
 import type { SettingsObject } from "model";
@@ -53,14 +53,14 @@ export type AutoSyncRecord = {
   uuid: string;
   readOnly?: boolean;
   syncStatus?: string;
-  validation?: Validation | null;
+  validation?: ArenaValidation | null;
   dateModified?: string | number;
   dateModifiedSynced?: string | null;
 };
 
 type CandidatesParams = {
   records: AutoSyncRecord[];
-  survey: Survey;
+  survey: ArenaSurvey;
   currentlyEditedRecordUuid?: string;
 };
 

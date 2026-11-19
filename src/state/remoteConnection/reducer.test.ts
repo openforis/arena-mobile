@@ -1,12 +1,12 @@
-import { User } from "@openforis/arena-core";
+import { ArenaUser } from "@openforis/arena-core";
 
 import {
   RemoteConnectionReducer,
   RemoteConnectionSliceActions,
 } from "./reducer";
 
-const user = { uuid: "user-uuid" } as unknown as User;
-const otherUser = { uuid: "other-user-uuid" } as unknown as User;
+const user = { uuid: "user-uuid" } as unknown as ArenaUser;
+const otherUser = { uuid: "other-user-uuid" } as unknown as ArenaUser;
 
 describe("RemoteConnectionReducer", () => {
   const initialState = RemoteConnectionReducer(undefined, { type: "@@INIT" });

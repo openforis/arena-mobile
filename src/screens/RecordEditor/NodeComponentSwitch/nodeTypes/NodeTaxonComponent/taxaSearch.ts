@@ -1,4 +1,4 @@
-import { Taxon } from "@openforis/arena-core";
+import { ArenaTaxon } from "@openforis/arena-core";
 
 const alwaysIncludeVernacularNames = false;
 const alwaysIncludeSingleVernacularName = true;
@@ -13,7 +13,7 @@ export type TaxonSearchKeys = {
 };
 
 // taxon list item: a taxon, or one of its vernacular names (see useTaxa)
-export type TaxonSearchItem = Taxon & {
+export type TaxonSearchItem = ArenaTaxon & {
   scientificName?: string;
   searchKeys?: TaxonSearchKeys;
   singleVernacularNameUuid?: string;

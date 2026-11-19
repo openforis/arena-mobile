@@ -1,9 +1,9 @@
 import {
-  AreaOfInterest,
-  Point,
+  ArenaAreaOfInterest,
+  ArenaPoint,
   Points,
-  SRSIndex,
-  Survey,
+  ArenaSRSIndex,
+  ArenaSurvey,
   Surveys,
 } from "@openforis/arena-core";
 
@@ -24,7 +24,7 @@ export const createPointFeature = ({
   point,
   properties,
 }: {
-  point: Point;
+  point: ArenaPoint;
   properties: Omit<RecordsMapPointProperties, "point">;
 }): RecordsMapPointFeature | null => {
   const longitude = Number(point.x);
@@ -44,9 +44,9 @@ export const toLatLong = ({
   point,
   srsIndex,
 }: {
-  point: Point | null;
-  srsIndex: SRSIndex;
-}): Point | null => {
+  point: ArenaPoint | null;
+  srsIndex: ArenaSRSIndex;
+}): ArenaPoint | null => {
   if (!point) return null;
   try {
     return Points.toLatLong(point, srsIndex);
@@ -61,7 +61,7 @@ export const buildCoordinateAttributeFeatures = ({
   nodeValues,
   recordLabelByUuid,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   layer: RecordsMapLayer;
   nodeValues: { recordUuid: string; nodeDefUuid: string; value: any }[];
   recordLabelByUuid: Record<string, string>;
@@ -142,7 +142,7 @@ export const buildAreaOfInterestPolygons = ({
   areaOfInterest,
 }: {
   layer: RecordsMapLayer;
-  areaOfInterest: AreaOfInterest;
+  areaOfInterest: ArenaAreaOfInterest;
 }): RecordsMapAreaPolygon[] => {
   const polygons =
     areaOfInterest.type === "Polygon"

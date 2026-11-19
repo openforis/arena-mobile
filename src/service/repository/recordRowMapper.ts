@@ -3,15 +3,15 @@ import {
   Arrays,
   DateFormats,
   Dates,
-  NodeDef,
+  ArenaNodeDef,
   NodeDefs,
   NodeDefType,
   Objects,
   RecordFixer,
   Records,
-  Survey,
+  ArenaSurvey,
   Surveys,
-  Validation,
+  ArenaValidation,
   Validations,
 } from "@openforis/arena-core";
 
@@ -30,9 +30,9 @@ import { RecordKeyOrSummaryColumn, RecordRow } from "./recordRow";
 const SUPPORTED_KEYS = 5;
 const SUPPORTED_SUMMARY_ATTRIBUTES = 5;
 
-type SurveyAndRecordParams = { survey: Survey; record: ArenaRecord };
+type SurveyAndRecordParams = { survey: ArenaSurvey; record: ArenaRecord };
 type SurveyAndRemoteSummaryParams = {
-  survey: Survey;
+  survey: ArenaSurvey;
   recordSummary: RemoteRecordSummary;
 };
 // a column value of a key or summary attribute
@@ -88,7 +88,7 @@ export const validationCountsColumnsSet =
 
 // values of the errors_count and warnings_count columns (null without validation)
 export const extractValidationCountsColumnsValues = (
-  record: { validation?: Validation | null } | null,
+  record: { validation?: ArenaValidation | null } | null,
 ): [number | null, number | null] => {
   const validation = record?.validation;
   if (!validation) return [null, null];
@@ -101,7 +101,7 @@ export const extractValidationCountsColumnsValues = (
 // summaries get only the validation counts, not the whole validation
 export const validationFromCountsColumns = (
   row: Pick<RecordRow, "errors_count" | "warnings_count">,
-): Validation | null => {
+): ArenaValidation | null => {
   const { errors_count: errors, warnings_count: warnings } = row;
   if (Objects.isNil(errors) && Objects.isNil(warnings)) return null;
   const counts = { errors: errors ?? 0, warnings: warnings ?? 0 };
@@ -241,12 +241,12 @@ type RecordFromRow = Omit<
   RecordSummary,
   "validation" | "dateModifiedSynced"
 > & {
-  validation?: Validation | null;
+  validation?: ArenaValidation | null;
   dateModifiedSynced?: string | null;
 };
 
 type FixRowParams = {
-  survey: Survey;
+  survey: ArenaSurvey;
   cycle: string | null | undefined;
   result: RecordFromRow;
   row: RecordRow;
@@ -262,7 +262,7 @@ const fixRowKeyOrSummaryAttributeColumns = ({
   result: RecordFromRow;
   row: RecordRow;
   columnNames: RecordKeyOrSummaryColumn[];
-  defs: NodeDef<NodeDefType>[];
+  defs: ArenaNodeDef<NodeDefType>[];
   wrapperProp: "keysObj" | "summaryAttributesObj";
 }) => {
   const values: RecordSummaryValues = {};
@@ -332,7 +332,7 @@ const fixRowValidation = ({
     return;
   }
   if (result.validation) {
-    let validation: Validation = result.validation;
+    let validation: ArenaValidation = result.validation;
     if (typeof validation === "string") {
       validation = JSON.parse(validation);
     }
@@ -346,7 +346,8 @@ const fixRowValidation = ({
 // the fixes depend on the survey structure and on the app code (including arena-core RecordFixer):
 // a record content is fixed again only when one of them changes (null: survey version unknown, always fix)
 export const getRecordFixKey = (
-  survey: Pick<Survey, "datePublished" | "dateModified"> | null | undefined,
+  survey:
+    Pick<ArenaSurvey, "datePublished" | "dateModified"> | null | undefined,
 ): string | null => {
   const surveyVersion = survey?.datePublished ?? survey?.dateModified;
   if (!surveyVersion) return null;
@@ -367,7 +368,7 @@ export const isRowToBeFixed = ({
 }): boolean => rowHasContent(row) && (!fixKey || row.fixed_for !== fixKey);
 
 export const rowToRecord =
-  ({ survey }: { survey: Survey }) =>
+  ({ survey }: { survey: ArenaSurvey }) =>
   (row: RecordRow): RecordSummary => {
     const sideEffect = true;
     const hasToBeFixed = isRowToBeFixed({

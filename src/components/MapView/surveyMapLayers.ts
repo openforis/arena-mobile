@@ -1,4 +1,4 @@
-import { LanguageCode, Survey, Surveys } from "@openforis/arena-core";
+import { LanguageCode, ArenaSurvey, Surveys } from "@openforis/arena-core";
 
 import { SurveyDefs } from "model/utils/SurveyDefs";
 
@@ -31,7 +31,7 @@ export const getSurveyMapLayers = ({
   survey,
   lang,
 }: {
-  survey: Survey | null | undefined;
+  survey: ArenaSurvey | null | undefined;
   lang: LanguageCode;
 }): SurveyMapLayer[] => {
   if (!survey) return [];

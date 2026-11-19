@@ -1,9 +1,9 @@
 import {
   ArenaExportFile,
   Dates,
-  Survey,
+  ArenaSurvey,
   Surveys,
-  UserGroup,
+  ArenaUserGroup,
 } from "@openforis/arena-core";
 
 import { SurveyPackage } from "model/SurveyPackage";
@@ -32,13 +32,15 @@ const remoteSurveyFetchTimeout = 60000; // 1 min
 // Dependency graph is derived from the survey's node defs; rebuild it here,
 // the single point where the survey content is persisted to file system,
 // so it's cached on disk and doesn't need to be rebuilt on every load.
-const storeSurveyInFileSystem = async (survey: Survey): Promise<Survey> => {
+const storeSurveyInFileSystem = async (
+  survey: ArenaSurvey,
+): Promise<ArenaSurvey> => {
   const surveyWithDependencyGraph =
     await Surveys.buildAndAssocDependencyGraph(survey);
   return SurveyFSRepository.saveSurveyFile(surveyWithDependencyGraph);
 };
 
-const _insertSurvey = async (survey: Survey): Promise<Survey> => {
+const _insertSurvey = async (survey: ArenaSurvey): Promise<ArenaSurvey> => {
   const surveyDb = await insertSurvey(survey);
   return storeSurveyInFileSystem(surveyDb);
 };
@@ -48,13 +50,13 @@ const _updateSurvey = async ({
   survey,
 }: {
   id: number;
-  survey: Survey;
-}): Promise<Survey> => {
+  survey: ArenaSurvey;
+}): Promise<ArenaSurvey> => {
   const surveyDb = await updateSurvey({ id, survey });
   return storeSurveyInFileSystem(surveyDb);
 };
 
-const fetchSurveyById = async (surveyId: number): Promise<Survey> => {
+const fetchSurveyById = async (surveyId: number): Promise<ArenaSurvey> => {
   const surveyDb = await SurveyRepository.fetchSurveyById(surveyId);
   const surveyLoaded = surveyDb.props
     ? surveyDb
@@ -108,7 +110,7 @@ const fetchSurveyRemoteById = async ({
   id,
 }: {
   id: number;
-}): Promise<Survey> => {
+}): Promise<ArenaSurvey> => {
   const { data } = await RemoteService.get(
     `api/mobile/survey/${id}`,
     {},
@@ -127,8 +129,8 @@ const fetchSurveyRemoteById = async ({
 const fetchCurrentUserGroupRemote = async ({
   survey,
 }: {
-  survey: Survey & { remoteId?: number };
-}): Promise<UserGroup | null> => {
+  survey: ArenaSurvey & { remoteId?: number };
+}): Promise<ArenaUserGroup | null> => {
   const { remoteId, uuid } = survey;
   if (!remoteId || uuid === demoSurveyUuid) return null;
   const { data } = await RemoteService.get(
@@ -139,8 +141,8 @@ const fetchCurrentUserGroupRemote = async ({
 
 // insert/update and dependency graph building set top-level props (id, remoteId, dependencyGraph)
 // of the survey object: always pass a (shallow) copy of the bundled one
-const cloneDemoSurvey = (): Survey => ({
-  ...(getDemoSurvey() as unknown as Survey),
+const cloneDemoSurvey = (): ArenaSurvey => ({
+  ...(getDemoSurvey() as unknown as ArenaSurvey),
 });
 
 const importDemoSurvey = async () => _insertSurvey(cloneDemoSurvey());
@@ -190,7 +192,7 @@ const importOrUpdateDemoSurvey = async ({
 };
 
 type SurveyRemoteFetchResult = {
-  survey: Survey;
+  survey: ArenaSurvey;
   // folder with the unzipped survey package (info.json, surveyfiles/); null if the survey was fetched as JSON
   unzippedDirUri: string | null;
 };
@@ -199,7 +201,7 @@ const readSurveyPackage = async ({
   unzippedDirUri,
 }: {
   unzippedDirUri: string;
-}): Promise<Survey> => {
+}): Promise<ArenaSurvey> => {
   const info = await Files.readJsonFromFile({
     fileUri: `${unzippedDirUri}/${ArenaExportFile.info}`,
   });
@@ -208,7 +210,7 @@ const readSurveyPackage = async ({
   }
   return (await Files.readJsonFromFile({
     fileUri: `${unzippedDirUri}/${ArenaExportFile.survey}`,
-  })) as Survey;
+  })) as ArenaSurvey;
 };
 
 // survey package (zip with survey JSON and survey files); null if not supported by the server or by the app environment
@@ -273,8 +275,8 @@ const storeSurveyPackageFiles = async ({
 
 const withSurveyRemote = async (
   id: number,
-  storeSurvey: (survey: Survey) => Promise<Survey>,
-): Promise<Survey> => {
+  storeSurvey: (survey: ArenaSurvey) => Promise<ArenaSurvey>,
+): Promise<ArenaSurvey> => {
   const { survey, unzippedDirUri } = await fetchSurveyRemote({ id });
   try {
     const surveyStored = await storeSurvey(survey);

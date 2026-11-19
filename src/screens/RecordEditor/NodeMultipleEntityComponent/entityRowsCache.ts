@@ -1,22 +1,22 @@
 import {
   ArenaRecord,
   ArenaRecordNode,
-  Dictionary,
-  NodeDef,
+  ArenaDictionary,
+  ArenaNodeDef,
   Records,
-  Survey,
+  ArenaSurvey,
 } from "@openforis/arena-core";
 
 import { RecordUtils } from "model/utils/RecordUtils";
 
-export type EntityRow = Dictionary<string> & { key: string; uuid: string };
+export type EntityRow = ArenaDictionary<string> & { key: string; uuid: string };
 
 type CacheEntry = {
-  survey: Survey | undefined;
+  survey: ArenaSurvey | undefined;
   cycle: string | undefined;
   lang: string;
   t: any;
-  summaryDefs: NodeDef<any>[];
+  summaryDefs: ArenaNodeDef<any>[];
   summaryNodes: (ArenaRecordNode | undefined)[];
   summaryValues: any[];
   row: EntityRow;
@@ -25,7 +25,7 @@ type CacheEntry = {
 // weak keys: entries are released together with the entity nodes
 const cache = new WeakMap<ArenaRecordNode, CacheEntry>();
 
-const sameDefs = (defsA: NodeDef<any>[], defsB: NodeDef<any>[]) =>
+const sameDefs = (defsA: ArenaNodeDef<any>[], defsB: ArenaNodeDef<any>[]) =>
   defsA.length === defsB.length &&
   defsA.every((def, index) => def.uuid === defsB[index]!.uuid);
 
@@ -41,11 +41,11 @@ const getEntityRow = ({
   summaryDefs,
   t,
 }: {
-  survey: Survey | undefined;
+  survey: ArenaSurvey | undefined;
   record: ArenaRecord;
   entity: ArenaRecordNode;
   lang: string;
-  summaryDefs: NodeDef<any>[];
+  summaryDefs: ArenaNodeDef<any>[];
   t: any;
 }): EntityRow => {
   const { cycle } = record;

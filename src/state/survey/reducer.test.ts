@@ -1,4 +1,4 @@
-import { LanguageCode, UserGroup } from "@openforis/arena-core";
+import { LanguageCode, ArenaUserGroup } from "@openforis/arena-core";
 
 import { SurveyReducer, SurveySliceActions } from "./reducer";
 import type { SurveyState } from "./state";
@@ -24,7 +24,7 @@ describe("SurveyReducer", () => {
   it("currentSurveySet sets the survey, its default cycle and resets the user group", () => {
     const prev: SurveyState = {
       ...initialState,
-      currentSurveyUserGroup: { uuid: "g" } as UserGroup,
+      currentSurveyUserGroup: { uuid: "g" } as ArenaUserGroup,
       currentSurveyUserGroupReady: true,
     };
     const state = SurveyReducer(
@@ -67,7 +67,7 @@ describe("SurveyReducer", () => {
   });
 
   it("user group loading/set/reset update the ready flag", () => {
-    const userGroup = { uuid: "g" } as UserGroup;
+    const userGroup = { uuid: "g" } as ArenaUserGroup;
     let state = SurveyReducer(
       initialState,
       SurveySliceActions.currentSurveyUserGroupLoading(),

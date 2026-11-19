@@ -1,11 +1,11 @@
 import { useMemo } from "react";
 
 import {
-  NodeValues,
-  NodeValueTaxon,
+  RecordNodeValues,
+  ArenaRecordNodeValueTaxon,
   Surveys,
-  Taxon,
-  VernacularName,
+  ArenaTaxon,
+  ArenaVernacularName,
 } from "@openforis/arena-core";
 
 import { SurveySelectors } from "state/survey";
@@ -15,11 +15,11 @@ const findVernacularNameByUuid = ({
   taxon,
   vernacularNameUuid,
 }: {
-  taxon: Taxon;
+  taxon: ArenaTaxon;
   vernacularNameUuid: string;
 }) => {
   const vernacularNamesByLang = taxon.vernacularNames!;
-  const vernacularNamesArray: VernacularName[] = Object.values(
+  const vernacularNamesArray: ArenaVernacularName[] = Object.values(
     vernacularNamesByLang,
   ).flat();
   return vernacularNamesArray.find(({ uuid }) => uuid === vernacularNameUuid);
@@ -28,13 +28,14 @@ const findVernacularNameByUuid = ({
 export const useTaxonByNodeValue = ({
   value,
 }: {
-  value: NodeValueTaxon | null | undefined;
+  value: ArenaRecordNodeValueTaxon | null | undefined;
 }): TaxonSearchItem | null => {
   const survey = SurveySelectors.useCurrentSurvey()!;
 
   return useMemo(() => {
-    const taxonUuid = NodeValues.getValueTaxonUuid(value);
-    const vernacularNameUuid = NodeValues.getValueVernacularNameUuid(value);
+    const taxonUuid = RecordNodeValues.getValueTaxonUuid(value);
+    const vernacularNameUuid =
+      RecordNodeValues.getValueVernacularNameUuid(value);
     if (!taxonUuid) return null;
     const { scientificName } = value!;
     let taxon: TaxonSearchItem = Surveys.getTaxonByUuid({ survey, taxonUuid })!;

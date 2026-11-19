@@ -4,7 +4,7 @@ import * as Location from "expo-location";
 import { useCallback, useMemo, useState } from "react";
 
 import {
-  NodeDefFile,
+  ArenaNodeDefFile,
   NodeDefFileType,
   NodeDefs,
   Objects,
@@ -43,7 +43,7 @@ const determineFileMaxSize = ({
   nodeDef,
   settings,
 }: {
-  nodeDef: NodeDefFile;
+  nodeDef: ArenaNodeDefFile;
   settings: { imageSizeLimit?: number; imageSizeUnlimited?: boolean };
 }) => {
   const { imageSizeLimit, imageSizeUnlimited } = settings;
@@ -134,7 +134,7 @@ const resizeImage = async (
 export const useNodeFileComponent = ({
   nodeDef,
   nodeUuid,
-}: Pick<NodeComponentProps<NodeDefFile>, "nodeDef" | "nodeUuid">) => {
+}: Pick<NodeComponentProps<ArenaNodeDefFile>, "nodeDef" | "nodeUuid">) => {
   const toaster = useToast();
   const imageSizeLimit = SettingsSelectors.useImageSizeLimit();
   const imageSizeUnlimited = SettingsSelectors.useImageSizeUnlimited();

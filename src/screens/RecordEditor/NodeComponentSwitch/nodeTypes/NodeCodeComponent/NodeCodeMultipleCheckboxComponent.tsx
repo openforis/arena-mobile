@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 
-import { CategoryItem } from "@openforis/arena-core";
+import { ArenaCategoryItem } from "@openforis/arena-core";
 
 import { Checkbox, HView } from "components";
 
@@ -8,11 +8,11 @@ import styles from "./styles";
 
 type NodeCodeMultipleCheckboxComponentProps = {
   editable?: boolean;
-  itemLabelFunction: (item: CategoryItem) => string;
-  items: CategoryItem[];
+  itemLabelFunction: (item: ArenaCategoryItem) => string;
+  items: ArenaCategoryItem[];
   onItemAdd: (uuid: string) => void;
   onItemRemove: (uuid: string) => void;
-  selectedItems?: CategoryItem[];
+  selectedItems?: ArenaCategoryItem[];
 };
 
 export const NodeCodeMultipleCheckboxComponent = (
@@ -28,7 +28,7 @@ export const NodeCodeMultipleCheckboxComponent = (
   } = props;
 
   const onItemSelect = useCallback(
-    (item: CategoryItem) => {
+    (item: ArenaCategoryItem) => {
       const wasSelected = selectedItems.includes(item);
       if (wasSelected) {
         onItemRemove(item.uuid);

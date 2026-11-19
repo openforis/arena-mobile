@@ -1,4 +1,4 @@
-import { LanguageCode, Surveys, UserGroup } from "@openforis/arena-core";
+import { LanguageCode, Surveys, ArenaUserGroup } from "@openforis/arena-core";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import type { SurveyState } from "./state";
@@ -46,7 +46,7 @@ const surveySlice = createSlice({
     },
     currentSurveyUserGroupSet: (
       state,
-      action: PayloadAction<UserGroup | null | undefined>,
+      action: PayloadAction<ArenaUserGroup | null | undefined>,
     ) => {
       state.currentSurveyUserGroup = action.payload;
       state.currentSurveyUserGroupReady = true;

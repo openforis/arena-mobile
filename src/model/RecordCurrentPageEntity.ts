@@ -1,4 +1,4 @@
-import { NodeDefEntity } from "@openforis/arena-core";
+import { ArenaNodeDefEntity } from "@openforis/arena-core";
 
 export type RecordCurrentPageEntityPointer = {
   parentEntityUuid?: string;
@@ -9,5 +9,5 @@ export type RecordCurrentPageEntityPointer = {
 };
 
 export type RecordCurrentPageEntity = RecordCurrentPageEntityPointer & {
-  entityDef: NodeDefEntity;
+  entityDef: ArenaNodeDefEntity;
 };

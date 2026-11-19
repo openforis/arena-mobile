@@ -1,7 +1,7 @@
 import {
   RecordBuilder,
   RecordNodeBuilders,
-  Survey,
+  ArenaSurvey,
   SurveyBuilder,
   SurveyObjectBuilders,
   Surveys,
@@ -47,7 +47,7 @@ const createState = ({
   }) as unknown as RootState;
 
 describe("current page entity selectors", () => {
-  let survey: Survey;
+  let survey: ArenaSurvey;
   let record: any;
 
   beforeAll(async () => {

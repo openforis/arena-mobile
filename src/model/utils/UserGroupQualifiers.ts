@@ -1,27 +1,27 @@
 import {
-  AreaOfInterestProvider,
+  ArenaAreaOfInterestProvider,
   ArenaRecord,
-  NodeDef,
-  NodeDefCode,
+  ArenaNodeDef,
+  ArenaNodeDefCode,
   NodeDefs,
   NodeDefType,
-  NodesMap,
-  NodeValues,
+  ArenaRecordNodesMap,
+  RecordNodeValues,
   Promises,
   Records,
   RecordUpdater,
-  Survey,
+  ArenaSurvey,
   Surveys,
-  User,
-  UserGroup,
+  ArenaUser,
+  ArenaUserGroup,
 } from "@openforis/arena-core";
 
 const getQualifierValueByNodeDefUuid = ({
   survey,
   userGroup,
 }: {
-  survey: Survey;
-  userGroup: UserGroup | null | undefined;
+  survey: ArenaSurvey;
+  userGroup: ArenaUserGroup | null | undefined;
 }): Record<string, string> => {
   const qualifiers = userGroup?.props.qualifiers;
   if (!qualifiers || qualifiers.length === 0) return {};
@@ -47,12 +47,12 @@ const resolveQualifierNodeValue = ({
   nodeDef,
   qualifierValue,
 }: {
-  survey: Survey;
-  nodeDef: NodeDef<any>;
+  survey: ArenaSurvey;
+  nodeDef: ArenaNodeDef<any>;
   qualifierValue: string;
 }): any => {
   if (nodeDef.type === NodeDefType.code) {
-    const categoryUuid = NodeDefs.getCategoryUuid(nodeDef as NodeDefCode);
+    const categoryUuid = NodeDefs.getCategoryUuid(nodeDef as ArenaNodeDefCode);
     if (!categoryUuid) return undefined;
     const itemUuid = Surveys.getCategoryItemUuidByCode({
       survey,
@@ -61,7 +61,7 @@ const resolveQualifierNodeValue = ({
       code: qualifierValue,
     });
     if (!itemUuid) return undefined;
-    return NodeValues.newCodeValue({ itemUuid });
+    return RecordNodeValues.newCodeValue({ itemUuid });
   }
   if (
     nodeDef.type === NodeDefType.integer ||
@@ -83,14 +83,14 @@ const assignQualifierValues = async ({
   areaOfInterestProvider,
   timezoneOffset,
 }: {
-  user: User;
-  survey: Survey;
-  userGroup: UserGroup | null | undefined;
+  user: ArenaUser;
+  survey: ArenaSurvey;
+  userGroup: ArenaUserGroup | null | undefined;
   record: ArenaRecord;
-  nodes?: NodesMap;
-  areaOfInterestProvider?: AreaOfInterestProvider;
+  nodes?: ArenaRecordNodesMap;
+  areaOfInterestProvider?: ArenaAreaOfInterestProvider;
   timezoneOffset?: number;
-}): Promise<{ record: ArenaRecord; nodes: NodesMap }> => {
+}): Promise<{ record: ArenaRecord; nodes: ArenaRecordNodesMap }> => {
   const qualifierDefs = Surveys.getQualifierDefs({ survey });
   if (qualifierDefs.length === 0) {
     return { record, nodes };

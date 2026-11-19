@@ -1,6 +1,6 @@
-import { Survey } from "@openforis/arena-core";
+import { ArenaSurvey } from "@openforis/arena-core";
 
-export type SurveyMobile = Survey & {
+export type SurveyMobile = ArenaSurvey & {
   id: number;
   remoteId: number;
   serverUrl?: string;

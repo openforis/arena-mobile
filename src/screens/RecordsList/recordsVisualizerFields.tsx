@@ -2,7 +2,7 @@ import {
   DateFormats,
   Dates,
   NodeDefs,
-  Validation,
+  ArenaValidation,
   Validations,
 } from "@openforis/arena-core";
 
@@ -29,7 +29,7 @@ export type RecordListItem = DataVisualizerItem & {
   origin?: RecordOrigin;
   readOnly?: boolean;
   syncStatus?: string;
-  validation: Validation;
+  validation: ArenaValidation;
 };
 
 export type RecordListField = DataVisualizerField<RecordListItem>;

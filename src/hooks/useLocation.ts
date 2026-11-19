@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Point } from "@openforis/arena-core";
+import { ArenaPoint } from "@openforis/arena-core";
 
 import { LocationPoint } from "model";
 import { useLocationWatch } from "./useLocationWatch";
@@ -21,7 +21,7 @@ export const useLocation = (): {
   locationWatchElapsedTime: number;
   locationWatchProgress: number;
   locationWatchTimeout: number;
-  pointLatLong: Point | null;
+  pointLatLong: ArenaPoint | null;
   startLocationWatch: () => void;
   stopLocationWatch: () => void;
   watchingLocation: boolean;

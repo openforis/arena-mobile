@@ -1,14 +1,14 @@
 import { useCallback, useMemo, useState } from "react";
 
 import {
-  NodeDefCoordinate,
+  ArenaNodeDefCoordinate,
   NodeDefs,
-  NodeValueCoordinate,
+  ArenaRecordNodeValueCoordinate,
   Numbers,
   Objects,
   PointFactory,
   Points,
-  SRSIndex,
+  ArenaSRSIndex,
   Surveys,
 } from "@openforis/arena-core";
 
@@ -53,9 +53,9 @@ const locationToUiValue = ({
   srsIndex,
 }: {
   location: LocationPoint;
-  nodeDef: NodeDefCoordinate;
+  nodeDef: ArenaNodeDefCoordinate;
   srsTo: string;
-  srsIndex?: SRSIndex;
+  srsIndex?: ArenaSRSIndex;
 }): LocationUiValue | null => {
   const { latitude, longitude, accuracy } = location;
 
@@ -89,7 +89,10 @@ const locationToUiValue = ({
 const nonNumericFields = new Set(["srs"]);
 
 export const useNodeCoordinateComponent = (
-  props: Pick<NodeComponentProps<NodeDefCoordinate>, "nodeDef" | "nodeUuid">,
+  props: Pick<
+    NodeComponentProps<ArenaNodeDefCoordinate>,
+    "nodeDef" | "nodeUuid"
+  >,
 ) => {
   const { nodeDef, nodeUuid } = props;
 
@@ -151,9 +154,11 @@ export const useNodeCoordinateComponent = (
 
   const isNodeValueEqual = useCallback(
     (nodeValueA: any, nodeValueB: any) => {
-      const transformCoordinateValue = (coordVal: NodeValueCoordinate) => {
+      const transformCoordinateValue = (
+        coordVal: ArenaRecordNodeValueCoordinate,
+      ) => {
         if (!coordVal) return null;
-        const coordValCleaned: NodeValueCoordinate = Object.entries(
+        const coordValCleaned: ArenaRecordNodeValueCoordinate = Object.entries(
           coordVal,
         ).reduce((acc, [key, value]) => {
           if (includedFields.has(key)) {
@@ -163,7 +168,7 @@ export const useNodeCoordinateComponent = (
               : Numbers.toNumber(value);
           }
           return acc;
-        }, {} as NodeValueCoordinate);
+        }, {} as ArenaRecordNodeValueCoordinate);
 
         if (!coordValCleaned.srs) {
           coordValCleaned.srs = defaultSrsCode;

@@ -1,4 +1,4 @@
-import { Survey, SurveyFile } from "@openforis/arena-core";
+import { ArenaSurvey, ArenaSurveyFile } from "@openforis/arena-core";
 
 import { Files } from "utils/Files";
 import {
@@ -35,8 +35,8 @@ const readPreloadedMapLayer = async ({
   survey,
   file,
 }: {
-  survey: Survey;
-  file: SurveyFile;
+  survey: ArenaSurvey;
+  file: ArenaSurveyFile;
 }): Promise<MapLayerFileGeometries | undefined> => {
   const surveyId = survey.id;
   if (!surveyId) return undefined;

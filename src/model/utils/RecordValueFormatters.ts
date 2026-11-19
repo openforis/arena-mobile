@@ -2,12 +2,12 @@ import {
   ArenaRecordNode,
   FileNames,
   LanguageCode,
-  NodeDef,
-  NodeDefBoolean,
+  ArenaNodeDef,
+  ArenaNodeDefBoolean,
   NodeDefType,
   Numbers,
   Objects,
-  Survey,
+  ArenaSurvey,
   Surveys,
 } from "@openforis/arena-core";
 
@@ -20,9 +20,9 @@ import { PositionTracks } from "./PositionTracks";
 export type SimpleTranslateFunction = (key: string) => string;
 
 export type SummaryValueFormatterParams = {
-  survey: Survey;
+  survey: ArenaSurvey;
   cycle: string;
-  nodeDef: NodeDef<NodeDefType>;
+  nodeDef: ArenaNodeDef<NodeDefType>;
   node?: ArenaRecordNode;
   value: any;
   showLabel?: boolean;
@@ -55,7 +55,7 @@ const formatBooleanValue = ({
   if (Objects.isEmpty(value)) return "";
   const booleanValueString = String(String(value) === "true");
   const labelValue =
-    (nodeDef as NodeDefBoolean).props.labelValue ?? "trueFalse";
+    (nodeDef as ArenaNodeDefBoolean).props.labelValue ?? "trueFalse";
   const labelKey =
     labelValue === "trueFalse"
       ? booleanValueString
@@ -80,7 +80,7 @@ const formatCoordinateValue = ({
   survey,
   value,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   value: CoordinateValue | null | undefined;
 }): string => {
   const { x, y, srs: srsCode } = value ?? {};

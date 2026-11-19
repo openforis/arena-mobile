@@ -2,7 +2,7 @@ import {
   ExtraPropDataType,
   LanguageCode,
   NodeDefType,
-  Survey,
+  ArenaSurvey,
   SurveyBuilder,
   SurveyObjectBuilders,
   Surveys,
@@ -29,7 +29,7 @@ const { category, categoryItem, codeDef, coordinateDef, entityDef } =
 
 const location = (x: number, y: number) => `SRID=EPSG:4326;POINT(${x} ${y})`;
 
-const buildSurvey = (): Promise<Survey> =>
+const buildSurvey = (): Promise<ArenaSurvey> =>
   new SurveyBuilder(
     UserFactory.createInstance({ email: "test@openforis.org", name: "test" }),
     entityDef(
@@ -70,7 +70,7 @@ const buildSurvey = (): Promise<Survey> =>
     )
     .build();
 
-const findItemUuid = (survey: Survey, codePaths: string[]) =>
+const findItemUuid = (survey: ArenaSurvey, codePaths: string[]) =>
   Surveys.getCategoryItemByCodePaths({
     survey,
     categoryUuid: Surveys.getCategoryByName({
@@ -81,7 +81,7 @@ const findItemUuid = (survey: Survey, codePaths: string[]) =>
   })!.uuid;
 
 describe("recordsMapLayers", () => {
-  let survey: Survey;
+  let survey: ArenaSurvey;
   const cycle = "0";
 
   beforeAll(async () => {
@@ -233,7 +233,7 @@ describe("recordsMapLayers", () => {
   });
 
   describe("position tracks", () => {
-    let surveyWithTrack: Survey;
+    let surveyWithTrack: ArenaSurvey;
 
     beforeAll(async () => {
       surveyWithTrack = await buildSurvey();
@@ -311,7 +311,7 @@ describe("recordsMapLayers", () => {
   });
 
   describe("areas of interest", () => {
-    const withAreasOfInterest = (survey: Survey): Survey => ({
+    const withAreasOfInterest = (survey: ArenaSurvey): ArenaSurvey => ({
       ...survey,
       props: {
         ...survey.props,
@@ -329,7 +329,7 @@ describe("recordsMapLayers", () => {
       },
     });
 
-    const getAreaLayer = (survey: Survey) =>
+    const getAreaLayer = (survey: ArenaSurvey) =>
       getAvailableLayers({ survey, cycle }).find(
         (layer) => layer.type === RecordsMapLayerType.areaOfInterest,
       )!;
@@ -438,9 +438,9 @@ describe("recordsMapLayers", () => {
     });
 
     const withPreloadedMapLayers = (
-      survey: Survey,
+      survey: ArenaSurvey,
       enabled = true,
-    ): Survey => ({
+    ): ArenaSurvey => ({
       ...survey,
       props: {
         ...survey.props,
@@ -449,7 +449,7 @@ describe("recordsMapLayers", () => {
       },
     });
 
-    const getPreloadedLayers = (survey: Survey) =>
+    const getPreloadedLayers = (survey: ArenaSurvey) =>
       getAvailableLayers({ survey, cycle }).filter(
         (layer) => layer.type === RecordsMapLayerType.preloadedMapLayer,
       );

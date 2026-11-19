@@ -1,6 +1,6 @@
 import { memo } from "react";
 
-import { NodeDefCode, NodeDefs } from "@openforis/arena-core";
+import { ArenaNodeDefCode, NodeDefs } from "@openforis/arena-core";
 
 import {
   DataEntrySelectors,
@@ -23,7 +23,7 @@ import { NodeComponentProps } from "../nodeComponentPropTypes";
 
 const MAX_VISIBLE_ITEMS = 10;
 
-type Props = NodeComponentProps<NodeDefCode>;
+type Props = NodeComponentProps<ArenaNodeDefCode>;
 
 export const NodeCodeComponent = memo((props: Props) => {
   const { parentNodeUuid, nodeDef } = props;

@@ -1,15 +1,15 @@
 import {
   NodeDefs,
-  Nodes,
+  RecordNodes,
   ArenaRecord,
   RecordBuilder,
   RecordNodeBuilders,
   Records,
-  Survey,
+  ArenaSurvey,
   SurveyBuilder,
   SurveyObjectBuilders,
   Surveys,
-  User,
+  ArenaUser,
   UserFactory,
 } from "@openforis/arena-core";
 
@@ -107,7 +107,7 @@ const updateRecordMock = RecordService.updateRecord as jest.Mock;
 const selectCurrentPageEntityMock =
   DataEntrySelectors.selectCurrentPageEntity as unknown as jest.Mock;
 
-const user: User = UserFactory.createInstance({
+const user: ArenaUser = UserFactory.createInstance({
   email: "test@openforis-arena.org",
   name: "test",
 });
@@ -131,10 +131,13 @@ const buildSurvey = async (
     ),
   ).build();
   const props = { ...survey.props, keepNonApplicableValues };
-  return { ...survey, props } as Survey;
+  return { ...survey, props } as ArenaSurvey;
 };
 
-const buildRecord = (survey: Survey, individualsCount: number): ArenaRecord => {
+const buildRecord = (
+  survey: ArenaSurvey,
+  individualsCount: number,
+): ArenaRecord => {
   const individuals = Array.from({ length: individualsCount }, (_, index) =>
     entity("individual", attribute("individual_id", index + 1)),
   );
@@ -154,19 +157,23 @@ const buildRecord = (survey: Survey, individualsCount: number): ArenaRecord => {
   ).build();
   // records loaded in the editor have no status flags
   for (const node of Records.getNodesArray(record)) {
-    Nodes.removeStatusFlags({ node, sideEffect: true });
+    RecordNodes.removeStatusFlags({ node, sideEffect: true });
   }
   return record;
 };
 
-const getNodesByName = (survey: Survey, record: ArenaRecord, name: string) => {
+const getNodesByName = (
+  survey: ArenaSurvey,
+  record: ArenaRecord,
+  name: string,
+) => {
   const nodeDef = Surveys.getNodeDefByName({ survey, name });
   return Records.getNodesArray(record).filter(
     (node) => node.nodeDefUuid === nodeDef.uuid,
   );
 };
 
-const getDistanceValue = (survey: Survey, record: ArenaRecord) =>
+const getDistanceValue = (survey: ArenaSurvey, record: ArenaRecord) =>
   getNodesByName(survey, record, "distance")[0]!.value;
 
 // runs thunks too; "dispatched" lets tests wait for thunks dispatched without being awaited

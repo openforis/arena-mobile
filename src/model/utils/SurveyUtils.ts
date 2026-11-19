@@ -1,11 +1,11 @@
-import { Dates, Survey } from "@openforis/arena-core";
+import { Dates, ArenaSurvey } from "@openforis/arena-core";
 
 const hasUpdates = ({
   localSurvey,
   remoteSurvey,
 }: {
-  localSurvey: Survey;
-  remoteSurvey: Survey;
+  localSurvey: ArenaSurvey;
+  remoteSurvey: ArenaSurvey;
 }) => {
   const remoteSurveyLastUpdate =
     remoteSurvey.datePublished ?? remoteSurvey.dateModified;

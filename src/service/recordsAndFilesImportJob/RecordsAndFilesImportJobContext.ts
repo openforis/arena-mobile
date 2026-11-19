@@ -1,8 +1,8 @@
-import { Survey } from "@openforis/arena-core";
+import { ArenaSurvey } from "@openforis/arena-core";
 import { JobMobileContext } from "model/JobMobile";
 
 export type RecordsAndFilesImportJobContext = JobMobileContext & {
-  survey: Survey;
+  survey: ArenaSurvey;
   fileUri?: string;
   overwriteExistingRecords?: boolean;
   recordUuids?: string[];

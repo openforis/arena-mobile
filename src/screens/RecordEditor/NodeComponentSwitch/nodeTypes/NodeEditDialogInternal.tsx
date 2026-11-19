@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { NodeDef } from "@openforis/arena-core";
+import { ArenaNodeDef } from "@openforis/arena-core";
 
 import { Modal } from "components";
 
@@ -9,7 +9,7 @@ import { Functions } from "utils/Functions";
 
 type Props = {
   children?: React.ReactNode;
-  nodeDef: NodeDef<any>;
+  nodeDef: ArenaNodeDef<any>;
   onDismiss?: () => void;
   parentNodeUuid?: string;
 };

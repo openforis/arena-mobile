@@ -1,6 +1,10 @@
 import { useCallback } from "react";
 
-import { AreaOfInterest, LanguageCode, Survey } from "@openforis/arena-core";
+import {
+  ArenaAreaOfInterest,
+  LanguageCode,
+  ArenaSurvey,
+} from "@openforis/arena-core";
 
 import { SurveyDefs } from "model/utils/SurveyDefs";
 import { AreaOfInterestProviderDefault } from "service/areaOfInterestProvider";
@@ -17,13 +21,13 @@ export const useSurveyMapLayersGeometries = ({
   areaNames,
   preloadedFileUuids,
 }: {
-  survey: Survey | null | undefined;
+  survey: ArenaSurvey | null | undefined;
   lang: LanguageCode;
   // memoized: a new array triggers the loading of the values not requested yet
   areaNames: string[];
   preloadedFileUuids: string[];
 }): {
-  areaOfInterestByName: Record<string, AreaOfInterest | null>;
+  areaOfInterestByName: Record<string, ArenaAreaOfInterest | null>;
   preloadedGeometriesByFileUuid: Record<string, MapLayerFileGeometries | null>;
 } => {
   const toaster = useToast();

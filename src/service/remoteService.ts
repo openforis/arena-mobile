@@ -1,4 +1,4 @@
-import { Dictionary } from "@openforis/arena-core";
+import { ArenaDictionary } from "@openforis/arena-core";
 import { CanceledError } from "axios";
 
 import { HttpErrors } from "utils/HttpErrors";
@@ -29,7 +29,7 @@ const handleError = ({ error }: any): { errorKey: string } => {
 const getServerUrl = async () =>
   (await SettingsService.fetchSettings()).serverUrl;
 
-const attachHeaders = (config: Dictionary<any> = {}) => {
+const attachHeaders = (config: ArenaDictionary<any> = {}) => {
   const headers = {
     ...config?.headers,
     ...AuthService.generateAuthorizationHeaders(),
@@ -64,7 +64,7 @@ const withRetry = async (
 type ApiRequestOptions = {
   serverUrl: string;
   uri: string;
-  data?: Dictionary<any>;
+  data?: ArenaDictionary<any>;
   // axios config or download options, depending on the request
   config?: any;
 };
@@ -80,20 +80,20 @@ const sendRequest = async (
   );
 };
 
-const get = (uri: string, data?: Dictionary<any>, config = {}) =>
+const get = (uri: string, data?: ArenaDictionary<any>, config = {}) =>
   sendRequest(API.get, { uri, data, config });
 
-const getFileOrThrow = (uri: string, data?: Dictionary<any>) =>
+const getFileOrThrow = (uri: string, data?: ArenaDictionary<any>) =>
   sendRequest(API.getFileOrThrow, { uri, data });
 
-const post = (uri: string, data?: Dictionary<any>) =>
+const post = (uri: string, data?: ArenaDictionary<any>) =>
   sendRequest(API.post, { uri, data });
 
 const del = (uri: string) => sendRequest(API.del, { uri });
 
 const postCancelableMultipartData = async (
   uri: string,
-  data: Dictionary<any>,
+  data: ArenaDictionary<any>,
   onUploadProgress: any,
 ) => {
   const serverUrl = await getServerUrl();

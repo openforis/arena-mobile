@@ -1,4 +1,4 @@
-import { Dictionary, User } from "@openforis/arena-core";
+import { ArenaDictionary, ArenaUser } from "@openforis/arena-core";
 
 import { API } from "./api";
 import { SecureStoreService } from "./SecureStoreService";
@@ -17,7 +17,7 @@ export const invalidTwoFactorCodeError =
   "authService:error.invalidTwoFactorCode";
 
 const extractCookieValue = (
-  headers: Dictionary<string>,
+  headers: ArenaDictionary<string>,
   cookieName: string,
 ): string | undefined => {
   const cookies: string[] = [headers?.["set-cookie"] ?? []].flat();
@@ -63,7 +63,7 @@ const extractErrorMessageFromLoginError = (err: any): { error: string } => {
 };
 
 export type LoginResponse = {
-  user?: User;
+  user?: ArenaUser;
   error?: string;
   message?: string;
   twoFactorRequired?: boolean;

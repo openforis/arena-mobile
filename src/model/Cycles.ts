@@ -1,4 +1,4 @@
-import { Survey, Surveys } from "@openforis/arena-core";
+import { ArenaSurvey, Surveys } from "@openforis/arena-core";
 
 // undefined for the first cycle (it has no previous one)
 const getPrevCycleKey = (
@@ -12,7 +12,7 @@ const getPrevCycleKeys = ({
   survey,
   cycleKey,
 }: {
-  survey: Survey | null | undefined;
+  survey: ArenaSurvey | null | undefined;
   cycleKey: string | null | undefined;
 }): string[] => {
   if (!survey || !cycleKey) return [];

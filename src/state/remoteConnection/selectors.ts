@@ -1,4 +1,4 @@
-import { Authorizer, Objects, User, Users } from "@openforis/arena-core";
+import { Authorizer, Objects, ArenaUser, Users } from "@openforis/arena-core";
 
 import { SurveySelectors } from "../survey/selectors";
 import { RemoteConnectionState, UserProfileIconInfo } from "./types";
@@ -8,11 +8,11 @@ import { useAppSelector } from "../storeHooks";
 const getRemoteConnectionState = (state: RootState): RemoteConnectionState =>
   state.remoteConnection;
 
-const selectLoggedUser = (state: RootState): User | null =>
+const selectLoggedUser = (state: RootState): ArenaUser | null =>
   getRemoteConnectionState(state).user;
 // props needed by arena-core when evaluating expressions with userProp (e.g. not logged in, web preview)
-const selectLoggedUserSafe = (state: RootState): User =>
-  selectLoggedUser(state) ?? ({ props: {} } as User);
+const selectLoggedUserSafe = (state: RootState): ArenaUser =>
+  selectLoggedUser(state) ?? ({ props: {} } as ArenaUser);
 const selectLoggedUserIsSystemAdmin = (state: RootState): boolean => {
   const user = selectLoggedUser(state);
   return !!user && Users.isSystemAdmin(user);

@@ -1,6 +1,10 @@
 import { useCallback, useMemo } from "react";
 
-import { NodeDefs, NodeDefTaxon, NodeValueTaxon } from "@openforis/arena-core";
+import {
+  NodeDefs,
+  ArenaNodeDefTaxon,
+  ArenaRecordNodeValueTaxon,
+} from "@openforis/arena-core";
 
 import { SelectableListWithFilter } from "components";
 import { Taxa } from "model";
@@ -21,7 +25,7 @@ const itemLabelExtractorWithCode = (taxon: TaxonSearchItem) =>
 const itemLabelExtractorWithoutCode = (taxon: TaxonSearchItem) =>
   buildTaxonLabel({ codeVisible: false, taxon });
 
-const isCodeVisible = (nodeDef: NodeDefTaxon): boolean => {
+const isCodeVisible = (nodeDef: ArenaNodeDefTaxon): boolean => {
   const visibleFields = NodeDefs.getVisibleFields(nodeDef);
   return !visibleFields || visibleFields.includes("code");
 };
@@ -43,11 +47,11 @@ const createTaxonValue = ({
   taxon,
   inputValue,
 }: {
-  nodeDef: NodeDefTaxon;
+  nodeDef: ArenaNodeDefTaxon;
   taxon: TaxonSearchItem | undefined;
   inputValue: string | null | undefined;
 }) => {
-  let value: NodeValueTaxon | null = null;
+  let value: ArenaRecordNodeValueTaxon | null = null;
   if (taxon) {
     value = { taxonUuid: taxon.uuid };
     if (
@@ -70,10 +74,12 @@ const createTaxonValue = ({
 };
 
 type NodeTaxonAutocompleteProps = {
-  nodeDef: NodeDefTaxon;
+  nodeDef: ArenaNodeDefTaxon;
   parentNodeUuid?: string;
   selectedTaxon?: TaxonSearchItem | null;
-  updateNodeValue: (params: { value: NodeValueTaxon | null }) => void;
+  updateNodeValue: (params: {
+    value: ArenaRecordNodeValueTaxon | null;
+  }) => void;
 };
 
 export const NodeTaxonAutocomplete = (props: NodeTaxonAutocompleteProps) => {

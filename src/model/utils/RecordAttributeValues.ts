@@ -1,32 +1,32 @@
 import {
   ArenaRecord,
   ArenaRecordNode,
-  Dictionary,
-  NodeDef,
-  NodeDefCoordinate,
-  NodeDefExpression,
+  ArenaDictionary,
+  ArenaNodeDef,
+  ArenaNodeDefCoordinate,
+  ArenaNodeDefExpression,
   NodeDefs,
   NodeDefType,
-  NodeValues,
+  RecordNodeValues,
   Numbers,
   Objects,
   RecordExpressionEvaluator,
-  Survey,
-  User,
+  ArenaSurvey,
+  ArenaUser,
 } from "@openforis/arena-core";
 
 const coordinateAttributeMandatoryFields: Set<string> = new Set([
-  NodeValues.ValuePropsCoordinate.x,
-  NodeValues.ValuePropsCoordinate.y,
-  NodeValues.ValuePropsCoordinate.srs,
+  RecordNodeValues.ValuePropsCoordinate.x,
+  RecordNodeValues.ValuePropsCoordinate.y,
+  RecordNodeValues.ValuePropsCoordinate.srs,
 ]);
 
 const coordinateAttributeNumericFields = [
-  NodeValues.ValuePropsCoordinate.x,
-  NodeValues.ValuePropsCoordinate.y,
-  NodeValues.ValuePropsCoordinate.accuracy,
-  NodeValues.ValuePropsCoordinate.altitude,
-  NodeValues.ValuePropsCoordinate.altitudeAccuracy,
+  RecordNodeValues.ValuePropsCoordinate.x,
+  RecordNodeValues.ValuePropsCoordinate.y,
+  RecordNodeValues.ValuePropsCoordinate.accuracy,
+  RecordNodeValues.ValuePropsCoordinate.altitude,
+  RecordNodeValues.ValuePropsCoordinate.altitudeAccuracy,
 ];
 
 const cleanupAttributeValue = ({
@@ -35,13 +35,13 @@ const cleanupAttributeValue = ({
   sideEffect = false,
 }: {
   value: any;
-  attributeDef: NodeDef<NodeDefType>;
+  attributeDef: ArenaNodeDef<NodeDefType>;
   sideEffect?: boolean;
 }) => {
   if (NodeDefs.getType(attributeDef) === NodeDefType.coordinate) {
     const valueUpdated = sideEffect ? value : { ...value };
     const additionalFields = NodeDefs.getCoordinateAdditionalFields(
-      attributeDef as NodeDefCoordinate,
+      attributeDef as ArenaNodeDefCoordinate,
     );
     const fieldsToRemove = Object.keys(valueUpdated).filter(
       (field) =>
@@ -65,7 +65,7 @@ const cleanupAttributeValue = ({
 const functionCallExpression = (functionName: string): string =>
   String.raw`${functionName}\s*\((?:[^()]*|\([^()]*\))*\)`;
 
-const possibleDistanceTargetExpressions: Dictionary<string> = {
+const possibleDistanceTargetExpressions: ArenaDictionary<string> = {
   simpleIdentifier: String.raw`\w+`,
   categoryItemProp: functionCallExpression("categoryItemProp"),
   parentFunction: functionCallExpression("parent"),
@@ -86,12 +86,12 @@ const distanceFunctionRegExp = (
 const extractDistanceTargetExpression = ({
   nodeDef,
 }: {
-  nodeDef: NodeDef<NodeDefType>;
+  nodeDef: ArenaNodeDef<NodeDefType>;
 }): string | null => {
   const validations = NodeDefs.getValidations(nodeDef);
   const distanceCallRegExp = new RegExp(distanceFunctionCallPattern);
   const distanceValidation = validations?.expressions?.find(
-    (expression: NodeDefExpression) =>
+    (expression: ArenaNodeDefExpression) =>
       distanceCallRegExp.test(expression.expression!),
   );
 
@@ -132,8 +132,8 @@ const getCoordinateDistanceTarget = async ({
   record,
   node,
 }: {
-  survey: Survey;
-  nodeDef: NodeDef<NodeDefType>;
+  survey: ArenaSurvey;
+  nodeDef: ArenaNodeDef<NodeDefType>;
   record: ArenaRecord;
   node: ArenaRecordNode | undefined;
 }) => {
@@ -141,7 +141,7 @@ const getCoordinateDistanceTarget = async ({
   if (distanceTargetExpression) {
     const distanceTarget = await new RecordExpressionEvaluator().evalExpression(
       {
-        user: {} as User,
+        user: {} as ArenaUser,
         survey,
         record,
         node: node!,

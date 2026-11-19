@@ -1,4 +1,4 @@
-import { User } from "@openforis/arena-core";
+import { ArenaUser } from "@openforis/arena-core";
 
 import { i18n } from "localization";
 import type { Navigator } from "navigation/navigator";
@@ -45,7 +45,7 @@ const onLoginResponseSuccessful = async ({
   dispatch,
   navigator,
 }: {
-  user: User;
+  user: ArenaUser;
   email: string | undefined;
   serverUrl: string;
   showBack: boolean | undefined;

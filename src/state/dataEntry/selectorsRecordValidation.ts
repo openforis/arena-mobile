@@ -2,7 +2,7 @@ import {
   Objects,
   Records,
   RecordValidations,
-  Validation,
+  ArenaValidation,
   Validations,
 } from "@openforis/arena-core";
 
@@ -20,7 +20,7 @@ const selectRecordNodePointerValidation =
   ({
     parentNodeUuid,
     nodeDefUuid,
-  }: NodePointerParams): Validation | undefined => {
+  }: NodePointerParams): ArenaValidation | undefined => {
     if (!parentNodeUuid) {
       return undefined;
     }
@@ -41,7 +41,7 @@ const selectRecordNodePointerValidation =
 
 const selectRecordNodePointerValidationChildrenCount =
   ({ parentNodeUuid, nodeDefUuid }: NodePointerParams) =>
-  (state: RootState): Validation | undefined => {
+  (state: RootState): ArenaValidation | undefined => {
     if (!parentNodeUuid) {
       return undefined;
     }

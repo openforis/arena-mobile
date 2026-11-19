@@ -1,10 +1,10 @@
 import {
   LanguageCode,
-  NodeDef,
-  NodeDefCode,
+  ArenaNodeDef,
+  ArenaNodeDefCode,
   NodeDefs,
   NodeDefType,
-  Survey,
+  ArenaSurvey,
   Surveys,
 } from "@openforis/arena-core";
 
@@ -27,10 +27,10 @@ const layerColors = [
 export const visitedSamplingPointColor = "#43a047";
 export const notVisitedSamplingPointColor = "#fdd835";
 
-export const getSamplingPointDataCategory = (survey: Survey) =>
+export const getSamplingPointDataCategory = (survey: ArenaSurvey) =>
   SurveyDefs.getSamplingPointDataCategoryWithLocation(survey);
 
-const getSamplingPointLevelIndexes = (survey: Survey): number[] => {
+const getSamplingPointLevelIndexes = (survey: ArenaSurvey): number[] => {
   const category = getSamplingPointDataCategory(survey);
   if (!category) return [];
   return (
@@ -48,9 +48,9 @@ const getCoordinateAttributeDefs = ({
   survey,
   cycle,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   cycle: string;
-}): NodeDef<any>[] =>
+}): ArenaNodeDef<any>[] =>
   Surveys.getNodeDefsArray(survey).filter(
     (nodeDef) =>
       nodeDef.type === NodeDefType.coordinate &&
@@ -62,9 +62,9 @@ const getPositionTrackAttributeDefs = ({
   survey,
   cycle,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   cycle: string;
-}): NodeDef<any>[] =>
+}): ArenaNodeDef<any>[] =>
   Surveys.getNodeDefsArray(survey).filter(
     (nodeDef) =>
       PositionTracks.isPositionTrackingNodeDef(nodeDef) &&
@@ -76,7 +76,7 @@ export const getAvailableLayers = ({
   survey,
   cycle,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   cycle: string;
 }): RecordsMapLayer[] => {
   const samplingPointLayers = getSamplingPointLevelIndexes(survey).map(
@@ -138,7 +138,7 @@ export const hasMapLayers = ({
   survey,
   cycle,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   cycle: string;
 }): boolean =>
   !!getSamplingPointDataCategory(survey) ||
@@ -152,7 +152,7 @@ const getSamplingPointFirstLevelEntityDefUuids = ({
   survey,
   cycle,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   cycle: string;
 }): Set<string> => {
   const entityDefUuids = new Set<string>();
@@ -162,11 +162,11 @@ const getSamplingPointFirstLevelEntityDefUuids = ({
       NodeDefs.isInCycle(cycle)(nodeDef) &&
       SurveyDefs.isCodeAttributeFromSamplingPointData({
         survey,
-        nodeDef: nodeDef as NodeDefCode,
+        nodeDef: nodeDef as ArenaNodeDefCode,
       }) &&
       Surveys.getNodeDefCategoryLevelIndex({
         survey,
-        nodeDef: nodeDef as NodeDefCode,
+        nodeDef: nodeDef as ArenaNodeDefCode,
       }) === 0
     ) {
       entityDefUuids.add(nodeDef.parentUuid);
@@ -182,7 +182,7 @@ export const getDefaultVisibleLayerKeys = ({
   cycle,
   layers,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   cycle: string;
   layers: RecordsMapLayer[];
 }): string[] => {
@@ -251,7 +251,7 @@ export const getLayerLabel = ({
   t,
   inGroup = false,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   layer: RecordsMapLayer;
   lang: LanguageCode;
   t: (key: string, params?: any) => string;

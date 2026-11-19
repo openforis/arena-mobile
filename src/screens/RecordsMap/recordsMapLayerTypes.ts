@@ -1,4 +1,4 @@
-import type { Point } from "@openforis/arena-core";
+import type { ArenaPoint } from "@openforis/arena-core";
 
 export const latLongSrsCode = "4326";
 
@@ -32,7 +32,7 @@ export type RecordsMapPointProperties = {
   recordUuids: string[];
   visited?: boolean;
   // location in lat/long (EPSG:4326), used to open the point in other map apps
-  point: Point;
+  point: ArenaPoint;
 };
 
 export type RecordsMapPointFeature = {
@@ -49,7 +49,7 @@ export type RecordsMapTrackFeature = {
   // one line per track segment
   lines: { latitude: number; longitude: number }[][];
   // track start, used to open the track in other map apps
-  point: Point;
+  point: ArenaPoint;
 };
 
 export type RecordsMapAreaPolygon = {

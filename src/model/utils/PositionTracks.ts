@@ -1,8 +1,8 @@
 import {
-  NodeDef,
+  ArenaNodeDef,
   NodeDefs,
-  Record as ArenaRecord,
-  Survey,
+  ArenaRecord,
+  ArenaSurvey,
   Surveys,
 } from "@openforis/arena-core";
 
@@ -44,24 +44,26 @@ const minPointsPerSegment = 2;
 
 const lineGeometryTypes = new Set(["LineString", "MultiLineString"]);
 
-const isPositionTrackingNodeDef = (nodeDef: NodeDef<any> | null | undefined) =>
+const isPositionTrackingNodeDef = (
+  nodeDef: ArenaNodeDef<any> | null | undefined,
+) =>
   !!nodeDef && NodeDefs.isGeo(nodeDef) && NodeDefs.isPositionTracking(nodeDef);
 
-const isTrackableNodeDef = (nodeDef: NodeDef<any> | null | undefined) =>
+const isTrackableNodeDef = (nodeDef: ArenaNodeDef<any> | null | undefined) =>
   !!nodeDef &&
   isPositionTrackingNodeDef(nodeDef) &&
   NodeDefs.isSingle(nodeDef) &&
   !NodeDefs.isReadOnly(nodeDef);
 
-const getTrackableNodeDefs = (survey: Survey): NodeDef<any>[] =>
+const getTrackableNodeDefs = (survey: ArenaSurvey): ArenaNodeDef<any>[] =>
   Surveys.getNodeDefsArray(survey).filter(isTrackableNodeDef);
 
 const isInSingleEntitiesOnly = ({
   survey,
   nodeDef,
 }: {
-  survey: Survey;
-  nodeDef: NodeDef<any>;
+  survey: ArenaSurvey;
+  nodeDef: ArenaNodeDef<any>;
 }): boolean => {
   let parentDef = Surveys.getNodeDefParent({ survey, nodeDef });
   while (parentDef) {
@@ -77,7 +79,7 @@ const findAutoStartNode = ({
   survey,
   record,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   record: ArenaRecord;
 }) => {
   const nodes = Object.values(record.nodes ?? {});

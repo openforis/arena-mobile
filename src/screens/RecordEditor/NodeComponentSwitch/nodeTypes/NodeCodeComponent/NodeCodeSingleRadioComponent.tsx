@@ -1,14 +1,14 @@
 import React from "react";
 
-import { CategoryItem } from "@openforis/arena-core";
+import { ArenaCategoryItem } from "@openforis/arena-core";
 
 import { HView, RadioButton, RadioButtonGroup } from "components";
 import styles from "./styles";
 
 type NodeCodeSingleRadioComponentProps = {
   editable?: boolean;
-  itemLabelFunction: (item: CategoryItem) => string;
-  items: CategoryItem[];
+  itemLabelFunction: (item: ArenaCategoryItem) => string;
+  items: ArenaCategoryItem[];
   onChange: (value: string) => void;
   value?: string;
 };

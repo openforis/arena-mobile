@@ -1,18 +1,18 @@
 import {
   ArenaRecordNode,
-  NodeDef,
-  NodeDefCode,
-  NodeDefEntity,
+  ArenaNodeDef,
+  ArenaNodeDefCode,
+  ArenaNodeDefEntity,
   NodeDefs,
   NodeDefType,
-  Nodes,
-  NodeValues,
+  RecordNodes,
+  RecordNodeValues,
   Objects,
   Records,
   RecordValidations,
-  Survey,
+  ArenaSurvey,
   Surveys,
-  Validation,
+  ArenaValidation,
 } from "@openforis/arena-core";
 
 import { SurveyDefs } from "model";
@@ -76,7 +76,7 @@ const selectRecordNodePointerEditable =
     }
     return (
       Records.isNodeEditable(parentNode)(record) &&
-      Nodes.isChildEditable(parentNode, nodeDefUuid)
+      RecordNodes.isChildEditable(parentNode, nodeDefUuid)
     );
   };
 
@@ -93,8 +93,8 @@ const selectRecordNodePointerVisibility =
     }
 
     const parentNode = Records.getNodeByUuid(parentNodeUuid)(record)!;
-    const applicable = Nodes.isChildApplicable(parentNode, nodeDefUuid);
-    const visible = Nodes.isChildVisible(parentNode, nodeDefUuid);
+    const applicable = RecordNodes.isChildApplicable(parentNode, nodeDefUuid);
+    const visible = RecordNodes.isChildVisible(parentNode, nodeDefUuid);
     const nodeDefChild = Surveys.getNodeDefByUuid({
       survey,
       uuid: nodeDefUuid,
@@ -109,7 +109,11 @@ const selectRecordAttributeInfo =
   ({ nodeUuid }: { nodeUuid: string }) =>
   (
     state: RootState,
-  ): { applicable: boolean; value: any; validation: Validation | null } => {
+  ): {
+    applicable: boolean;
+    value: any;
+    validation: ArenaValidation | null;
+  } => {
     const record = selectRecordUnsafe(state);
     const defaultAttributeState = {
       applicable: false,
@@ -150,14 +154,15 @@ const selectIsRecordAttributeFilled =
       state,
     );
     return (
-      nodes.length > 0 && nodes.every((node) => Nodes.isValueNotBlank(node))
+      nodes.length > 0 &&
+      nodes.every((node) => RecordNodes.isValueNotBlank(node))
     );
   };
 
 // child defs depend only on survey, cycle and entity def: cached per survey (selected by every form field)
 const childDefsCacheBySurvey = new WeakMap<
   object,
-  Map<string, NodeDef<NodeDefType>[]>
+  Map<string, ArenaNodeDef<NodeDefType>[]>
 >();
 
 export const getChildDefs = ({
@@ -165,10 +170,10 @@ export const getChildDefs = ({
   cycle,
   nodeDef,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   cycle: string;
-  nodeDef: NodeDefEntity;
-}): NodeDef<NodeDefType>[] => {
+  nodeDef: ArenaNodeDefEntity;
+}): ArenaNodeDef<NodeDefType>[] => {
   let cache = childDefsCacheBySurvey.get(survey);
   if (!cache) {
     cache = new Map();
@@ -190,8 +195,8 @@ export const getChildDefs = ({
 };
 
 const selectChildDefs =
-  ({ nodeDef }: { nodeDef: NodeDefEntity }) =>
-  (state: RootState): NodeDef<NodeDefType>[] =>
+  ({ nodeDef }: { nodeDef: ArenaNodeDefEntity }) =>
+  (state: RootState): ArenaNodeDef<NodeDefType>[] =>
     getChildDefs({
       survey: SurveySelectors.selectCurrentSurvey(state)!,
       cycle: selectRecordCycle(state),
@@ -203,7 +208,7 @@ const selectRecordCodeParentItemUuid =
     nodeDef,
     parentNodeUuid,
   }: {
-    nodeDef: NodeDefCode;
+    nodeDef: ArenaNodeDefCode;
     parentNodeUuid: string | undefined;
   }) =>
   (state: RootState): string | undefined => {
@@ -221,7 +226,7 @@ const selectRecordCodeParentItemUuid =
       nodeDef,
     )(record);
     return parentCodeAttribute
-      ? NodeValues.getItemUuid(parentCodeAttribute)
+      ? RecordNodeValues.getItemUuid(parentCodeAttribute)
       : undefined;
   };
 
@@ -237,7 +242,7 @@ const selectIsMaxCountReached =
       : null;
     if (!parentNode) return false;
 
-    const maxCount = Nodes.getChildrenMaxCount({
+    const maxCount = RecordNodes.getChildrenMaxCount({
       parentNode,
       nodeDef,
     });
@@ -262,7 +267,7 @@ export const RecordNodesSelectors = {
   }: NodePointerParams) =>
     useAppSelector(selectRecordSingleNodeUuid({ parentNodeUuid, nodeDefUuid })),
 
-  useRecordEntityChildDefs: ({ nodeDef }: { nodeDef: NodeDefEntity }) =>
+  useRecordEntityChildDefs: ({ nodeDef }: { nodeDef: ArenaNodeDefEntity }) =>
     useAppSelector(selectChildDefs({ nodeDef }), Objects.isEqual),
 
   useRecordNodePointerVisibility: ({
@@ -289,7 +294,7 @@ export const RecordNodesSelectors = {
     nodeDef,
   }: {
     parentEntityUuid: string | undefined;
-    nodeDef: NodeDef<NodeDefType>;
+    nodeDef: ArenaNodeDef<NodeDefType>;
   }) =>
     useAppSelector(
       selectRecordChildNodes({ parentNodeUuid: parentEntityUuid, nodeDef }),
@@ -316,7 +321,7 @@ export const RecordNodesSelectors = {
     nodeDef,
   }: {
     parentNodeUuid: string | undefined;
-    nodeDef: NodeDefCode;
+    nodeDef: ArenaNodeDefCode;
   }) =>
     useAppSelector(selectRecordCodeParentItemUuid({ parentNodeUuid, nodeDef })),
 

@@ -1,8 +1,8 @@
-import { JobBase, JobContext, Logger } from "@openforis/arena-core";
+import { JobBase, ArenaJobContext, ArenaLogger } from "@openforis/arena-core";
 import { Files } from "utils/Files";
 import { log } from "utils/Logger";
 
-export type JobMobileContext = JobContext;
+export type JobMobileContext = ArenaJobContext;
 
 export abstract class JobMobile<C extends JobMobileContext> extends JobBase<
   C,
@@ -10,7 +10,7 @@ export abstract class JobMobile<C extends JobMobileContext> extends JobBase<
 > {
   private readonly tempFolderUris: string[] = [];
 
-  createLogger(): Logger {
+  createLogger(): ArenaLogger {
     return {
       isDebugEnabled: () => true,
       isInfoEnabled: () => true,

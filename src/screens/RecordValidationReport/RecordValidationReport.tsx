@@ -2,13 +2,13 @@ import { useCallback, useMemo, useState } from "react";
 import { useNavigator } from "navigation/navigator";
 
 import {
-  NodeDef,
+  ArenaNodeDef,
   NodeDefs,
   Objects,
   Records,
   RecordValidations,
   Surveys,
-  ValidationFields,
+  ArenaValidationFields,
   Validations,
 } from "@openforis/arena-core";
 
@@ -80,7 +80,7 @@ const extractValidationItem = ({
   t,
 }: any): {
   key: string;
-  nodeDef: NodeDef<any>;
+  nodeDef: ArenaNodeDef<any>;
   parentNodeUuid?: string;
   path: string;
   error: string;
@@ -143,7 +143,7 @@ const extractValidationItem = ({
 
 type RecordValidationReportState = {
   editDialogOpen: boolean;
-  dialogNodeDef?: NodeDef<any>;
+  dialogNodeDef?: ArenaNodeDef<any>;
   dialogNodeUuid?: string;
   dialogParentNodeUuid?: string;
 };
@@ -165,7 +165,7 @@ export const RecordValidationReport = () => {
   const { editDialogOpen, dialogNodeDef, dialogParentNodeUuid } = state;
 
   const { validation } = record;
-  const validationFields: ValidationFields = useMemo(
+  const validationFields: ArenaValidationFields = useMemo(
     () => (validation ? Validations.getFieldValidations(validation) : {}),
     [validation],
   );

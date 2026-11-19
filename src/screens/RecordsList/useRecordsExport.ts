@@ -1,6 +1,10 @@
 import { useCallback, useMemo } from "react";
 
-import { JobSerialized, Survey, Surveys } from "@openforis/arena-core";
+import {
+  ArenaJobSerialized,
+  ArenaSurvey,
+  Surveys,
+} from "@openforis/arena-core";
 
 import { useToast } from "hooks";
 import { useTranslation } from "localization";
@@ -41,7 +45,7 @@ export type UseRecordsExportParams = {
   networkAvailable: boolean;
   records: ExportRecord[];
   setLoading: (loading: boolean) => void;
-  survey: Survey | undefined;
+  survey: ArenaSurvey | undefined;
   syncStatusFetched?: boolean;
 };
 
@@ -170,7 +174,7 @@ export const useRecordsExport = ({
       setLoading(true);
 
       const onJobComplete = async (
-        jobCompleted: JobSerialized<RecordsUploadResult | undefined>,
+        jobCompleted: ArenaJobSerialized<RecordsUploadResult | undefined>,
       ) => {
         const missingFiles = jobCompleted.result?.missingFiles ?? 0;
 

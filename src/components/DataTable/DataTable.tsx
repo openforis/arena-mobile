@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { DataTable as RNPDataTable, useTheme } from "react-native-paper";
 
-import { Arrays, Dictionary, Objects } from "@openforis/arena-core";
+import { Arrays, ArenaDictionary, Objects } from "@openforis/arena-core";
 
 import { useStableCallback } from "hooks/useStableCallback";
 import { useTranslation } from "localization";
@@ -256,7 +256,7 @@ export const DataTable = <T extends DataVisualizerItem>(
   const onHeaderPress = (fieldKey: string) => {
     const fieldSortPrev = sort?.[fieldKey];
     const fieldSortNext = SortUtils.getNextSortDirection(fieldSortPrev);
-    const sortNext: Dictionary<Sort> = {};
+    const sortNext: ArenaDictionary<Sort> = {};
     // allow only one sort field at a time
     if (fieldSortNext) {
       sortNext[fieldKey] = fieldSortNext;

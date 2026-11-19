@@ -1,4 +1,4 @@
-import { User } from "@openforis/arena-core";
+import { ArenaUser } from "@openforis/arena-core";
 
 import { SecureStoreService, UserService } from "service";
 
@@ -20,8 +20,8 @@ jest.mock("./selectors", () => ({
   RemoteConnectionSelectors: { selectLoggedUser: (state: any) => state.user },
 }));
 
-const cachedUser = { uuid: "cached" } as unknown as User;
-const remoteUser = { uuid: "remote" } as unknown as User;
+const cachedUser = { uuid: "cached" } as unknown as ArenaUser;
+const remoteUser = { uuid: "remote" } as unknown as ArenaUser;
 
 const getState = () => ({
   deviceInfo: { isNetworkConnected: true },

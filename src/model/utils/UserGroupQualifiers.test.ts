@@ -4,9 +4,9 @@ import {
   RecordNodeBuilders,
   SurveyBuilder,
   SurveyObjectBuilders,
-  User,
+  ArenaUser,
   UserFactory,
-  UserGroup,
+  ArenaUserGroup,
 } from "@openforis/arena-core";
 
 import { UserGroupQualifiers } from "./UserGroupQualifiers";
@@ -14,7 +14,7 @@ import { UserGroupQualifiers } from "./UserGroupQualifiers";
 const { entityDef, integerDef, textDef } = SurveyObjectBuilders;
 const { entity, attribute } = RecordNodeBuilders;
 
-const user: User = UserFactory.createInstance({
+const user: ArenaUser = UserFactory.createInstance({
   email: "test@openforis-arena.org",
   name: "test",
 });
@@ -30,14 +30,14 @@ const buildSurvey = () =>
     ),
   ).build();
 
-const buildUserGroup = (teamValue: string): UserGroup =>
+const buildUserGroup = (teamValue: string): ArenaUserGroup =>
   ({
     uuid: "group-uuid",
     props: {
       name: "control",
       qualifiers: [{ name: "team", value: teamValue }],
     },
-  }) as UserGroup;
+  }) as ArenaUserGroup;
 
 const getAttributeValue = (record: any, name: string, survey: any) => {
   const nodeDef = Object.values(survey.nodeDefs).find(

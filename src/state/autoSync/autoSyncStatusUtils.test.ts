@@ -1,4 +1,4 @@
-import type { Survey } from "@openforis/arena-core";
+import type { ArenaSurvey } from "@openforis/arena-core";
 
 import { RecordSyncStatus } from "../../model/RecordSyncStatus";
 
@@ -28,7 +28,7 @@ jest.mock("@openforis/arena-core", () => ({
 
 // only the props read by the mocked Surveys functions above
 const surveyWithSecurity = (security: Record<string, boolean> = {}) =>
-  ({ props: { security } }) as unknown as Survey;
+  ({ props: { security } }) as unknown as ArenaSurvey;
 
 const surveyMergeAllowed = surveyWithSecurity();
 const surveyMergeNotAllowed = surveyWithSecurity({

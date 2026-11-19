@@ -1,13 +1,17 @@
 import { useMemo } from "react";
 
-import { Survey, Taxon, VernacularName } from "@openforis/arena-core";
+import {
+  ArenaSurvey,
+  ArenaTaxon,
+  ArenaVernacularName,
+} from "@openforis/arena-core";
 
 import { Taxa } from "model/Taxa";
 import { LanguageUtils } from "utils/LanguageUtils";
 
 import { buildTaxonSearchKeys, TaxonSearchItem } from "./taxaSearch";
 
-const calculateVernacularNamesCount = (taxon: Taxon) =>
+const calculateVernacularNamesCount = (taxon: ArenaTaxon) =>
   Object.values(taxon.vernacularNames ?? {}).reduce(
     (acc, vernacularNamesArray) => acc + vernacularNamesArray.length,
     0,
@@ -15,7 +19,7 @@ const calculateVernacularNamesCount = (taxon: Taxon) =>
 
 const vernacularNameObjectToItem =
   (taxonItem: TaxonSearchItem) =>
-  (vernacularNameObj: VernacularName): TaxonSearchItem => {
+  (vernacularNameObj: ArenaVernacularName): TaxonSearchItem => {
     const { uuid: vernacularNameUuid, props } = vernacularNameObj;
     const { name: vernacularName, lang: vernacularNameLangCode } = props;
     const item: TaxonSearchItem = {
@@ -29,9 +33,9 @@ const vernacularNameObjectToItem =
   };
 
 const getAllVernacularNameObjects = (
-  vernacularNamesArray: VernacularName[][],
+  vernacularNamesArray: ArenaVernacularName[][],
 ) => {
-  const result: VernacularName[] = [];
+  const result: ArenaVernacularName[] = [];
   for (const vernacularNameObjects of vernacularNamesArray) {
     for (const vernacularNameObject of vernacularNameObjects) {
       result.push(vernacularNameObject);
@@ -43,7 +47,7 @@ const getAllVernacularNameObjects = (
 const joinVernacularNameObjects = ({
   taxonItem,
 }: {
-  taxonItem: Taxon;
+  taxonItem: ArenaTaxon;
 }): {
   vernacularNamesJoint: string;
   singleVernacularNameUuid: string | undefined;
@@ -77,7 +81,7 @@ export const useTaxa = ({
   taxonomyUuid,
   joinVernacularNames = false,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   taxonomyUuid: string | undefined;
   joinVernacularNames?: boolean;
 }) => {
@@ -87,8 +91,8 @@ export const useTaxa = ({
   );
 
   const { taxa, unknownTaxon, unlistedTaxon } = useMemo(() => {
-    const taxaByCode: Record<string, Taxon> = {};
-    const allTaxa: Taxon[] = Object.values(taxonIndex);
+    const taxaByCode: Record<string, ArenaTaxon> = {};
+    const allTaxa: ArenaTaxon[] = Object.values(taxonIndex);
     const taxaReduced: TaxonSearchItem[] = [];
     for (const taxon of allTaxa) {
       if (taxon.taxonomyUuid !== taxonomyUuid) {
@@ -103,7 +107,7 @@ export const useTaxa = ({
       };
       taxaReduced.push(taxonItem);
       const vernacularNamesByLang = taxon.vernacularNames ?? {};
-      const vernacularNamesArray: VernacularName[][] = Object.values(
+      const vernacularNamesArray: ArenaVernacularName[][] = Object.values(
         vernacularNamesByLang,
       );
       if (vernacularNamesArray.length > 0) {
@@ -113,7 +117,7 @@ export const useTaxa = ({
           taxonItem.vernacularNamesJoint = vernacularNamesJoint;
           taxonItem.singleVernacularNameUuid = singleVernacularNameUuid;
         } else {
-          const vernacularNames: VernacularName[] =
+          const vernacularNames: ArenaVernacularName[] =
             getAllVernacularNameObjects(vernacularNamesArray);
           taxaReduced.push(
             ...vernacularNames.map(vernacularNameObjectToItem(taxonItem)),

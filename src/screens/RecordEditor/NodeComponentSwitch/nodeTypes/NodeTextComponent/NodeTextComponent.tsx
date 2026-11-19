@@ -1,10 +1,10 @@
 import { memo, useCallback, useEffect, useMemo, useRef } from "react";
 
 import {
-  NodeDefDecimal,
-  NodeDefInteger,
+  ArenaNodeDefDecimal,
+  ArenaNodeDefInteger,
   NodeDefs,
-  NodeDefText,
+  ArenaNodeDefText,
   NodeDefTextInputType,
   NodeDefType,
   Objects,
@@ -26,7 +26,9 @@ const isNumericByType: Record<string, boolean> = {
 const nodeValueToUiValue = (value: any) =>
   Objects.isEmpty(value) ? "" : String(value);
 
-type Props = NodeComponentProps<NodeDefText | NodeDefDecimal | NodeDefInteger>;
+type Props = NodeComponentProps<
+  ArenaNodeDefText | ArenaNodeDefDecimal | ArenaNodeDefInteger
+>;
 
 export const NodeTextComponent = memo((props: Props) => {
   const { nodeDef, nodeUuid, style: styleProp } = props;

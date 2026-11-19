@@ -6,7 +6,7 @@ import * as Localization from "expo-localization";
 import * as ExpoScreenOrientation from "expo-screen-orientation";
 
 import {
-  AppInfo,
+  ArenaAppInfo,
   Dates,
   FileNames,
   Promises,
@@ -17,7 +17,7 @@ import { ScreenOrientation } from "model/ScreenOrientation";
 import { Environment } from "./Environment";
 import { Files } from "./Files";
 
-export interface ArenaMobileAppInfo extends AppInfo {
+export interface ArenaMobileAppInfo extends ArenaAppInfo {
   buildNumber?: string | null;
   lastUpdateTime?: string | null;
 }

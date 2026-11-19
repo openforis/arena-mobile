@@ -2,12 +2,12 @@ import {
   ArenaRecord,
   ArenaRecordNode,
   Dates,
-  Dictionary,
+  ArenaDictionary,
   Objects,
   RecordNodesUpdater,
   Records,
-  Survey,
-  User,
+  ArenaSurvey,
+  ArenaUser,
 } from "@openforis/arena-core";
 
 import {
@@ -40,13 +40,13 @@ const updateCurrentRecordWithPrevCycleValues = async ({
   prevCycleRecord,
 }: {
   dispatch: AppDispatch;
-  user: User;
-  survey: Survey;
+  user: ArenaUser;
+  survey: ArenaSurvey;
   currentCycleRecord: ArenaRecord;
   nodeDefUuidsUsingPrevCycleValueFunctions: string[];
   prevCycleRecord: ArenaMobileRecord;
 }): Promise<void> => {
-  const nodesToUpdateByUuid: Dictionary<ArenaRecordNode> = {};
+  const nodesToUpdateByUuid: ArenaDictionary<ArenaRecordNode> = {};
   for (const nodeDefUuid of nodeDefUuidsUsingPrevCycleValueFunctions) {
     const nodes = Records.getNodesByDefUuid(nodeDefUuid)(currentCycleRecord);
     for (const node of nodes) {
@@ -77,8 +77,8 @@ const _fetchRecordFromPreviousCycleAndLinkItInternal = async ({
   recordId,
 }: {
   dispatch: AppDispatch;
-  user: User;
-  survey: Survey;
+  user: ArenaUser;
+  survey: ArenaSurvey;
   currentCycleRecord: ArenaRecord;
   recordId: number;
 }) => {
@@ -132,8 +132,8 @@ const _fetchRecordFromPreviousCycleAndLinkIt = async ({
   lang,
 }: {
   dispatch: AppDispatch;
-  user: User;
-  survey: Survey;
+  user: ArenaUser;
+  survey: ArenaSurvey;
   record: ArenaRecord;
   prevCycle: string;
   lang: string;

@@ -1,4 +1,4 @@
-import { Surveys, Records, NodeDefs, Nodes } from "@openforis/arena-core";
+import { Surveys, Records, NodeDefs, RecordNodes } from "@openforis/arena-core";
 
 import { RecordUtils } from "model/utils/RecordUtils";
 
@@ -32,7 +32,7 @@ const getNextOrPreviousMultipleEntityPointer = ({
   entity,
   offset,
 }: any) => {
-  if (Nodes.isRoot(entity)) return null;
+  if (RecordNodes.isRoot(entity)) return null;
 
   const parentEntity = Records.getParent(entity)(record);
   const entityDefUuid = entity.nodeDefUuid;
