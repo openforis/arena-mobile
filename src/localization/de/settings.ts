@@ -4,6 +4,7 @@ export default {
     appearance: "Erscheinungsbild",
     dataEntry: "Dateneingabe",
     location: "Standort & GPS",
+    maps: "Karten",
     images: "Bilder",
   },
   animationsEnabled: {
@@ -85,6 +86,21 @@ export default {
     error:
       "GPS-Sperrung kann nicht gestartet werden: Standortanbieter nicht verfügbar oder Zugriff auf den Standort nicht gewährt",
   },
+  positionTrackingAccuracyThreshold: {
+    label: "Genauigkeitsschwellenwert der Positionsverfolgung: {{value}} m",
+    description:
+      "Standorte, die ungenauer sind, werden dem aufgezeichneten Track nicht hinzugefügt",
+  },
+  positionTrackingBatterySaver: {
+    label: "Energiesparmodus der Positionsverfolgung",
+    description:
+      "Wenn aktiviert, ist der Track weniger präzise, aber der Akkuverbrauch wird reduziert",
+  },
+  positionTrackingMinDistance: {
+    label: "Mindestabstand der Positionsverfolgung: {{value}} m",
+    description:
+      "Mindestabstand zwischen zwei Punkten des aufgezeichneten Tracks (größer, wenn der Standort ungenauer ist)",
+  },
   gpsDevicePairing: {
     title: "GPS-Gerät koppeln",
     scanButton: "Nach Geräten suchen",
@@ -117,6 +133,21 @@ export default {
     pairNewDevice: "Neues Gerät koppeln…",
   },
 
+  mapLayer: {
+    label: "Standard-Kartenebene",
+    description:
+      "Ebene, die beim Öffnen einer Karte angezeigt wird (sie kann auf der Karte weiterhin über die Ebenen-Schaltfläche geändert werden)",
+  },
+  mapProvider: {
+    label: "Kartenanbieter",
+    description:
+      "Karte, die beim Zeichnen oder Anzeigen geografischer Attribute verwendet wird. Freie Kartenebenen können für die Offline-Nutzung vorab heruntergeladen werden (siehe Offline-Karten)",
+    options: {
+      default: "Google Maps (Apple Karten unter iOS)",
+      freeLayers:
+        "Kostenlose Kartenebenen (Satellit, topografisch) - offlinefähig",
+    },
+  },
   showRecordCompletion: {
     label: "Fortschritt der Datensatzvervollständigung anzeigen",
     description:

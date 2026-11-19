@@ -4,6 +4,7 @@ export default {
     appearance: "Apparence",
     dataEntry: "Saisie de données",
     location: "Localisation et GPS",
+    maps: "Cartes",
     images: "Images",
   },
   animationsEnabled: {
@@ -84,6 +85,21 @@ export default {
     error:
       "Impossible de démarrer le verrouillage GPS: fournisseur de localisation non disponible ou accès à la localisation non accordé",
   },
+  positionTrackingAccuracyThreshold: {
+    label: "Seuil de précision du suivi de position: {{value}} m",
+    description:
+      "Les positions moins précises que ce seuil ne sont pas ajoutées au tracé en cours d'enregistrement",
+  },
+  positionTrackingBatterySaver: {
+    label: "Économie de batterie du suivi de position",
+    description:
+      "Si activé, le tracé sera moins précis mais la consommation de batterie sera réduite",
+  },
+  positionTrackingMinDistance: {
+    label: "Distance minimale du suivi de position: {{value}} m",
+    description:
+      "Distance minimale entre deux points du tracé en cours d'enregistrement (plus grande si la position est moins précise)",
+  },
   gpsDevicePairing: {
     title: "Associer un appareil GPS",
     scanButton: "Rechercher des appareils",
@@ -114,6 +130,21 @@ export default {
     auto: "Auto (externe si disponible)",
     internal: "GPS interne",
     pairNewDevice: "Associer un nouvel appareil…",
+  },
+  mapLayer: {
+    label: "Couche de carte par défaut",
+    description:
+      "Couche affichée à l'ouverture d'une carte (elle peut toujours être changée sur la carte avec le bouton des couches)",
+  },
+  mapProvider: {
+    label: "Fournisseur de cartes",
+    description:
+      "Carte utilisée pour dessiner ou afficher les attributs géographiques. Les couches de carte gratuites peuvent être pré-téléchargées pour une utilisation hors ligne (voir Cartes hors ligne)",
+    options: {
+      default: "Google Maps (Apple Plans sur iOS)",
+      freeLayers:
+        "Couches de carte gratuites (satellite, topographique) - utilisables hors ligne",
+    },
   },
   showRecordCompletion: {
     label: "Afficher la progression de l'enregistrement",

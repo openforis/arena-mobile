@@ -4,6 +4,7 @@ export default {
     appearance: "Ulkoasu",
     dataEntry: "Tiedonkeruu",
     location: "Sijainti ja GPS",
+    maps: "Kartat",
     images: "Kuvat",
   },
   animationsEnabled: {
@@ -83,6 +84,21 @@ Se auttaa saamaan paremman tarkkuuden koordinaattiattribuuteissa.`,
     error:
       "GPS-lukitusta ei voi käynnistää: sijaintipalvelu ei ole käytettävissä tai sijaintiin ei ole myönnetty käyttöoikeutta",
   },
+  positionTrackingAccuracyThreshold: {
+    label: "Sijainnin seurannan tarkkuuskynnys: {{value}} m",
+    description:
+      "Tätä epätarkempia sijainteja ei lisätä tallennettavaan reittiin",
+  },
+  positionTrackingBatterySaver: {
+    label: "Sijainnin seurannan virransäästö",
+    description:
+      "Kun tämä on käytössä, reitti on epätarkempi, mutta akun kulutus pienenee",
+  },
+  positionTrackingMinDistance: {
+    label: "Sijainnin seurannan vähimmäisetäisyys: {{value}} m",
+    description:
+      "Tallennettavan reitin kahden pisteen välinen vähimmäisetäisyys (suurempi, jos sijainti on epätarkempi)",
+  },
   gpsDevicePairing: {
     title: "Pariuta GPS-laite",
     scanButton: "Etsi laitteita",
@@ -111,6 +127,21 @@ Se auttaa saamaan paremman tarkkuuden koordinaattiattribuuteissa.`,
     auto: "Automaattinen (ulkoinen, jos saatavilla)",
     internal: "Sisäinen GPS",
     pairNewDevice: "Pariuta uusi laite…",
+  },
+  mapLayer: {
+    label: "Oletuskarttataso",
+    description:
+      "Taso, joka näytetään, kun kartta avataan (sitä voi edelleen vaihtaa kartalla tasopainikkeella)",
+  },
+  mapProvider: {
+    label: "Karttapalvelu",
+    description:
+      "Kartta, jota käytetään maantieteellisten attribuuttien piirtämiseen tai katseluun. Ilmaiset karttatasot voi ladata etukäteen offline-käyttöä varten (katso Offline-kartat)",
+    options: {
+      default: "Google Maps (iOS:ssä Apple Maps)",
+      freeLayers:
+        "Ilmaiset karttatasot (satelliitti, maastokartta) - toimii offline-tilassa",
+    },
   },
   showRecordCompletion: {
     label: "Näytä tietueen täyttöaste",

@@ -4,6 +4,7 @@ export default {
     appearance: "Tampilan",
     dataEntry: "Pengisian data",
     location: "Lokasi & GPS",
+    maps: "Peta",
     images: "Gambar",
   },
   animationsEnabled: {
@@ -81,6 +82,21 @@ Ini akan membantu mendapatkan akurasi yang lebih baik pada atribut koordinat.`,
     error:
       "Tidak dapat memulai penguncian GPS: penyedia lokasi tidak tersedia atau akses ke lokasi tidak diberikan",
   },
+  positionTrackingAccuracyThreshold: {
+    label: "Ambang akurasi pelacakan posisi: {{value}} m",
+    description:
+      "Lokasi yang kurang akurat dari nilai ini tidak ditambahkan ke jejak yang sedang direkam",
+  },
+  positionTrackingBatterySaver: {
+    label: "Penghemat baterai pelacakan posisi",
+    description:
+      "Jika diaktifkan, jejak akan kurang presisi tetapi konsumsi baterai akan berkurang",
+  },
+  positionTrackingMinDistance: {
+    label: "Jarak minimum pelacakan posisi: {{value}} m",
+    description:
+      "Jarak minimum antara dua titik pada jejak yang sedang direkam (lebih besar jika lokasi kurang akurat)",
+  },
   gpsDevicePairing: {
     title: "Sambungkan perangkat GPS",
     scanButton: "Pindai perangkat",
@@ -109,6 +125,21 @@ Ini akan membantu mendapatkan akurasi yang lebih baik pada atribut koordinat.`,
     auto: "Otomatis (eksternal jika tersedia)",
     internal: "GPS internal",
     pairNewDevice: "Sambungkan perangkat baru…",
+  },
+  mapLayer: {
+    label: "Lapisan peta default",
+    description:
+      "Lapisan yang ditampilkan saat peta dibuka (masih dapat diubah di peta menggunakan tombol lapisan)",
+  },
+  mapProvider: {
+    label: "Penyedia peta",
+    description:
+      "Peta yang digunakan saat menggambar atau melihat atribut geografis. Lapisan peta gratis dapat diunduh terlebih dahulu untuk penggunaan offline (lihat Peta offline)",
+    options: {
+      default: "Google Maps (Apple Maps di iOS)",
+      freeLayers:
+        "Lapisan peta gratis (satelit, topografi) - dapat digunakan offline",
+    },
   },
   showRecordCompletion: {
     label: "Tampilkan progres kelengkapan data isian",

@@ -166,6 +166,8 @@ Haluatko hakea sen uudelleen palvelimelta?`,
   syncStatusHeader: "Tila",
   syncStatus: {
     conflictingKeys: "Tietue samalla avaimella on jo olemassa",
+    deviceDateBehindServer:
+      "Ei lähetetty: laitteen päivämäärä on palvelimen päivämäärää jäljessä (aseta oikea päivämäärä ja kellonaika ja muokkaa sitten tietuetta uudelleen)",
     keysNotSpecified: `Avainta(vat) ei määritetty`,
     new: "Uusi (ei vielä ladattu)",
     notModified: "Ei muokattu (ei muutoksia ladattavaksi)",
@@ -182,6 +184,8 @@ Haluatko hakea sen uudelleen palvelimelta?`,
   uploadingData: {
     title: "Ladataan tietoja",
     size: "Tiedoston koko: {{size}}",
+    speed: "Lähetysnopeus: {{speed}}/s",
+    eta: "Arvioitu jäljellä oleva aika: {{eta}}",
   },
   validationReport: {
     title: "Validointiraportti",
@@ -248,23 +252,23 @@ Haluatko hakea sen uudelleen palvelimelta?`,
     viewModeCompass: "Kompassi",
     viewModeRadar: "Tutka",
     locationNavigatorInfo: {
-      title: "Location Navigator",
+      title: "Sijaintinavigaattori",
       description:
-        "Guides you toward a target coordinate using your device's GPS and sensors. It shows a target location relative to your current position and lets you navigate to it in the field.",
-      viewModesTitle: "View Modes",
-      compassTitle: "Compass",
+        "Opastaa sinut kohdekoordinaattiin laitteen GPS:n ja anturien avulla. Se näyttää kohteen sijainnin suhteessa nykyiseen sijaintiisi ja auttaa navigoimaan sinne maastossa.",
+      viewModesTitle: "Näkymätilat",
+      compassTitle: "Kompassi",
       compassDesc:
-        "Displays a rotating compass rose aligned to North. An arrow points toward the target. When very close to the target (proximity mode), the arrow is replaced with a dot on the accuracy circle showing the target's relative position.",
-      radarTitle: "Radar",
+        "Näyttää pohjoiseen suunnatun, pyörivän kompassiruusun. Nuoli osoittaa kohdetta kohti. Kun kohde on hyvin lähellä (lähestymistila), nuoli korvataan tarkkuusympyrällä näkyvällä pisteellä, joka osoittaa kohteen suhteellisen sijainnin.",
+      radarTitle: "Tutka",
       radarDesc:
-        "Shows a top-down radar view with your position fixed at the center. The target dot moves around you in real time to reflect its actual direction and distance.",
-      headingSourcesTitle: "Heading Sources",
-      sensorTitle: "Sensor (Magnetometer)",
+        "Näyttää ylhäältä kuvatun tutkanäkymän, jonka keskellä sijaintisi pysyy paikallaan. Kohdepiste liikkuu ympärilläsi reaaliajassa ja kuvaa sen todellista suuntaa ja etäisyyttä.",
+      headingSourcesTitle: "Suunnan lähteet",
+      sensorTitle: "Anturi (magnetometri)",
       sensorDesc:
-        "Uses the device's built-in magnetometer (compass chip). Works while standing still, but can be affected by nearby metal objects or magnetic interference.",
+        "Käyttää laitteen sisäänrakennettua magnetometriä (kompassisirua). Toimii myös paikallaan seistessä, mutta lähellä olevat metalliesineet tai magneettiset häiriöt voivat vaikuttaa siihen.",
       gpsTitle: "GPS",
       gpsDesc:
-        "Derives heading from GPS movement. More accurate in open spaces, but requires you to be walking and may not be available on all devices.",
+        "Määrittää suunnan GPS-liikkeen perusteella. Tarkempi avoimilla alueilla, mutta edellyttää, että kävelet, eikä välttämättä ole käytettävissä kaikissa laitteissa.",
     },
   },
   geo: {
@@ -281,6 +285,54 @@ Paina '$t(common:stop)', kun olet valmis.`,
     addCurrentLocationPoint: "Lisää nykyinen sijainti",
     addCurrentLocationPointInstructions:
       "Lisää nykyinen sijainti monikulmioon painamalla '$t(dataEntry:geo.addCurrentLocationPoint)'",
+  },
+  positionTracking: {
+    title: "Sijainnin seuranta",
+    start: "Aloita seuranta",
+    resume: "Jatka",
+    restart: "Aloita alusta",
+    restartConfirm: {
+      title: "Poistetaanko tallennettu reitti?",
+      message:
+        "Kaikki tähän attribuuttiin tähän mennessä tallennetut pisteet poistetaan ja seuranta aloitetaan alusta. Tätä ei voi kumota.",
+    },
+    delete: "Poista reitti",
+    deleteConfirm: {
+      title: "Poistetaanko tallennettu reitti?",
+      message:
+        "Kaikki tähän attribuuttiin tallennetut pisteet poistetaan ja attribuutti jätetään tyhjäksi. Tätä ei voi kumota.",
+    },
+    stop: "Pysäytä",
+    showTrack: "Näytä reitti",
+    retry: "Yritä uudelleen",
+    status: {
+      idle: "Ei seurantaa",
+      stopped: "Seuranta pysäytetty",
+      starting: "Seurantaa käynnistetään…",
+      tracking: "Seuranta käynnissä",
+      paused: "Seuranta keskeytetty",
+    },
+    waitingForFix: "Odotetaan GPS:ää…",
+    accuracy: "±{{accuracy}} m",
+    pointsCount: "{{count}} pistettä",
+    trackSummary: "{{length}} · {{pointsCount}} pistettä · {{duration}}",
+    attributeNotEditable:
+      "Tämän attribuutin arvo tallennetaan sijainnin seurannalla",
+    stopConfirm:
+      "Pysäytetäänkö seuranta? Tallennettu reitti säilytetään attribuutissa, ja seurantaa voi jatkaa myöhemmin.",
+    stopCurrentConfirm:
+      "Toista attribuuttia seurataan parhaillaan: pysäytetäänkö sen seuranta ja aloitetaan tämän seuranta?",
+    interrupted:
+      "Sijainnin seuranta keskeytyi: tallennettu reitti on tallennettu. Jatka seurantaa jatkaaksesi.",
+    error: {
+      generic: "Sijainnin seurantaa ei voi aloittaa",
+      permissionDenied:
+        "Sijaintia ei voi seurata: sijainnin käyttöoikeutta ei ole myönnetty",
+      locationServicesOff:
+        "Sijaintia ei voi seurata: sijaintipalvelu on pois käytöstä",
+      notSaved:
+        "Reittiä ei vielä voitu tallentaa attribuuttiin: se tallennetaan myöhemmin",
+    },
   },
   taxon: {
     search: "Hae lajia",

@@ -7,7 +7,7 @@ export default {
   description:
     "Baixe o mapa da sua área de interesse antes de ir a campo: ele estará disponível mesmo sem conexão com a internet ao desenhar ou visualizar atributos geográficos.",
   freeLayersNotInUse:
-    "Os mapas offline são usados somente quando o provedor de mapas nas configurações é 'Free map layers'.",
+    "Os mapas offline são usados somente quando o provedor de mapas nas configurações é 'Camadas de mapa gratuitas'.",
   useFreeLayers: "Usar camadas de mapa gratuitas",
   offlineMode: "Offline",
   addArea: "Adicionar área",

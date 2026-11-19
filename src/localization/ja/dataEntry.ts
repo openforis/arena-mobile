@@ -220,6 +220,8 @@ export default {
   syncStatusHeader: "状態",
   syncStatus: {
     conflictingKeys: "同じキーの記録がすでに存在します",
+    deviceDateBehindServer:
+      "未アップロード：デバイスの日付がサーバーより遅れています（正しい日付と時刻を設定してから、記録を再度編集してください）",
     keysNotSpecified: `キーが指定されていません`,
     new: "新規（まだアップロードされていません）",
     notModified: "変更なし（アップロードする変更がありません）",
@@ -236,6 +238,8 @@ export default {
   uploadingData: {
     title: "データをアップロード中",
     size: "ファイルサイズ: {{size}}",
+    speed: "アップロード速度: {{speed}}/s",
+    eta: "推定残り時間: {{eta}}",
   },
   validationReport: {
     title: "検証レポート",
@@ -299,23 +303,23 @@ export default {
     viewModeCompass: "コンパス",
     viewModeRadar: "レーダー",
     locationNavigatorInfo: {
-      title: "Location Navigator",
+      title: "位置ナビゲーター",
       description:
-        "Guides you toward a target coordinate using your device's GPS and sensors. It shows a target location relative to your current position and lets you navigate to it in the field.",
-      viewModesTitle: "View Modes",
-      compassTitle: "Compass",
+        "デバイスのGPSとセンサーを使って目標座標まで案内します。現在地に対する目標地点の位置を表示し、現地でそこまでナビゲートできます。",
+      viewModesTitle: "表示モード",
+      compassTitle: "コンパス",
       compassDesc:
-        "Displays a rotating compass rose aligned to North. An arrow points toward the target. When very close to the target (proximity mode), the arrow is replaced with a dot on the accuracy circle showing the target's relative position.",
-      radarTitle: "Radar",
+        "北に合わせて回転するコンパスローズを表示します。矢印が目標の方向を指します。目標にごく近づくと（近接モード）、矢印は精度円上の点に置き換わり、目標の相対位置を示します。",
+      radarTitle: "レーダー",
       radarDesc:
-        "Shows a top-down radar view with your position fixed at the center. The target dot moves around you in real time to reflect its actual direction and distance.",
-      headingSourcesTitle: "Heading Sources",
-      sensorTitle: "Sensor (Magnetometer)",
+        "現在地を中心に固定した上から見たレーダー表示です。目標の点がリアルタイムで周囲を移動し、実際の方向と距離を示します。",
+      headingSourcesTitle: "方位ソース",
+      sensorTitle: "センサー（磁力計）",
       sensorDesc:
-        "Uses the device's built-in magnetometer (compass chip). Works while standing still, but can be affected by nearby metal objects or magnetic interference.",
+        "デバイス内蔵の磁力計（コンパスチップ）を使用します。立ち止まっていても機能しますが、近くの金属物や磁気の干渉の影響を受けることがあります。",
       gpsTitle: "GPS",
       gpsDesc:
-        "Derives heading from GPS movement. More accurate in open spaces, but requires you to be walking and may not be available on all devices.",
+        "GPSでの移動から方位を算出します。開けた場所ではより正確ですが、歩いている必要があり、すべてのデバイスで利用できるとは限りません。",
     },
   },
   geo: {
@@ -332,6 +336,52 @@ export default {
     addCurrentLocationPoint: "現在地を追加",
     addCurrentLocationPointInstructions:
       "現在地を多角形に追加するには '$t(dataEntry:geo.addCurrentLocationPoint)' を押してください",
+  },
+  positionTracking: {
+    title: "位置トラッキング",
+    start: "トラッキングを開始",
+    resume: "再開",
+    restart: "最初からやり直す",
+    restartConfirm: {
+      title: "記録したトラックを削除しますか？",
+      message:
+        "この属性にこれまでに記録されたすべてのポイントが削除され、トラッキングが最初からやり直されます。この操作は元に戻せません。",
+    },
+    delete: "トラックを削除",
+    deleteConfirm: {
+      title: "記録したトラックを削除しますか？",
+      message:
+        "この属性に記録されたすべてのポイントが削除され、属性は空になります。この操作は元に戻せません。",
+    },
+    stop: "停止",
+    showTrack: "トラックを表示",
+    retry: "再試行",
+    status: {
+      idle: "トラッキングしていません",
+      stopped: "トラッキング停止",
+      starting: "トラッキングを開始しています…",
+      tracking: "トラッキング中",
+      paused: "トラッキング一時停止中",
+    },
+    waitingForFix: "GPSを待機中…",
+    accuracy: "±{{accuracy}} m",
+    pointsCount: "{{count}} ポイント",
+    trackSummary: "{{length}} · {{pointsCount}} ポイント · {{duration}}",
+    attributeNotEditable: "この属性の値は位置トラッキングによって記録されます",
+    stopConfirm:
+      "トラッキングを停止しますか？記録したトラックは属性に保存され、後で続けることができます。",
+    stopCurrentConfirm:
+      "別の属性がトラッキング中です。そのトラッキングを停止して、この属性のトラッキングを開始しますか？",
+    interrupted:
+      "位置トラッキングが中断されました。記録したトラックは保存されています。続けるにはトラッキングを再開してください。",
+    error: {
+      generic: "位置トラッキングを開始できません",
+      permissionDenied:
+        "位置をトラッキングできません：位置情報へのアクセスが許可されていません",
+      locationServicesOff:
+        "位置をトラッキングできません：位置情報サービスがオフになっています",
+      notSaved: "トラックをまだ属性に保存できませんでした。後で保存されます",
+    },
   },
   taxon: {
     search: "分類群を検索",
