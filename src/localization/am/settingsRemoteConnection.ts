@@ -8,6 +8,8 @@ export default {
   loginUsingQrCode: "የQR ኮድ በመጠቀም ይግቡ",
   logout: "ውጣ",
   logoutConfirmMessage: "ወጥተው የተጠቃሚ ማረጋገጫዎችን ያጽዱ?",
+  newToArena: "በአሬና አዲስ ነዎት?",
+  or: "ወይም",
   password: "የይለፍ ቃል",
   qrCodeNotValid: "የQR ኮድ ልክ አይደለም",
   loginUsingQrCodeInstructions: `በQR ኮድ በመጠቀም ለመግባት:
@@ -15,7 +17,9 @@ export default {
 2. በላይኛው ቀኝ ጥግ ያለውን አዝራር ይጫኑ እና የተጠቃሚውን ምናሌ ይክፈቱ
 3. **ከArena Mobile QR ኮድ በመጠቀም ይግቡ** ይምረጡ
 4. የታየውን QR ኮድ ይቃኙ`,
-  requestAccess: "በአሬና አዲስ ነዎት? መዳረሻ ይጠይቁ",
+  registerBeforeLoggingIn: "መጀመሪያ መዳረሻ ይጠይቁ፦ መግባት የሚችሉት የተመዘገቡ ተጠቃሚዎች ብቻ ናቸው።",
+  registeredUsersOnly: "ለተመዘገቡ ተጠቃሚዎች ብቻ",
+  requestAccess: "መዳረሻ ይጠይቁ",
   scanQrCode: "QR ኮድ ይቃኙ",
   serverUrl: "የአገልጋይ አድራሻ",
   serverUrlNotValid: "የአገልጋይ አድራሻ ልክ አይደለም",
@@ -23,6 +27,7 @@ export default {
     default: "ነባሪ",
     custom: "ብጁ",
   },
+  signInWith: "በ{{provider}} ይግቡ",
   testUrl: "URL ይሞክሩ",
   title: "ከአገልጋይ ጋር ግንኙነት",
   twoFactor: {
@@ -31,6 +36,8 @@ export default {
     description: "በማረጋገጫ መተግበሪያዎ የተፈጠረውን ኮድ ያስገቡ።",
     descriptionBackupCode:
       "ባለሁለት ደረጃ ማረጋገጫን ሲያዋቅሩ ካስቀመጧቸው የመጠባበቂያ ኮዶች አንዱን ያስገቡ።",
+    arenaAccountRequiresCode: "የArena መለያዎ ባለሁለት ደረጃ ማረጋገጫንም ይጠቀማል።",
+    signedInWith: "በ{{provider}} ገብተዋል",
     title: "ባለሁለት ደረጃ ማረጋገጫ",
     useAuthenticatorApp: "የማረጋገጫ መተግበሪያውን ተጠቀም",
     useBackupCode: "የመጠባበቂያ ኮድ ተጠቀም",

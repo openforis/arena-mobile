@@ -10,6 +10,7 @@ import {
   VerificationCodeInput,
 } from "components";
 import { useEffectiveTheme } from "hooks";
+import { useTranslation } from "localization";
 
 export const twoFactorCodeLength = 6;
 
@@ -29,6 +30,8 @@ type Props = {
   codeNotValid: boolean;
   disabled: boolean;
   email: string;
+  // set when signing in with an external provider: the code is still the one of the Arena account
+  externalLoginProvider?: string | null;
   loading: boolean;
   onBackupCodeModeToggle: () => void;
   onCodeChange: (code: string) => void;
@@ -42,6 +45,7 @@ export const TwoFactorVerification = ({
   codeNotValid,
   disabled,
   email,
+  externalLoginProvider,
   loading,
   onBackupCodeModeToggle,
   onCodeChange,
@@ -49,6 +53,7 @@ export const TwoFactorVerification = ({
   onVerify,
 }: Props) => {
   const theme = useEffectiveTheme();
+  const { t } = useTranslation();
 
   const codeComplete = backupCodeMode
     ? code.trim().length > 0
@@ -68,16 +73,37 @@ export const TwoFactorVerification = ({
           textKey="settingsRemoteConnection:twoFactor.title"
           variant="titleLarge"
         />
-        <Text
-          selectable
-          style={[
-            styles.centeredText,
-            { color: theme.colors.onSurfaceVariant },
-          ]}
-          variant="bodyMedium"
-        >
-          {email}
-        </Text>
+        {!!email && (
+          <Text
+            selectable
+            style={[
+              styles.centeredText,
+              { color: theme.colors.onSurfaceVariant },
+            ]}
+            variant="bodyMedium"
+          >
+            {email}
+          </Text>
+        )}
+        {!!externalLoginProvider && (
+          <>
+            <Text
+              style={[
+                styles.centeredText,
+                { color: theme.colors.onSurfaceVariant },
+              ]}
+              variant="bodyMedium"
+            >
+              {t("settingsRemoteConnection:twoFactor.signedInWith", {
+                provider: externalLoginProvider,
+              })}
+            </Text>
+            <Text
+              style={styles.centeredText}
+              textKey="settingsRemoteConnection:twoFactor.arenaAccountRequiresCode"
+            />
+          </>
+        )}
         <Text
           style={styles.centeredText}
           textKey={

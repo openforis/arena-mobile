@@ -8,6 +8,8 @@ export default {
   loginUsingQrCode: "Logga in med QR-kod",
   logout: "Logga ut",
   logoutConfirmMessage: "Logga ut och rensa användarens inloggningsuppgifter?",
+  newToArena: "Ny på Arena?",
+  or: "eller",
   password: "Lösenord",
   qrCodeNotValid: "QR-koden är inte giltig",
   loginUsingQrCodeInstructions: `För att logga in med en QR-kod:
@@ -15,7 +17,10 @@ export default {
 2. tryck på knappen i övre högra hörnet och öppna användarmenyn
 3. välj **Logga in från Arena Mobile med QR-kod**
 4. skanna den visade QR-koden`,
-  requestAccess: "Ny på Arena? Begär åtkomst",
+  registerBeforeLoggingIn:
+    "Begär åtkomst först: endast registrerade användare kan logga in.",
+  registeredUsersOnly: "Endast registrerade användare",
+  requestAccess: "Begär åtkomst",
   scanQrCode: "Skanna QR-kod",
   serverUrl: "Server-URL",
   serverUrlNotValid: "Server-URL:en är inte giltig",
@@ -23,6 +28,7 @@ export default {
     default: "Standard",
     custom: "Anpassad",
   },
+  signInWith: "Logga in med {{provider}}",
   testUrl: "Testa URL",
   title: "Anslutning till servern",
   twoFactor: {
@@ -31,6 +37,9 @@ export default {
     description: "Vänligen ange koden som genererats av din autentiseringsapp.",
     descriptionBackupCode:
       "Ange en av de reservkoder som du sparade när du konfigurerade tvåstegsverifiering.",
+    arenaAccountRequiresCode:
+      "Ditt Arena-konto använder också tvåstegsverifiering.",
+    signedInWith: "Inloggad med {{provider}}",
     title: "Tvåstegsverifiering",
     useAuthenticatorApp: "Använd autentiseringsappen",
     useBackupCode: "Använd en reservkod",

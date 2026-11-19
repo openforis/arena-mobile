@@ -9,6 +9,8 @@ export default {
   logout: "Terminar sessão",
   logoutConfirmMessage:
     "Terminar sessão e limpar as credenciais do utilizador?",
+  newToArena: "Novo no Arena?",
+  or: "ou",
   password: "Palavra-passe",
   qrCodeNotValid: "Código QR inválido",
   loginUsingQrCodeInstructions: `Para iniciar sessão usando um código QR:
@@ -16,7 +18,10 @@ export default {
 2. pressione o botão no canto superior direito e abra o menu do utilizador
 3. selecione **Iniciar sessão a partir do Arena Mobile usando código QR**
 4. digitalize o código QR exibido`,
-  requestAccess: "Novo no Arena? Solicitar acesso",
+  registerBeforeLoggingIn:
+    "Solicite acesso primeiro: apenas usuários registrados podem entrar.",
+  registeredUsersOnly: "Apenas usuários registrados",
+  requestAccess: "Solicitar acesso",
   scanQrCode: "Digitalizar código QR",
   serverUrl: "URL do servidor",
   serverUrlNotValid: "URL do servidor inválida",
@@ -24,6 +29,7 @@ export default {
     default: "Padrão",
     custom: "Personalizada",
   },
+  signInWith: "Entrar com {{provider}}",
   testUrl: "Testar URL",
   title: "Ligação ao servidor",
   twoFactor: {
@@ -33,6 +39,9 @@ export default {
       "Por favor, insira o código gerado pelo seu aplicativo autenticador.",
     descriptionBackupCode:
       "Insira um dos códigos de backup que você salvou ao configurar a verificação em duas etapas.",
+    arenaAccountRequiresCode:
+      "Sua conta do Arena também usa a verificação em duas etapas.",
+    signedInWith: "Conectado com {{provider}}",
     title: "Verificação em duas etapas",
     useAuthenticatorApp: "Usar o aplicativo autenticador",
     useBackupCode: "Usar um código de backup",

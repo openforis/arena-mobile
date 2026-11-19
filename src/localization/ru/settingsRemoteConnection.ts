@@ -8,6 +8,8 @@ export default {
   loginUsingQrCode: "Войти с помощью QR-кода",
   logout: "Выйти",
   logoutConfirmMessage: "Выйти и очистить учетные данные пользователя?",
+  newToArena: "Вы впервые в Arena?",
+  or: "или",
   password: "Пароль",
   qrCodeNotValid: "QR-код недействителен",
   loginUsingQrCodeInstructions: `Чтобы войти с помощью QR-кода:
@@ -15,7 +17,10 @@ export default {
 2. нажмите кнопку в правом верхнем углу и откройте меню пользователя
 3. выберите **Вход из Arena Mobile с помощью QR-кода**
 4. отсканируйте отображаемый QR-код`,
-  requestAccess: "Вы впервые в Arena? Запросить доступ",
+  registerBeforeLoggingIn:
+    "Сначала запросите доступ: войти могут только зарегистрированные пользователи.",
+  registeredUsersOnly: "Только для зарегистрированных пользователей",
+  requestAccess: "Запросить доступ",
   scanQrCode: "Сканировать QR-код",
   serverUrl: "URL сервера",
   serverUrlNotValid: "Неверный URL сервера",
@@ -23,6 +28,7 @@ export default {
     default: "По умолчанию",
     custom: "Пользователя",
   },
+  signInWith: "Войти через {{provider}}",
   testUrl: "Проверить URL",
   title: "Подключение к серверу",
   twoFactor: {
@@ -32,6 +38,9 @@ export default {
       "Пожалуйста, введите код, сгенерированный вашим приложением аутентификации.",
     descriptionBackupCode:
       "Введите один из резервных кодов, сохранённых при настройке двухэтапной проверки.",
+    arenaAccountRequiresCode:
+      "Ваша учётная запись Arena также использует двухэтапную проверку.",
+    signedInWith: "Вход выполнен через {{provider}}",
     title: "Двухэтапная проверка",
     useAuthenticatorApp: "Использовать приложение-аутентификатор",
     useBackupCode: "Использовать резервный код",

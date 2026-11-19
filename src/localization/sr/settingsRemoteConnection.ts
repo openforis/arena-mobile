@@ -8,6 +8,8 @@ export default {
   loginUsingQrCode: "Prijava pomoću QR koda",
   logout: "Odjavi se",
   logoutConfirmMessage: "Odjaviti se i obrisati korisničke pristupne podatke?",
+  newToArena: "Novi ste u aplikaciji Arena?",
+  or: "ili",
   password: "Lozinka",
   qrCodeNotValid: "QR kod nije ispravan",
   loginUsingQrCodeInstructions: `Za prijavu pomoću QR koda:
@@ -15,7 +17,10 @@ export default {
 2. pritisnite dugme u gornjem desnom uglu i otvorite korisnički meni
 3. izaberite **Prijava u Arena Mobile pomoću QR koda**
 4. skenirajte prikazani QR kod`,
-  requestAccess: "Novi ste u aplikaciji Arena? Zatražite pristup",
+  registerBeforeLoggingIn:
+    "Prvo zatražite pristup: samo registrovani korisnici mogu da se prijave.",
+  registeredUsersOnly: "Samo za registrovane korisnike",
+  requestAccess: "Zatražite pristup",
   scanQrCode: "Skeniraj QR kod",
   serverUrl: "URL servera",
   serverUrlNotValid: "URL servera nije ispravan",
@@ -23,6 +28,7 @@ export default {
     default: "Podrazumijevani",
     custom: "Prilagođeni",
   },
+  signInWith: "Prijavi se putem {{provider}}",
   testUrl: "Testiraj URL",
   title: "Veza sa serverom",
   twoFactor: {
@@ -32,6 +38,9 @@ export default {
       "Unesite kod koji je generisala vaša aplikacija za autentifikaciju.",
     descriptionBackupCode:
       "Unesite jedan od rezervnih kodova koje ste sačuvali prilikom podešavanja verifikacije u dva koraka.",
+    arenaAccountRequiresCode:
+      "Vaš Arena nalog takođe koristi verifikaciju u dva koraka.",
+    signedInWith: "Prijavljeni ste putem {{provider}}",
     title: "Verifikacija u dva koraka",
     useAuthenticatorApp: "Koristi aplikaciju za autentifikaciju",
     useBackupCode: "Koristi rezervni kod",

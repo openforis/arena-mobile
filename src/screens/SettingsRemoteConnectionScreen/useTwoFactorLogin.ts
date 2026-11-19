@@ -37,6 +37,7 @@ export const useTwoFactorLogin = ({
           codeNotValid: res.error === invalidTwoFactorCodeError,
         }),
       );
+      return res;
     },
     [loginWithToken, setLoading],
   );

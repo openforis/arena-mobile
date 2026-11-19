@@ -19,7 +19,14 @@ appId: ${APP_ID}
       notVisible: "Custom"
     commands:
       - tapOn: "Server URL"
+# the request access banner at the top pushes the panel below the screen on small devices
+- scrollUntilVisible:
+    element: "Custom"
 - tapOn: "Custom"
+# the request access banner at the top pushes the field below the screen on small devices
+- scrollUntilVisible:
+    element:
+      id: "remote-connection-server-url-input"
 - tapOn:
     id: "remote-connection-server-url-input"
     waitToSettleTimeoutMs: 1000
@@ -38,12 +45,13 @@ appId: ${APP_ID}
 - tapOn: "Password"
 - inputText: ${ARENA_SERVER_PASSWORD}
 
-# workaround: the first tap may only hide the keyboard
+# the keyboard can cover the login button (pushed down by the request access banner)
+- hideKeyboard
+- scrollUntilVisible:
+    element:
+      id: "remote-connection-login-button"
 - tapOn:
     id: "remote-connection-login-button"
-- tapOn:
-    id: "remote-connection-login-button"
-    optional: true
 
 - extendedWaitUntil:
     visible: "Login successful!"
