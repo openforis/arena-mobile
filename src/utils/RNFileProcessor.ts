@@ -2,12 +2,12 @@ import { File, FileHandle } from "expo-file-system";
 
 import {
   FileProcessor,
-  FileProcessorConstructorArgs,
+  ArenaFileProcessorConstructorArgs,
 } from "@openforis/arena-core";
 
 import { Files } from "./Files";
 
-export type RNFileProcessorArgs = FileProcessorConstructorArgs & {
+export type RNFileProcessorArgs = ArenaFileProcessorConstructorArgs & {
   fileId: string;
 };
 

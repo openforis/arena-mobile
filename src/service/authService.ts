@@ -1,7 +1,7 @@
 import * as Crypto from "expo-crypto";
 import * as WebBrowser from "expo-web-browser";
 
-import { Dictionary, User } from "@openforis/arena-core";
+import { ArenaDictionary, ArenaUser } from "@openforis/arena-core";
 
 import { API } from "./api";
 import { APIUtils } from "./api/apiUtils";
@@ -42,7 +42,7 @@ const externalLoginErrorKeys = new Set([
 const externalLoginServerErrorKeyPrefix = "externalLogin.";
 
 const extractCookieValue = (
-  headers: Dictionary<string>,
+  headers: ArenaDictionary<string>,
   cookieName: string,
 ): string | undefined => {
   const cookies: string[] = [headers?.["set-cookie"] ?? []].flat();
@@ -88,7 +88,7 @@ const extractErrorMessageFromLoginError = (err: any): { error: string } => {
 };
 
 export type LoginResponse = {
-  user?: User;
+  user?: ArenaUser;
   error?: string;
   message?: string;
   twoFactorRequired?: boolean;

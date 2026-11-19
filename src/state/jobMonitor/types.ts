@@ -1,4 +1,4 @@
-import { JobStatus, ValidationFields } from "@openforis/arena-core";
+import { JobStatus, ArenaValidationFields } from "@openforis/arena-core";
 
 export type JobMonitorState = {
   autoDismiss?: boolean;
@@ -10,7 +10,7 @@ export type JobMonitorState = {
   // id of the callbacks (onCancel, onClose) registered outside of the store (see JobMonitorActions.start)
   callbacksId?: number;
   closeButtonTextKey: string;
-  errors?: ValidationFields;
+  errors?: ArenaValidationFields;
   etaSeconds: number | null;
   messageKey?: string;
   messageParams?: Record<string, unknown>;

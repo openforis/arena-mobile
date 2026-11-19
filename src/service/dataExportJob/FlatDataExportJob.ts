@@ -1,17 +1,17 @@
 import {
   ArenaRecordNode,
   FlatDataExportDefaultOptions,
-  FlatDataExportOptions,
+  ArenaFlatDataExportOptions,
   Dates,
-  Dictionary,
+  ArenaDictionary,
   FlatDataExportModel,
   FlatDataFiles,
-  NodeDef,
+  ArenaNodeDef,
   NodeDefs,
   NodeDefType,
   Promises,
   Records,
-  Survey,
+  ArenaSurvey,
   Surveys,
   UniqueFileNamesGenerator,
 } from "@openforis/arena-core";
@@ -25,9 +25,9 @@ import { Files, FlatDataWriter } from "utils";
 import { extractRowNodeData } from "./recordFlatDataExtractor";
 
 type FlatDataExportJobContext = JobMobileContext & {
-  survey: Survey;
+  survey: ArenaSurvey;
   cycle: string;
-  options: FlatDataExportOptions;
+  options: ArenaFlatDataExportOptions;
   outputFileUri?: string;
 };
 
@@ -37,8 +37,9 @@ export type FlatDataExportJobResult = {
 
 export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
   private tempFolderUri?: string;
-  private nodeDefsToExport?: NodeDef<any>[];
-  private dataExportModelByNodeDefUuid: Dictionary<FlatDataExportModel> = {};
+  private nodeDefsToExport?: ArenaNodeDef<any>[];
+  private dataExportModelByNodeDefUuid: ArenaDictionary<FlatDataExportModel> =
+    {};
   private readonly uniqueFileNameGenerator: UniqueFileNamesGenerator =
     new UniqueFileNamesGenerator();
   // ancestor file attributes are repeated in every descendant row: copy each file once
@@ -51,10 +52,10 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     });
   }
 
-  determineNodeDefsToExport(): NodeDef<any>[] {
+  determineNodeDefsToExport(): ArenaNodeDef<any>[] {
     const { survey, cycle, options } = this.context;
     const { exportSingleEntitiesIntoSeparateFiles } = options;
-    const result: NodeDef<any>[] = [];
+    const result: ArenaNodeDef<any>[] = [];
     Surveys.visitDescendantsAndSelfNodeDef({
       survey,
       cycle,
@@ -251,7 +252,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     nodeDef,
     record,
   }: {
-    nodeDef: NodeDef<any>;
+    nodeDef: ArenaNodeDef<any>;
     record: ArenaMobileRecord;
   }): { rowsData: any[][]; fileValues: any[] } {
     const { survey, cycle, options } = this.context;
@@ -296,9 +297,9 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     nodeDefAncestor,
   }: {
     record: ArenaMobileRecord;
-    nodeDef: NodeDef<any>;
+    nodeDef: ArenaNodeDef<any>;
     node: ArenaRecordNode;
-    nodeDefAncestor: NodeDef<any>;
+    nodeDefAncestor: ArenaNodeDef<any>;
   }): { rowData: any[]; fileValues: any[] } {
     const { context, uniqueFileNameGenerator } = this;
     const { survey, cycle, options } = context;

@@ -1,27 +1,27 @@
 import React, { useCallback } from "react";
 
-import { CategoryItem, Labels } from "@openforis/arena-core";
+import { ArenaCategoryItem, ArenaLabels } from "@openforis/arena-core";
 
 import { SelectableListWithFilter } from "components";
 
 import { SurveySelectors } from "state/survey";
 
 // descriptions are not declared in arena-core CategoryItemProps
-type CategoryItemWithDescriptions = CategoryItem & {
-  props: { descriptions?: Labels };
+type CategoryItemWithDescriptions = ArenaCategoryItem & {
+  props: { descriptions?: ArenaLabels };
 };
 
-const itemKeyExtractor = (item: CategoryItem) => item?.uuid;
+const itemKeyExtractor = (item: ArenaCategoryItem) => item?.uuid;
 
 type NodeCodeAutocompleteProps = {
   editable?: boolean;
-  itemLabelFunction: (item: CategoryItem) => string;
-  items?: CategoryItem[];
+  itemLabelFunction: (item: ArenaCategoryItem) => string;
+  items?: ArenaCategoryItem[];
   multiple?: boolean;
   onItemAdd: (uuid: string) => void;
   onItemRemove: (uuid: string) => void;
   onSingleValueChange: (uuid: string | undefined) => void;
-  selectedItems?: CategoryItem[];
+  selectedItems?: ArenaCategoryItem[];
 };
 
 export const NodeCodeAutocomplete = (props: NodeCodeAutocompleteProps) => {
@@ -39,7 +39,7 @@ export const NodeCodeAutocomplete = (props: NodeCodeAutocompleteProps) => {
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
 
   const onSelectedItemsChange = useCallback(
-    (selectedItemsUpdated: CategoryItem[]) => {
+    (selectedItemsUpdated: ArenaCategoryItem[]) => {
       if (multiple) {
         const newItem = selectedItemsUpdated.find(
           (item) => !selectedItems.includes(item),

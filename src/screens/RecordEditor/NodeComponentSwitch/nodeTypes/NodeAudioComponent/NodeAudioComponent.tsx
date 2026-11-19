@@ -1,4 +1,4 @@
-import { NodeDefFile, NodeDefs } from "@openforis/arena-core";
+import { ArenaNodeDefFile, NodeDefs } from "@openforis/arena-core";
 
 import { AudioEqualizer, AudioPlayback } from "components/audio";
 import { Button, DeleteIconButton, HView, IconButton, VView } from "components";
@@ -8,7 +8,9 @@ import { NodeComponentProps } from "../nodeComponentPropTypes";
 import { useNodeAudioComponent } from "./useNodeAudioComponent";
 import styles from "./styles";
 
-export const NodeAudioComponent = (props: NodeComponentProps<NodeDefFile>) => {
+export const NodeAudioComponent = (
+  props: NodeComponentProps<ArenaNodeDefFile>,
+) => {
   const { nodeDef, nodeUuid } = props;
 
   log.debug(`rendering NodeAudioComponent for ${NodeDefs.getName(nodeDef)}`);

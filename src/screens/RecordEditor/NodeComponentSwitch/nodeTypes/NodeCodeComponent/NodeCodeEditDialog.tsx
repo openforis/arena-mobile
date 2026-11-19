@@ -1,21 +1,25 @@
 import React, { useCallback } from "react";
 
-import { CategoryItem, NodeDefCode, NodeDefs } from "@openforis/arena-core";
+import {
+  ArenaCategoryItem,
+  ArenaNodeDefCode,
+  NodeDefs,
+} from "@openforis/arena-core";
 
 import { NodeCodeAutocomplete } from "./NodeCodeAutocomplete";
 import { NodeEditDialogInternal } from "../NodeEditDialogInternal";
 
 type NodeCodeEditDialogProps = {
   editable?: boolean;
-  itemLabelFunction: (item: CategoryItem) => string;
-  items?: CategoryItem[];
-  nodeDef: NodeDefCode;
+  itemLabelFunction: (item: ArenaCategoryItem) => string;
+  items?: ArenaCategoryItem[];
+  nodeDef: ArenaNodeDefCode;
   onDismiss?: () => void;
   onItemAdd: (uuid: string) => void;
   onItemRemove: (uuid: string) => void;
   onSingleValueChange: (uuid: string | undefined) => void;
   parentNodeUuid?: string;
-  selectedItems?: CategoryItem[];
+  selectedItems?: ArenaCategoryItem[];
 };
 
 export const NodeCodeEditDialog = (props: NodeCodeEditDialogProps) => {

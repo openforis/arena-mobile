@@ -1,4 +1,4 @@
-import { UUIDs, User } from "@openforis/arena-core";
+import { UUIDs, ArenaUser } from "@openforis/arena-core";
 import { File } from "expo-file-system";
 
 import { ImportedMap, ImportedMapSourceType } from "model/ImportedMap";
@@ -260,7 +260,7 @@ const createImportJob = ({
     dateModified: now,
   };
   return new ImportedMapImportJob({
-    user: {} as User,
+    user: {} as ArenaUser,
     sourceFileUri,
     importedMap,
     georeference,

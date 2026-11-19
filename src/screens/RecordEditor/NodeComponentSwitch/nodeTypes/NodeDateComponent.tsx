@@ -1,11 +1,11 @@
 import { memo } from "react";
 
-import { NodeDefDate } from "@openforis/arena-core";
+import { ArenaNodeDefDate } from "@openforis/arena-core";
 
 import { NodeDateTimeComponent } from "./NodeDateTimeComponent";
 import { NodeComponentProps } from "./nodeComponentPropTypes";
 
-type Props = NodeComponentProps<NodeDefDate>;
+type Props = NodeComponentProps<ArenaNodeDefDate>;
 
 export const NodeDateComponent = memo((props: Props) => (
   <NodeDateTimeComponent mode="date" {...props} />

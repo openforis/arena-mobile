@@ -3,15 +3,15 @@ import {
   NodeDefs,
   NodeDefType,
   Categories,
-  Survey,
-  NodeDef,
-  NodeDefEntity,
+  ArenaSurvey,
+  ArenaNodeDef,
+  ArenaNodeDefEntity,
   LanguageCode,
-  NodeDefCode,
+  ArenaNodeDefCode,
   Objects,
-  NodeDefFile,
-  NodeDefExpression,
-  SurveyFile,
+  ArenaNodeDefFile,
+  ArenaNodeDefExpression,
+  ArenaSurveyFile,
 } from "@openforis/arena-core";
 
 const samplingPointDataCategoryName = "sampling_point_data";
@@ -22,9 +22,9 @@ const mobileNodeDefFilter =
   }: {
     cycle: string;
   }): ((
-    value: NodeDef<any>,
+    value: ArenaNodeDef<any>,
     index?: number,
-    array?: NodeDef<any>[],
+    array?: ArenaNodeDef<any>[],
   ) => boolean) =>
   (childDef) =>
     !NodeDefs.isHidden(childDef) &&
@@ -47,8 +47,8 @@ const getChildrenDefs = ({
   nodeDef,
   cycle,
 }: {
-  survey: Survey;
-  nodeDef: NodeDef<any>;
+  survey: ArenaSurvey;
+  nodeDef: ArenaNodeDef<any>;
   cycle: string;
 }) =>
   Surveys.getNodeDefChildrenSorted({
@@ -63,9 +63,9 @@ const getDescendantsInSingleEntities = ({
   cycle,
   entityDef,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   cycle: string;
-  entityDef: NodeDefEntity;
+  entityDef: ArenaNodeDefEntity;
 }) =>
   Surveys.getDescendantsInSingleEntities({
     survey,
@@ -80,8 +80,8 @@ const getEntitySummaryDefs = ({
   onlyKeys = true,
   maxSummaryDefs = 3,
 }: {
-  survey: Survey;
-  entityDef: NodeDefEntity;
+  survey: ArenaSurvey;
+  entityDef: ArenaNodeDefEntity;
   cycle: string;
   onlyKeys?: boolean;
   maxSummaryDefs?: number;
@@ -135,7 +135,7 @@ const getEntitySummaryDefs = ({
 const samplingPointDataLocationPropName = "location";
 
 // the sampling point data category, only if its items have a location
-const getSamplingPointDataCategoryWithLocation = (survey: Survey) => {
+const getSamplingPointDataCategoryWithLocation = (survey: ArenaSurvey) => {
   const samplingPointDataCategory = Surveys.getCategoryByName({
     survey,
     categoryName: samplingPointDataCategoryName,
@@ -148,15 +148,15 @@ const getSamplingPointDataCategoryWithLocation = (survey: Survey) => {
     : null;
 };
 
-const hasSamplingPointDataLocation = (survey: Survey) =>
+const hasSamplingPointDataLocation = (survey: ArenaSurvey) =>
   !!getSamplingPointDataCategoryWithLocation(survey);
 
 const isCodeAttributeFromSamplingPointData = ({
   survey,
   nodeDef,
 }: {
-  survey: Survey;
-  nodeDef: NodeDefCode;
+  survey: ArenaSurvey;
+  nodeDef: ArenaNodeDefCode;
 }) => {
   if (nodeDef.type !== NodeDefType.code) return false;
 
@@ -174,7 +174,7 @@ const getNodeDefsLabelsOrNames = ({
   nodeDefUuids,
   lang,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   nodeDefUuids: string[];
   lang: LanguageCode;
 }) =>
@@ -184,11 +184,11 @@ const getNodeDefsLabelsOrNames = ({
   });
 
 const findNodeDefUuidsUsingPrevCycleValueFunctions = (
-  survey: Survey,
+  survey: ArenaSurvey,
 ): string[] => {
   const nodeeDefsWithPrevCycleValueFunctions = [];
   for (const nodeDef of Object.values(survey.nodeDefs ?? {})) {
-    const nodeDefExpressions: NodeDefExpression[] = [
+    const nodeDefExpressions: ArenaNodeDefExpression[] = [
       ...NodeDefs.getApplicable(nodeDef),
       ...NodeDefs.getDefaultValues(nodeDef),
       ...NodeDefs.getVisibleIf(nodeDef),
@@ -196,9 +196,13 @@ const findNodeDefUuidsUsingPrevCycleValueFunctions = (
       ...NodeDefs.getValidationsExpressions(nodeDef),
     ];
     if (nodeDef.type === NodeDefType.file) {
-      const fnExpr = NodeDefs.getFileNameExpression(nodeDef as NodeDefFile);
+      const fnExpr = NodeDefs.getFileNameExpression(
+        nodeDef as ArenaNodeDefFile,
+      );
       if (fnExpr) {
-        nodeDefExpressions.push({ expression: fnExpr } as NodeDefExpression);
+        nodeDefExpressions.push({
+          expression: fnExpr,
+        } as ArenaNodeDefExpression);
       }
     }
     if (
@@ -218,7 +222,7 @@ const findNodeDefUuidsUsingPrevCycleValueFunctions = (
 };
 
 // files included in the survey package by Arena only when the preloaded map layers are enabled
-const getPreloadedMapLayers = (survey: Survey): SurveyFile[] =>
+const getPreloadedMapLayers = (survey: ArenaSurvey): ArenaSurveyFile[] =>
   survey.props.preloadedMapLayersEnabled
     ? (survey.props.preloadedMapLayers ?? []).filter(
         (file) => !file.props.deleted,

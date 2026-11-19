@@ -3,7 +3,7 @@ import { FlatList } from "react-native";
 
 import {
   LanguageCode,
-  NodeDef,
+  ArenaNodeDef,
   NodeDefs,
   NodeDefType,
   Records,
@@ -24,7 +24,7 @@ import { NodePageNavigationButton } from "../BottomNavigationBar/NodePageNavigat
 import styles from "./styles";
 
 const iconByNodeDefType: Partial<
-  Record<NodeDefType, (params: { nodeDef: NodeDef<any> }) => string>
+  Record<NodeDefType, (params: { nodeDef: ArenaNodeDef<any> }) => string>
 > = {
   [NodeDefType.boolean]: () => "checkbox-marked-outline",
   [NodeDefType.code]: () => "format-list-numbered",
@@ -40,7 +40,7 @@ const iconByNodeDefType: Partial<
   [NodeDefType.time]: () => "clock-time-three-outline",
 };
 
-const getNodeDefIcon = (nodeDef: NodeDef<any>) =>
+const getNodeDefIcon = (nodeDef: ArenaNodeDef<any>) =>
   iconByNodeDefType[NodeDefs.getType(nodeDef)]?.({ nodeDef });
 
 type ValidationStatus = { hasErrors: boolean; hasWarnings: boolean };
@@ -51,7 +51,7 @@ type PageNodesListItemProps = {
   hasWarnings: boolean;
   index: number;
   lang: LanguageCode;
-  nodeDef: NodeDef<any>;
+  nodeDef: ArenaNodeDef<any>;
   onPress: (index: number) => void;
 };
 

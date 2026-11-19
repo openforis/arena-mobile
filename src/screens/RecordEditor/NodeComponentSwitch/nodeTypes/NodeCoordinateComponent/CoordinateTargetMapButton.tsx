@@ -1,6 +1,6 @@
 import React from "react";
 
-import { NodeDef } from "@openforis/arena-core";
+import { ArenaNodeDef } from "@openforis/arena-core";
 
 import { OpenMapButton } from "components";
 import { SurveySelectors } from "state";
@@ -8,7 +8,7 @@ import { useCoordinateDistanceTarget } from "./useCoordinateDistanceTarget";
 import { useCoordinateMapTitleParams } from "./useCoordinateMapTitleParams";
 
 type Props = {
-  nodeDef: NodeDef<any>;
+  nodeDef: ArenaNodeDef<any>;
   size?: number;
   targetPoint: any;
 };
@@ -32,7 +32,7 @@ export const CoordinateTargetMapButton = (props: Props) => {
 };
 
 export const NodeCoordinateTargetMapButton = (props: {
-  nodeDef: NodeDef<any>;
+  nodeDef: ArenaNodeDef<any>;
   nodeUuid: string;
 }) => {
   const { nodeDef, nodeUuid } = props;

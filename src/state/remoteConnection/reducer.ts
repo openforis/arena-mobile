@@ -1,4 +1,4 @@
-import { User } from "@openforis/arena-core";
+import { ArenaUser } from "@openforis/arena-core";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { RemoteConnectionState, UserProfileIconInfo } from "./types";
@@ -13,12 +13,15 @@ const remoteConnectionSlice = createSlice({
   name: "remoteConnection",
   initialState,
   reducers: {
-    userLoading: (state, action: PayloadAction<User | null | undefined>) => {
+    userLoading: (
+      state,
+      action: PayloadAction<ArenaUser | null | undefined>,
+    ) => {
       // last logged in user (if any) kept while it's fetched again
       state.user = action.payload ?? null;
       state.userLoading = true;
     },
-    userSet: (state, action: PayloadAction<User | null>) => {
+    userSet: (state, action: PayloadAction<ArenaUser | null>) => {
       state.user = action.payload;
       state.userLoading = false;
     },

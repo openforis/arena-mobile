@@ -1,4 +1,4 @@
-import { Survey, Surveys } from "@openforis/arena-core";
+import { ArenaSurvey, Surveys } from "@openforis/arena-core";
 
 import { RecordSyncStatus } from "model";
 
@@ -40,7 +40,7 @@ export const isAutoMergeAllowed = ({
   survey,
 }: {
   autoSyncEnabled: boolean;
-  survey: Survey;
+  survey: ArenaSurvey;
 }): boolean =>
   autoSyncEnabled &&
   Surveys.isVisibleInMobile(survey) &&
@@ -114,7 +114,7 @@ export const computeAutoSyncStatus = ({
   autoSyncEnabled = false,
 }: {
   records: RecordWithSyncStatus[];
-  survey: Survey;
+  survey: ArenaSurvey;
   autoSyncEnabled?: boolean;
 }): AutoSyncStatus => {
   const mergeWithSameKeysAllowed =
@@ -150,7 +150,7 @@ export const hasConflictingKeysWithMergeNotAllowed = ({
   survey,
 }: {
   records: RecordWithSyncStatus[];
-  survey: Survey;
+  survey: ArenaSurvey;
 }): boolean =>
   !Surveys.isRecordsMergeWithSameKeysAllowed(survey) &&
   records.some(

@@ -1,7 +1,7 @@
 import { createSelector } from "@reduxjs/toolkit";
 import {
   NodeDefs,
-  Nodes,
+  RecordNodes,
   Objects,
   Records,
   Surveys,
@@ -26,7 +26,7 @@ const calculateIsMaxCountReached = ({
     : null;
   if (!parentNode) return false;
 
-  const maxCount = Nodes.getChildrenMaxCount({
+  const maxCount = RecordNodes.getChildrenMaxCount({
     parentNode,
     nodeDef: entityDef,
   });

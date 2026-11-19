@@ -1,4 +1,4 @@
-import { NodeDef, NodeDefType, Survey } from "@openforis/arena-core";
+import { ArenaNodeDef, NodeDefType, ArenaSurvey } from "@openforis/arena-core";
 
 import { RecordCompletion } from "./RecordCompletion";
 import { RecordValueFormatters } from "./RecordValueFormatters";
@@ -12,10 +12,12 @@ const booleanDef = (labelValue?: string) =>
   ({
     type: NodeDefType.boolean,
     props: { name: "flag", labelValue },
-  }) as unknown as NodeDef<NodeDefType>;
+  }) as unknown as ArenaNodeDef<NodeDefType>;
 
 const surveyWithSrsCodes = (...codes: string[]) =>
-  ({ props: { srs: codes.map((code) => ({ code })) } }) as unknown as Survey;
+  ({
+    props: { srs: codes.map((code) => ({ code })) },
+  }) as unknown as ArenaSurvey;
 
 describe("RecordValueFormatters.formatBooleanValue", () => {
   test("empty value", () => {

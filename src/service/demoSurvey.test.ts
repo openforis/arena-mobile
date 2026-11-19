@@ -1,5 +1,5 @@
 import {
-  NodeDef,
+  ArenaNodeDef,
   NodeDefs,
   NodeDefType,
   ArenaRecord,
@@ -8,9 +8,9 @@ import {
   RecordUpdater,
   RecordValidator,
   Records,
-  Survey,
+  ArenaSurvey,
   Surveys,
-  User,
+  ArenaUser,
   UserFactory,
 } from "@openforis/arena-core";
 
@@ -40,25 +40,28 @@ const nodeDefNamesAddedAfterFirstVersion = [
 
 const cycle = "0";
 
-const user: User = UserFactory.createInstance({
+const user: ArenaUser = UserFactory.createInstance({
   email: "test@openforis.org",
   name: "Test User",
 });
 
-const cloneSurvey = (): Survey =>
-  JSON.parse(JSON.stringify(demoSurveyJson)) as Survey;
+const cloneSurvey = (): ArenaSurvey =>
+  JSON.parse(JSON.stringify(demoSurveyJson)) as ArenaSurvey;
 
-const getDef = (survey: Survey, name: string): NodeDef<any> =>
+const getDef = (survey: ArenaSurvey, name: string): ArenaNodeDef<any> =>
   Surveys.getNodeDefByName({ survey, name });
 
-const getNodesByName = (survey: Survey, record: ArenaRecord, name: string) =>
-  Records.getNodesByDefUuid(getDef(survey, name).uuid)(record);
+const getNodesByName = (
+  survey: ArenaSurvey,
+  record: ArenaRecord,
+  name: string,
+) => Records.getNodesByDefUuid(getDef(survey, name).uuid)(record);
 
-const getValues = (survey: Survey, record: ArenaRecord, name: string) =>
+const getValues = (survey: ArenaSurvey, record: ArenaRecord, name: string) =>
   getNodesByName(survey, record, name).map((node) => node.value);
 
 const categoryItemUuid = (
-  survey: Survey,
+  survey: ArenaSurvey,
   nodeDefName: string,
   codePaths: string[],
 ): string => {
@@ -74,7 +77,7 @@ const categoryItemUuid = (
   return item.uuid;
 };
 
-const createRecord = async (survey: Survey): Promise<ArenaRecord> => {
+const createRecord = async (survey: ArenaSurvey): Promise<ArenaRecord> => {
   const { record } = await RecordUpdater.createRootEntity({
     user,
     survey,
@@ -94,7 +97,7 @@ const updateValue = async ({
   value,
   index = 0,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   record: ArenaRecord;
   name: string;
   value: any;
@@ -118,7 +121,7 @@ const addEntity = async ({
   name,
   parentName,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   record: ArenaRecord;
   name: string;
   parentName?: string;
@@ -138,7 +141,7 @@ const addEntity = async ({
 };
 
 describe("Demo survey", () => {
-  let survey: Survey;
+  let survey: ArenaSurvey;
 
   beforeAll(async () => {
     survey = await Surveys.buildAndAssocDependencyGraph(cloneSurvey());

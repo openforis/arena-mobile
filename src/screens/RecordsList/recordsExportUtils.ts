@@ -1,4 +1,4 @@
-import { Survey, Surveys, Validation } from "@openforis/arena-core";
+import { ArenaSurvey, Surveys, ArenaValidation } from "@openforis/arena-core";
 
 import {
   RecordOrigin,
@@ -13,7 +13,7 @@ export type ExportRecord = {
   origin?: string;
   readOnly?: boolean;
   syncStatus?: string;
-  validation?: Validation | null;
+  validation?: ArenaValidation | null;
 };
 
 export type RecordsExportGroups<R extends ExportRecord = ExportRecord> = {
@@ -51,7 +51,7 @@ export const checkCanSendData = ({
   records,
   selectedRecordUuids,
 }: {
-  survey: Survey | undefined;
+  survey: ArenaSurvey | undefined;
   records: ExportRecord[];
   selectedRecordUuids?: string[];
 }): string | undefined => {

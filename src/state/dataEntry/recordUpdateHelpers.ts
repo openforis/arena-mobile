@@ -1,9 +1,9 @@
 import {
   LanguageCode,
   NodeDefs,
-  Nodes,
-  NodesMap,
-  Survey,
+  RecordNodes,
+  ArenaRecordNodesMap,
+  ArenaSurvey,
   Surveys,
   Validations,
 } from "@openforis/arena-core";
@@ -35,9 +35,9 @@ export const handleError = (
   dispatch(ToastActions.show(messageKey, params));
 };
 
-export const removeNodesFlags = (nodes: NodesMap) => {
+export const removeNodesFlags = (nodes: ArenaRecordNodesMap) => {
   for (const node of Object.values(nodes)) {
-    Nodes.removeStatusFlags({ node, sideEffect: true });
+    RecordNodes.removeStatusFlags({ node, sideEffect: true });
   }
 };
 
@@ -94,7 +94,7 @@ const findNewlyInapplicableNodeDefNames = ({
   lang,
   clearedDefUuids,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   lang: LanguageCode;
   clearedDefUuids: Set<string>;
 }): string[] => {
@@ -157,7 +157,7 @@ export const confirmClearNewlyInapplicableValues = async ({
   clearedDefUuids,
 }: {
   dispatch: AppDispatch;
-  survey: Survey;
+  survey: ArenaSurvey;
   lang: LanguageCode;
   clearedDefUuids: Set<string>;
 }): Promise<boolean> => {

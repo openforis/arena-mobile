@@ -1,4 +1,4 @@
-import { UUIDs, User } from "@openforis/arena-core";
+import { UUIDs, ArenaUser } from "@openforis/arena-core";
 
 import { LatLng } from "model/LocationPoint";
 import { MapLayers } from "model/MapLayers";
@@ -118,7 +118,7 @@ const getAreaSquareMeters = (area: OfflineMapArea): number =>
 // creates a job that downloads the tiles of the area (tiles already on the device are skipped);
 // the job must be started by the caller
 const createDownloadJob = (area: OfflineMapArea): OfflineMapAreaDownloadJob =>
-  new OfflineMapAreaDownloadJob({ user: {} as User, area });
+  new OfflineMapAreaDownloadJob({ user: {} as ArenaUser, area });
 
 const computeAreaTileKeys = (area: OfflineMapArea): Set<string> =>
   new Set(

@@ -1,6 +1,6 @@
 import { StyleSheet, View } from "react-native";
 
-import { User } from "@openforis/arena-core";
+import { ArenaUser } from "@openforis/arena-core";
 
 import { Button, Card, Divider, HView, Icon, Text, VView } from "components";
 import { useEffectiveTheme } from "hooks";
@@ -52,7 +52,7 @@ type Props = {
   onGoBack: () => void;
   onLogout: () => void;
   serverUrl: string;
-  user: User;
+  user: ArenaUser;
 };
 
 export const LoggedInUserSummary = ({

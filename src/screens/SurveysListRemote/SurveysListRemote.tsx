@@ -1,7 +1,12 @@
 import { useCallback, useMemo, useState } from "react";
 import { useNavigator } from "navigation/navigator";
 
-import { DateFormats, Dates, Survey, Surveys } from "@openforis/arena-core";
+import {
+  DateFormats,
+  Dates,
+  ArenaSurvey,
+  Surveys,
+} from "@openforis/arena-core";
 
 import {
   DataVisualizer,
@@ -36,7 +41,7 @@ const INITIAL_STATE = {
 const minSurveysToShowSearchBar = 5;
 
 // only published surveys are fetched
-type SurveyRemoteItem = Survey & {
+type SurveyRemoteItem = ArenaSurvey & {
   datePublished: string;
   key: string;
   loadStatusKey: string;

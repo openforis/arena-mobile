@@ -1,4 +1,4 @@
-import { NodeDefType, Survey, Surveys } from "@openforis/arena-core";
+import { NodeDefType, ArenaSurvey, Surveys } from "@openforis/arena-core";
 
 import demoSurveyJson from "../../service/demoSurvey.json";
 
@@ -237,9 +237,9 @@ describe("PositionTracks.formatDuration", () => {
 
 describe("PositionTracks node defs", () => {
   const createSurvey = () =>
-    JSON.parse(JSON.stringify(demoSurveyJson)) as Survey;
+    JSON.parse(JSON.stringify(demoSurveyJson)) as ArenaSurvey;
 
-  const makeTrackable = (survey: Survey, name: string) => {
+  const makeTrackable = (survey: ArenaSurvey, name: string) => {
     const nodeDef = Surveys.getNodeDefByName({ survey, name }) as any;
     nodeDef.type = NodeDefType.geo;
     nodeDef.props.positionTracking = true;

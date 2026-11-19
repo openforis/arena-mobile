@@ -1,29 +1,29 @@
 import {
-  Validation,
-  ValidationFields,
-  ValidationResult,
+  ArenaValidation,
+  ArenaValidationFields,
+  ArenaValidationResult,
 } from "@openforis/arena-core";
 
 const extractErrorMessage = ({
   errors,
   t,
 }: {
-  errors: ValidationFields;
+  errors: ArenaValidationFields;
   t: any;
 }): string => {
   const firstLevelErrors = Object.values(errors);
-  const secondLevelErrors: Validation[] = firstLevelErrors.flatMap(
+  const secondLevelErrors: ArenaValidation[] = firstLevelErrors.flatMap(
     (firstLevelError) => Object.values(firstLevelError),
   );
-  const errorItems: ValidationResult[] = secondLevelErrors.reduce(
-    (acc, secondLevelError: Validation) => {
+  const errorItems: ArenaValidationResult[] = secondLevelErrors.reduce(
+    (acc, secondLevelError: ArenaValidation) => {
       acc.push(...(secondLevelError.errors ?? []));
       return acc;
     },
-    [] as ValidationResult[],
+    [] as ArenaValidationResult[],
   );
   return errorItems
-    .reduce((acc: any, errorItem: ValidationResult) => {
+    .reduce((acc: any, errorItem: ArenaValidationResult) => {
       const { key, params } = errorItem;
       if (key) {
         const messageKey =

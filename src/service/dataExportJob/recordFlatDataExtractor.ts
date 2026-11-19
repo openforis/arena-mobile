@@ -2,32 +2,32 @@ import {
   ArenaRecordNode,
   Arrays,
   CategoryItems,
-  FlatDataExportOptions,
+  ArenaFlatDataExportOptions,
   Dates,
-  NodeDef,
-  NodeDefCoordinate,
+  ArenaNodeDef,
+  ArenaNodeDefCoordinate,
   NodeDefs,
   NodeDefType,
-  NodeValueFormatter,
-  NodeValues,
+  RecordNodeValueFormatter,
+  RecordNodeValues,
   Objects,
   Strings,
-  Survey,
+  ArenaSurvey,
   Surveys,
   Taxa,
-  Taxon,
+  ArenaTaxon,
   UniqueFileNamesGenerator,
 } from "@openforis/arena-core";
 import { ArenaMobileRecord } from "model/ArenaMobileRecord";
 import { Files } from "utils";
 
 type RowDataExtractorParams = {
-  survey: Survey;
+  survey: ArenaSurvey;
   cycle: string;
   record: ArenaMobileRecord;
   node: ArenaRecordNode | null | undefined;
-  nodeDef: NodeDef<any>;
-  options: FlatDataExportOptions;
+  nodeDef: ArenaNodeDef<any>;
+  options: ArenaFlatDataExportOptions;
   uniqueFileNameGenerator: UniqueFileNamesGenerator;
 };
 
@@ -49,7 +49,7 @@ const totalFieldsCountCalculatorByNodeDefType: Partial<
   },
   [NodeDefType.coordinate]: ({ nodeDef }) => {
     const additionalFields = NodeDefs.getCoordinateAdditionalFields(
-      nodeDef as NodeDefCoordinate,
+      nodeDef as ArenaNodeDefCoordinate,
     );
     return 3 + additionalFields.length;
   },
@@ -73,7 +73,7 @@ const generateEmptyFields = (
 const extractCategoryItem = (params: RowDataExtractorParams) => {
   const { survey, node } = params;
   if (Objects.isNotEmpty(node?.value)) {
-    const itemUuid = NodeValues.getItemUuid(node!);
+    const itemUuid = RecordNodeValues.getItemUuid(node!);
     if (itemUuid) {
       return Surveys.getCategoryItemByUuid({ survey, itemUuid });
     }
@@ -84,7 +84,7 @@ const extractCategoryItem = (params: RowDataExtractorParams) => {
 const extractTaxon = (params: RowDataExtractorParams) => {
   const { survey, node } = params;
   if (Objects.isNotEmpty(node?.value)) {
-    const taxonUuid = NodeValues.getTaxonUuid(node!);
+    const taxonUuid = RecordNodeValues.getTaxonUuid(node!);
     if (taxonUuid) {
       return Surveys.getTaxonByUuid({ survey, taxonUuid });
     }
@@ -96,12 +96,12 @@ const extractScientificName = ({
   taxon,
   node,
 }: {
-  taxon: Taxon;
+  taxon: ArenaTaxon;
   node: ArenaRecordNode;
 }): string => {
   const taxonScientificName = Taxa.getScientificName(taxon);
   if (Taxa.isUnknownOrUnlisted(taxon)) {
-    const nodeScientificName = NodeValues.getScientificName(node);
+    const nodeScientificName = RecordNodeValues.getScientificName(node);
     return nodeScientificName ?? taxonScientificName;
   }
   return taxonScientificName;
@@ -111,17 +111,17 @@ const extractVernacularName = ({
   taxon,
   node,
 }: {
-  taxon: Taxon;
+  taxon: ArenaTaxon;
   node: ArenaRecordNode;
 }): string | undefined => {
-  const vernacularNameUuid = NodeValues.getVernacularNameUuid(node);
+  const vernacularNameUuid = RecordNodeValues.getVernacularNameUuid(node);
   if (vernacularNameUuid) {
     const { vernacularName, vernacularLang } =
       Taxa.getVernacularNameAndLang(vernacularNameUuid)(taxon);
     return vernacularName ? `${vernacularName} (${vernacularLang})` : undefined;
   }
   if (Taxa.isUnknownOrUnlisted(taxon)) {
-    return NodeValues.getVernacularName(node);
+    return RecordNodeValues.getVernacularName(node);
   }
   return undefined;
 };
@@ -150,7 +150,7 @@ const rowDataExtractorByNodeDefType: Partial<
   [NodeDefType.coordinate]: (params) => {
     const { node, nodeDef } = params;
     const additionalFields = NodeDefs.getCoordinateAdditionalFields(
-      nodeDef as NodeDefCoordinate,
+      nodeDef as ArenaNodeDefCoordinate,
     );
     const value = node?.value;
     if (Objects.isEmpty(value)) {
@@ -167,9 +167,9 @@ const rowDataExtractorByNodeDefType: Partial<
     }
     const node = nodeParam!;
     const [year, month, day] = [
-      NodeValues.getDateYear(node),
-      NodeValues.getDateMonth(node),
-      NodeValues.getDateDay(node),
+      RecordNodeValues.getDateYear(node),
+      RecordNodeValues.getDateMonth(node),
+      RecordNodeValues.getDateDay(node),
     ];
     return Dates.isValidDate(year, month, day)
       ? [`${year}-${month}-${day}`]
@@ -182,10 +182,10 @@ const rowDataExtractorByNodeDefType: Partial<
     }
     const node = nodeParam!;
     const fileNameExpression = NodeDefs.getFileNameExpression(nodeDef);
-    const fileUuid = NodeValues.getFileUuid(node)!;
+    const fileUuid = RecordNodeValues.getFileUuid(node)!;
     const fileName = fileNameExpression
-      ? NodeValues.getFileNameCalculated(node)
-      : NodeValues.getFileName(node);
+      ? RecordNodeValues.getFileNameCalculated(node)
+      : RecordNodeValues.getFileName(node);
     // the name becomes a file path in the export, and records can come from other devices or a server
     const uniqueFileName = uniqueFileNameGenerator.generateUniqueFileName(
       fileName ? Files.sanitizeFileName(fileName) : fileUuid,
@@ -214,8 +214,8 @@ const rowDataExtractorByNodeDefType: Partial<
       return generateEmptyFields(params);
     }
     const node = nodeParam!;
-    const hour = NodeValues.getTimeHour(node);
-    const minute = NodeValues.getTimeMinute(node);
+    const hour = RecordNodeValues.getTimeHour(node);
+    const minute = RecordNodeValues.getTimeMinute(node);
     return Dates.isValidTime(hour, minute)
       ? [`${hour}:${minute}:00`]
       : generateEmptyFields(params);
@@ -235,7 +235,7 @@ export const extractRowNodeData = (params: RowDataExtractorParams): any[] => {
     return [""];
   }
   // default extractor
-  const valueFormatted = NodeValueFormatter.format({
+  const valueFormatted = RecordNodeValueFormatter.format({
     survey,
     cycle,
     node: node!,

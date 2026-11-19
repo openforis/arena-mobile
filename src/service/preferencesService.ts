@@ -1,4 +1,4 @@
-import { Objects, Promises, UserGroup } from "@openforis/arena-core";
+import { Objects, Promises, ArenaUserGroup } from "@openforis/arena-core";
 import { asyncStorageKeys } from "./asyncStorage/asyncStorageKeys";
 import { StoredObject } from "./asyncStorage/StoredItem";
 
@@ -14,7 +14,7 @@ export type SurveyPreferences = {
   language?: string;
   lastEditedPageByRecordId?: Record<string, RecordLastEditedPage>;
   entityListColumnsByEntityDefUuid?: Record<string, string[]>;
-  userGroup?: UserGroup | null;
+  userGroup?: ArenaUserGroup | null;
 };
 
 type Preferences = {
@@ -153,7 +153,7 @@ const setSurveyPreferredLanguage = async (surveyId: number, lang: string) =>
 
 const setSurveyUserGroup = async (
   surveyId: number,
-  userGroup: UserGroup | null,
+  userGroup: ArenaUserGroup | null,
 ) =>
   updateSurveyPreference(surveyId, surveyPreferencesKeys.userGroup, userGroup);
 

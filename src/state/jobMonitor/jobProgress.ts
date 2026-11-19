@@ -1,7 +1,7 @@
-import { JobSerialized, JobStatus } from "@openforis/arena-core";
+import { ArenaJobSerialized, JobStatus } from "@openforis/arena-core";
 
 // a local or remote job, as notified while it runs
-export type JobSummary<R = unknown> = JobSerialized<R>;
+export type JobSummary<R = unknown> = ArenaJobSerialized<R>;
 
 export type TransferSample = {
   processed: number;

@@ -1,4 +1,4 @@
-import { Survey } from "@openforis/arena-core";
+import { ArenaSurvey } from "@openforis/arena-core";
 
 const prefix = "arenaMobilePreview/";
 
@@ -11,7 +11,7 @@ export const PreviewMessageType = {
 
 export type PreviewSurveyMessage = {
   type: typeof PreviewMessageType.survey;
-  survey: Survey;
+  survey: ArenaSurvey;
   lang?: string;
   cycle?: string;
 };
@@ -32,8 +32,8 @@ const isNonEmptyString = (value: unknown): value is string =>
 const isOptionalString = (value: unknown): boolean =>
   value === undefined || value === null || isNonEmptyString(value);
 
-const isSurvey = (value: unknown): value is Survey => {
-  const survey = value as Survey | null;
+const isSurvey = (value: unknown): value is ArenaSurvey => {
+  const survey = value as ArenaSurvey | null;
   return (
     !!survey &&
     typeof survey === "object" &&

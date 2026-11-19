@@ -2,7 +2,7 @@ import {
   RecordBuilder,
   RecordNodeBuilders,
   Records,
-  Survey,
+  ArenaSurvey,
   SurveyBuilder,
   SurveyObjectBuilders,
   Surveys,
@@ -22,7 +22,7 @@ const user = UserFactory.createInstance({
 const { getNextEntityPointer, getPrevEntityPointer } = RecordPageNavigator;
 
 describe("RecordPageNavigator", () => {
-  let survey: Survey;
+  let survey: ArenaSurvey;
   let record: any;
   let defs: Record<string, any>;
   let nodes: Record<string, any>;

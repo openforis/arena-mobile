@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as Location from "expo-location";
-import { Point, PointFactory } from "@openforis/arena-core";
+import { ArenaPoint, PointFactory } from "@openforis/arena-core";
 
 import { AveragedLocation, GpsSourceSetting, LocationPoint } from "model";
 import { log, Permissions, Refs } from "utils";
@@ -21,7 +21,9 @@ export type LocationWatchStatus = "idle" | "connecting" | "watching";
 
 type LocationSubscription = { remove: () => void };
 
-const locationPointToPoint = (locationPoint: LocationPoint): Point | null => {
+const locationPointToPoint = (
+  locationPoint: LocationPoint,
+): ArenaPoint | null => {
   if (!locationPoint) return null;
 
   const { latitude, longitude } = locationPoint;
@@ -59,7 +61,7 @@ export const useLocationWatch = ({
   locationCallback: (params: {
     location: LocationPoint | null;
     locationAccuracy: number | null | undefined;
-    pointLatLong: Point | null;
+    pointLatLong: ArenaPoint | null;
     thresholdReached: boolean;
   }) => void;
   stopOnAccuracyThreshold?: boolean;

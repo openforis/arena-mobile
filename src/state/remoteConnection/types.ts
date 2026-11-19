@@ -1,4 +1,4 @@
-import { User } from "@openforis/arena-core";
+import { ArenaUser } from "@openforis/arena-core";
 
 export type UserProfileIconInfo = {
   loaded: boolean;
@@ -7,7 +7,7 @@ export type UserProfileIconInfo = {
 };
 
 export type RemoteConnectionState = {
-  user: User | null;
+  user: ArenaUser | null;
   userLoading: boolean;
   // null once the user credentials are cleared
   userProfileIconInfo: UserProfileIconInfo | null;

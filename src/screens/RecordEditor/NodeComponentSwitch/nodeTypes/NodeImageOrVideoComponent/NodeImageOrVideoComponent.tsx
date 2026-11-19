@@ -1,4 +1,8 @@
-import { NodeDefFile, NodeDefFileType, NodeDefs } from "@openforis/arena-core";
+import {
+  ArenaNodeDefFile,
+  NodeDefFileType,
+  NodeDefs,
+} from "@openforis/arena-core";
 
 import {
   AlertIcon,
@@ -32,7 +36,7 @@ const cameraButtonAvailableByFileType: Record<string, boolean> = {
 };
 
 export const NodeImageOrVideoComponent = (
-  props: NodeComponentProps<NodeDefFile>,
+  props: NodeComponentProps<ArenaNodeDefFile>,
 ) => {
   const { nodeDef, nodeUuid } = props;
 

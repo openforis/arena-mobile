@@ -1,10 +1,10 @@
-import { LanguageCode, Survey } from "@openforis/arena-core";
+import { LanguageCode, ArenaSurvey } from "@openforis/arena-core";
 
 import { getSurveyMapLayers, SurveyMapLayerType } from "./surveyMapLayers";
 
 const buildSurvey = ({
   preloadedMapLayersEnabled = true,
-}: { preloadedMapLayersEnabled?: boolean } = {}): Survey =>
+}: { preloadedMapLayersEnabled?: boolean } = {}): ArenaSurvey =>
   ({
     props: {
       areasOfInterest: [
@@ -18,7 +18,7 @@ const buildSurvey = ({
         { uuid: "f3", props: { name: "f3.geojson" } },
       ],
     },
-  }) as unknown as Survey;
+  }) as unknown as ArenaSurvey;
 
 describe("getSurveyMapLayers", () => {
   test("no layers without a survey", () => {

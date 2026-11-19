@@ -1,12 +1,12 @@
 import {
-  CategoryItem,
-  NodeDef,
+  ArenaCategoryItem,
+  ArenaNodeDef,
   NodeDefs,
   Objects,
   RecordExpressionEvaluator,
   Records,
-  Taxon,
-  User,
+  ArenaTaxon,
+  ArenaUser,
 } from "@openforis/arena-core";
 
 import { useAsyncValueEffect } from "hooks";
@@ -18,13 +18,13 @@ import {
 import { AreaOfInterestProviderDefault } from "service/areaOfInterestProvider";
 import { useAppSelector } from "state/storeHooks";
 
-export const useItemsFilter = <T extends CategoryItem | Taxon>({
+export const useItemsFilter = <T extends ArenaCategoryItem | ArenaTaxon>({
   nodeDef,
   parentNodeUuid,
   items,
   alwaysIncludeItemFunction = undefined,
 }: {
-  nodeDef: NodeDef<any>;
+  nodeDef: ArenaNodeDef<any>;
   parentNodeUuid?: string;
   items: T[];
   alwaysIncludeItemFunction?: (item: T) => boolean;
@@ -43,7 +43,7 @@ export const useItemsFilter = <T extends CategoryItem | Taxon>({
 
   const [filteredItems] = useAsyncValueEffect(
     () => {
-      const user = loggedUser ?? ({ props: {} } as User);
+      const user = loggedUser ?? ({ props: {} } as ArenaUser);
       const parentNode = Records.getNodeByUuid(parentNodeUuid!)(record);
       const expressionEvaluator = new RecordExpressionEvaluator();
       return Promise.all(

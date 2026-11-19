@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { StyleSheet } from "react-native";
 
-import { NodeDefs, NodeDefText } from "@openforis/arena-core";
+import { NodeDefs, ArenaNodeDefText } from "@openforis/arena-core";
 
 import {
   CopyToClipboardButton,
@@ -32,7 +32,7 @@ export const NodeTextReadOnlyValuePreview = (props: NodeValuePreviewProps) => {
   const cycle = DataEntrySelectors.useRecordCycle();
   const [normalizedUrl, setNormalizedUrl] = useState<string | null>(null);
 
-  const nodeDefText = nodeDef as NodeDefText;
+  const nodeDefText = nodeDef as ArenaNodeDefText;
 
   const isHyperlink = NodeDefs.isLayoutRenderTypeHyperlink(cycle)(nodeDefText);
   const isMarkdown = NodeDefs.isLayoutRenderTypeMarkdown(cycle)(nodeDefText);

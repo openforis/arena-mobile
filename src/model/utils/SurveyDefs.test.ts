@@ -1,7 +1,7 @@
 import {
-  NodeDefEntity,
+  ArenaNodeDefEntity,
   NodeDefs,
-  Survey,
+  ArenaSurvey,
   Surveys,
 } from "@openforis/arena-core";
 
@@ -13,7 +13,7 @@ const cycle = "0";
 
 describe("SurveyDefs.getEntitySummaryDefs", () => {
   test("doesn't duplicate key defs also included in the multiple entity summary", () => {
-    const survey = JSON.parse(JSON.stringify(demoSurveyJson)) as Survey;
+    const survey = JSON.parse(JSON.stringify(demoSurveyJson)) as ArenaSurvey;
     const keyDef = Surveys.getNodeDefByName({
       survey,
       name: "regeneration_no",
@@ -24,7 +24,7 @@ describe("SurveyDefs.getEntitySummaryDefs", () => {
     const entityDef = Surveys.getNodeDefByName({
       survey,
       name: "regeneration",
-    }) as NodeDefEntity;
+    }) as ArenaNodeDefEntity;
 
     const summaryDefNames = SurveyDefs.getEntitySummaryDefs({
       survey,

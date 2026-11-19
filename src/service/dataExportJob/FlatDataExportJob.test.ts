@@ -1,4 +1,4 @@
-import { JobStatus, Survey } from "@openforis/arena-core";
+import { JobStatus, ArenaSurvey } from "@openforis/arena-core";
 
 import { RecordService } from "service";
 import { Files } from "utils";
@@ -31,7 +31,7 @@ jest.mock("utils", () => ({
   FlatDataWriter: { appendCsvRows: jest.fn(), writeCsvHeaders: jest.fn() },
 }));
 
-const survey = JSON.parse(JSON.stringify(demoSurveyJson)) as Survey;
+const survey = JSON.parse(JSON.stringify(demoSurveyJson)) as ArenaSurvey;
 
 const createJob = () =>
   new FlatDataExportJob({

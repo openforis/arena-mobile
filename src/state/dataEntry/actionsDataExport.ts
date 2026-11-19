@@ -1,8 +1,8 @@
 import {
-  JobSerialized,
+  ArenaJobSerialized,
   JobStatus,
   Objects,
-  Validation,
+  ArenaValidation,
 } from "@openforis/arena-core";
 
 import { RecordService, UserService } from "service";
@@ -42,14 +42,14 @@ const exportType = {
   share: "share",
 };
 
-type UploadJobSummary = JobSerialized<RecordsUploadResult | undefined>;
+type UploadJobSummary = ArenaJobSerialized<RecordsUploadResult | undefined>;
 
 type OnUploadJobComplete = (
   jobComplete: UploadJobSummary,
 ) => void | Promise<void>;
 
 // errors of the export file generation job, by record
-type ExportFileGenerationErrors = Record<string, { error: Validation }>;
+type ExportFileGenerationErrors = Record<string, { error: ArenaValidation }>;
 
 const onExportConfirmed =
   ({

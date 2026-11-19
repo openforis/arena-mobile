@@ -1,8 +1,8 @@
 import {
-  NodeDef,
-  NodeDefEntity,
+  ArenaNodeDef,
+  ArenaNodeDefEntity,
   NodeDefType,
-  Nodes,
+  RecordNodes,
   Objects,
   Records,
   Surveys,
@@ -58,7 +58,7 @@ export const selectCurrentPageEntity = createSelector(
     const entityDef = Surveys.getNodeDefByUuid({
       survey: survey!,
       uuid: entityDefUuid,
-    })! as NodeDefEntity;
+    })! as ArenaNodeDefEntity;
 
     return {
       parentEntityUuid,
@@ -78,7 +78,7 @@ const selectCurrentPageEntityRelevantChildDefs = createSelector(
     selectRecordUnsafe,
     selectCurrentPageEntity,
   ],
-  (survey, record, currentPageEntity): NodeDef<NodeDefType>[] => {
+  (survey, record, currentPageEntity): ArenaNodeDef<NodeDefType>[] => {
     const { parentEntityUuid, entityDef, entityUuid } = currentPageEntity;
     const actualEntityUuid = entityUuid ?? parentEntityUuid;
     if (!actualEntityUuid || !record) {
@@ -93,8 +93,8 @@ const selectCurrentPageEntityRelevantChildDefs = createSelector(
     });
     return childDefs.filter(
       (childDef) =>
-        Nodes.isChildApplicable(parentEntity, childDef.uuid) &&
-        Nodes.isChildVisible(parentEntity, childDef.uuid),
+        RecordNodes.isChildApplicable(parentEntity, childDef.uuid) &&
+        RecordNodes.isChildVisible(parentEntity, childDef.uuid),
     );
   },
 );
@@ -112,7 +112,7 @@ const selectCurrentPageEntityActiveChildDefUuid = createSelector(
 );
 
 const useIsNodeDefCurrentActiveChild = (
-  nodeDef: NodeDef<NodeDefType>,
+  nodeDef: ArenaNodeDef<NodeDefType>,
 ): boolean =>
   useAppSelector(
     (state) =>

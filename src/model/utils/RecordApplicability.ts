@@ -1,14 +1,14 @@
 import {
   ArenaRecord,
   ArenaRecordNode,
-  NodeDef,
-  NodeDefEntity,
+  ArenaNodeDef,
+  ArenaNodeDefEntity,
   NodeDefs,
   NodeDefType,
-  Nodes,
+  RecordNodes,
   Objects,
   Records,
-  Survey,
+  ArenaSurvey,
 } from "@openforis/arena-core";
 
 import { SurveyDefs } from "./SurveyDefs";
@@ -20,20 +20,20 @@ const getApplicableChildrenEntityDefs = ({
   cycle,
   onlyInOwnPage = false,
 }: {
-  survey: Survey;
-  nodeDef: NodeDefEntity;
+  survey: ArenaSurvey;
+  nodeDef: ArenaNodeDefEntity;
   parentEntity: ArenaRecordNode;
   cycle: string | undefined;
   onlyInOwnPage?: boolean;
-}): NodeDefEntity[] =>
+}): ArenaNodeDefEntity[] =>
   SurveyDefs.getChildrenDefs({ survey, nodeDef, cycle: cycle! }).filter(
     (childDef) =>
       NodeDefs.isEntity(childDef) &&
-      Nodes.isChildApplicable(parentEntity, childDef.uuid) &&
-      Nodes.isChildVisible(parentEntity, childDef.uuid) &&
+      RecordNodes.isChildApplicable(parentEntity, childDef.uuid) &&
+      RecordNodes.isChildVisible(parentEntity, childDef.uuid) &&
       (!onlyInOwnPage ||
-        NodeDefs.isDisplayInOwnPage(cycle!)(childDef as NodeDefEntity)),
-  ) as NodeDefEntity[];
+        NodeDefs.isDisplayInOwnPage(cycle!)(childDef as ArenaNodeDefEntity)),
+  ) as ArenaNodeDefEntity[];
 
 const hasDescendantApplicableNodes = ({
   record,
@@ -42,7 +42,7 @@ const hasDescendantApplicableNodes = ({
 }: {
   record: ArenaRecord;
   parentEntity: ArenaRecordNode;
-  nodeDef: NodeDef<NodeDefType>;
+  nodeDef: ArenaNodeDef<NodeDefType>;
 }): boolean => {
   const descendants = Records.getDescendantsOrSelf(
     parentEntity,
@@ -58,12 +58,12 @@ const getApplicableDescendantDefs = ({
   parentEntity,
   onlyAttributes = true,
 }: {
-  survey: Survey | undefined;
-  entityDef: NodeDefEntity;
+  survey: ArenaSurvey | undefined;
+  entityDef: ArenaNodeDefEntity;
   record: ArenaRecord;
   parentEntity: ArenaRecordNode;
   onlyAttributes?: boolean;
-}): NodeDef<NodeDefType>[] => {
+}): ArenaNodeDef<NodeDefType>[] => {
   const cycle = record.cycle!;
   const defs = SurveyDefs.getDescendantsInSingleEntities({
     survey: survey!,
@@ -86,13 +86,13 @@ const getApplicableSummaryDefs = ({
   onlyKeys = false,
   maxSummaryDefs = undefined,
 }: {
-  survey: Survey | undefined;
-  entityDef: NodeDefEntity;
+  survey: ArenaSurvey | undefined;
+  entityDef: ArenaNodeDefEntity;
   record: ArenaRecord;
   parentEntity: ArenaRecordNode;
   onlyKeys?: boolean;
   maxSummaryDefs?: number;
-}): NodeDef<NodeDefType>[] => {
+}): ArenaNodeDef<NodeDefType>[] => {
   const cycle = record.cycle!;
   const summaryDefs = SurveyDefs.getEntitySummaryDefs({
     survey: survey!,

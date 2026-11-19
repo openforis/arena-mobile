@@ -2,7 +2,7 @@ import React, { JSX } from "react";
 import {
   NodeDefs,
   NodeDefType,
-  NodeValueFormatter,
+  RecordNodeValueFormatter,
   Objects,
 } from "@openforis/arena-core";
 
@@ -43,7 +43,7 @@ export const NodeValuePreview = (props: NodeValuePreviewProps) => {
     return <Text>---</Text>;
   }
 
-  const valueFormatted = NodeValueFormatter.format({
+  const valueFormatted = RecordNodeValueFormatter.format({
     survey,
     cycle,
     nodeDef,

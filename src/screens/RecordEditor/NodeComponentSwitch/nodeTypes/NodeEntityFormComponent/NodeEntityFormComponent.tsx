@@ -1,7 +1,11 @@
 import React, { memo, useCallback, useEffect, useRef } from "react";
 import { ListRenderItemInfo, VirtualizedList } from "react-native";
 
-import { NodeDef, NodeDefEntity, NodeDefs } from "@openforis/arena-core";
+import {
+  ArenaNodeDef,
+  ArenaNodeDefEntity,
+  NodeDefs,
+} from "@openforis/arena-core";
 
 import { DataEntrySelectors } from "state";
 import { log } from "utils";
@@ -11,13 +15,13 @@ import { NodeComponentProps } from "../nodeComponentPropTypes";
 
 import styles from "./styles";
 
-const keyExtractor = (childDef: NodeDef<any>) => childDef.uuid;
+const keyExtractor = (childDef: ArenaNodeDef<any>) => childDef.uuid;
 
-const getItem = (data: NodeDef<any>[], index: number) => data[index]!;
+const getItem = (data: ArenaNodeDef<any>[], index: number) => data[index]!;
 
-const getItemCount = (data: NodeDef<any>[]) => data.length;
+const getItemCount = (data: ArenaNodeDef<any>[]) => data.length;
 
-type Props = NodeComponentProps<NodeDefEntity>;
+type Props = NodeComponentProps<ArenaNodeDefEntity>;
 
 export const NodeEntityFormComponent = memo((props: Props) => {
   const { nodeDef, parentNodeUuid } = props;
@@ -36,7 +40,7 @@ export const NodeEntityFormComponent = memo((props: Props) => {
   }, [nodeDef, parentNodeUuid]);
 
   const renderItem = useCallback(
-    ({ item: childDef }: ListRenderItemInfo<NodeDef<any>>) => (
+    ({ item: childDef }: ListRenderItemInfo<ArenaNodeDef<any>>) => (
       <NodeDefFormItem nodeDef={childDef} parentNodeUuid={parentNodeUuid} />
     ),
     [parentNodeUuid],

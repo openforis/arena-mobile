@@ -1,4 +1,4 @@
-import { JobSerialized, Surveys, UUIDs } from "@openforis/arena-core";
+import { ArenaJobSerialized, Surveys, UUIDs } from "@openforis/arena-core";
 
 import { AppCompatibilityOperation, SettingsService } from "service";
 
@@ -32,7 +32,10 @@ const { t } = i18n;
 
 // a failed job rejects with its summary (see JobMonitorActions.startAsync)
 type FailedJobSummary = Partial<
-  Pick<JobSerialized<unknown>, "errors" | "innerJobs" | "currentInnerJobIndex">
+  Pick<
+    ArenaJobSerialized<unknown>,
+    "errors" | "innerJobs" | "currentInnerJobIndex"
+  >
 >;
 
 /**
@@ -144,7 +147,7 @@ export const startUploadDataToRemoteServer =
     skipMissingFiles?: boolean;
     onJobComplete?:
       | ((
-          jobComplete: JobSerialized<RecordsUploadResult | undefined>,
+          jobComplete: ArenaJobSerialized<RecordsUploadResult | undefined>,
         ) => void | Promise<void>)
       | null;
     silent?: boolean;
@@ -198,10 +201,10 @@ export const startUploadDataToRemoteServer =
 
     // runs the job, starting it again while the user chooses to retry it
     const runUploadAndProcessJob = async (): Promise<
-      JobSerialized<RecordsUploadResult | undefined> | null | undefined
+      ArenaJobSerialized<RecordsUploadResult | undefined> | null | undefined
     > => {
       let jobComplete:
-        JobSerialized<RecordsUploadResult | undefined> | null | undefined =
+        ArenaJobSerialized<RecordsUploadResult | undefined> | null | undefined =
         null;
       let shouldRetry: boolean;
       try {

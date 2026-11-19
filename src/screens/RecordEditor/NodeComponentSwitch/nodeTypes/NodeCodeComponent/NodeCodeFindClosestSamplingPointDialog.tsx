@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 
-import { CategoryItem, Points } from "@openforis/arena-core";
+import { ArenaCategoryItem, Points } from "@openforis/arena-core";
 
 import {
   Button,
@@ -16,10 +16,10 @@ import { useLocation } from "hooks";
 import { SurveySelectors } from "state";
 
 type NodeCodeFindClosestSamplingPointDialogProps = {
-  itemLabelFunction: (item: CategoryItem) => string;
-  items: CategoryItem[];
+  itemLabelFunction: (item: ArenaCategoryItem) => string;
+  items: ArenaCategoryItem[];
   onDismiss: () => void;
-  onItemSelected: (item: CategoryItem) => void;
+  onItemSelected: (item: ArenaCategoryItem) => void;
 };
 
 export const NodeCodeFindClosestSamplingPointDialog = ({
@@ -44,10 +44,10 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
   } = useLocation();
 
   const [selectedMinDistanceItem, setSelectedMinDistanceItem] =
-    useState<CategoryItem | null>(null);
+    useState<ArenaCategoryItem | null>(null);
 
   const findItemsWithMinDistance = useCallback(() => {
-    let minDistanceItems: CategoryItem[] = [];
+    let minDistanceItems: ArenaCategoryItem[] = [];
     let minDistance: number | null = null;
 
     for (const item of items) {
@@ -80,7 +80,7 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
   const { minDistance, minDistanceItems } = useMemo(
     (): {
       minDistance: number | null;
-      minDistanceItems: CategoryItem[] | null;
+      minDistanceItems: ArenaCategoryItem[] | null;
     } =>
       items && locationFetched && pointLatLong
         ? findItemsWithMinDistance()
@@ -137,10 +137,10 @@ export const NodeCodeFindClosestSamplingPointDialog = ({
             }}
           />
           <SelectableList
-            itemKeyExtractor={(item: CategoryItem) => item.uuid}
+            itemKeyExtractor={(item: ArenaCategoryItem) => item.uuid}
             itemLabelExtractor={itemLabelFunction}
             items={minDistanceItems}
-            onChange={(selectedItems: CategoryItem[]) => {
+            onChange={(selectedItems: ArenaCategoryItem[]) => {
               setSelectedMinDistanceItem(selectedItems[0] ?? null);
             }}
             selectedItems={

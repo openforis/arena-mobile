@@ -1,8 +1,8 @@
 import {
   FlatDataExportDefaultOptions,
   FlatDataExportOption,
-  FlatDataExportOptions,
-  JobSerialized,
+  ArenaFlatDataExportOptions,
+  ArenaJobSerialized,
   Surveys,
 } from "@openforis/arena-core";
 
@@ -47,7 +47,7 @@ const selectedOptionsToDataExportOptions = ({
   availableOptions: FlatDataExportOption[];
   selectedOptions: string[] | undefined;
 }) => {
-  const options: FlatDataExportOptions = {};
+  const options: ArenaFlatDataExportOptions = {};
   for (const option of availableOptions) {
     options[option] = selectedOptions?.includes(option) ?? false;
   }
@@ -111,7 +111,7 @@ export const startCsvDataExportJob =
           job: dataExportJob,
           titleKey: "dataEntry:dataExport.exportingData",
           onJobComplete: (
-            jobComplete: JobSerialized<FlatDataExportJobResult>,
+            jobComplete: ArenaJobSerialized<FlatDataExportJobResult>,
           ) => {
             const { result } = jobComplete;
             const { outputFileUri } = result || {};

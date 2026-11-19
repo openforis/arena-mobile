@@ -1,12 +1,12 @@
 import {
-  CategoryItem,
+  ArenaCategoryItem,
   CategoryItems,
-  NodeDef,
-  NodeDefCode,
+  ArenaNodeDef,
+  ArenaNodeDefCode,
   NodeDefs,
   Objects,
   Points,
-  Survey,
+  ArenaSurvey,
   Surveys,
 } from "@openforis/arena-core";
 
@@ -24,11 +24,11 @@ const getItemCodePath = ({
   survey,
   item,
 }: {
-  survey: Survey;
-  item: CategoryItem;
+  survey: ArenaSurvey;
+  item: ArenaCategoryItem;
 }): string[] => {
   const codes: string[] = [];
-  let current: CategoryItem | undefined = item;
+  let current: ArenaCategoryItem | undefined = item;
   while (current) {
     codes.unshift(CategoryItems.getCode(current));
     current = current.parentUuid
@@ -42,17 +42,17 @@ const getSamplingPointRootKeyDefs = ({
   survey,
   cycle,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   cycle: string;
-}): NodeDefCode[] =>
-  (SurveyDefs.getRootKeyDefs({ survey, cycle }) as NodeDef<any>[])
+}): ArenaNodeDefCode[] =>
+  (SurveyDefs.getRootKeyDefs({ survey, cycle }) as ArenaNodeDef<any>[])
     .filter((nodeDef) =>
       SurveyDefs.isCodeAttributeFromSamplingPointData({
         survey,
-        nodeDef: nodeDef as NodeDefCode,
+        nodeDef: nodeDef as ArenaNodeDefCode,
       }),
     )
-    .map((nodeDef) => nodeDef as NodeDefCode)
+    .map((nodeDef) => nodeDef as ArenaNodeDefCode)
     .sort(
       (defA, defB) =>
         Surveys.getNodeDefCategoryLevelIndex({ survey, nodeDef: defA }) -
@@ -66,11 +66,11 @@ const resolveKeyItem = ({
   value,
   codePath,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   categoryUuid: string;
   value: any;
   codePath: string[];
-}): CategoryItem | undefined => {
+}): ArenaCategoryItem | undefined => {
   if (Objects.isEmpty(value)) return undefined;
   const itemUuid = typeof value === "object" ? value.itemUuid : undefined;
   if (itemUuid) return Surveys.getCategoryItemByUuid({ survey, itemUuid });
@@ -89,8 +89,8 @@ const addRecordToVisitedItems = ({
   recordSummary,
   recordUuidsByItemUuid,
 }: {
-  survey: Survey;
-  keyDefs: NodeDefCode[];
+  survey: ArenaSurvey;
+  keyDefs: ArenaNodeDefCode[];
   recordSummary: RecordSummaryForMap;
   recordUuidsByItemUuid: Record<string, string[]>;
 }) => {
@@ -117,7 +117,7 @@ export const getRecordUuidsBySamplingPointItemUuid = ({
   cycle,
   recordSummaries,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   cycle: string;
   recordSummaries: RecordSummaryForMap[];
 }): Record<string, string[]> => {
@@ -140,7 +140,7 @@ export const buildSamplingPointFeatures = ({
   layer,
   recordUuidsByItemUuid,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   layer: RecordsMapLayer;
   recordUuidsByItemUuid: Record<string, string[]>;
 }): RecordsMapPointFeature[] => {

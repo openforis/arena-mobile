@@ -1,4 +1,4 @@
-import { Survey } from "@openforis/arena-core";
+import { ArenaSurvey } from "@openforis/arena-core";
 
 import {
   RecordWithSyncStatus,
@@ -19,7 +19,13 @@ const checkStart = AutoSyncSliceActions.checkStart;
 // whether records with conflicting keys can be merged, the auto-sync setting to tell whether
 // records modified on the server too get merged automatically (see computeAutoSyncStatus)
 const checkEnd =
-  ({ records, survey }: { records: RecordWithSyncStatus[]; survey: Survey }) =>
+  ({
+    records,
+    survey,
+  }: {
+    records: RecordWithSyncStatus[];
+    survey: ArenaSurvey;
+  }) =>
   (dispatch: AppDispatch, getState: AppGetState) => {
     const autoSyncEnabled = !!getState().settings?.autoSyncEnabled;
     dispatch(

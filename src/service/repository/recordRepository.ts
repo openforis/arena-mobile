@@ -1,13 +1,13 @@
 import {
   ArenaRecord,
   Dates,
-  NodeDef,
+  ArenaNodeDef,
   NodeDefType,
   Objects,
   Promises,
-  Survey,
+  ArenaSurvey,
   Surveys,
-  Validation,
+  ArenaValidation,
 } from "@openforis/arena-core";
 
 import { DbUtils, dbClient, SQLiteClient, SqlParams, SqlValue } from "db";
@@ -42,8 +42,8 @@ import {
 } from "./recordRowMapper";
 import { RecordRow } from "./recordRow";
 
-type SurveyParam = { survey: Survey };
-type SurveyId = Survey["id"];
+type SurveyParam = { survey: ArenaSurvey };
+type SurveyId = ArenaSurvey["id"];
 type RecordId = ArenaRecord["id"];
 type SurveyAndRecordParams = SurveyParam & { record: ArenaMobileRecord };
 type SurveyIdAndRecordUuidsParams = {
@@ -148,7 +148,7 @@ const fetchRecords = async ({
 };
 
 type KeyColParams = {
-  keyDef: NodeDef<NodeDefType> | undefined;
+  keyDef: ArenaNodeDef<NodeDefType> | undefined;
   val: RecordKeyValue;
 };
 
@@ -463,7 +463,7 @@ const updateRecordValidation = async ({
 }: {
   surveyId: SurveyId;
   recordUuid: string;
-  validation: Validation;
+  validation: ArenaValidation;
 }) =>
   dbClient.runSql(
     `UPDATE record SET content = json_set(content, '$.validation', json(?)), ${validationCountsColumnsSet}

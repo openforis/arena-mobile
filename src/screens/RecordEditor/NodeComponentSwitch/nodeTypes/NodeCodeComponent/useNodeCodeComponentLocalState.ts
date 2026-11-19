@@ -1,11 +1,11 @@
 import { useCallback, useMemo, useState } from "react";
 
 import {
-  CategoryItem,
+  ArenaCategoryItem,
   CategoryItems,
-  NodeDefCode,
+  ArenaNodeDefCode,
   NodeDefs,
-  NodeValues,
+  RecordNodeValues,
   Surveys,
 } from "@openforis/arena-core";
 
@@ -25,7 +25,7 @@ export const useNodeCodeComponentLocalState = ({
   nodeDef,
 }: {
   parentNodeUuid?: string;
-  nodeDef: NodeDefCode;
+  nodeDef: ArenaNodeDefCode;
 }) => {
   const dispatch = useAppDispatch();
 
@@ -72,11 +72,11 @@ export const useNodeCodeComponentLocalState = ({
   const selectedItems = useMemo(
     () =>
       nodes.reduce((acc, node) => {
-        const itemUuid = NodeValues.getItemUuid(node)!;
+        const itemUuid = RecordNodeValues.getItemUuid(node)!;
         const item = Surveys.getCategoryItemByUuid({ survey, itemUuid });
         if (item) acc.push(item);
         return acc;
-      }, [] as CategoryItem[]),
+      }, [] as ArenaCategoryItem[]),
     [survey, nodes],
   );
 
@@ -84,7 +84,7 @@ export const useNodeCodeComponentLocalState = ({
     selectedItems.length === 1 ? selectedItems[0]?.uuid : null;
 
   const itemLabelFunction = useCallback(
-    (item: CategoryItem | null | undefined) => {
+    (item: ArenaCategoryItem | null | undefined) => {
       if (!item) return "";
 
       return NodeDefs.isCodeShown(cycle)(nodeDef)
@@ -96,7 +96,7 @@ export const useNodeCodeComponentLocalState = ({
 
   const onItemAdd = useCallback(
     (itemUuid: string) => {
-      const value = NodeValues.newCodeValue({ itemUuid });
+      const value = RecordNodeValues.newCodeValue({ itemUuid });
       if (NodeDefs.isSingle(nodeDef)) {
         const node = nodes[0];
         if (node) {
@@ -145,7 +145,7 @@ export const useNodeCodeComponentLocalState = ({
         }
       } else {
         const nodeToRemove = nodes.find(
-          (node) => NodeValues.getItemUuid(node) === itemUuid,
+          (node) => RecordNodeValues.getItemUuid(node) === itemUuid,
         );
         if (nodeToRemove) {
           dispatch(DataEntryActions.deleteNodes([nodeToRemove.uuid]));
@@ -164,9 +164,11 @@ export const useNodeCodeComponentLocalState = ({
   const onSingleValueChange = useCallback(
     (itemUuid: string | null | undefined) => {
       const node = nodes[0]!;
-      const wasSelected = NodeValues.getItemUuid(node) === itemUuid;
+      const wasSelected = RecordNodeValues.getItemUuid(node) === itemUuid;
       const value =
-        !itemUuid || wasSelected ? null : NodeValues.newCodeValue({ itemUuid });
+        !itemUuid || wasSelected
+          ? null
+          : RecordNodeValues.newCodeValue({ itemUuid });
       dispatch(DataEntryActions.updateAttribute({ uuid: node.uuid, value }));
     },
     [dispatch, nodes],

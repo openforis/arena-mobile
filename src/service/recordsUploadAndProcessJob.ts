@@ -1,4 +1,4 @@
-import { JobEvent, JobStatus } from "@openforis/arena-core";
+import { ArenaJobEvent, JobStatus } from "@openforis/arena-core";
 
 import { JobMobile } from "model";
 
@@ -38,7 +38,7 @@ export class RecordsUploadAndProcessJob extends JobMobile<RecordsUploadAndProces
     ]);
   }
 
-  override onInnerJobEvent(event: JobEvent): Promise<void> {
+  override onInnerJobEvent(event: ArenaJobEvent): Promise<void> {
     // JobBase's own onInnerJobEvent only copies the failed inner job's `status` up to this
     // (parent) job, not its `errors` - without this, this job's own `errors` (read from its
     // rejected/serialized summary by callers, e.g. startUploadDataToRemoteServer) would stay

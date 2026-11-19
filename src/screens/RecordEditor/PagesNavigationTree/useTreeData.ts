@@ -2,15 +2,15 @@ import { useMemo } from "react";
 
 import {
   LanguageCode,
-  NodeDef,
-  NodeDefEntity,
+  ArenaNodeDef,
+  ArenaNodeDefEntity,
   NodeDefs,
-  Nodes,
+  RecordNodes,
   Records,
   RecordValidations,
-  Survey,
+  ArenaSurvey,
   Surveys,
-  Validation,
+  ArenaValidation,
   Validations,
 } from "@openforis/arena-core";
 
@@ -28,7 +28,7 @@ const getChildEntity = ({ record, entity, currentEntity, childDef }: any) => {
     return Records.getChild(entity, childDef.uuid)(record);
   }
   const currentEntityAndAncestorUuids = new Set([
-    ...Nodes.getHierarchy(currentEntity),
+    ...RecordNodes.getHierarchy(currentEntity),
     currentEntity.uuid,
   ]);
   const children = Records.getChildren(entity, childDef.uuid)(record);
@@ -43,7 +43,7 @@ const processChildrenCountValidation = ({
   treeItemsById,
   acc,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   validationKey: string;
   treeItemsById: any;
   acc: TreeValidationAccumulator;
@@ -75,11 +75,11 @@ const _processFieldValidation = ({
   fieldValidation,
   validationKey,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   record: ArenaMobileRecord;
   treeItemsById: any;
   acc: TreeValidationAccumulator;
-  fieldValidation: Validation;
+  fieldValidation: ArenaValidation;
   validationKey: string;
 }) => {
   if (fieldValidation.valid) return acc;
@@ -163,10 +163,10 @@ const createChildTreeItem = ({
   createTreeItem,
   showRecordCompletion,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   record: ArenaMobileRecord;
   visitedEntity: any;
-  childDef: NodeDef<any>;
+  childDef: ArenaNodeDef<any>;
   currentEntity: any;
   createTreeItem: ({ nodeDef, parentEntityUuid, entityUuid }: any) => TreeItem;
   showRecordCompletion: boolean;
@@ -202,10 +202,10 @@ const isChildDefIncluded =
     visitedEntityDef,
     currentEntityDef,
   }: {
-    visitedEntityDef: NodeDefEntity;
-    currentEntityDef: NodeDefEntity;
+    visitedEntityDef: ArenaNodeDefEntity;
+    currentEntityDef: ArenaNodeDefEntity;
   }) =>
-  (childDef: NodeDef<any>): boolean =>
+  (childDef: ArenaNodeDef<any>): boolean =>
     Surveys.isNodeDefAncestor({
       nodeDefAncestor: visitedEntityDef,
       nodeDefDescendant: currentEntityDef,
@@ -226,10 +226,10 @@ const buildTreeData = ({
   parentEntityUuid,
   showRecordCompletion,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   lang: LanguageCode;
   record: ArenaMobileRecord;
-  currentEntityDef: NodeDefEntity;
+  currentEntityDef: ArenaNodeDefEntity;
   entityUuid?: string;
   parentEntityUuid?: string;
   showRecordCompletion: boolean;
@@ -238,9 +238,9 @@ const buildTreeData = ({
   const currentEntity = Records.getNodeByUuid(currentEntityUuid)(record);
   const { cycle } = record;
 
-  const getIconName = (nodeDef: NodeDef<any>): string => {
+  const getIconName = (nodeDef: ArenaNodeDef<any>): string => {
     if (NodeDefs.isSingle(nodeDef)) return "file-outline";
-    if (NodeDefs.isLayoutRenderTypeTable(cycle)(nodeDef as NodeDefEntity))
+    if (NodeDefs.isLayoutRenderTypeTable(cycle)(nodeDef as ArenaNodeDefEntity))
       return "table";
     return "content-copy";
   };
@@ -250,7 +250,7 @@ const buildTreeData = ({
     parentEntityUuid,
     entityUuid,
   }: {
-    nodeDef: NodeDef<any>;
+    nodeDef: ArenaNodeDef<any>;
     parentEntityUuid?: string;
     entityUuid?: string;
   }): TreeItem => ({
@@ -287,7 +287,7 @@ const buildTreeData = ({
 
   const stack = [
     { treeItem: rootTreeItem, entityDef: rootDef, entity: rootNode },
-  ] as { treeItem: TreeItem; entityDef: NodeDefEntity; entity: any }[];
+  ] as { treeItem: TreeItem; entityDef: ArenaNodeDefEntity; entity: any }[];
 
   const treeItemsById: Record<string, TreeItem> = {};
   treeItemsById[rootDef.uuid] = rootTreeItem;
@@ -325,7 +325,7 @@ const buildTreeData = ({
       if (childEntity) {
         stack.push({
           treeItem,
-          entityDef: childDef as NodeDefEntity,
+          entityDef: childDef as ArenaNodeDefEntity,
           entity: childEntity,
         });
       }

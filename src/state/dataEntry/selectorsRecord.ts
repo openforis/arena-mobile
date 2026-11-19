@@ -1,7 +1,7 @@
 import {
   ArenaRecord,
   ArenaRecordNode,
-  NodeDef,
+  ArenaNodeDef,
   NodeDefType,
   Records,
   Surveys,
@@ -23,7 +23,7 @@ export type NodePointerParams = {
 
 export type ParentNodeUuidNodeDefParams = {
   parentNodeUuid: string | undefined;
-  nodeDef: NodeDef<NodeDefType>;
+  nodeDef: ArenaNodeDef<NodeDefType>;
 };
 
 export const getDataEntryState = (state: RootState): DataEntryState =>

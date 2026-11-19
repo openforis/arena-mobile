@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { StyleSheet } from "react-native";
 
-import { Surveys, UserGroup, Users } from "@openforis/arena-core";
+import { Surveys, ArenaUserGroup, Users } from "@openforis/arena-core";
 
 import {
   HView,
@@ -57,7 +57,7 @@ const determineUserGroupStatusKey = ({
   userGroup,
 }: {
   userGroupReady: boolean;
-  userGroup: UserGroup | null;
+  userGroup: ArenaUserGroup | null;
 }) => {
   if (userGroupReady) {
     if (userGroup) {

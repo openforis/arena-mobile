@@ -1,6 +1,10 @@
 import { useMemo } from "react";
 
-import { CategoryItem, NodeDefCode, NodeDefs } from "@openforis/arena-core";
+import {
+  ArenaCategoryItem,
+  ArenaNodeDefCode,
+  NodeDefs,
+} from "@openforis/arena-core";
 
 import { Button, HView } from "components";
 import { useIsTextDirectionRtl } from "localization";
@@ -69,11 +73,11 @@ const OpenDropdownButton = (props: OpenDropdownButtonProps) => {
 };
 
 type NodeCodePreviewProps = {
-  itemLabelFunction: (item: CategoryItem | undefined) => string;
-  nodeDef: NodeDefCode;
+  itemLabelFunction: (item: ArenaCategoryItem | undefined) => string;
+  nodeDef: ArenaNodeDefCode;
   openEditDialog: () => void;
   openFindClosestSamplingPointDialog: () => void;
-  selectedItems?: CategoryItem[];
+  selectedItems?: ArenaCategoryItem[];
 };
 
 export const NodeCodePreview = (props: NodeCodePreviewProps) => {

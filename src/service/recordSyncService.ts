@@ -1,4 +1,4 @@
-import { Survey } from "@openforis/arena-core";
+import { ArenaSurvey } from "@openforis/arena-core";
 
 import { RecordLoadStatus, RecordOrigin, RecordSummaries } from "model";
 import type { ArenaMobileRecord } from "model";
@@ -11,7 +11,7 @@ import {
   RecordSyncStatusService,
 } from "./recordSyncStatus";
 
-type RecordsSyncSurvey = Survey & { remoteId?: number };
+type RecordsSyncSurvey = ArenaSurvey & { remoteId?: number };
 
 type RecordSummaryWithSyncStatus = ArenaMobileRecord & { syncStatus?: string };
 

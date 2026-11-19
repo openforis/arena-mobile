@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 
-import { NodeDefGeo } from "@openforis/arena-core";
+import { ArenaNodeDefGeo } from "@openforis/arena-core";
 
 import { Button, HView, IconButton, Text, VView } from "components";
 import {
@@ -24,7 +24,7 @@ import styles from "./styles";
 
 // geo attribute with position tracking enabled: the value is read-only, written only by tracking
 export const NodeGeoTrackComponent = (
-  props: NodeComponentProps<NodeDefGeo>,
+  props: NodeComponentProps<ArenaNodeDefGeo>,
 ) => {
   const { nodeDef, nodeUuid } = props;
 

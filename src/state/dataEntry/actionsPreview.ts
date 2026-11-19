@@ -1,9 +1,9 @@
 import {
   LanguageCode,
-  Nodes,
+  RecordNodes,
   RecordFactory,
   RecordUpdater,
-  Survey,
+  ArenaSurvey,
   Surveys,
 } from "@openforis/arena-core";
 
@@ -16,7 +16,7 @@ import { selectRecordUpdaterParams } from "./recordUpdaterParams";
 import type { AppDispatch, AppGetState } from "../store";
 
 type StartPreviewParams = {
-  survey: Survey;
+  survey: ArenaSurvey;
   lang?: string | null;
   cycle?: string | null;
 };
@@ -47,7 +47,7 @@ const startPreview =
       record: recordEmpty,
     });
     for (const node of Object.values(nodes)) {
-      Nodes.removeStatusFlags({ node, sideEffect: true });
+      RecordNodes.removeStatusFlags({ node, sideEffect: true });
     }
     dispatch(
       DataEntrySliceActions.recordSet({

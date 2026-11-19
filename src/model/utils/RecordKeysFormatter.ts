@@ -1,16 +1,16 @@
 import {
   ArenaRecord,
   ArenaRecordNode,
-  Dictionary,
+  ArenaDictionary,
   LanguageCode,
-  NodeDef,
-  NodeDefEntity,
+  ArenaNodeDef,
+  ArenaNodeDefEntity,
   NodeDefs,
   NodeDefType,
-  NodeValueFormatter,
+  RecordNodeValueFormatter,
   Objects,
   Records,
-  Survey,
+  ArenaSurvey,
   Surveys,
 } from "@openforis/arena-core";
 
@@ -31,7 +31,7 @@ const getEntityKeysFormatted = ({
   showLabel = true,
   emptyValue = "",
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   record: ArenaRecord;
   entity: ArenaRecordNode;
   lang?: string;
@@ -47,7 +47,7 @@ const getEntityKeysFormatted = ({
   return keyDefs.map((keyDef) => {
     const keyNode = Records.getDescendant(entity, keyDef)(record);
     if (!keyNode) return emptyValue;
-    return NodeValueFormatter.format({
+    return RecordNodeValueFormatter.format({
       survey,
       cycle,
       nodeDef: keyDef,
@@ -65,7 +65,7 @@ const getRootEntityKeysFormatted = ({
   lang,
   showLabel = true,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   record: ArenaRecord;
   lang?: string;
   showLabel?: boolean;
@@ -88,20 +88,20 @@ const getEntitySummaryValuesByNameFormatted = ({
   emptyValue = EMPTY_VALUE,
   t,
 }: {
-  survey: Survey | undefined;
+  survey: ArenaSurvey | undefined;
   record: ArenaRecord;
   entity: ArenaRecordNode;
   onlyKeys?: boolean;
   lang?: string;
-  summaryDefs?: NodeDef<NodeDefType>[] | null;
+  summaryDefs?: ArenaNodeDef<NodeDefType>[] | null;
   emptyValue?: string | null;
   t: SimpleTranslateFunction;
-}): Dictionary<string> => {
+}): ArenaDictionary<string> => {
   const cycle = record.cycle!;
   const entityDef = Surveys.getNodeDefByUuid({
     survey: survey!,
     uuid: entity.nodeDefUuid,
-  }) as NodeDefEntity;
+  }) as ArenaNodeDefEntity;
   const summaryDefs =
     summaryDefsParam ??
     SurveyDefs.getEntitySummaryDefs({
@@ -110,7 +110,7 @@ const getEntitySummaryValuesByNameFormatted = ({
       entityDef,
       onlyKeys,
     });
-  const result: Dictionary<string> = {};
+  const result: ArenaDictionary<string> = {};
   for (const summaryDef of summaryDefs) {
     let formattedValue: unknown;
     try {
@@ -122,7 +122,7 @@ const getEntitySummaryValuesByNameFormatted = ({
         const formatter: (params: SummaryValueFormatterParams) => unknown =
           RecordValueFormatters.formatterByNodeDefType[
             NodeDefs.getType(summaryDef)
-          ] ?? NodeValueFormatter.format;
+          ] ?? RecordNodeValueFormatter.format;
         formattedValue = formatter({
           survey: survey!,
           cycle,
@@ -155,7 +155,7 @@ const getAncestorsLabelAndKeysText = ({
   lang,
   t,
 }: {
-  survey: Survey;
+  survey: ArenaSurvey;
   record: ArenaRecord;
   node: ArenaRecordNode;
   lang: LanguageCode;
@@ -201,7 +201,7 @@ const getAncestorsLabelAndKeysText = ({
 };
 
 type RecordSummaryValuesFormattedParams = {
-  survey: Survey | undefined;
+  survey: ArenaSurvey | undefined;
   lang: LanguageCode;
   recordSummary: ArenaRecord;
   t?: SimpleTranslateFunction | null;
@@ -234,7 +234,7 @@ const getRecordSummaryValuesByKeyOrSummaryAttributeFormatted = ({
       const value = Objects.path([valuesWrapperProp, nodeDefName])(
         recordSummary,
       );
-      let valueFormatted: string | undefined = NodeValueFormatter.format({
+      let valueFormatted: string | undefined = RecordNodeValueFormatter.format({
         survey,
         cycle,
         nodeDef,
