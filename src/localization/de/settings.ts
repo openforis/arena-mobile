@@ -144,7 +144,8 @@ export default {
       "Karte, die beim Zeichnen oder Anzeigen geografischer Attribute verwendet wird. Freie Kartenebenen können für die Offline-Nutzung vorab heruntergeladen werden (siehe Offline-Karten)",
     options: {
       default: "Google Maps (Apple Karten unter iOS)",
-      freeLayers: "Freie Kartenebenen (Satellit, topografisch) - offlinefähig",
+      freeLayers:
+        "Kostenlose Kartenebenen (Satellit, topografisch) - offlinefähig",
     },
   },
   showRecordCompletion: {

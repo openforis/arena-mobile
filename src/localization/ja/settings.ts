@@ -4,6 +4,7 @@ export default {
     appearance: "外観",
     dataEntry: "データ入力",
     location: "位置情報とGPS",
+    maps: "地図",
     images: "画像",
   },
   animationsEnabled: {
@@ -81,6 +82,20 @@ export default {
     error:
       "GPSロックを開始できません：位置情報サービスが利用できないか、位置情報へのアクセスが許可されていません",
   },
+  positionTrackingAccuracyThreshold: {
+    label: "位置トラッキングの精度しきい値: {{value}} m",
+    description: "これより精度の低い位置は、記録中のトラックに追加されません",
+  },
+  positionTrackingBatterySaver: {
+    label: "位置トラッキングの省電力モード",
+    description:
+      "有効にすると、トラックの精度は下がりますが、バッテリー消費が抑えられます",
+  },
+  positionTrackingMinDistance: {
+    label: "位置トラッキングの最小距離: {{value}} m",
+    description:
+      "記録中のトラックの2点間の最小距離（位置の精度が低いほど大きくなります）",
+  },
   gpsDevicePairing: {
     title: "GPSデバイスをペアリング",
     scanButton: "デバイスをスキャン",
@@ -111,6 +126,20 @@ export default {
     pairNewDevice: "新しいデバイスをペアリング…",
   },
 
+  mapLayer: {
+    label: "デフォルトの地図レイヤー",
+    description:
+      "地図を開いたときに表示されるレイヤー（地図上のレイヤーボタンでいつでも変更できます）",
+  },
+  mapProvider: {
+    label: "地図プロバイダー",
+    description:
+      "地理属性の描画や表示に使用する地図。無料の地図レイヤーはオフラインで使用するために事前に取得できます（オフラインマップを参照）",
+    options: {
+      default: "Google マップ（iOS では Apple マップ）",
+      freeLayers: "無料の地図レイヤー（衛星、地形）- オフライン対応",
+    },
+  },
   showRecordCompletion: {
     label: "レコードの入力進捗を表示",
     description:

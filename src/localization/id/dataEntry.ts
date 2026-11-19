@@ -168,6 +168,8 @@ Apakah Anda ingin mengambilnya lagi dari server?`,
   syncStatusHeader: "Status",
   syncStatus: {
     conflictingKeys: "Catatan dengan kunci yang sama sudah ada",
+    deviceDateBehindServer:
+      "Tidak diunggah: tanggal perangkat lebih awal dari tanggal server (atur tanggal dan waktu yang benar, lalu edit catatan lagi)",
     keysNotSpecified: `Kunci tidak ditentukan`,
     new: "Baru (belum diunggah)",
     notModified: "Tidak dimodifikasi (tidak ada perubahan untuk diunggah)",
@@ -184,6 +186,8 @@ Apakah Anda ingin mengambilnya lagi dari server?`,
   uploadingData: {
     title: "Mengunggah data",
     size: "Ukuran file: {{size}}",
+    speed: "Kecepatan unggah: {{speed}}/dtk",
+    eta: "Perkiraan sisa waktu: {{eta}}",
   },
   validationReport: {
     title: "Laporan validasi",
@@ -249,23 +253,23 @@ Apakah Anda ingin mengambilnya lagi dari server?`,
     viewModeCompass: "Kompas",
     viewModeRadar: "Radar",
     locationNavigatorInfo: {
-      title: "Location Navigator",
+      title: "Navigator Lokasi",
       description:
-        "Guides you toward a target coordinate using your device's GPS and sensors. It shows a target location relative to your current position and lets you navigate to it in the field.",
-      viewModesTitle: "View Modes",
-      compassTitle: "Compass",
+        "Memandu Anda menuju koordinat target menggunakan GPS dan sensor perangkat Anda. Menampilkan lokasi target relatif terhadap posisi Anda saat ini dan memungkinkan Anda bernavigasi ke sana di lapangan.",
+      viewModesTitle: "Mode Tampilan",
+      compassTitle: "Kompas",
       compassDesc:
-        "Displays a rotating compass rose aligned to North. An arrow points toward the target. When very close to the target (proximity mode), the arrow is replaced with a dot on the accuracy circle showing the target's relative position.",
+        "Menampilkan mawar kompas berputar yang sejajar dengan Utara. Sebuah panah menunjuk ke arah target. Saat sangat dekat dengan target (mode kedekatan), panah diganti dengan titik pada lingkaran akurasi yang menunjukkan posisi relatif target.",
       radarTitle: "Radar",
       radarDesc:
-        "Shows a top-down radar view with your position fixed at the center. The target dot moves around you in real time to reflect its actual direction and distance.",
-      headingSourcesTitle: "Heading Sources",
+        "Menampilkan tampilan radar dari atas dengan posisi Anda tetap di tengah. Titik target bergerak di sekitar Anda secara real time untuk mencerminkan arah dan jarak sebenarnya.",
+      headingSourcesTitle: "Sumber Arah",
       sensorTitle: "Sensor (Magnetometer)",
       sensorDesc:
-        "Uses the device's built-in magnetometer (compass chip). Works while standing still, but can be affected by nearby metal objects or magnetic interference.",
+        "Menggunakan magnetometer bawaan perangkat (chip kompas). Berfungsi saat diam, tetapi dapat terpengaruh oleh benda logam di dekatnya atau gangguan magnetik.",
       gpsTitle: "GPS",
       gpsDesc:
-        "Derives heading from GPS movement. More accurate in open spaces, but requires you to be walking and may not be available on all devices.",
+        "Menentukan arah dari pergerakan GPS. Lebih akurat di ruang terbuka, tetapi mengharuskan Anda berjalan dan mungkin tidak tersedia di semua perangkat.",
     },
   },
   geo: {
@@ -282,6 +286,53 @@ Tekan '$t(common:stop)' ketika selesai.`,
     addCurrentLocationPoint: "Tambah lokasi saat ini",
     addCurrentLocationPointInstructions:
       "Tekan '$t(dataEntry:geo.addCurrentLocationPoint)' untuk menambahkan lokasi saat ini ke poligon",
+  },
+  positionTracking: {
+    title: "Pelacakan posisi",
+    start: "Mulai pelacakan",
+    resume: "Lanjutkan",
+    restart: "Mulai ulang",
+    restartConfirm: {
+      title: "Hapus jejak yang direkam?",
+      message:
+        "Semua titik yang telah direkam sejauh ini pada atribut ini akan dihapus dan pelacakan akan dimulai dari awal. Tindakan ini tidak dapat dibatalkan.",
+    },
+    delete: "Hapus jejak",
+    deleteConfirm: {
+      title: "Hapus jejak yang direkam?",
+      message:
+        "Semua titik yang direkam pada atribut ini akan dihapus dan atribut akan dibiarkan kosong. Tindakan ini tidak dapat dibatalkan.",
+    },
+    stop: "Berhenti",
+    showTrack: "Tampilkan jejak",
+    retry: "Coba lagi",
+    status: {
+      idle: "Tidak melacak",
+      stopped: "Pelacakan dihentikan",
+      starting: "Memulai pelacakan…",
+      tracking: "Melacak",
+      paused: "Pelacakan dijeda",
+    },
+    waitingForFix: "Menunggu GPS…",
+    accuracy: "±{{accuracy}} m",
+    pointsCount: "{{count}} titik",
+    trackSummary: "{{length}} · {{pointsCount}} titik · {{duration}}",
+    attributeNotEditable: "Nilai atribut ini direkam oleh pelacakan posisi",
+    stopConfirm:
+      "Hentikan pelacakan? Jejak yang direkam disimpan dalam atribut dan dapat dilanjutkan nanti.",
+    stopCurrentConfirm:
+      "Atribut lain sedang dilacak: hentikan pelacakannya dan mulai melacak atribut ini?",
+    interrupted:
+      "Pelacakan posisi terhenti: jejak yang direkam telah disimpan. Lanjutkan pelacakan untuk meneruskan.",
+    error: {
+      generic: "Tidak dapat memulai pelacakan posisi",
+      permissionDenied:
+        "Tidak dapat melacak posisi: akses ke lokasi tidak diberikan",
+      locationServicesOff:
+        "Tidak dapat melacak posisi: layanan lokasi dimatikan",
+      notSaved:
+        "Jejak belum dapat disimpan dalam atribut: jejak akan disimpan nanti",
+    },
   },
   taxon: {
     search: "Cari takson",

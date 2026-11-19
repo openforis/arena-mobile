@@ -153,6 +153,8 @@ export default {
   syncStatusHeader: "ሁኔታ",
   syncStatus: {
     conflictingKeys: "ተመሳሳይ ቁልፍ(ች) ያለው መዝገብ አስቀድሞ አለ",
+    deviceDateBehindServer:
+      "አልተሰቀለም፡ የመሣሪያው ቀን ከአገልጋዩ ወደ ኋላ ቀርቷል (ትክክለኛውን ቀን እና ሰዓት ያስተካክሉ፣ ከዚያም መዝገቡን እንደገና ያርትዑ)",
     keysNotSpecified: "ቁልፍ(ች) አልተገለጹም",
     new: "አዲስ (ገና አልተሰቀለም)",
     notModified: "ያልተሻሻለ (የሚሰቀል ምንም ለውጥ የለም)",
@@ -165,8 +167,10 @@ export default {
     title: "Տվյալների մշակում",
   },
   uploadingData: {
-    title: "Տվյալների վերբեռնում",
+    title: "ውሂብ በመስቀል ላይ",
     size: "የፋይል መጠን: {{size}}",
+    speed: "የመስቀል ፍጥነት: {{speed}}/ሰ",
+    eta: "የሚቀረው ግምታዊ ጊዜ: {{eta}}",
   },
   validationReport: {
     title: "የማረጋገጫ ሪፖርት",
@@ -225,25 +229,25 @@ export default {
     x: "X",
     y: "Y",
     viewModeCompass: "Compass",
-    viewModeRadar: "Radar",
+    viewModeRadar: "ራዳር",
     locationNavigatorInfo: {
-      title: "Location Navigator",
+      title: "የቦታ መምሪያ (Location Navigator)",
       description:
-        "Guides you toward a target coordinate using your device's GPS and sensors. It shows a target location relative to your current position and lets you navigate to it in the field.",
-      viewModesTitle: "View Modes",
-      compassTitle: "Compass",
+        "የመሣሪያዎን ጂፒኤስ እና ዳሳሾች በመጠቀም ወደ ዒላማ መጋጠሚያ ይመራዎታል። ዒላማውን ቦታ አሁን ካሉበት ቦታ አንጻር ያሳያል እና በመስክ ላይ ወደ እሱ እንዲሄዱ ያስችልዎታል።",
+      viewModesTitle: "የእይታ ሁነታዎች",
+      compassTitle: "ኮምፓስ",
       compassDesc:
-        "Displays a rotating compass rose aligned to North. An arrow points toward the target. When very close to the target (proximity mode), the arrow is replaced with a dot on the accuracy circle showing the target's relative position.",
-      radarTitle: "Radar",
+        "ወደ ሰሜን የተሰለፈ የሚሽከረከር የኮምፓስ ጽጌረዳ ያሳያል። ቀስት ወደ ዒላማው ይጠቁማል። ከዒላማው በጣም ሲቀርቡ (የቅርበት ሁነታ)፣ ቀስቱ በትክክለኛነት ክበቡ ላይ የዒላማውን አንጻራዊ ቦታ በሚያሳይ ነጥብ ይተካል።",
+      radarTitle: "ራዳር",
       radarDesc:
-        "Shows a top-down radar view with your position fixed at the center. The target dot moves around you in real time to reflect its actual direction and distance.",
-      headingSourcesTitle: "Heading Sources",
-      sensorTitle: "Sensor (Magnetometer)",
+        "ቦታዎ በመሃል ላይ ተስተካክሎ ከላይ የሚታይ የራዳር እይታ ያሳያል። የዒላማው ነጥብ ትክክለኛ አቅጣጫውን እና ርቀቱን ለማሳየት በእውነተኛ ጊዜ በዙሪያዎ ይንቀሳቀሳል።",
+      headingSourcesTitle: "የአቅጣጫ ምንጮች",
+      sensorTitle: "ዳሳሽ (ማግኔቶሜትር)",
       sensorDesc:
-        "Uses the device's built-in magnetometer (compass chip). Works while standing still, but can be affected by nearby metal objects or magnetic interference.",
-      gpsTitle: "GPS",
+        "የመሣሪያውን አብሮ የተሰራ ማግኔቶሜትር (የኮምፓስ ቺፕ) ይጠቀማል። ቆመው ሳሉም ይሰራል፣ ነገር ግን በአቅራቢያ ባሉ የብረት ነገሮች ወይም በመግነጢሳዊ ጣልቃ ገብነት ሊጎዳ ይችላል።",
+      gpsTitle: "ጂፒኤስ",
       gpsDesc:
-        "Derives heading from GPS movement. More accurate in open spaces, but requires you to be walking and may not be available on all devices.",
+        "አቅጣጫን ከጂፒኤስ እንቅስቃሴ ያገኛል። በክፍት ቦታዎች የበለጠ ትክክለኛ ነው፣ ነገር ግን በእግር መጓዝ ይጠይቃል እና በሁሉም መሣሪያዎች ላይ ላይገኝ ይችላል።",
     },
   },
   geo: {
@@ -259,6 +263,47 @@ export default {
     addCurrentLocationPoint: "የአሁን ቦታ ጨምር",
     addCurrentLocationPointInstructions:
       "አሁን ያለውን አካባቢ ወደ ፖሊጎኑ ለመጨመር '$t(dataEntry:geo.addCurrentLocationPoint)' ይጫኑ",
+  },
+  positionTracking: {
+    title: "የቦታ ክትትል",
+    start: "ክትትል ጀምር",
+    resume: "ቀጥል",
+    restart: "እንደገና ጀምር",
+    restartConfirm: {
+      title: "የተቀዳውን መስመር ልሰርዝ?",
+      message:
+        "በዚህ ባህሪ ውስጥ እስካሁን የተቀዱት ሁሉም ነጥቦች ይሰረዛሉ እና ክትትሉ ከመጀመሪያው ይጀምራል። ይህ ሊቀለበስ አይችልም።",
+    },
+    delete: "መስመሩን ሰርዝ",
+    deleteConfirm: {
+      title: "የተቀዳውን መስመር ልሰርዝ?",
+      message:
+        "በዚህ ባህሪ ውስጥ የተቀዱት ሁሉም ነጥቦች ይሰረዛሉ እና ባህሪው ባዶ ሆኖ ይቀራል። ይህ ሊቀለበስ አይችልም።",
+    },
+    stop: "አቁም",
+    showTrack: "መስመሩን አሳይ",
+    retry: "እንደገና ሞክር",
+    status: {
+      idle: "ክትትል የለም",
+      stopped: "ክትትል ቆሟል",
+      starting: "ክትትል በመጀመር ላይ…",
+      tracking: "በክትትል ላይ",
+      paused: "ክትትል ለአፍታ ቆሟል",
+    },
+    waitingForFix: "ጂፒኤስን በመጠበቅ ላይ…",
+    accuracy: "±{{accuracy}} m",
+    pointsCount: "{{count}} ነጥቦች",
+    trackSummary: "{{length}} · {{pointsCount}} ነጥቦች · {{duration}}",
+    attributeNotEditable: "የዚህ ባህሪ እሴት በቦታ ክትትል ይመዘገባል",
+    stopConfirm: "ክትትሉን ላቁም? የተቀዳው መስመር በባህሪው ውስጥ ይቀመጣል እና በኋላ ሊቀጥል ይችላል።",
+    stopCurrentConfirm: "ሌላ ባህሪ በክትትል ላይ ነው፡ የእሱን ክትትል አቁሜ የዚህን ክትትል ልጀምር?",
+    interrupted: "የቦታ ክትትል ተቋርጧል፡ የተቀዳው መስመር ተቀምጧል። ለመቀጠል ክትትሉን ይቀጥሉ።",
+    error: {
+      generic: "የቦታ ክትትልን መጀመር አልተቻለም",
+      permissionDenied: "ቦታውን መከታተል አልተቻለም፡ ወደ አካባቢው መዳረሻ አልተሰጠም",
+      locationServicesOff: "ቦታውን መከታተል አልተቻለም፡ የአካባቢ አገልግሎቶች ጠፍተዋል",
+      notSaved: "መስመሩ እስካሁን በባህሪው ውስጥ ሊቀመጥ አልቻለም፡ በኋላ ይቀመጣል",
+    },
   },
   taxon: {
     search: "ታክሶን ይፈልጉ",

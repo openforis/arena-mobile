@@ -168,6 +168,8 @@ export default {
   syncStatusHeader: "Статус",
   syncStatus: {
     conflictingKeys: "Запись с таким же ключом(ами) уже существует",
+    deviceDateBehindServer:
+      "Не загружено: дата на устройстве отстаёт от даты на сервере (установите правильные дату и время, затем снова отредактируйте запись)",
     keysNotSpecified: "Ключ(и) не указаны",
     new: "Новая (еще не загружена)",
     notModified: "Не изменена (нет изменений для загрузки)",
@@ -184,6 +186,8 @@ export default {
   uploadingData: {
     title: "Загрузка данных",
     size: "Размер файла: {{size}}",
+    speed: "Скорость загрузки: {{speed}}/с",
+    eta: "Осталось примерно: {{eta}}",
   },
   validationReport: {
     title: "Отчет о проверке правильности",
@@ -249,23 +253,23 @@ export default {
     viewModeCompass: "Компас",
     viewModeRadar: "Радар",
     locationNavigatorInfo: {
-      title: "Location Navigator",
+      title: "Навигатор по местоположению",
       description:
-        "Guides you toward a target coordinate using your device's GPS and sensors. It shows a target location relative to your current position and lets you navigate to it in the field.",
-      viewModesTitle: "View Modes",
-      compassTitle: "Compass",
+        "Ведёт вас к целевой координате с помощью GPS и датчиков вашего устройства. Показывает целевое местоположение относительно вашей текущей позиции и позволяет дойти до него в поле.",
+      viewModesTitle: "Режимы просмотра",
+      compassTitle: "Компас",
       compassDesc:
-        "Displays a rotating compass rose aligned to North. An arrow points toward the target. When very close to the target (proximity mode), the arrow is replaced with a dot on the accuracy circle showing the target's relative position.",
-      radarTitle: "Radar",
+        "Отображает вращающуюся розу ветров, ориентированную на север. Стрелка указывает направление на цель. Когда цель совсем близко (режим приближения), стрелка заменяется точкой на круге точности, показывающей относительное положение цели.",
+      radarTitle: "Радар",
       radarDesc:
-        "Shows a top-down radar view with your position fixed at the center. The target dot moves around you in real time to reflect its actual direction and distance.",
-      headingSourcesTitle: "Heading Sources",
-      sensorTitle: "Sensor (Magnetometer)",
+        "Показывает вид радара сверху, где ваша позиция зафиксирована в центре. Точка цели перемещается вокруг вас в реальном времени, отражая её фактическое направление и расстояние.",
+      headingSourcesTitle: "Источники направления",
+      sensorTitle: "Датчик (магнитометр)",
       sensorDesc:
-        "Uses the device's built-in magnetometer (compass chip). Works while standing still, but can be affected by nearby metal objects or magnetic interference.",
+        "Использует встроенный магнитометр устройства (чип компаса). Работает, когда вы стоите на месте, но на него могут влиять находящиеся рядом металлические предметы или магнитные помехи.",
       gpsTitle: "GPS",
       gpsDesc:
-        "Derives heading from GPS movement. More accurate in open spaces, but requires you to be walking and may not be available on all devices.",
+        "Определяет направление по перемещению по GPS. Точнее на открытой местности, но требует, чтобы вы шли, и может быть доступно не на всех устройствах.",
     },
   },
   geo: {
@@ -282,6 +286,57 @@ export default {
     addCurrentLocationPoint: "Добавить текущее местоположение",
     addCurrentLocationPointInstructions:
       "Нажмите '$t(dataEntry:geo.addCurrentLocationPoint)', чтобы добавить текущее местоположение в полигон",
+  },
+  positionTracking: {
+    title: "Отслеживание местоположения",
+    start: "Начать отслеживание",
+    resume: "Продолжить",
+    restart: "Начать заново",
+    restartConfirm: {
+      title: "Удалить записанный трек?",
+      message:
+        "Все точки, записанные до сих пор в этом атрибуте, будут удалены, и отслеживание начнётся с нуля. Это действие нельзя отменить.",
+    },
+    delete: "Удалить трек",
+    deleteConfirm: {
+      title: "Удалить записанный трек?",
+      message:
+        "Все точки, записанные в этом атрибуте, будут удалены, и атрибут останется пустым. Это действие нельзя отменить.",
+    },
+    stop: "Остановить",
+    showTrack: "Показать трек",
+    retry: "Повторить",
+    status: {
+      idle: "Отслеживание не ведётся",
+      stopped: "Отслеживание остановлено",
+      starting: "Запуск отслеживания…",
+      tracking: "Идёт отслеживание",
+      paused: "Отслеживание приостановлено",
+    },
+    waitingForFix: "Ожидание GPS…",
+    accuracy: "±{{accuracy}} м",
+    pointsCount: "{{count}} точка",
+    pointsCount_few: "{{count}} точки",
+    pointsCount_many: "{{count}} точек",
+    pointsCount_other: "{{count}} точки",
+    trackSummary: "{{length}} · точек: {{pointsCount}} · {{duration}}",
+    attributeNotEditable:
+      "Значение этого атрибута записывается отслеживанием местоположения",
+    stopConfirm:
+      "Остановить отслеживание? Записанный трек сохраняется в атрибуте, и его можно будет продолжить позже.",
+    stopCurrentConfirm:
+      "Сейчас отслеживается другой атрибут: остановить его отслеживание и начать отслеживание этого?",
+    interrupted:
+      "Отслеживание местоположения было прервано: записанный трек сохранён. Продолжите отслеживание, чтобы продолжить запись.",
+    error: {
+      generic: "Невозможно запустить отслеживание местоположения",
+      permissionDenied:
+        "Невозможно отслеживать местоположение: доступ к местоположению не предоставлен",
+      locationServicesOff:
+        "Невозможно отслеживать местоположение: службы геолокации отключены",
+      notSaved:
+        "Трек пока не удалось сохранить в атрибуте: он будет сохранён позже",
+    },
   },
   taxon: {
     search: "Поиск таксона",
