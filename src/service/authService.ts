@@ -324,11 +324,17 @@ const logout = async () => {
     const { data } = await API.post({
       serverUrl: await getServerUrl(),
       uri: "/auth/logout",
+      // the server requires a valid access token for the logout
+      config: { headers: generateAuthorizationHeaders() },
     });
     return data;
   } catch (err: any) {
     if (!err.response) {
       return { error: invalidServerUrlError };
+    }
+    // access token expired: the server session is already over
+    if (HttpErrors.isUnauthorizedResponse(err)) {
+      return {};
     }
     return { error: err.message };
   } finally {

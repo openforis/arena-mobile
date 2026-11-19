@@ -216,6 +216,26 @@ describe("AuthService.logout", () => {
     await AuthService.login({ email: "a@b.c", password: "pwd" });
   });
 
+  it("sends the access token", async () => {
+    postMock.mockResolvedValue({ data: {} });
+    await AuthService.logout();
+    expect(postMock).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        uri: "/auth/logout",
+        config: { headers: { Authorization: "Bearer auth-token" } },
+      }),
+    );
+  });
+
+  it("succeeds when the access token has expired", async () => {
+    postMock.mockRejectedValue(
+      Object.assign(new Error("Request failed with status code 401"), {
+        response: { status: 401 },
+      }),
+    );
+    expect(await AuthService.logout()).toEqual({});
+  });
+
   it("clears the auth token", async () => {
     postMock.mockResolvedValue({ data: {} });
     await AuthService.logout();
