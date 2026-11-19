@@ -20,6 +20,10 @@ appId: ${APP_ID}
     commands:
       - tapOn: "Server URL"
 - tapOn: "Custom"
+# the request access banner at the top pushes the field below the screen on small devices
+- scrollUntilVisible:
+    element:
+      id: "remote-connection-server-url-input"
 - tapOn:
     id: "remote-connection-server-url-input"
     waitToSettleTimeoutMs: 1000
