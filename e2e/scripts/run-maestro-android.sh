@@ -104,6 +104,19 @@ recover_device() {
   sleep 30
 }
 
+# the failure screenshots are only in the run artifacts: print what the screen shows and the JS errors in the job log
+print_failure_diagnostics() {
+  echo "::group::Screen content after the failure (text / content-desc / resource-id)"
+  if adb shell uiautomator dump /sdcard/window_dump.xml >/dev/null 2>&1; then
+    adb shell cat /sdcard/window_dump.xml |
+      grep -oE '(text|content-desc|resource-id)="[^"]+"' | grep -vE '="(android|com\.android)[^"]*"' | head -n 150 || true
+  fi
+  echo "::endgroup::"
+  echo "::group::React Native JS errors and crashes (logcat)"
+  adb logcat -d -v brief ReactNativeJS:W ReactNative:E AndroidRuntime:E '*:S' | tail -n 80 || true
+  echo "::endgroup::"
+}
+
 install_app
 push_test_files
 
@@ -119,6 +132,7 @@ for attempt in $(seq 0 "$MAX_DEVICE_OFFLINE_RETRIES"); do
     exit 0
   fi
   if ! last_run_lost_device; then
+    print_failure_diagnostics
     exit 1
   fi
 done
