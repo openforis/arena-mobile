@@ -2,7 +2,16 @@ appId: ${APP_ID}
 ---
 - tapOn:
     id: "home-connect-button"
-# the server URL panel is below the login form
+# the server URL panel is below the login form. scrollUntilVisible swipes from the screen center, a drag
+# that doesn't scroll the form when it starts on a text field: swipe from the "Go back" button first
+- runFlow:
+    when:
+      notVisible: "Server URL"
+    commands:
+      - swipe:
+          from:
+            text: "Go back"
+          direction: UP
 - scrollUntilVisible:
     element: "Server URL"
 # the panel opens by itself when a custom server URL was used before:
@@ -20,10 +29,27 @@ appId: ${APP_ID}
     commands:
       - tapOn: "Server URL"
 # the request access banner at the top pushes the panel below the screen on small devices
+- runFlow:
+    when:
+      notVisible: "Custom"
+    commands:
+      - swipe:
+          from:
+            text: "Go back"
+          direction: UP
 - scrollUntilVisible:
     element: "Custom"
 - tapOn: "Custom"
 # the request access banner at the top pushes the field below the screen on small devices
+- runFlow:
+    when:
+      notVisible:
+        id: "remote-connection-server-url-input"
+    commands:
+      - swipe:
+          from:
+            text: "Go back"
+          direction: UP
 - scrollUntilVisible:
     element:
       id: "remote-connection-server-url-input"
@@ -35,7 +61,17 @@ appId: ${APP_ID}
 - eraseText
 - inputText: ${ARENA_SERVER_URL}
 
-# the keyboard scrolls the screen to the server URL field, hiding the email field
+# the keyboard scrolls the screen to the server URL field, hiding the email field:
+# hide it, then scroll back up from the "Go back" button (see above)
+- hideKeyboard
+- runFlow:
+    when:
+      notVisible: "Email"
+    commands:
+      - swipe:
+          from:
+            text: "Go back"
+          direction: DOWN
 - scrollUntilVisible:
     element: "Email"
     direction: UP
@@ -47,6 +83,15 @@ appId: ${APP_ID}
 
 # the keyboard can cover the login button (pushed down by the request access banner)
 - hideKeyboard
+- runFlow:
+    when:
+      notVisible:
+        id: "remote-connection-login-button"
+    commands:
+      - swipe:
+          from:
+            text: "Forgot password?"
+          direction: UP
 - scrollUntilVisible:
     element:
       id: "remote-connection-login-button"
