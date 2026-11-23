@@ -4,24 +4,20 @@
   "target": "<s1>Open Foris Arena Mobile</s1>"
  },
  {
+  "source": "<s1>User Manual</s1>",
+  "target": "<s1>Manual de usuario</s1>"
+ },
+ {
   "source": "<s1>Version {{version}}</s1>",
   "target": "<s1>Versión {{version}}</s1>"
- },
- {
-  "source": "<s1>https://www.openforis.org/arena-mobile/</s1>",
-  "target": "<s1>https://www.openforis.org/arena-mobile/</s1>"
- },
- {
-  "source": "<s1>User Manual</s1>",
-  "target": "<s1>Manual del usuario</s1>"
  },
  {
   "source": "<s1>{{releaseDate}}</s1>",
   "target": "<s1>{{releaseDate}}</s1>"
  },
  {
-  "source": "<s1>Forestry Division, FAO</s1>",
-  "target": "<s1>División Forestal, FAO</s1>"
+  "source": "<s1>https://www.openforis.org/arena-mobile/</s1>",
+  "target": "<s1>https://www.openforis.org/arena-mobile/</s1>"
  },
  {
   "source": "<s1>Contents</s1>",
@@ -2065,7 +2061,11 @@
  },
  {
   "source": "<x1/><s2>   Open Foris Arena Mobile - User Manual</s2>",
-  "target": "<x1/><s2>   Open Foris Arena Mobile - Manual del usuario</s2>"
+  "target": "<x1/><s2>   Open Foris Arena Mobile - Manual de usuario</s2>"
+ },
+ {
+  "source": "<s1>Forestry Division, FAO</s1>",
+  "target": "<s1>División Forestal, FAO</s1>"
  },
  {
   "source": "<x1/><s2> Mobile device’s compass typically points to the magnetic north, not true north. The magnetic north is based on the Earth’s magnetic field, while true north refers to the geographic North Pole. You might be able to calibrate your device’s compass with a known declination value. This means that, depending on your location, your device can adjust readings to provide more accurate direction relative to true north.</s2>",

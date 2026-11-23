@@ -24,6 +24,7 @@ Update the manual in the same pull request as every user-facing change.
 
 - Keep the `{{version}}` and `{{releaseDate}}` placeholders on the cover: they are replaced with the version (from `package.json`) and the date when generating the PDF.
 - The table of contents and the page numbers are updated when generating the PDF.
+- Same layout as the [Arena manual](https://github.com/openforis/arena/tree/master/docs/user-manual) (A4, cover, header, headings): keep them consistent. On the cover, the logo, the title, the version and the date are in the text; the bar on the left, the Open Foris logo and the partner logos are in the footer of the first page.
 - Keep the document in `.docx` format (in LibreOffice: **Keep current format** when saving).
 - The PDF is generated with LibreOffice: use fonts available on Linux or metric-compatible with them (e.g. Calibri, replaced by Carlito), and check the PDF artifact of the pull request.
 - UI labels in bold, as they appear in the English version of the app (see `src/localization/en`).
