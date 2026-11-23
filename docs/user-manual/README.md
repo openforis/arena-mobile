@@ -28,6 +28,7 @@ Update the manual in the same pull request as every user-facing change.
 - The PDF is generated with LibreOffice: use fonts available on Linux or metric-compatible with them (e.g. Calibri, replaced by Carlito), and check the PDF artifact of the pull request.
 - UI labels in bold, as they appear in the English version of the app (see `src/localization/en`).
 - Crop the status bar out of phone screenshots.
+- Start a new page with **Page break before** (paragraph properties), not with a page break in the text: the translated manuals turn it into a line break.
 
 ## Translations
 

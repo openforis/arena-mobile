@@ -24,8 +24,8 @@
   "target": "<s1>Division des forêts, FAO</s1>"
  },
  {
-  "source": "<s1>\n</s1><s2>Contents</s2>",
-  "target": "<s1>\n</s1><s2>Table des matières</s2>"
+  "source": "<s1>Contents</s1>",
+  "target": "<s1>Table des matières</s1>"
  },
  {
   "source": "<s1>1\tIntroduction</s1>",
