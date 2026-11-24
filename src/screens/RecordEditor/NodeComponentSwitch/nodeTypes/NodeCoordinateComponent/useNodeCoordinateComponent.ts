@@ -6,9 +6,6 @@ import {
   NodeDefs,
   Numbers,
   Objects,
-  PointFactory,
-  Points,
-  ArenaSRSIndex,
   Surveys,
 } from "@openforis/arena-core";
 
@@ -28,67 +25,12 @@ import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState"
 import { useCoordinateDistanceTarget } from "./useCoordinateDistanceTarget";
 import { NodeComponentProps } from "../nodeComponentPropTypes";
 import { CoordinateUiField, CoordinateUiValue } from "./coordinateValueTypes";
-
-const stringToNumber = (str: string | undefined) => Numbers.toNumber(str);
-const numberToString = (
-  num: number | string | null | undefined,
-  roundToDecimals = Number.NaN,
-) => {
-  if (Objects.isEmpty(num)) return "";
-  return String(Numbers.roundToPrecision(num, roundToDecimals));
-};
-const pointToUiValue = ({
-  x,
-  y,
-  srs,
-}: {
-  x?: number | string;
-  y?: number | string;
-  srs: string;
-}): CoordinateUiValue => ({
-  x: numberToString(x),
-  y: numberToString(y),
-  srs,
-});
-
-const locationToUiValue = ({
-  location,
-  nodeDef,
-  srsTo,
-  srsIndex,
-}: {
-  location: LocationPoint;
-  nodeDef: ArenaNodeDefCoordinate;
-  srsTo: string;
-  srsIndex?: ArenaSRSIndex;
-}): CoordinateUiValue | null => {
-  const { latitude, longitude, accuracy } = location;
-
-  const pointLatLong = PointFactory.createInstance({
-    x: longitude,
-    y: latitude,
-  });
-  const point = Points.transform(pointLatLong, srsTo, srsIndex);
-  if (!point) {
-    return null;
-  }
-  const { x, y } = point;
-
-  const includedExtraFields = NodeDefs.getCoordinateAdditionalFields(nodeDef);
-
-  const result = pointToUiValue({
-    x: Numbers.roundToPrecision(x, 6),
-    y: Numbers.roundToPrecision(y, 6),
-    srs: srsTo,
-  });
-
-  for (const field of includedExtraFields) {
-    result[field] = numberToString(location[field], 2);
-  }
-  // always include accuracy
-  result.accuracy = numberToString(accuracy, 2);
-  return result;
-};
+import {
+  locationToUiValue,
+  numberToString,
+  pointToUiValue,
+  stringToNumber,
+} from "./coordinateUiValueUtils";
 
 const nonNumericFields = new Set(["srs"]);
 
@@ -233,19 +175,30 @@ export const useNodeCoordinateComponent = (
     [onValueChange, uiValue],
   );
 
-  const locationCallback = useCallback(
-    ({ location }: { location: LocationPoint | null }) => {
-      if (!location) return;
-
+  const applyLocation = useCallback(
+    (location: LocationPoint, ignoreDelay = false) => {
       const valueNext = locationToUiValue({
         location,
         nodeDef,
         srsTo: srs,
         srsIndex,
       });
-      onValueChange({ value: valueNext! });
+      if (!valueNext) {
+        // the location cannot be converted to the selected SRS: keep the current value
+        log.warn(`cannot convert location to SRS ${srs}`);
+        return;
+      }
+      onValueChange({ value: valueNext, ignoreDelay });
     },
     [nodeDef, onValueChange, srs, srsIndex],
+  );
+
+  const locationCallback = useCallback(
+    ({ location }: { location: LocationPoint | null }) => {
+      if (!location) return;
+      applyLocation(location);
+    },
+    [applyLocation],
   );
 
   const {
@@ -348,16 +301,8 @@ export const useNodeCoordinateComponent = (
   );
 
   const onCompassNavigatorUseCurrentLocation = useCallback(
-    (location: LocationPoint) => {
-      const valueNext = locationToUiValue({
-        location,
-        nodeDef,
-        srsTo: srs,
-        srsIndex,
-      });
-      onValueChange({ value: valueNext!, ignoreDelay: true });
-    },
-    [nodeDef, srs, srsIndex, onValueChange],
+    (location: LocationPoint) => applyLocation(location, true),
+    [applyLocation],
   );
 
   const editable = !NodeDefs.isReadOnly(nodeDef);
