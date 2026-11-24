@@ -3,6 +3,7 @@ import { StyleSheet } from "react-native";
 
 import {
   ArenaNodeDefCoordinate,
+  ArenaRecordNodeValueCoordinate,
   NodeDefs,
   Objects,
 } from "@openforis/arena-core";
@@ -11,7 +12,6 @@ import { HView, OpenMapButton, Text, View, VView } from "components";
 import { useTranslation } from "localization";
 import { SurveySelectors } from "state";
 import { useCoordinateMapTitleParams } from "../NodeComponentSwitch/nodeTypes/NodeCoordinateComponent";
-import { CoordinateValueWithExtraFields } from "../NodeComponentSwitch/nodeTypes/NodeCoordinateComponent/coordinateValueTypes";
 import { NodeValuePreviewProps } from "./NodeValuePreviewPropTypes";
 
 const styles = StyleSheet.create({
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
 
 export const CoordinateValuePreview = (props: NodeValuePreviewProps) => {
   const nodeDef = props.nodeDef as ArenaNodeDefCoordinate;
-  const value = props.value as CoordinateValueWithExtraFields;
+  const value = props.value as ArenaRecordNodeValueCoordinate;
 
   const { t } = useTranslation();
 
@@ -37,7 +37,7 @@ export const CoordinateValuePreview = (props: NodeValuePreviewProps) => {
     return `${label}:`;
   };
 
-  const fields = useMemo(() => {
+  const fields = useMemo((): (keyof ArenaRecordNodeValueCoordinate)[] => {
     const includedExtraFields = NodeDefs.getCoordinateAdditionalFields(nodeDef);
     return ["x", "y", "srs", ...includedExtraFields];
   }, [nodeDef]);

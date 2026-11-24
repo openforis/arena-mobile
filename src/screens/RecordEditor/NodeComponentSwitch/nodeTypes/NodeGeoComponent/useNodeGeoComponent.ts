@@ -6,7 +6,11 @@ import {
 } from "components/GeoPolygonEditor/polygonEditorUtils";
 import MapView from "react-native-maps";
 
-import { ArenaNodeDefGeo, Records } from "@openforis/arena-core";
+import {
+  ArenaGeoPolygonFeature,
+  ArenaNodeDefGeo,
+  Records,
+} from "@openforis/arena-core";
 
 import { useTranslation } from "localization";
 import { LatLng, PositionTracks, RecordUtils } from "model";
@@ -25,7 +29,9 @@ import { NodeComponentProps } from "../nodeComponentPropTypes";
 
 const GEO_POLYGON_KEY = "geo_polygon_0";
 
-const toGeoJsonPolygon = (coordinates: LatLng[]) => {
+const toGeoJsonPolygon = (
+  coordinates: LatLng[],
+): ArenaGeoPolygonFeature | null => {
   if (coordinates.length < 3) return null;
 
   const linearRing = coordinates.map((c) => [c.longitude, c.latitude]);

@@ -3,22 +3,27 @@ import { File, FileHandle } from "expo-file-system";
 import {
   FileProcessor,
   ArenaFileProcessorConstructorArgs,
+  ArenaFileProcessorUriChunk,
 } from "@openforis/arena-core";
 
 import { Files } from "./Files";
 
-export type RNFileProcessorArgs = ArenaFileProcessorConstructorArgs & {
+// R: result of the chunk processor
+export type RNFileProcessorArgs<R> = ArenaFileProcessorConstructorArgs<
+  ArenaFileProcessorUriChunk,
+  R
+> & {
   fileId: string;
 };
 
-// filePath and chunkSize are private in FileProcessor
-type FileProcessorPrivateProps = { filePath: string; chunkSize: number };
-
-export class RNFileProcessor extends FileProcessor {
+export class RNFileProcessor<R = unknown> extends FileProcessor<
+  ArenaFileProcessorUriChunk,
+  R
+> {
   fileId: string;
   fileHandle: FileHandle;
 
-  constructor(args: RNFileProcessorArgs) {
+  constructor(args: RNFileProcessorArgs<R>) {
     super(args);
     const { fileId, filePath } = args;
     if (!filePath) {
@@ -30,13 +35,12 @@ export class RNFileProcessor extends FileProcessor {
   }
 
   override async calculateFileSize() {
-    const { filePath: fileUri } = this as unknown as FileProcessorPrivateProps;
-    return Files.getSize(fileUri);
+    // checked in the constructor
+    return Files.getSize(this.filePath!);
   }
 
-  override async extractCurrentFileChunk() {
-    const { currentChunkNumber } = this;
-    const { chunkSize } = this as unknown as FileProcessorPrivateProps;
+  override async extractCurrentFileChunk(): Promise<ArenaFileProcessorUriChunk> {
+    const { currentChunkNumber, chunkSize } = this;
 
     if (!this.fileHandle?.size) {
       throw new Error(
@@ -67,7 +71,7 @@ export class RNFileProcessor extends FileProcessor {
         uri: tempFileUri,
         type: "application/octet-stream",
         name: tempFileName,
-      } as unknown as Blob;
+      };
     } catch (error) {
       // Clean up temp file in case of error
       if (tempFileUri && (await Files.exists(tempFileUri))) {

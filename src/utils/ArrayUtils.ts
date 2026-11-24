@@ -67,8 +67,8 @@ const sortCompareFn =
   (sortProp: string, sortDirection: Sort) =>
   (itemA: object, itemB: object): number => {
     const sortPropPath = sortProp?.split(".");
-    const propA = Objects.path(sortPropPath)(itemA);
-    const propB = Objects.path(sortPropPath)(itemB);
+    const propA = Objects.path<unknown>(sortPropPath)(itemA);
+    const propB = Objects.path<unknown>(sortPropPath)(itemB);
 
     const sortDirectionFactor = getSortFactor(sortDirection);
 

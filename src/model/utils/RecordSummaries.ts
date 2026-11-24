@@ -29,7 +29,7 @@ const getKeyValue = ({
   keyDef: ArenaAnyNodeDef;
   recordSummary: RecordSummaryWithKeys;
 }): unknown =>
-  Objects.path(["keysObj", NodeDefs.getName(keyDef)])(recordSummary);
+  Objects.path<unknown>(["keysObj", NodeDefs.getName(keyDef)])(recordSummary);
 
 const getKeyValuesByDefUuid = ({
   survey,

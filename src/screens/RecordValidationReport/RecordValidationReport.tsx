@@ -190,7 +190,7 @@ export const RecordValidationReport = () => {
 
   const { validation } = record;
   const validationFields: ArenaValidationFields = useMemo(
-    () => (validation ? Validations.getFieldValidations(validation) : {}),
+    () => Validations.getFieldValidations(validation),
     [validation],
   );
 

@@ -1,13 +1,11 @@
-import type { ArenaRecordNodeValueCoordinate } from "@openforis/arena-core";
+import type { ArenaCoordinateAdditionalField } from "@openforis/arena-core";
 
-// additional fields (accuracy, altitude, ...) are not part of the arena-core type
-export type CoordinateValueWithExtraFields = ArenaRecordNodeValueCoordinate &
-  Partial<Record<string, number | string>>;
+// numeric fields editable in the form
+export type CoordinateUiField = "x" | "y" | ArenaCoordinateAdditionalField;
 
-// x, y, srs and additional fields as strings, indexed by field name
+// x, y, srs and additional fields as strings
 export type CoordinateUiValue = {
   x: string;
   y: string;
   srs: string;
-  accuracy?: string;
-} & Partial<Record<string, string>>;
+} & Partial<Record<ArenaCoordinateAdditionalField, string>>;

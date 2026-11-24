@@ -32,7 +32,7 @@ export const getFieldValueText = <T extends DataVisualizerItem>(
   item: T,
   field: DataVisualizerField<T>,
 ): string => {
-  const value = Objects.path(field.key.split("."))(item);
+  const value = Objects.path<unknown>(field.key.split("."))(item);
   return Objects.isEmpty(value) ? "" : String(value);
 };
 

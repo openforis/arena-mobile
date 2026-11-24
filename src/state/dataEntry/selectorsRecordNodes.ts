@@ -110,7 +110,7 @@ const selectRecordAttributeInfo =
     state: RootState,
   ): {
     applicable: boolean;
-    value: any;
+    value: unknown;
     validation: ArenaValidation | null;
   } => {
     const record = selectRecordUnsafe(state);
