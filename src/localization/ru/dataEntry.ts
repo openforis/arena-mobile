@@ -240,6 +240,8 @@ export default {
     headingSourceMagnetometer: "Датчик",
     headingSourceLocation: "GPS",
     keepXAndY: "Сохранить X и Y",
+    locationCannotBeConvertedToSrs:
+      "GPS-местоположение невозможно преобразовать в систему координат {{srs}}",
     locationHeadingNotAvailable: "Курс по GPS недоступен!",
     magnetometerNotAvailable: "Магнитометр недоступен!",
     navigateToTarget: "Перейти к местоположению",
