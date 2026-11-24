@@ -368,6 +368,49 @@ describe("LocationAverager", () => {
     });
   });
 
+  describe("calculateAveragedLocation optional fields", () => {
+    it("returns null (not NaN) for altitude, altitude accuracy and speed missing in every reading", () => {
+      const averager = new LocationAverager();
+      averager.addReading({ latitude: 1, longitude: 2, accuracy: 5 });
+      averager.addReading({ latitude: 1, longitude: 2, accuracy: 5 });
+
+      const result = averager.calculateAveragedLocation();
+      expect(result?.altitude).toBeNull();
+      expect(result?.altitudeAccuracy).toBeNull();
+      expect(result?.speed).toBeNull();
+    });
+
+    it("averages optional fields over the readings that have them", () => {
+      const averager = new LocationAverager();
+      averager.addReading({
+        latitude: 1,
+        longitude: 2,
+        accuracy: 5,
+        altitude: 100,
+        speed: 2,
+      });
+      averager.addReading({
+        latitude: 1,
+        longitude: 2,
+        accuracy: 5,
+        altitude: undefined,
+        speed: null,
+      });
+      averager.addReading({
+        latitude: 1,
+        longitude: 2,
+        accuracy: 5,
+        altitude: 200,
+        speed: 4,
+      });
+
+      const result = averager.calculateAveragedLocation();
+      expect(result?.altitude).toBeCloseTo(150);
+      expect(result?.speed).toBeCloseTo(3);
+      expect(result?.altitudeAccuracy).toBeNull();
+    });
+  });
+
   describe("Integration scenarios", () => {
     it("should handle a complete workflow: add, calculate, clear, add, calculate", () => {
       const averager = new LocationAverager();
