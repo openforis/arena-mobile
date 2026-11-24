@@ -4,7 +4,11 @@ import { useTheme } from "react-native-paper";
 
 import { Environment } from "utils/Environment";
 import { Dropdown } from "./Dropdown";
-import { Numbers } from "@openforis/arena-core";
+import {
+  getSliderDropdownOptions,
+  roundSliderValue,
+  SliderDropdownOption,
+} from "./sliderDropdownOptions";
 
 type Props = {
   maxValue?: number;
@@ -20,10 +24,9 @@ export const Slider = (props: Props) => {
   const theme = useTheme();
 
   const onChange = useCallback(
-    // the Dropdown fallback passes the value as a string
-    (val: number | string) => {
+    (val: number) => {
       if (val !== value) {
-        onValueChange?.(val as number);
+        onValueChange?.(val);
       }
     },
     [onValueChange, value],
@@ -34,24 +37,13 @@ export const Slider = (props: Props) => {
     // render a Dropdown instead of the slider
     // to allow selection of discrete values
 
-    // possible values calculation
-    // e.g. min=2, max=8, step=2 => possible values: 2,4,6,8 => count=4
-    // e.g. min=1 max=5, step=1 => possible values: 1,2,3,4,5 => count=5
-    const possibleValuesCount = Math.ceil((maxValue - minValue) / step) + 1;
-    const options = [];
-    for (let index = 0; index < possibleValuesCount; index++) {
-      const numValue = minValue + step * index;
-      const value = Number.isInteger(numValue)
-        ? String(numValue)
-        : Numbers.formatDecimal(numValue, 2);
-      options.push({ value, label: value });
-    }
+    const options = getSliderDropdownOptions({ minValue, maxValue, step });
     return (
-      <Dropdown
+      <Dropdown<SliderDropdownOption, number>
         items={options}
-        onChange={(val) => onChange(val)}
+        onChange={onChange}
         translateItemLabels={false}
-        value={String(value)}
+        value={value === undefined ? undefined : roundSliderValue(value)}
       />
     );
   }
