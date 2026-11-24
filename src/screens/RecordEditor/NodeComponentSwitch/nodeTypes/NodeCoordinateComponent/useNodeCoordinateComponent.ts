@@ -9,7 +9,7 @@ import {
   Surveys,
 } from "@openforis/arena-core";
 
-import { useAvailableGpsSources, useLocationWatch } from "hooks";
+import { useAvailableGpsSources, useLocationWatch, useToast } from "hooks";
 import { LocationPoint, SettingsModel } from "model";
 import { GpsSourceDescriptor } from "service/externalGps/types";
 import {
@@ -31,6 +31,7 @@ import {
   pointToUiValue,
   stringToNumber,
 } from "./coordinateUiValueUtils";
+import { createOncePerKeyNotifier } from "./oncePerKeyNotifier";
 
 const nonNumericFields = new Set(["srs"]);
 
@@ -44,6 +45,8 @@ export const useNodeCoordinateComponent = (
 
   const dispatch = useAppDispatch();
   const confirm = useConfirm();
+  const toaster = useToast();
+  const [conversionWarningNotifier] = useState(createOncePerKeyNotifier);
   const survey = SurveySelectors.useCurrentSurvey()!;
   const srsIndex = SurveySelectors.useCurrentSurveySrsIndex();
   const srss = useMemo(() => Surveys.getSRSs(survey), [survey]);
@@ -176,7 +179,15 @@ export const useNodeCoordinateComponent = (
   );
 
   const applyLocation = useCallback(
-    (location: LocationPoint, ignoreDelay = false) => {
+    ({
+      location,
+      ignoreDelay = false,
+      throttleWarning = false,
+    }: {
+      location: LocationPoint;
+      ignoreDelay?: boolean;
+      throttleWarning?: boolean;
+    }) => {
       const valueNext = locationToUiValue({
         location,
         nodeDef,
@@ -186,17 +197,23 @@ export const useNodeCoordinateComponent = (
       if (!valueNext) {
         // the location cannot be converted to the selected SRS: keep the current value
         log.warn(`cannot convert location to SRS ${srs}`);
+        if (!throttleWarning || conversionWarningNotifier.shouldNotify(srs)) {
+          toaster("dataEntry:coordinate.locationCannotBeConvertedToSrs", {
+            srs,
+          });
+        }
         return;
       }
       onValueChange({ value: valueNext, ignoreDelay });
     },
-    [nodeDef, onValueChange, srs, srsIndex],
+    [conversionWarningNotifier, nodeDef, onValueChange, srs, srsIndex, toaster],
   );
 
   const locationCallback = useCallback(
     ({ location }: { location: LocationPoint | null }) => {
       if (!location) return;
-      applyLocation(location);
+      // watch readings arrive continuously: warn once per watch and SRS
+      applyLocation({ location, throttleWarning: true });
     },
     [applyLocation],
   );
@@ -271,8 +288,16 @@ export const useNodeCoordinateComponent = (
         return;
       }
     }
+    conversionWarningNotifier.reset();
     await startLocationWatch();
-  }, [confirm, startLocationWatch, uiValueX, uiValueY, updateNodeValue]);
+  }, [
+    confirm,
+    conversionWarningNotifier,
+    startLocationWatch,
+    uiValueX,
+    uiValueY,
+    updateNodeValue,
+  ]);
 
   const onStopGpsPress = useCallback(() => {
     stopLocationWatch();
@@ -301,7 +326,7 @@ export const useNodeCoordinateComponent = (
   );
 
   const onCompassNavigatorUseCurrentLocation = useCallback(
-    (location: LocationPoint) => applyLocation(location, true),
+    (location: LocationPoint) => applyLocation({ location, ignoreDelay: true }),
     [applyLocation],
   );
 

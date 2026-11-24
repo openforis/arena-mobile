@@ -239,6 +239,8 @@ Apakah Anda ingin mengambilnya lagi dari server?`,
     headingSourceMagnetometer: "Sensor",
     headingSourceLocation: "GPS",
     keepXAndY: "Pertahankan X dan Y",
+    locationCannotBeConvertedToSrs:
+      "Lokasi GPS tidak dapat dikonversi ke sistem koordinat {{srs}}",
     locationHeadingNotAvailable: "Arah GPS tidak tersedia!",
     magnetometerNotAvailable: "Magnetometer tidak tersedia!",
     navigateToTarget: "Navigasi ke target",

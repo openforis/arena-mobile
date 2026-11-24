@@ -233,6 +233,8 @@ Sus valores serán borrados.
     headingSourceMagnetometer: "Sensor",
     headingSourceLocation: "GPS",
     keepXAndY: "Mantener X e Y",
+    locationCannotBeConvertedToSrs:
+      "La ubicación GPS no se puede convertir al sistema de coordenadas {{srs}}",
     locationHeadingNotAvailable: "¡Rumbo GPS no disponible!",
     magnetometerNotAvailable: "¡Magnetómetro no disponible!",
     navigateToTarget: "Navegar al objetivo",

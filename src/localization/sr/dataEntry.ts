@@ -298,6 +298,8 @@ Preuzeti listu zapisa sa servera i pokušati ponovo?`,
     headingSourceMagnetometer: "Senzor",
     headingSourceLocation: "GPS",
     keepXAndY: "Zadrži X i Y",
+    locationCannotBeConvertedToSrs:
+      "GPS lokacija ne može biti konvertovana u koordinatni sistem {{srs}}",
     locationHeadingNotAvailable: "GPS pravac nije dostupan!",
     magnetometerNotAvailable: "Magnetometar nije dostupan!",
     navigateToTarget: "Navigiraj do cilja",
