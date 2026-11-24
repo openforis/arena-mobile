@@ -1,3 +1,5 @@
+import type { ArenaSurvey } from "@openforis/arena-core";
+
 import { RecordService } from "service";
 import { AutoSyncActions } from "state/autoSync";
 import { RemoteConnectionUtils } from "state/remoteConnection/remoteConnectionUtils";
@@ -6,17 +8,19 @@ import { log } from "utils";
 import { HttpErrors } from "utils/HttpErrors";
 import type { AppDispatch } from "state/store";
 
+import type { RecordSummaryWithSyncStatus } from "./recordsListTypes";
+
 type FetchRecordsWithSyncStatusParams = {
-  cycle: any;
+  cycle: string | undefined;
   dispatch: AppDispatch;
   navigator: Navigator;
   onlyLocal: boolean;
-  survey: any;
+  survey: (ArenaSurvey & { remoteId?: number }) | undefined;
 };
 
 type FetchRecordsWithSyncStatusResult = {
   // only set when the sync status could be fetched
-  records?: any[];
+  records?: RecordSummaryWithSyncStatus[];
   syncStatusFetched: boolean;
 };
 
@@ -32,15 +36,16 @@ export const fetchRecordsWithSyncStatus = async ({
     if (
       await RemoteConnectionUtils.checkLoggedInUser({ dispatch, navigator })
     ) {
+      // a missing survey fails like any other error (handled below)
       const records = await RecordService.syncRecordSummaries({
-        survey,
+        survey: survey!,
         cycle,
         onlyLocal,
       });
       log.debug(
         `fetchRecordsWithSyncStatus: fetched ${records.length} record summary(ies)`,
       );
-      dispatch(AutoSyncActions.checkEnd({ records, survey }));
+      dispatch(AutoSyncActions.checkEnd({ records, survey: survey! }));
       return { records, syncStatusFetched: true };
     }
     log.debug("fetchRecordsWithSyncStatus: user not logged in, aborting");

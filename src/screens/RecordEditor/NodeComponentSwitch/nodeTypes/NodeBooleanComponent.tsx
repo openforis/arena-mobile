@@ -1,4 +1,5 @@
 import { memo, useCallback, useMemo } from "react";
+import type { StyleProp, ViewStyle } from "react-native";
 
 import { ArenaNodeDefBoolean, NodeDefs } from "@openforis/arena-core";
 
@@ -16,7 +17,7 @@ const yesNoValueByBooleanValue: Record<string, string> = {
 };
 
 const baseStyle = { width: 200 };
-const rtlStyle = { alignSelf: "flex-end" };
+const rtlStyle: ViewStyle = { alignSelf: "flex-end" };
 
 type Props = NodeComponentProps<ArenaNodeDefBoolean>;
 
@@ -25,12 +26,12 @@ export const NodeBooleanComponent = memo((props: Props) => {
 
   log.debug(`rendering NodeBooleanComponent for ${NodeDefs.getName(nodeDef)}`);
   const isRtl = useIsTextDirectionRtl();
-  const { value, updateNodeValue } = useNodeComponentLocalState({
+  const { value, updateNodeValue } = useNodeComponentLocalState<string>({
     nodeUuid,
   });
 
   const onChange = useCallback(
-    (val: any) => {
+    (val: string) => {
       updateNodeValue({ value: val === value ? null : val });
     },
     [updateNodeValue, value],
@@ -39,7 +40,7 @@ export const NodeBooleanComponent = memo((props: Props) => {
   const labelValue = nodeDef.props.labelValue ?? "trueFalse";
 
   const getLabelKey = useCallback(
-    (booleanValue: any) =>
+    (booleanValue: string) =>
       labelValue === "trueFalse"
         ? booleanValue
         : yesNoValueByBooleanValue[booleanValue],
@@ -47,7 +48,7 @@ export const NodeBooleanComponent = memo((props: Props) => {
   );
 
   const style = useMemo(() => {
-    const _style: any[] = [baseStyle];
+    const _style: StyleProp<ViewStyle>[] = [baseStyle];
     if (isRtl) {
       _style.push(rtlStyle);
     }

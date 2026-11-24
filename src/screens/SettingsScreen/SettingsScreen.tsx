@@ -67,7 +67,7 @@ export const SettingsScreen = () => {
 
   const onPropValueChange =
     ({ key }: { key: keyof SettingsObject }) =>
-    async (value: any) => {
+    async (value: unknown) => {
       const oldValue = settings[key];
       if (value === oldValue) return;
       setPendingValues((prev) => ({ ...prev, [key]: value }));

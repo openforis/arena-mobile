@@ -59,7 +59,7 @@ export const ChangelogViewDialog = (props: ChangelogViewDialogProps) => {
     onError: (error) => log.error("Error fetching the changelog", error),
   });
 
-  const styles: any = useMemo(
+  const styles = useMemo(
     () =>
       StyleSheet.create({
         formItem: { backgroundColor: "transparent" },
@@ -69,8 +69,8 @@ export const ChangelogViewDialog = (props: ChangelogViewDialogProps) => {
           flex: 1,
           backgroundColor: theme.colors.surfaceVariant,
         },
-        changelogContent: { flex: 1 as const },
-      } as any),
+        changelogContent: { flex: 1 },
+      }),
     [theme],
   );
 

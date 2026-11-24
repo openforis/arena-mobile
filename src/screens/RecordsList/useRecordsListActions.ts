@@ -8,13 +8,14 @@ import { DataEntryActions, useAppDispatch, useConfirm } from "state";
 import { Files } from "utils";
 
 import { dataImportOptions, importFileExtension } from "./recordsListUtils";
+import type { RecordSummaryWithSyncStatus } from "./recordsListTypes";
 
 type UseRecordsListActionsParams = {
   confirm: ReturnType<typeof useConfirm>;
   dispatch: ReturnType<typeof useAppDispatch>;
   loadRecords: () => Promise<void>;
   navigator: ReturnType<typeof useNavigator>;
-  records: any[];
+  records: RecordSummaryWithSyncStatus[];
   setLoading: (loading: boolean) => void;
   toaster: ReturnType<typeof useToast>;
 };
@@ -83,7 +84,7 @@ export const useRecordsListActions = ({
   }, [dispatch, navigator, setLoading]);
 
   const onDeleteSelectedRecordUuids = useCallback(
-    async (recordUuids: any) => {
+    async (recordUuids: string[]) => {
       if (
         await confirm({
           titleKey: "recordsList:deleteRecordsConfirm.title",
@@ -101,14 +102,13 @@ export const useRecordsListActions = ({
   );
 
   const checkRecordsCanBeImported = useCallback(
-    (selectedRecords: any) => {
+    (selectedRecords: RecordSummaryWithSyncStatus[]) => {
       const selectedLocalRecords = selectedRecords.filter(
-        (record: any) => record.origin === RecordOrigin.local,
+        (record) => record.origin === RecordOrigin.local,
       );
       if (
         selectedLocalRecords.some(
-          (record: any) =>
-            record.syncStatus !== RecordSyncStatus.modifiedRemotely,
+          (record) => record.syncStatus !== RecordSyncStatus.modifiedRemotely,
         )
       ) {
         toaster("dataEntry:dataExport.onlyRecordsInRemoteServerCanBeImported");
@@ -120,7 +120,7 @@ export const useRecordsListActions = ({
   );
 
   const onFetchSelectedRecordUuids = useCallback(
-    (selectedRecordUuids: any) => {
+    (selectedRecordUuids: string[]) => {
       const selectedRecords = records.filter((record) =>
         selectedRecordUuids.includes(record.uuid),
       );
@@ -138,13 +138,13 @@ export const useRecordsListActions = ({
   );
 
   const checkRecordsCanBeCloned = useCallback(
-    (selectedRecords: any) => {
+    (selectedRecords: RecordSummaryWithSyncStatus[]) => {
       const selectedRemoteRecords = selectedRecords.filter(
-        (record: any) => record.origin === RecordOrigin.remote,
+        (record) => record.origin === RecordOrigin.remote,
       );
       if (
         selectedRemoteRecords.some(
-          (record: any) => record.loadStatus !== RecordLoadStatus.complete,
+          (record) => record.loadStatus !== RecordLoadStatus.complete,
         )
       ) {
         toaster(
@@ -158,7 +158,7 @@ export const useRecordsListActions = ({
   );
 
   const onCloneSelectedRecordUuids = useCallback(
-    (selectedRecordUuids: any) => {
+    (selectedRecordUuids: string[]) => {
       const selectedRecords = records.filter((record) =>
         selectedRecordUuids.includes(record.uuid),
       );
@@ -176,7 +176,7 @@ export const useRecordsListActions = ({
   );
 
   const onRevalidateSelectedRecordUuids = useCallback(
-    (selectedRecordUuids: any) => {
+    (selectedRecordUuids: string[]) => {
       const recordIds = records
         .filter((record) => selectedRecordUuids.includes(record.uuid))
         .map((record) => record.id);

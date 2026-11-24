@@ -1,12 +1,17 @@
 import { useMemo } from "react";
 import { StyleSheet } from "react-native";
 
-import { NodeDefs, Objects } from "@openforis/arena-core";
+import {
+  ArenaNodeDefCoordinate,
+  NodeDefs,
+  Objects,
+} from "@openforis/arena-core";
 
 import { HView, OpenMapButton, Text, View, VView } from "components";
 import { useTranslation } from "localization";
 import { SurveySelectors } from "state";
 import { useCoordinateMapTitleParams } from "../NodeComponentSwitch/nodeTypes/NodeCoordinateComponent";
+import { CoordinateValueWithExtraFields } from "../NodeComponentSwitch/nodeTypes/NodeCoordinateComponent/coordinateValueTypes";
 import { NodeValuePreviewProps } from "./NodeValuePreviewPropTypes";
 
 const styles = StyleSheet.create({
@@ -18,7 +23,8 @@ const styles = StyleSheet.create({
 });
 
 export const CoordinateValuePreview = (props: NodeValuePreviewProps) => {
-  const { nodeDef, value } = props;
+  const nodeDef = props.nodeDef as ArenaNodeDefCoordinate;
+  const value = props.value as CoordinateValueWithExtraFields;
 
   const { t } = useTranslation();
 

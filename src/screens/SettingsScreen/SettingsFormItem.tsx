@@ -8,9 +8,9 @@ import styles from "./styles";
 type SettingsFormItemProps = {
   settingKey: string;
   labelKey?: string;
-  labelParams?: any;
+  labelParams?: Record<string, unknown>;
   descriptionKey?: string;
-  descriptionParams?: any;
+  descriptionParams?: Record<string, unknown>;
   direction?: string;
   children?: React.ReactNode;
 };

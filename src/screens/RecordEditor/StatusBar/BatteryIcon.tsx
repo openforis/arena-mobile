@@ -2,7 +2,13 @@ import { Icon } from "components/Icon";
 import { BatteryState } from "model/BatteryState";
 import { useAppTheme } from "theme";
 
-const getBatteryIconSource = ({ batteryLevel, batteryState }: any) => {
+const getBatteryIconSource = ({
+  batteryLevel,
+  batteryState,
+}: {
+  batteryLevel: number;
+  batteryState?: string;
+}) => {
   if (batteryLevel < 0.1) return "battery-alert-variant-outline";
   const suffix = batteryState === BatteryState.charging ? "-charging" : "";
   const iconName = `battery${suffix}`;

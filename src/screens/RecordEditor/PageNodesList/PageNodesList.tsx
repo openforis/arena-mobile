@@ -3,7 +3,7 @@ import { FlatList } from "react-native";
 
 import {
   LanguageCode,
-  ArenaNodeDef,
+  ArenaAnyNodeDef,
   NodeDefs,
   NodeDefType,
   Records,
@@ -24,7 +24,7 @@ import { NodePageNavigationButton } from "../BottomNavigationBar/NodePageNavigat
 import styles from "./styles";
 
 const iconByNodeDefType: Partial<
-  Record<NodeDefType, (params: { nodeDef: ArenaNodeDef<any> }) => string>
+  Record<NodeDefType, (params: { nodeDef: ArenaAnyNodeDef }) => string>
 > = {
   [NodeDefType.boolean]: () => "checkbox-marked-outline",
   [NodeDefType.code]: () => "format-list-numbered",
@@ -40,7 +40,7 @@ const iconByNodeDefType: Partial<
   [NodeDefType.time]: () => "clock-time-three-outline",
 };
 
-const getNodeDefIcon = (nodeDef: ArenaNodeDef<any>) =>
+const getNodeDefIcon = (nodeDef: ArenaAnyNodeDef) =>
   iconByNodeDefType[NodeDefs.getType(nodeDef)]?.({ nodeDef });
 
 type ValidationStatus = { hasErrors: boolean; hasWarnings: boolean };
@@ -51,7 +51,7 @@ type PageNodesListItemProps = {
   hasWarnings: boolean;
   index: number;
   lang: LanguageCode;
-  nodeDef: ArenaNodeDef<any>;
+  nodeDef: ArenaAnyNodeDef;
   onPress: (index: number) => void;
 };
 
@@ -144,7 +144,7 @@ export const PageNodesList = () => {
   }, [childDefs, parentEntity, record, validation]);
 
   const renderItem = useCallback(
-    ({ index, item }: { index: number; item: any }) => {
+    ({ index, item }: { index: number; item: ArenaAnyNodeDef }) => {
       const validationStatus = validationStatusByDefUuid.get(item.uuid);
       return (
         <PageNodesListItem

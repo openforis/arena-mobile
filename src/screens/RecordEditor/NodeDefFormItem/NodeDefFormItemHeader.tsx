@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 
-import { ArenaNodeDef, NodeDefs, Objects } from "@openforis/arena-core";
+import { ArenaAnyNodeDef, NodeDefs, Objects } from "@openforis/arena-core";
 
 import { HView, Icon, Text, View, ViewMoreText } from "components";
 import { useIsTextDirectionRtl } from "localization";
@@ -13,7 +13,7 @@ import { useStyles } from "./styles";
 type NodeDefFormItemHeaderProps = {
   endAccessory?: ReactNode;
   startAccessory?: ReactNode;
-  nodeDef: ArenaNodeDef<any>;
+  nodeDef: ArenaAnyNodeDef;
   parentNodeUuid?: string;
 };
 

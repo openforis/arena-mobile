@@ -1,6 +1,8 @@
 import {
+  ArenaAnyNodeDef,
   DateFormats,
   Dates,
+  LanguageCode,
   NodeDefs,
   ArenaValidation,
   Validations,
@@ -29,13 +31,15 @@ export type RecordListItem = DataVisualizerItem & {
   origin?: RecordOrigin;
   readOnly?: boolean;
   syncStatus?: string;
-  validation: ArenaValidation;
+  validation?: ArenaValidation;
 };
 
 export type RecordListField = DataVisualizerField<RecordListItem>;
 type RecordListCellProps = DataVisualizerCellProps<RecordListItem>;
 
-export const formatDateToDateTimeDisplay = (date: any) =>
+export const formatDateToDateTimeDisplay = (
+  date: string | number | Date | undefined,
+) =>
   typeof date === "string"
     ? Dates.convertDate({
         dateStr: date,
@@ -70,19 +74,23 @@ const getSyncStatusCellRenderer = ({
   syncStatusLoading ? LoadingIconCellRenderer : RecordSyncStatusIcon;
 
 const RecordErrorsListCellRenderer = ({ item }: RecordListCellProps) => (
-  <Text>{Validations.getErrorsCount(item.validation)}</Text>
+  <Text>{Validations.getErrorsCount(item.validation!)}</Text>
 );
 
 const RecordWarningsListCellRenderer = ({ item }: RecordListCellProps) => (
-  <Text>{Validations.getWarningsCount(item.validation)}</Text>
+  <Text>{Validations.getWarningsCount(item.validation!)}</Text>
 );
 
 export const buildKeySummaryFields = ({
   rootKeyDefs,
   rootSummaryDefs,
   lang,
-}: any): RecordListField[] => [
-  ...rootKeyDefs.map((keyDef: any) => ({
+}: {
+  rootKeyDefs: ArenaAnyNodeDef[];
+  rootSummaryDefs: ArenaAnyNodeDef[];
+  lang: LanguageCode;
+}): RecordListField[] => [
+  ...rootKeyDefs.map((keyDef) => ({
     key: `keysObj.${NodeDefs.getName(keyDef)}`,
     cardRole: "title" as const,
     cardShowLabel: true,
@@ -90,7 +98,7 @@ export const buildKeySummaryFields = ({
     sortable: true,
   })),
   // optional: in a narrow table they move to the expanded row
-  ...rootSummaryDefs.map((keyDef: any) => ({
+  ...rootSummaryDefs.map((keyDef) => ({
     key: `summaryAttributesObj.${NodeDefs.getName(keyDef)}`,
     header: NodeDefs.getLabelOrName(keyDef, lang),
     optional: true,
@@ -222,7 +230,10 @@ export const buildReadOnlyFields = ({
 export const buildSyncStatusFields = ({
   syncStatusLoading,
   syncStatusFetched,
-}: any): RecordListField[] => {
+}: {
+  syncStatusLoading?: boolean;
+  syncStatusFetched?: boolean;
+}): RecordListField[] => {
   const result: RecordListField[] = [];
   if (syncStatusLoading || syncStatusFetched) {
     result.push({

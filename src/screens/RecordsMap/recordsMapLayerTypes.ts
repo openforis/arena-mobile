@@ -72,5 +72,12 @@ export type RecordsMapPreloadedLayerShapes = {
 export type RecordSummaryForMap = {
   uuid: string;
   cycle?: string;
-  keysObj?: Record<string, any>;
+  keysObj?: Record<string, unknown>;
+};
+
+// value of a node (attribute) of a record stored in the device
+export type RecordsMapNodeValue = {
+  recordUuid: string;
+  nodeDefUuid: string;
+  value: unknown;
 };

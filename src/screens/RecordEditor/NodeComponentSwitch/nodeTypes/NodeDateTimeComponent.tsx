@@ -30,11 +30,13 @@ export const NodeDateTimeComponent = (props: NodeDateTimeComponentProps) => {
   const formatStorage =
     mode === "date" ? DateFormats.dateStorage : DateFormats.timeStorage;
 
-  const { value, updateNodeValue } = useNodeComponentLocalState({ nodeUuid });
+  const { value, updateNodeValue } = useNodeComponentLocalState<string>({
+    nodeUuid,
+  });
 
   const onChange = useCallback(
-    (date: any) => {
-      const dateNodeValue = Dates.format(date, formatStorage);
+    (date: Date | null) => {
+      const dateNodeValue = Dates.format(date as Date, formatStorage);
       updateNodeValue({ value: dateNodeValue });
     },
     [formatStorage, updateNodeValue],
@@ -44,7 +46,7 @@ export const NodeDateTimeComponent = (props: NodeDateTimeComponentProps) => {
 
   const dateValue = Objects.isEmpty(value)
     ? null
-    : Dates.parse(value, formatStorage, { keepTimeZone: false });
+    : Dates.parse(value!, formatStorage, { keepTimeZone: false });
 
   return (
     <DateTimePicker

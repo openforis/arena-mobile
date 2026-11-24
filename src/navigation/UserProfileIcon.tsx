@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { TouchableOpacity } from "react-native";
 
+import type { ArenaUser } from "@openforis/arena-core";
+
 import { Avatar } from "components";
 import {
   RemoteConnectionActions,
@@ -13,7 +15,7 @@ type UserProfileAvatarProps = {
   loading?: boolean;
   size?: number;
   uri?: string;
-  user?: any;
+  user?: ArenaUser | null;
 };
 
 const UserProfileAvatar = (props: UserProfileAvatarProps) => {
@@ -21,7 +23,7 @@ const UserProfileAvatar = (props: UserProfileAvatarProps) => {
   if (loading) return <Avatar icon="loading" size={size} />;
   if (uri) return <Avatar imageUri={uri} size={size} />;
   const userName = user?.name;
-  if (userName?.length > 0) {
+  if (userName && userName.length > 0) {
     const userFirstLetter = userName.substring(0, 1).toLocaleUpperCase();
     return <Avatar label={userFirstLetter} size={size} />;
   }

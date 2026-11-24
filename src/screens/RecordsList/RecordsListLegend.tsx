@@ -59,7 +59,7 @@ export const RecordsListLegend = () => {
         ))}
       </FieldSet>
       <FieldSet headerKey="common:status">
-        {visibleSyncStatus.map((syncStatus: any) => (
+        {visibleSyncStatus.map((syncStatus) => (
           <LegendItem
             key={syncStatus}
             icon={

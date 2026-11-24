@@ -1,4 +1,4 @@
-import { Dates, Surveys } from "@openforis/arena-core";
+import { ArenaSurvey, ArenaUser, Dates, Surveys } from "@openforis/arena-core";
 
 import { SurveyStatus, UpdateStatus } from "model";
 import type { Navigator } from "navigation/navigator";
@@ -6,11 +6,14 @@ import { SurveyService } from "service";
 import { SurveyActions } from "state";
 import type { AppDispatch } from "state/store";
 
+// survey stored in the device (remoteId: id of the survey in the server)
+type LocalSurvey = ArenaSurvey & { remoteId?: number };
+
 type DetermineSurveyUpdateStatusParams = {
   networkAvailable: boolean;
-  survey: any;
+  survey: LocalSurvey;
   surveyName?: string;
-  user: any;
+  user: ArenaUser | null | undefined;
 };
 
 export type DetermineSurveyUpdateStatusResult = {
@@ -26,7 +29,7 @@ type TriggerSurveyUpdateParams = {
   onComplete?: (() => void) | null;
   onConfirm?: (() => void) | null;
   skipConfirmation?: boolean;
-  survey: any;
+  survey: LocalSurvey;
 };
 
 export const determineSurveyUpdateStatus = async ({
@@ -64,7 +67,7 @@ export const determineSurveyUpdateStatus = async ({
   if (
     Dates.isAfter(
       surveyRemote.datePublished ?? surveyRemote.dateModified,
-      survey.datePublished ?? survey.dateModified,
+      (survey.datePublished ?? survey.dateModified)!,
     )
   ) {
     return { updateStatus: UpdateStatus.notUpToDate };

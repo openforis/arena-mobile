@@ -1,4 +1,5 @@
 import React, { memo, useCallback } from "react";
+import { StyleProp, TextStyle } from "react-native";
 
 import {
   ArenaNodeDefCoordinate,
@@ -76,7 +77,13 @@ export const NodeCoordinateComponent = memo((props: Props) => {
   const mapTitleParams = useCoordinateMapTitleParams(nodeDef);
 
   const createNumericFieldFormItem = useCallback(
-    ({ fieldKey, labelStyle = styles.formItemLabel }: any) => (
+    ({
+      fieldKey,
+      labelStyle = styles.formItemLabel,
+    }: {
+      fieldKey: string;
+      labelStyle?: StyleProp<TextStyle>;
+    }) => (
       <HView key={fieldKey} style={styles.formItem}>
         <Text style={labelStyle} textKey={`dataEntry:coordinate.${fieldKey}`} />
         <TextInput

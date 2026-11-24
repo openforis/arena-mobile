@@ -1,7 +1,7 @@
 import { Fragment, useMemo, useState } from "react";
 import { StyleSheet } from "react-native";
 
-import { ArenaNodeDef, NodeDefs } from "@openforis/arena-core";
+import { ArenaAnyNodeDef, NodeDefs } from "@openforis/arena-core";
 
 import {
   Button,
@@ -15,11 +15,11 @@ import { SurveySelectors } from "state";
 import { ArrayUtils } from "utils/ArrayUtils";
 
 type Props = {
-  availableDefs: ArenaNodeDef<any>[];
+  availableDefs: ArenaAnyNodeDef[];
   onApply: (columns: string[]) => void;
   onClose: () => void;
   onReset: () => void;
-  visibleDefs: ArenaNodeDef<any>[];
+  visibleDefs: ArenaAnyNodeDef[];
 };
 
 const styles = StyleSheet.create({
@@ -70,7 +70,7 @@ export const EntityListColumnsDialog = (props: Props) => {
   const toggle = (uuid: string) =>
     setSelectedUuids((prev) => ArrayUtils.toggleItem(prev, uuid));
 
-  const toggleGroup = (defs: ArenaNodeDef<any>[], allSelected: boolean) => {
+  const toggleGroup = (defs: ArenaAnyNodeDef[], allSelected: boolean) => {
     const groupUuids = defs.map((def) => def.uuid);
     setSelectedUuids((prev) =>
       allSelected

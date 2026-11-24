@@ -94,7 +94,7 @@ export const BottomNavigationBar = memo(() => {
           <NodePageNavigationButton
             icon={prevButtonIcon}
             iconPosition={prevButtonIconPosition}
-            entityPointer={prevEntityPointer}
+            entityPointer={prevEntityPointer!}
             style={prevButtonStyle}
           />
         )}
@@ -124,7 +124,7 @@ export const BottomNavigationBar = memo(() => {
           <NodePageNavigationButton
             icon={nextButtonIcon}
             iconPosition={nextButtonIconPosition}
-            entityPointer={nextEntityPointer}
+            entityPointer={nextEntityPointer!}
             style={nextButtonStyle}
           />
         )}
