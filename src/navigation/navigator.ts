@@ -42,7 +42,7 @@ type AppNavigation = NavigationProp<AppStackParamList>;
 export const createNavigator = (
   navigation: NavigationProp<ParamListBase> | ReturnType<typeof useNavigation>,
 ) => {
-  const nav = navigation as unknown as AppNavigation;
+  const nav = navigation as AppNavigation;
   return {
     addListener: (type: "focus" | "blur", handler: () => void) =>
       nav.addListener(type, handler),
