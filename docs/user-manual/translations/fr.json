@@ -404,6 +404,10 @@
   "target": "<s1>Vous êtes redirigé vers la page contenant la liste des enregistrements collectés avec cette enquête.</s1>"
  },
  {
+  "source": "<s1>As in the list of the surveys in the server, the view mode button in the top bar switches the view from a table to cards: every card shows the label and the name of the survey, its </s1><s2>Description</s2><s3> and the date it was published (</s3><s4>Published on</s4><s5>); the survey you are working with is marked as </s5><s6>Current survey</s6><s7>.</s7>",
+  "target": "<s1>Comme dans la liste des enquêtes du serveur, le bouton de mode d’affichage dans la barre supérieure fait passer l’affichage d’un tableau à des cartes : chaque carte affiche le libellé et le nom de l’enquête, sa </s1><s2>Description</s2><s3> et sa date de publication (</s3><s4>Publié le</s4><s5>) ; l’enquête avec laquelle vous travaillez est marquée comme </s5><s6>Enquête actuelle</s6><s7>.</s7>"
+ },
+ {
   "source": "<s1>4.2. Updating a survey</s1>",
   "target": "<s1>4.2. Mise à jour d’une enquête</s1>"
  },
@@ -744,6 +748,10 @@
   "target": "<s1>Les valeurs affichées en X et Y sont celles qui sont enregistrées dans les données.</s1>"
  },
  {
+  "source": "<s1>If the location cannot be converted to the selected </s1><s2>SRS</s2><s3>, it is not used: a message warns you and the current values are kept; select another </s3><s4>SRS</s4><s5>.</s5>",
+  "target": "<s1>Si la position ne peut pas être convertie dans le </s1><s2>SRS</s2><s3> sélectionné, elle n’est pas utilisée : un message vous en avertit et les valeurs actuelles sont conservées ; sélectionnez un autre </s3><s4>SRS</s4><s5>.</s5>"
+ },
+ {
   "source": "<s1>When the accuracy threshold or the fetch timeout is reached (specified in the settings), the GPS antenna is automatically stopped.</s1>",
   "target": "<s1>Lorsque le seuil de précision ou le délai d’acquisition (définis dans les paramètres) est atteint, l’antenne GPS s’arrête automatiquement.</s1>"
  },
@@ -1026,6 +1034,10 @@
  {
   "source": "<s1>Following the arrow and the distance to the target will guide you to reach the target location without looking at a map. Press </s1><s2>Use current location</s2><s3> to use your current location as the value of the coordinate attribute.</s3>",
   "target": "<s1>En suivant la flèche et la distance jusqu’à la cible, vous pouvez atteindre la position cible sans regarder de carte. Appuyez sur </s1><s2>Utiliser la position actuelle</s2><s3> pour utiliser votre position actuelle comme valeur de l’attribut de coordonnées.</s3>"
+ },
+ {
+  "source": "<s1>If your current location cannot be converted to the </s1><s2>SRS</s2><s3> of the coordinate attribute, it is not used and a message warns you.</s3>",
+  "target": "<s1>Si votre position actuelle ne peut pas être convertie dans le </s1><s2>SRS</s2><s3> de l’attribut de coordonnées, elle n’est pas utilisée et un message vous en avertit.</s3>"
  },
  {
   "source": "<s1>6.6. Finding the closest sampling point</s1>",
