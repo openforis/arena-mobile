@@ -6,8 +6,22 @@ import { store } from "state/store";
 import { Errors } from "./Errors";
 import { log } from "./Logger";
 
-const globalErrorUtils = (global as any).ErrorUtils as
-  ErrorUtilsType | undefined;
+// React Native / Hermes globals not (or loosely) declared in the RN types
+type AppGlobal = {
+  ErrorUtils?: ErrorUtilsType;
+  HermesInternal?: {
+    enablePromiseRejectionTracker?: (options: {
+      allRejections: boolean;
+      onHandled: () => void;
+      onUnhandled: (id: number, rejection: unknown) => void;
+    }) => void;
+  } | null;
+  [initializedFlagKey]?: boolean;
+};
+
+const appGlobal = global as unknown as AppGlobal;
+
+const globalErrorUtils = appGlobal.ErrorUtils;
 
 // tracked on the actual JS global (not module-local state), since a module-local
 // flag would be reset if this module gets re-evaluated by Fast Refresh; without
@@ -59,10 +73,10 @@ const handleUnhandledRejection = (id: number, rejection: unknown) => {
  * this, unhandled rejections would fail silently.
  */
 export const initializeGlobalErrorHandler = () => {
-  if ((global as any)[initializedFlagKey]) {
+  if (appGlobal[initializedFlagKey]) {
     return;
   }
-  (global as any)[initializedFlagKey] = true;
+  appGlobal[initializedFlagKey] = true;
 
   if (globalErrorUtils) {
     const previousHandler = globalErrorUtils.getGlobalHandler();
@@ -73,7 +87,7 @@ export const initializeGlobalErrorHandler = () => {
   }
 
   if (!__DEV__) {
-    (global as any).HermesInternal?.enablePromiseRejectionTracker?.({
+    appGlobal.HermesInternal?.enablePromiseRejectionTracker?.({
       allRejections: true,
       onHandled: () => {},
       onUnhandled: handleUnhandledRejection,

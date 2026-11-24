@@ -100,7 +100,10 @@ const PagerView = forwardRef<PagerViewRef, PagerViewProps>((props, ref) => {
   const onPointerDown = useCallback((e: PointerEvent) => {
     const { pointerType, button, clientX, clientY } = e.nativeEvent;
     // the event target is a DOM element on web
-    const fromTextInput = (e.target as any)?.closest?.("input, textarea");
+    const target = e.target as {
+      closest?: (selectors: string) => unknown;
+    } | null;
+    const fromTextInput = target?.closest?.("input, textarea");
     dragStartRef.current =
       pointerType === "mouse" && button === 0 && !fromTextInput
         ? { x: clientX, y: clientY }

@@ -4,7 +4,6 @@ import { StyleProp, Text, View, ViewStyle } from "react-native";
 // the other react-native-maps props are ignored
 type MapViewProps = {
   style?: StyleProp<ViewStyle>;
-  [key: string]: any;
 };
 
 const placeholderStyle: ViewStyle = {
@@ -15,7 +14,7 @@ const placeholderStyle: ViewStyle = {
 };
 
 // Web replacement of react-native-maps: maps are not available in the browser preview
-const MapView = forwardRef<any, MapViewProps>(({ style }, ref) => {
+const MapView = forwardRef<unknown, MapViewProps>(({ style }, ref) => {
   useImperativeHandle(ref, () => ({
     animateCamera: () => {},
     animateToRegion: () => {},
@@ -36,7 +35,7 @@ const MapView = forwardRef<any, MapViewProps>(({ style }, ref) => {
 });
 MapView.displayName = "MapView";
 
-const NullComponent = (_props: any) => null;
+const NullComponent = (_props: unknown) => null;
 
 export const Callout = NullComponent;
 export const Circle = NullComponent;

@@ -6,10 +6,20 @@ import { IconButton } from "./IconButton";
 import { Menu } from "./Menu";
 import { MenuItem } from "./MenuItem";
 
+export type MenuButtonItem = {
+  key: string;
+  disabled?: boolean;
+  icon?: string;
+  label: string;
+  labelIsI18nKey?: boolean;
+  onPress?: () => void;
+  keepMenuOpenOnPress?: boolean;
+};
+
 type Props = {
   anchorPosition?: "top" | "bottom";
   icon?: string;
-  items: any[];
+  items: MenuButtonItem[];
   label?: string;
   menuStyle?: StyleProp<ViewStyle>;
   mode?: ButtonMode;
@@ -72,7 +82,7 @@ export const MenuButton = (props: Props) => {
           labelIsI18nKey,
           onPress,
           keepMenuOpenOnPress = false,
-        }: any) => (
+        }) => (
           <MenuItem
             key={key}
             disabled={disabled}
@@ -82,7 +92,7 @@ export const MenuButton = (props: Props) => {
               if (!keepMenuOpenOnPress) {
                 closeMenu();
               }
-              onPress();
+              onPress?.();
             }}
             title={label}
           />

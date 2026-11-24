@@ -42,7 +42,7 @@ export const View = (props: ViewProps) => {
   );
 
   const style = useMemo(() => {
-    const parts: any[] = [{ backgroundColor }];
+    const parts: StyleProp<ViewStyle>[] = [{ backgroundColor }];
     if (fullFlex) parts.push(styles.fullFlex);
     if (fullWidth) parts.push(styles.fullWidth);
     if (styleProp) parts.push(styleProp);

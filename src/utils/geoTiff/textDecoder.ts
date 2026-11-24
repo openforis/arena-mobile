@@ -34,7 +34,7 @@ class Utf8TextDecoder {
 // returns true when the native TextDecoder is available
 export const ensureTextDecoder = (): boolean => {
   if (typeof globalThis.TextDecoder === "function") return true;
-  (globalThis as any).TextDecoder = Utf8TextDecoder;
+  (globalThis as { TextDecoder?: unknown }).TextDecoder = Utf8TextDecoder;
   return false;
 };
 

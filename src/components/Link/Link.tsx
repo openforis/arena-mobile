@@ -7,10 +7,11 @@ import { Text } from "components/Text";
 import { useTranslation } from "localization";
 
 import styles from "./styles";
+import type { TranslateParams } from "localization";
 
 type Props = {
   labelKey?: string;
-  labelParams?: any;
+  labelParams?: TranslateParams;
   labelIsI18nKey?: boolean;
   style?: StyleProp<TextStyle>;
   textVariant?: "bodyMedium" | "bodyLarge" | "labelMedium" | "labelLarge";

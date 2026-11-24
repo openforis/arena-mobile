@@ -2,14 +2,18 @@ import { useMemo } from "react";
 import { Text as RNText } from "react-native-paper";
 import { StyleProp, TextLayoutEvent, TextStyle } from "react-native";
 
-import { useIsTextDirectionRtl, useTranslation } from "localization";
+import {
+  TranslateParams,
+  useIsTextDirectionRtl,
+  useTranslation,
+} from "localization";
 
-const styleToObject = (style: any): any =>
+const styleToObject = (style: StyleProp<TextStyle>): TextStyle =>
   Array.isArray(style)
     ? Object.assign({}, ...style.map(styleToObject))
-    : (style ?? {});
+    : ((style ?? {}) as TextStyle);
 
-type TextVariant =
+export type TextVariant =
   | "displayLarge"
   | "displayMedium"
   | "displaySmall"
@@ -32,7 +36,7 @@ const TranslatedText = ({
   textParams,
 }: {
   textKey: string;
-  textParams?: any;
+  textParams?: TranslateParams;
 }) => {
   const { t } = useTranslation();
   return t(textKey, textParams);
@@ -46,7 +50,7 @@ type Props = {
   selectable?: boolean;
   style?: StyleProp<TextStyle>;
   textKey?: string;
-  textParams?: any;
+  textParams?: TranslateParams;
   variant?: TextVariant;
 };
 
@@ -71,7 +75,7 @@ export const Text = (props: Props) => {
     }
     const _style = styleToObject(styleProp);
     const { textAlign } = _style;
-    return textAlign ? _style : [_style, { textAlign: "right" }];
+    return textAlign ? _style : [_style, { textAlign: "right" as const }];
   }, [isRtl, styleProp]);
 
   return (

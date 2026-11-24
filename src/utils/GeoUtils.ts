@@ -90,9 +90,15 @@ const hasCoordinate = (
 ): boolean =>
   coordinates.some((item) => isSameCoordinate(item, coordinate, epsilon));
 
+type GeoJsonFeatureValue =
+  | { geometry?: { type?: string; coordinates?: [number, number][][] } }
+  | null
+  | undefined;
+
 const extractPolygonCoordinatesFromGeoJson = (
-  geoJsonValue: any,
+  geoJsonValueParam: unknown,
 ): LatLng[] | null => {
+  const geoJsonValue = geoJsonValueParam as GeoJsonFeatureValue;
   const geometryType = geoJsonValue?.geometry?.type;
   if (geometryType && geometryType !== "Polygon") return null;
   const coordinates: [number, number][] | undefined =

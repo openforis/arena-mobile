@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 
+import type { ConfirmShowParams } from "state/confirm";
 import { useConfirm } from "state/confirm/hooks";
 
 import { runConfirmedAction } from "./confirmedActionUtils";
@@ -10,7 +11,10 @@ export const useConfirmedAction = () => {
   const [running, setRunning] = useState(false);
 
   const confirmAndRun = useCallback(
-    (confirmParams: any, action: () => Promise<unknown>): Promise<boolean> =>
+    (
+      confirmParams: Omit<ConfirmShowParams, "onConfirm" | "onCancel">,
+      action: () => Promise<unknown>,
+    ): Promise<boolean> =>
       runConfirmedAction({
         confirm: () => confirm(confirmParams),
         action,

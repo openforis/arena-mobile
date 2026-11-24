@@ -25,7 +25,10 @@ const SENSOR_UPDATE_INTERVAL_MS = 50; // 20 Hz
 // returns m/s² or G-units: in LANDSCAPE_LEFT the visual top is -x (normalised
 // acc.x < 0 when tilted up), in LANDSCAPE_RIGHT the visual top is +x (> 0).
 // Threshold 0.05 ≈ 3° tilt; below that the expo key is the fallback.
-const adjustOrientationForLandscape = (o: any, acc: Vector3): any => {
+const adjustOrientationForLandscape = (
+  o: number | null,
+  acc: Vector3,
+): number | null => {
   if (!ScreenOrientation.isLandscape(o)) return o;
   const accNorm = Math.hypot(acc.x, acc.y, acc.z);
   if (accNorm < 0.001) return o;
@@ -45,7 +48,7 @@ const adjustOrientationForLandscape = (o: any, acc: Vector3): any => {
 //   PORTRAIT_DOWN (2)  → 180° around z
 //   LANDSCAPE_LEFT (3) → device rotated 90° CW,  top points right: x'=y,  y'=-x
 //   LANDSCAPE_RIGHT(4) → device rotated 90° CCW, top points left:  x'=-y, y'=x
-const toPortraitFrame = (v: Vector3, orientation: number): Vector3 => {
+const toPortraitFrame = (v: Vector3, orientation: number | null): Vector3 => {
   switch (orientation) {
     case ScreenOrientation.keys.PORTRAIT_DOWN:
       return { x: -v.x, y: -v.y, z: v.z };
@@ -187,7 +190,7 @@ export const useMagnetometerHeading = ({
           accRef.current = data;
         });
       })
-      .catch((error: any) => {
+      .catch((error: unknown) => {
         if (cancelled) return;
         log.error("Error initializing magnetometer", error);
         setMagnetometerAvailable(false);

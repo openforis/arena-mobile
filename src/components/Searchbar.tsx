@@ -8,7 +8,7 @@ const baseStyle = { margin: 5 };
 type Props = {
   placeholder?: string;
   onChange: (value: string) => void;
-  value?: any;
+  value?: string;
 };
 
 export const Searchbar = (props: Props) => {
@@ -25,7 +25,7 @@ export const Searchbar = (props: Props) => {
       placeholder={t(placeholderProp)}
       onChangeText={onChange}
       style={baseStyle}
-      value={value}
+      value={value as string}
     />
   );
 };

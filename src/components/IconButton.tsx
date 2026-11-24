@@ -37,7 +37,7 @@ export const IconButton = (props: IconButtonProps) => {
   return (
     <RNPIconButton
       disabled={disabled}
-      icon={icon}
+      icon={icon as React.ComponentProps<typeof RNPIconButton>["icon"]}
       iconColor={iconColor}
       loading={actualLoading}
       mode={mode === "text" ? undefined : mode}
