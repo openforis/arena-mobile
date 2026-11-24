@@ -46,7 +46,10 @@ const openGeoTiff = async (fileUri: string) => {
   GeoTiffImages.registerDecoders();
   const source = GeoTiffFileSource.open(fileUri);
   try {
-    const tiff = await GeoTIFF.fromSource(source as any);
+    // implements the fetch() of the geotiff BaseSource (not a subclass)
+    const tiff = await GeoTIFF.fromSource(
+      source as unknown as Parameters<typeof GeoTIFF.fromSource>[0],
+    );
     return { source, tiff };
   } catch (error) {
     await source.close();

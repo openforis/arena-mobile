@@ -105,7 +105,7 @@ export const AppConfirmDialog = () => {
       {(singleChoiceOptions?.length ?? 0) > 0 && (
         <RadioButtonGroup
           onValueChange={onSingleChoiceOptionChange}
-          value={selectedSingleChoiceValue}
+          value={selectedSingleChoiceValue ?? undefined}
         >
           <VView>
             {singleChoiceOptions!.map(

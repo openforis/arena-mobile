@@ -12,8 +12,8 @@ import { useAppDispatch, useAppSelector } from "state/storeHooks";
 
 type ConfirmDialogLocalState = {
   confirmInProgress: boolean;
-  selectedMultipleChoiceValues: any[];
-  selectedSingleChoiceValue: any;
+  selectedMultipleChoiceValues: string[];
+  selectedSingleChoiceValue: string | null | undefined;
   swipeConfirmed: boolean;
   textInputValue: string;
 };
@@ -40,8 +40,8 @@ export const useConfirmDialog = (): ConfirmState &
     confirmButtonEnabled: boolean;
     confirm: () => void;
     cancel: () => void;
-    onMultipleChoiceOptionChange: (value: any) => void;
-    onSingleChoiceOptionChange: (value: any) => void;
+    onMultipleChoiceOptionChange: (value: string) => void;
+    onSingleChoiceOptionChange: (value: string) => void;
     onTextInputChange: (value: string) => void;
     setSwipeConfirmed: () => void;
   } => {
@@ -106,7 +106,7 @@ export const useConfirmDialog = (): ConfirmState &
     dispatch(ConfirmActions.cancel());
   }, [dispatch]);
 
-  const onMultipleChoiceOptionChange = useCallback((value: any) => {
+  const onMultipleChoiceOptionChange = useCallback((value: string) => {
     setState((statePrev) => {
       const prevSelection = statePrev.selectedMultipleChoiceValues ?? [];
       const nextChecked = !prevSelection.includes(value);
@@ -120,7 +120,7 @@ export const useConfirmDialog = (): ConfirmState &
     });
   }, []);
 
-  const onSingleChoiceOptionChange = useCallback((value: any) => {
+  const onSingleChoiceOptionChange = useCallback((value: string) => {
     setState((statePrev) => ({
       ...statePrev,
       selectedSingleChoiceValue: value,

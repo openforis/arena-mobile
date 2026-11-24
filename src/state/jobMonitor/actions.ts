@@ -185,7 +185,7 @@ const monitorRemoteJob = async <R>({
       log.debug(`remote job status poll failed: ${error}`);
     }
   }, REMOTE_JOB_STATUS_POLL_INTERVAL_MS);
-  ws.on(WebSocketService.EVENTS.jobUpdate, onRemoteJobUpdate);
+  ws!.on(WebSocketService.EVENTS.jobUpdate, onRemoteJobUpdate);
 };
 
 type JobStartParams<R = unknown> = {
@@ -289,9 +289,9 @@ const start =
     if (job) {
       // local job: listen to job update events
       if (job.isEnded()) {
-        onJobUpdate(job.toJSON());
+        onJobUpdate(job.toJSON() as JobSummary<R>);
       } else {
-        job.onEvent(() => onJobUpdate(job.toJSON()));
+        job.onEvent(() => onJobUpdate(job.toJSON() as JobSummary<R>));
       }
     } else if (jobUuid) {
       await monitorRemoteJob({ jobUuid, getState, onJobUpdate });

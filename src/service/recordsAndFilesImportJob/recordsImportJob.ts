@@ -7,9 +7,17 @@ import { isValidFileUuid } from "utils/isValidFileUuid";
 import { RecordService } from "../recordService";
 import { RecordsAndFilesImportJobContext } from "./RecordsAndFilesImportJobContext";
 
-export class RecordsImportJob extends JobMobile<RecordsAndFilesImportJobContext> {
-  insertedRecords: any;
-  updatedRecords: any;
+export type RecordsImportJobResult = {
+  insertedRecords?: number;
+  updatedRecords?: number;
+};
+
+export class RecordsImportJob extends JobMobile<
+  RecordsAndFilesImportJobContext,
+  RecordsImportJobResult
+> {
+  insertedRecords?: number;
+  updatedRecords?: number;
   override async execute() {
     const { survey, unzippedFolderUri, overwriteExistingRecords } =
       this.context;
@@ -26,7 +34,7 @@ export class RecordsImportJob extends JobMobile<RecordsAndFilesImportJobContext>
       return;
     }
 
-    const fileRecordsSummary = fileRecordsSummaryObj as any[];
+    const fileRecordsSummary = fileRecordsSummaryObj as { uuid: string }[];
 
     this.total = fileRecordsSummary.length;
     this.insertedRecords = 0;
@@ -70,7 +78,8 @@ export class RecordsImportJob extends JobMobile<RecordsAndFilesImportJobContext>
         `this record cannot be imported in the current survey; it has been created with another one;`,
       );
     for (const node of Object.values(record.nodes ?? {})) {
-      const fileUuid = (node.value as any)?.fileUuid;
+      const fileUuid = (node.value as { fileUuid?: string } | undefined)
+        ?.fileUuid;
       if (fileUuid && !isValidFileUuid(fileUuid))
         throw new Error(
           `invalid file uuid in record ${recordUuid}: ${fileUuid}`,
@@ -102,7 +111,7 @@ export class RecordsImportJob extends JobMobile<RecordsAndFilesImportJobContext>
         recordUuids: [record.uuid],
       });
     }
-    this.insertedRecords++;
+    this.insertedRecords!++;
   }
 
   private async updateRecord(record: ArenaRecord) {
@@ -118,10 +127,10 @@ export class RecordsImportJob extends JobMobile<RecordsAndFilesImportJobContext>
         record,
       });
     }
-    this.updatedRecords++;
+    this.updatedRecords!++;
   }
 
-  override generateResult() {
+  override generateResult(): Promise<RecordsImportJobResult> {
     const { insertedRecords, updatedRecords } = this;
     return Promise.resolve({ insertedRecords, updatedRecords });
   }

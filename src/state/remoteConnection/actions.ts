@@ -25,7 +25,7 @@ import { invalidTwoFactorCodeError, LoginResponse } from "service/authService";
 import type { AppDispatch, AppGetState } from "../store";
 
 const confirmGoToConnectionToRemoteServer =
-  ({ navigator }: any) =>
+  ({ navigator }: { navigator: Navigator }) =>
   (dispatch: AppDispatch) => {
     dispatch(
       ConfirmActions.show({
@@ -244,7 +244,7 @@ const fetchLoggedInUserProfileIcon = async (
 };
 
 const _clearUserCredentialsInternal =
-  ({ keepEmailAddress }: any = {}) =>
+  ({ keepEmailAddress }: { keepEmailAddress?: boolean } = {}) =>
   async (dispatch: AppDispatch) => {
     const settings = await SettingsService.fetchSettings();
     const emailNext = keepEmailAddress ? settings.email : undefined;
@@ -275,7 +275,7 @@ const clearUserCredentials = () => async (dispatch: AppDispatch) => {
 };
 
 const _doLogout =
-  ({ keepEmailAddress }: any) =>
+  ({ keepEmailAddress }: { keepEmailAddress: boolean }) =>
   async (dispatch: AppDispatch) => {
     await AuthService.logout();
     await UserService.clearLastLoggedInUser();
@@ -283,7 +283,7 @@ const _doLogout =
     // device doesn't get the previous user's group/qualifiers as an offline fallback.
     const surveySummaries = await SurveyService.fetchSurveySummariesLocal();
     await PreferencesService.clearSurveyUserGroups(
-      surveySummaries.map((surveySummary: any) => surveySummary.id),
+      surveySummaries.map((surveySummary) => surveySummary.id),
     );
     // Clear the in-memory survey user group too, so it doesn't keep showing the previous
     // user's group until a new one logs in and it gets refetched.
@@ -303,10 +303,10 @@ const logout = () => (dispatch: AppDispatch) => {
         }),
       ),
       titleKey: "authService:logout",
-      onConfirm: ({ selectedMultipleChoiceValues }: any) =>
+      onConfirm: ({ selectedMultipleChoiceValues }) =>
         dispatch(
           _doLogout({
-            keepEmailAddress: selectedMultipleChoiceValues.includes(
+            keepEmailAddress: selectedMultipleChoiceValues!.includes(
               UserLogoutOptions.keepEmailAddress,
             ),
           }),

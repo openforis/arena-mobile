@@ -88,9 +88,10 @@ export const triggerSurveyUpdate = ({
 }: TriggerSurveyUpdateParams) =>
   dispatch(
     SurveyActions.updateSurveyRemote({
-      surveyId: survey.id,
+      surveyId: survey.id!,
       surveyName: Surveys.getName(survey),
-      surveyRemoteId: survey.remoteId,
+      // update triggered only when the survey is in the server
+      surveyRemoteId: survey.remoteId!,
       navigator,
       confirmMessageKey,
       onConfirm,

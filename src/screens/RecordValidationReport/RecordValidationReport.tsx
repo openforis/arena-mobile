@@ -49,7 +49,7 @@ type ValidationItem = {
   nodeDef: ArenaAnyNodeDef;
   parentNodeUuid?: string;
   path: string;
-  error: string;
+  error: string | null;
 };
 
 // empty array (filtered out as empty path part) when the node is not found

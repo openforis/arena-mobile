@@ -1,4 +1,4 @@
-import { JobStatus } from "@openforis/arena-core";
+import { ArenaJobSerialized, JobStatus } from "@openforis/arena-core";
 
 import type { AppDispatch } from "state/store";
 import { log } from "utils";
@@ -22,7 +22,7 @@ export const REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES = {
   uploadAndProcess: { progressRangeStart: 33, progressRangeEnd: 100 },
 };
 
-export const errorOrJobToString = (errorOrJob: any) => {
+export const errorOrJobToString = (errorOrJob: unknown) => {
   if (!errorOrJob) {
     return "";
   }
@@ -30,8 +30,9 @@ export const errorOrJobToString = (errorOrJob: any) => {
     return errorOrJob.message ?? errorOrJob.toString();
   }
   // job
-  if (errorOrJob.status === JobStatus.failed) {
-    return JSON.stringify(errorOrJob.errors);
+  const job = errorOrJob as Partial<ArenaJobSerialized<unknown>>;
+  if (job.status === JobStatus.failed) {
+    return JSON.stringify(job.errors);
   }
   return JSON.stringify(errorOrJob);
 };
@@ -43,12 +44,12 @@ export const errorTextLooksLikeAuthError = (text: string) =>
   /\bstatus code 401\b/.test(text);
 
 // raw/wrapped HTTP errors carry the status, failed jobs only the error text
-export const isAuthErrorOrFailedJobAuthError = (error: any) =>
+export const isAuthErrorOrFailedJobAuthError = (error: unknown) =>
   HttpErrors.isUnauthorized(error) ||
   errorTextLooksLikeAuthError(errorOrJobToString(error));
 
 export const handleDataExportError =
-  (error: any, silent = false) =>
+  (error: unknown, silent = false) =>
   (dispatch: AppDispatch) => {
     if (silent) {
       // an unattended tick must never surface a blocking error dialog; shown through the sync

@@ -4,7 +4,7 @@ import {
   Dispatch,
   PayloadAction,
 } from "@reduxjs/toolkit";
-import { Keyboard } from "react-native";
+import { Keyboard, StyleProp, ViewStyle } from "react-native";
 
 import { log } from "utils";
 
@@ -20,9 +20,9 @@ type ChoiceOption = { label: string; value: string };
 
 export type ConfirmShowParams = {
   titleKey?: string;
-  cancelButtonStyle?: any;
+  cancelButtonStyle?: StyleProp<ViewStyle>;
   cancelButtonTextKey?: string;
-  confirmButtonStyle?: any;
+  confirmButtonStyle?: StyleProp<ViewStyle>;
   confirmButtonTextKey?: string;
   confirmButtonEnableFn?: (params: OnConfirmParams) => boolean;
   defaultMultipleChoiceValues?: string[];
@@ -30,10 +30,10 @@ export type ConfirmShowParams = {
   defaultTextInputValue?: string;
   messageIsMarkdown?: boolean;
   messageKey?: string;
-  messageParams?: any;
+  messageParams?: Record<string, unknown>;
   multipleChoiceOptions?: ChoiceOption[];
   onConfirm: (params: OnConfirmParams) => Promise<void> | void;
-  onCancel?: () => Promise<void> | void;
+  onCancel?: (() => Promise<void> | void) | null;
   singleChoiceOptions?: ChoiceOption[];
   swipeToConfirm?: boolean;
   swipeToConfirmTitleKey?: string;

@@ -23,8 +23,9 @@ import styles from "./styles";
 
 // Crypto (for internal UUIDs generation)
 import * as Crypto from "expo-crypto";
-if (!(globalThis as any).crypto) {
-  (globalThis as any).crypto = Crypto;
+const globalWithCrypto = globalThis as { crypto?: unknown };
+if (!globalWithCrypto.crypto) {
+  globalWithCrypto.crypto = Crypto;
 }
 
 const steps = {
@@ -69,7 +70,7 @@ export const AppInitializer = (props: Props) => {
   } as AppInitializerState);
   const { loading, errorMessage, step } = state;
 
-  const setStep = (stepNew: any) => {
+  const setStep = (stepNew: string) => {
     log.debug(`App initialization step: ${stepNew}`);
     setState((statePrev) => ({ ...statePrev, step: stepNew }));
   };

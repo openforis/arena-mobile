@@ -1,4 +1,4 @@
-import { ArenaExportFile } from "@openforis/arena-core";
+import { ArenaExportFile, ArenaSurvey } from "@openforis/arena-core";
 
 import { Files } from "utils/Files";
 import { GenericFileRepository } from "./genericFileRepository";
@@ -8,7 +8,7 @@ const SURVEY_FILES_DIR_NAME = "survey_files";
 const getSurveyFilesDirUri = () =>
   GenericFileRepository.getDirUri(SURVEY_FILES_DIR_NAME);
 
-const getSurveyFileUri = ({ surveyId }: any) =>
+const getSurveyFileUri = ({ surveyId }: { surveyId: number }) =>
   `${getSurveyFilesDirUri()}/${surveyId}.json`;
 
 const toTempFileUri = (fileUri: string) => `${fileUri}.tmp`;
@@ -28,18 +28,22 @@ const getSurveyPackageFileUri = ({
 
 const getStorageSize = async () => Files.getDirSize(getSurveyFilesDirUri());
 
-const readSurveyFile = async ({ surveyId }: any) => {
+const readSurveyFile = async ({
+  surveyId,
+}: {
+  surveyId: number;
+}): Promise<ArenaSurvey> => {
   const fileUri = getSurveyFileUri({ surveyId });
   const tempFileUri = toTempFileUri(fileUri);
   // on iOS the move deletes the target first: an interruption can leave only the temp file
   if (!(await Files.exists(fileUri)) && (await Files.exists(tempFileUri))) {
     await Files.moveFile({ from: tempFileUri, to: fileUri });
   }
-  return Files.readJsonFromFile({ fileUri });
+  return (await Files.readJsonFromFile({ fileUri })) as ArenaSurvey;
 };
 
-const saveSurveyFile = async (survey: any) => {
-  const { id: surveyId } = survey;
+const saveSurveyFile = async <T extends ArenaSurvey>(survey: T): Promise<T> => {
+  const surveyId = survey.id!;
   await GenericFileRepository.makeDirIfNotExists(getSurveyFilesDirUri());
 
   const fileUri = getSurveyFileUri({ surveyId });
@@ -84,7 +88,7 @@ const replaceSurveyPackageFiles = async ({
   );
 };
 
-const deleteSurveyFile = async ({ surveyId }: any) => {
+const deleteSurveyFile = async ({ surveyId }: { surveyId: number }) => {
   const fileUri = getSurveyFileUri({ surveyId });
   await GenericFileRepository.deleteFile(fileUri);
   await deleteSurveyPackageFiles({ surveyId });

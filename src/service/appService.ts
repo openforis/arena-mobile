@@ -20,14 +20,15 @@ const estimateFullBackupSize = async () => {
   return dbSize + surveysSize + recordFilesSize;
 };
 
-const generateFullBackup = async () => {
+// null if the backup job has been canceled
+const generateFullBackup = async (): Promise<string | null> => {
   const job = new BackupJob({ user: {} as ArenaUser });
   await job.start();
 
   const { status, result, errors } = job;
   switch (status) {
     case JobStatus.succeeded:
-      return result.outputFileUri;
+      return result!.outputFileUri;
     case JobStatus.failed:
       throw new Error(JSON.stringify(errors));
     default:

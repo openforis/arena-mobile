@@ -1,4 +1,4 @@
-import { Surveys } from "@openforis/arena-core";
+import { ArenaRecord, Surveys } from "@openforis/arena-core";
 
 import { Cycles } from "model";
 import { RecordService } from "service";
@@ -13,7 +13,13 @@ import type { AppDispatch, AppGetState } from "../store";
 const textKeyPrefix = "recordsList:cloneRecords.";
 
 export const cloneRecordsIntoDefaultCycle =
-  ({ recordSummaries, callback = null }: any) =>
+  ({
+    recordSummaries,
+    callback = null,
+  }: {
+    recordSummaries: ArenaRecord[];
+    callback?: (() => unknown) | null;
+  }) =>
   async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state)!;

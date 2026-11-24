@@ -6,14 +6,19 @@ const keys = {
   LANDSCAPE_RIGHT: 4,
 };
 
-const isLandscapeByKey = {
+const isLandscapeByKey: Record<number, boolean> = {
   [keys.LANDSCAPE_LEFT]: true,
   [keys.LANDSCAPE_RIGHT]: true,
 };
 
-const isLandscape = (orientation: any) => !!isLandscapeByKey[orientation];
-const fromExpoOrientation = (expoOrientation: any) =>
-  Object.values(keys).includes(expoOrientation) ? expoOrientation : null;
+const isLandscape = (orientation: number | null | undefined): boolean =>
+  orientation != null && !!isLandscapeByKey[orientation];
+const fromExpoOrientation = (
+  expoOrientation: number | null | undefined,
+): number | null =>
+  expoOrientation != null && Object.values(keys).includes(expoOrientation)
+    ? expoOrientation
+    : null;
 
 export const ScreenOrientation = {
   keys,

@@ -1,6 +1,6 @@
-import { Strings } from "@openforis/arena-core";
+import { ArenaDictionary, Strings } from "@openforis/arena-core";
 
-const objectToFormData = (obj: any) =>
+const objectToFormData = (obj: ArenaDictionary<unknown> = {}) =>
   Object.entries(obj).reduce((acc, [key, value]) => {
     if (value instanceof Blob) {
       acc.append(key, value);
@@ -15,7 +15,8 @@ const objectToFormData = (obj: any) =>
       "type" in value &&
       "name" in value
     ) {
-      acc.append(key, value as any);
+      // React Native FormData accepts file descriptors
+      acc.append(key, value as unknown as Blob);
       return acc;
     }
 
@@ -24,12 +25,20 @@ const objectToFormData = (obj: any) =>
     return acc;
   }, new FormData());
 
-const getUrl = ({ serverUrl, uri }: any) =>
+const getUrl = ({ serverUrl, uri }: { serverUrl: string; uri: string }) =>
   [Strings.removeSuffix("/")(serverUrl), Strings.removePrefix("/")(uri)].join(
     "/",
   );
 
-const getUrlWithParams = ({ serverUrl, uri, data = {} }: any) => {
+const getUrlWithParams = ({
+  serverUrl,
+  uri,
+  data = {},
+}: {
+  serverUrl: string;
+  uri: string;
+  data?: ArenaDictionary<unknown>;
+}) => {
   const searchParams = new URLSearchParams();
   for (const [key, value] of Object.entries(data)) {
     searchParams.append(key, String(value));

@@ -11,9 +11,13 @@ import { SurveyFSRepository } from "./repository/surveyFSRepository";
 let cachedSurveyId: number | null = null;
 const cache = new Map<string, ArenaAreaOfInterest>();
 
-const isAreaOfInterest = (value: any): value is ArenaAreaOfInterest =>
-  (value?.type === "Polygon" || value?.type === "MultiPolygon") &&
-  Array.isArray(value.coordinates);
+const isAreaOfInterest = (value: unknown): value is ArenaAreaOfInterest => {
+  const geometry = value as { type?: string; coordinates?: unknown } | null;
+  return (
+    (geometry?.type === "Polygon" || geometry?.type === "MultiPolygon") &&
+    Array.isArray(geometry.coordinates)
+  );
+};
 
 // the area files are stored by Arena already normalized as a Polygon or MultiPolygon geometry
 const readAreaOfInterest = async ({

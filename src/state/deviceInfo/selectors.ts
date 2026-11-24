@@ -6,7 +6,7 @@ import { useAppSelector } from "../storeHooks";
 
 const selectDeviceInfo = (state: RootState) => state.deviceInfo;
 
-const selectIsDeviceType = (type: any) => (state: RootState) => {
+const selectIsDeviceType = (type: Device.DeviceType) => (state: RootState) => {
   const info = selectDeviceInfo(state);
   const { deviceType } = info;
   return deviceType === type;

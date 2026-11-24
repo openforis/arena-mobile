@@ -15,13 +15,15 @@ import {
   Text,
   VView,
 } from "components";
-import { ScreenViewMode, SurveyStatus, UpdateStatus } from "model";
 import { SurveyService } from "service";
 import { useIsNetworkConnected, useNavigationFocus } from "hooks";
-import type {
+import {
+  ScreenViewMode,
+  SurveyStatus,
   SurveySummaryLocal,
   SurveySummaryRemote,
-} from "screens/SurveysList/surveySummaryTypes";
+  UpdateStatus,
+} from "model";
 import { useSurveysSearch } from "screens/SurveysList/useSurveysSearch";
 import {
   RemoteConnectionUtils,
@@ -163,7 +165,10 @@ export const SurveysListLocal = () => {
           swipeToConfirm: true,
         })
       ) {
-        await dispatch(SurveyActions.deleteSurveys(surveyIds));
+        // item keys are the survey ids (numbers, see loadSurveys)
+        await dispatch(
+          SurveyActions.deleteSurveys(surveyIds as unknown as number[]),
+        );
         await loadSurveys();
         return true;
       }

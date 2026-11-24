@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 
 import { Objects } from "@openforis/arena-core";
 
-import type { SurveySearchable } from "./surveySummaryTypes";
+import type { SurveySearchable } from "model";
 
 const prepareForSearch = (v: string | null | undefined): string =>
   Objects.isEmpty(v) ? "" : v!.toLocaleLowerCase().trim().replaceAll("_", " ");

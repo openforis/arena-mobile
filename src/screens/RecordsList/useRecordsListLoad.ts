@@ -15,7 +15,7 @@ import {
 import { log } from "utils";
 
 import { fetchRecordsWithSyncStatus } from "./fetchRecordsWithSyncStatus";
-import type { RecordSummaryWithSyncStatus } from "./recordsListTypes";
+import type { RecordSummaryWithSyncStatus } from "model";
 
 export type RecordsListState = {
   loading: boolean;

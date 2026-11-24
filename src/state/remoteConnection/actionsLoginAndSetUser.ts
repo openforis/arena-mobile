@@ -11,7 +11,7 @@ import type { AppDispatch, AppGetState } from "../store";
 const fetchUser = async () => {
   try {
     return await UserService.fetchUser();
-  } catch (error: any) {
+  } catch (error) {
     log.error("Error fetching user", error);
     // session no longer valid: a new login is required
     if (HttpErrors.isUnauthorizedResponse(error)) return null;

@@ -20,7 +20,8 @@ const { actions, reducer: ToastReducer } = toastSlice;
 const { show, dismiss } = actions;
 
 export const ToastActions = {
-  show: (textKey: any, textParams = {}) => show({ textKey, textParams }),
+  show: (textKey: string, textParams: Record<string, unknown> = {}) =>
+    show({ textKey, textParams }),
   dismiss,
 };
 

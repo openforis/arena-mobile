@@ -4,8 +4,9 @@ import {
   CategoryItems,
   ArenaFlatDataExportOptions,
   Dates,
-  ArenaNodeDef,
+  ArenaAnyNodeDef,
   ArenaNodeDefCoordinate,
+  ArenaNodeDefFile,
   NodeDefs,
   NodeDefType,
   RecordNodeValueFormatter,
@@ -26,10 +27,12 @@ type RowDataExtractorParams = {
   cycle: string;
   record: ArenaMobileRecord;
   node: ArenaRecordNode | null | undefined;
-  nodeDef: ArenaNodeDef<any>;
+  nodeDef: ArenaAnyNodeDef;
   options: ArenaFlatDataExportOptions;
   uniqueFileNameGenerator: UniqueFileNamesGenerator;
 };
+
+export type RowData = (string | null | undefined)[];
 
 type RowDataExtractor = ({
   survey,
@@ -38,7 +41,7 @@ type RowDataExtractor = ({
   node,
   nodeDef,
   options,
-}: RowDataExtractorParams) => (string | null | undefined)[];
+}: RowDataExtractorParams) => RowData;
 
 const totalFieldsCountCalculatorByNodeDefType: Partial<
   Record<NodeDefType, (params: RowDataExtractorParams) => number>
@@ -181,7 +184,9 @@ const rowDataExtractorByNodeDefType: Partial<
       return generateEmptyFields(params);
     }
     const node = nodeParam!;
-    const fileNameExpression = NodeDefs.getFileNameExpression(nodeDef);
+    const fileNameExpression = NodeDefs.getFileNameExpression(
+      nodeDef as ArenaNodeDefFile,
+    );
     const fileUuid = RecordNodeValues.getFileUuid(node)!;
     const fileName = fileNameExpression
       ? RecordNodeValues.getFileNameCalculated(node)
@@ -222,7 +227,7 @@ const rowDataExtractorByNodeDefType: Partial<
   },
 };
 
-export const extractRowNodeData = (params: RowDataExtractorParams): any[] => {
+export const extractRowNodeData = (params: RowDataExtractorParams): RowData => {
   const { survey, cycle, node, nodeDef } = params;
   const nodeValueExtractor =
     rowDataExtractorByNodeDefType[NodeDefs.getType(nodeDef)];

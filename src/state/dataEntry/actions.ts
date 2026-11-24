@@ -1,6 +1,8 @@
 import { Keyboard } from "react-native";
 
 import {
+  ArenaRecord,
+  ArenaSurvey,
   Dates,
   NodeDefs,
   RecordFactory,
@@ -9,7 +11,14 @@ import {
   Surveys,
 } from "@openforis/arena-core";
 
-import { RecordLoadStatus, RecordOrigin, UserGroupQualifiers } from "model";
+import {
+  RecordLoadStatus,
+  RecordOrigin,
+  RecordSummary,
+  UserGroupQualifiers,
+} from "model";
+import type { Navigator } from "navigation/navigator";
+import type { RecordLastEditedPage } from "service/preferencesService";
 import { PreferencesService } from "service/preferencesService";
 import { RecordService } from "service/recordService";
 
@@ -67,7 +76,7 @@ const { linkToRecordInPreviousCycle, unlinkFromRecordInPreviousCycle } =
   DataEntryActionsRecordPreviousCycle;
 
 const createNewRecord =
-  ({ navigator }: any) =>
+  ({ navigator }: { navigator: Navigator }) =>
   async (dispatch: AppDispatch, getState: AppGetState) => {
     try {
       let state = getState();
@@ -123,7 +132,7 @@ const createNewRecord =
 
       await dispatch(editRecord({ navigator, record, locked: false }));
       await dispatch(PositionTrackingActions.autoStartTracking());
-    } catch (error: any) {
+    } catch (error) {
       handleError(dispatch, error, "dataEntry:createRecordError");
     }
   };
@@ -202,7 +211,7 @@ const _performAddEntity = serializeRecordUpdate(async (dispatch, getState) => {
 });
 
 const addNewEntity =
-  (options = {} as any) =>
+  (options: { delay?: number | null } = {}) =>
   (dispatch: AppDispatch) => {
     const { delay = null } = options;
     Keyboard.dismiss();
@@ -213,7 +222,7 @@ const addNewEntity =
     }
   };
 
-const deleteNodes = (nodeUuids: any) =>
+const deleteNodes = (nodeUuids: string[]) =>
   serializeRecordUpdate(async (dispatch, getState) => {
     if (isRecordSyncInProgress(dispatch, getState)) return;
     const state = getState();
@@ -251,7 +260,7 @@ const deleteNodes = (nodeUuids: any) =>
   });
 
 const deleteRecords =
-  (recordUuids: any) =>
+  (recordUuids: string[]) =>
   async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
@@ -266,23 +275,35 @@ const checkEntityPageIsValidAndNotRoot = ({
   survey,
   entityPage,
   record,
-}: any) => {
+}: {
+  survey: ArenaSurvey;
+  entityPage: RecordLastEditedPage;
+  record: ArenaRecord;
+}) => {
   const { parentEntityUuid, entityDefUuid, entityUuid } = entityPage;
   const entityDef = Surveys.findNodeDefByUuid({ survey, uuid: entityDefUuid });
   return (
     entityDef &&
     !NodeDefs.isRoot(entityDef) &&
     (parentEntityUuid === null ||
-      !!Records.getNodeByUuid(parentEntityUuid)(record)) &&
-    (entityUuid === null || !!Records.getNodeByUuid(entityUuid)(record))
+      !!Records.getNodeByUuid(parentEntityUuid!)(record)) &&
+    (entityUuid === null || !!Records.getNodeByUuid(entityUuid!)(record))
   );
 };
 
 const editRecord =
-  ({ navigator, record, locked = true }: any) =>
+  ({
+    navigator,
+    record,
+    locked = true,
+  }: {
+    navigator: Navigator;
+    record: ArenaRecord;
+    locked?: boolean;
+  }) =>
   async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
-    const survey = SurveySelectors.selectCurrentSurvey(state);
+    const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const surveyId = SurveySelectors.selectCurrentSurveyId(state);
     const { id: recordId } = record;
     const lastEditedPage =
@@ -328,16 +349,27 @@ const _fetchAndEditRecordInternal = async ({
   navigator,
   survey,
   recordId,
-}: any) => {
+}: {
+  dispatch: AppDispatch;
+  navigator: Navigator;
+  survey: ArenaSurvey;
+  recordId: ArenaRecord["id"];
+}) => {
   const record = await RecordService.fetchRecord({ survey, recordId });
   await dispatch(editRecord({ navigator, record }));
 };
 
 const fetchAndEditRecord =
-  ({ navigator, recordSummary }: any) =>
+  ({
+    navigator,
+    recordSummary,
+  }: {
+    navigator: Navigator;
+    recordSummary: Pick<RecordSummary, "id" | "uuid" | "origin" | "loadStatus">;
+  }) =>
   async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
-    const survey = SurveySelectors.selectCurrentSurvey(state);
+    const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const {
       id: recordId,
       uuid: recordUuid,

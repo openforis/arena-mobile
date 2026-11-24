@@ -1,4 +1,4 @@
-import { Surveys } from "@openforis/arena-core";
+import { ArenaSurvey, LanguageCode, Surveys } from "@openforis/arena-core";
 
 import { i18n } from "localization";
 import type { Navigator } from "navigation/navigator";
@@ -15,6 +15,7 @@ import { SurveySelectors } from "./selectors";
 import { log } from "utils/Logger";
 import { SurveyUtils } from "model/index";
 import type { AppDispatch, AppGetState } from "../store";
+import type { CurrentSurvey } from "./state";
 
 // Best-effort: fetches the current user's UserGroup for the given survey (if any) and stores it;
 // mirrors the offline handling of RemoteConnectionActions.loginAndSetUser: when the fetch isn't
@@ -22,9 +23,10 @@ import type { AppDispatch, AppGetState } from "../store";
 // last group fetched successfully for this survey, cached locally via PreferencesService.
 // currentSurveyUserGroupReady is set to true once a value (remote or cached) is settled on.
 const fetchCurrentSurveyUserGroup =
-  ({ survey }: any) =>
+  ({ survey }: { survey: CurrentSurvey }) =>
   async (dispatch: AppDispatch, getState: AppGetState) => {
-    const surveyId = survey?.id;
+    // always set for a local survey
+    const surveyId = survey?.id as number;
     // Avoid race conditions when the user switches surveys quickly: only apply the result
     // if the fetched survey is still the current one.
     const isSurveyStillCurrent = () =>
@@ -85,21 +87,28 @@ const resetCurrentSurveyUserGroup =
   SurveySliceActions.currentSurveyUserGroupReset;
 
 const setCurrentSurvey =
-  ({ survey, preferredLanguage = null, navigator = null }: any) =>
+  ({
+    survey,
+    preferredLanguage = null,
+    navigator = null,
+  }: {
+    survey: CurrentSurvey;
+    preferredLanguage?: LanguageCode | null;
+    navigator?: Navigator | null;
+  }) =>
   async (dispatch: AppDispatch) => {
     dispatch(
       SurveySliceActions.currentSurveySet({ survey, preferredLanguage }),
     );
-    await PreferencesService.setCurrentSurveyId(survey.id);
-    await dispatch(
-      SurveyOptionsActions.fetchEntityListColumns({ surveyId: survey.id }),
-    );
+    const surveyId = survey.id!;
+    await PreferencesService.setCurrentSurveyId(surveyId);
+    await dispatch(SurveyOptionsActions.fetchEntityListColumns({ surveyId }));
     dispatch(fetchCurrentSurveyUserGroup({ survey }));
     navigator?.navigateToRecordsList();
   };
 
 const setCurrentSurveyPreferredLanguage =
-  ({ lang }: any) =>
+  ({ lang }: { lang: LanguageCode }) =>
   async (dispatch: AppDispatch, getState: AppGetState) => {
     dispatch(SurveySliceActions.currentSurveyPreferredLanguageSet(lang));
     const state = getState();
@@ -108,7 +117,7 @@ const setCurrentSurveyPreferredLanguage =
   };
 
 const setCurrentSurveyCycle =
-  ({ cycleKey }: any) =>
+  ({ cycleKey }: { cycleKey: string | null | undefined }) =>
   (dispatch: AppDispatch) => {
     dispatch(SurveySliceActions.currentSurveyCycleSet(cycleKey));
   };
@@ -132,7 +141,14 @@ const fetchAndSetCurrentSurvey =
       }
       const preferredLanguage =
         await PreferencesService.getSurveyPreferredLanguage(surveyId);
-      dispatch(setCurrentSurvey({ survey, preferredLanguage, navigator }));
+      dispatch(
+        setCurrentSurvey({
+          survey,
+          // stored as one of the survey languages
+          preferredLanguage: preferredLanguage as LanguageCode | undefined,
+          navigator,
+        }),
+      );
     } else {
       dispatch(
         MessageActions.setMessage({
@@ -164,18 +180,21 @@ const fetchAndSetRemoteSurveyIfOnlyOne =
       }
 
       const { surveys: remoteSurveys = [] } =
-        (await SurveyService.fetchSurveySummariesRemote()) as any;
-      const remoteSurveysVisibleInMobile = remoteSurveys.filter(
-        Surveys.isVisibleInMobile,
+        (await SurveyService.fetchSurveySummariesRemote()) as {
+          surveys?: ArenaSurvey[];
+        };
+      const remoteSurveysVisibleInMobile = remoteSurveys.filter((survey) =>
+        Surveys.isVisibleInMobile(survey),
       );
       if (remoteSurveysVisibleInMobile.length !== 1) {
         return;
       }
 
-      const remoteSurvey = remoteSurveysVisibleInMobile[0];
+      const remoteSurvey = remoteSurveysVisibleInMobile[0]!;
+      const remoteSurveyId = remoteSurvey.id!;
       const surveysLocal = await SurveyService.fetchSurveySummariesLocal();
       const localSurveyWithSameUuid = surveysLocal.find(
-        (surveyLocal: any) => surveyLocal.uuid === remoteSurvey.uuid,
+        (surveyLocal) => surveyLocal.uuid === remoteSurvey.uuid,
       );
 
       if (localSurveyWithSameUuid) {
@@ -190,7 +209,7 @@ const fetchAndSetRemoteSurveyIfOnlyOne =
           await dispatch(
             updateSurveyRemote({
               surveyId: localSurveyId,
-              surveyRemoteId: remoteSurvey.id,
+              surveyRemoteId: remoteSurveyId,
               skipConfirmation: true,
             }),
           );
@@ -206,7 +225,7 @@ const fetchAndSetRemoteSurveyIfOnlyOne =
         }
       } else {
         // No local survey with the same UUID, import the remote survey
-        await dispatch(importSurveyRemote({ surveyId: remoteSurvey.id }));
+        await dispatch(importSurveyRemote({ surveyId: remoteSurveyId }));
       }
     } catch (error) {
       log.error("Failed to fetch and set remote survey:", error);
@@ -214,14 +233,26 @@ const fetchAndSetRemoteSurveyIfOnlyOne =
   };
 
 const _onSurveyInsertOrUpdate =
-  ({ survey, navigator }: any) =>
+  ({
+    survey,
+    navigator,
+  }: {
+    survey: CurrentSurvey;
+    navigator?: Navigator | null;
+  }) =>
   (dispatch: AppDispatch) => {
     dispatch(setCurrentSurvey({ survey, navigator }));
     dispatch(fetchAndSetLocalSurveys());
   };
 
 const importSurveyRemote =
-  ({ surveyId, navigator }: any) =>
+  ({
+    surveyId,
+    navigator,
+  }: {
+    surveyId: number;
+    navigator?: Navigator | null;
+  }) =>
   async (dispatch: AppDispatch) => {
     const survey = await SurveyService.importSurveyRemote({ id: surveyId });
     dispatch(_onSurveyInsertOrUpdate({ survey, navigator }));
@@ -238,7 +269,17 @@ const updateSurveyRemote =
     onCancel = null,
     onComplete = null,
     skipConfirmation = false,
-  }: any) =>
+  }: {
+    surveyId: number;
+    surveyName?: string;
+    surveyRemoteId: number;
+    navigator?: Navigator | null;
+    confirmMessageKey?: string;
+    onConfirm?: (() => void) | null;
+    onCancel?: (() => void) | null;
+    onComplete?: (() => void) | null;
+    skipConfirmation?: boolean;
+  }) =>
   async (dispatch: AppDispatch) => {
     const executeUpdate = async () => {
       onConfirm?.();
@@ -273,7 +314,8 @@ const updateSurveyRemote =
   };
 
 const deleteSurveys =
-  (surveyIds: any) => async (dispatch: AppDispatch, getState: AppGetState) => {
+  (surveyIds: number[]) =>
+  async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const currentSurveyId = SurveySelectors.selectCurrentSurveyId(state);
     await SurveyService.deleteSurveys(surveyIds);

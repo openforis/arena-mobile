@@ -3,6 +3,10 @@ import axios, { AxiosRequestConfig, AxiosResponse, isCancel } from "axios";
 import { log } from "utils/Logger";
 
 import { RequestOptions } from "./apiTypes";
+
+type RequestOptionsWithFormData = Omit<RequestOptions, "data"> & {
+  data?: RequestOptions["data"] | FormData;
+};
 import { APIUtils } from "./apiUtils";
 
 const defaultConfig: AxiosRequestConfig = {
@@ -16,12 +20,16 @@ const multipartDataHeaders = { "Content-Type": "multipart/form-data" };
 // the error (e.g. "AxiosError: Network Error"), losing the url and the error code - which are
 // what tell apart a request that never reached the server (no response: ERR_NETWORK,
 // ECONNABORTED/timeout, ...) from one the server rejected (response status)
-const _logRequestError = (config: AxiosRequestConfig, error: any) => {
+const _logRequestError = (config: AxiosRequestConfig, error: unknown) => {
   if (isCancel(error)) {
     log.debug(`API request canceled: ${config.method ?? "get"} ${config.url}`);
     return;
   }
-  const { code, message, response } = error ?? {};
+  const { code, message, response } = (error ?? {}) as {
+    code?: string;
+    message?: string;
+    response?: AxiosResponse;
+  };
   const details = [
     `code: ${code ?? "-"}`,
     `message: ${message ?? error}`,
@@ -67,7 +75,7 @@ const get = async (options: RequestOptions): Promise<AxiosResponse> => {
   return promise;
 };
 
-const getFileAsText = async (options: RequestOptions): Promise<any> => {
+const getFileAsText = async (options: RequestOptions): Promise<string> => {
   const { data } = await get(options);
   return data;
 };
@@ -83,7 +91,7 @@ const test = async (options: RequestOptions): Promise<boolean> => {
 };
 
 const postCancelable = (
-  options: RequestOptions,
+  options: RequestOptionsWithFormData,
 ): { promise: Promise<AxiosResponse>; cancel: () => void } => {
   const { serverUrl, uri, data, config } = options;
   const url = APIUtils.getUrl({ serverUrl, uri });
@@ -112,7 +120,7 @@ const del = (options: RequestOptions) => {
 
 const _prepareMultipartDataOptions = (
   options: RequestOptions,
-): RequestOptions => {
+): RequestOptionsWithFormData => {
   const { data, config: configParam } = options;
 
   const formData = APIUtils.objectToFormData(data);

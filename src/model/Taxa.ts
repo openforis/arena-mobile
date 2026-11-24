@@ -1,14 +1,24 @@
-import { NodeDefs } from "@openforis/arena-core";
+import { ArenaAnyNodeDef, ArenaTaxon, NodeDefs } from "@openforis/arena-core";
 
 import { LanguageUtils } from "utils/LanguageUtils";
 
 const unlistedCode = "UNL";
 const unknownCode = "UNK";
 
+// unlisted taxa (UNL) have the scientific name in the node value; vernacular name optionally selected
+type TaxonWithSelectedNames = ArenaTaxon & {
+  scientificName?: string;
+  vernacularName?: string;
+  vernacularNameLangCode?: string;
+};
+
 const taxonToString = ({
   nodeDef,
   taxon,
-}: any): {
+}: {
+  nodeDef: ArenaAnyNodeDef | null | undefined;
+  taxon: TaxonWithSelectedNames | null | undefined;
+}): {
   fullText: string;
   scientificNameAndCode: string;
   vernacularNamePart: string;

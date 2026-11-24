@@ -6,7 +6,8 @@ import {
   ArenaDictionary,
   FlatDataExportModel,
   FlatDataFiles,
-  ArenaNodeDef,
+  ArenaAnyNodeDef,
+  ArenaRecordNodeValueFile,
   NodeDefs,
   NodeDefType,
   Promises,
@@ -16,13 +17,18 @@ import {
   UniqueFileNamesGenerator,
 } from "@openforis/arena-core";
 
-import { ArenaMobileRecord, JobMobile, JobMobileContext } from "model";
+import {
+  ArenaMobileRecord,
+  JobMobile,
+  JobMobileContext,
+  RecordSummary,
+} from "model";
 
 import { RecordFileService, RecordService } from "service";
 
 import { Files, FlatDataWriter } from "utils";
 
-import { extractRowNodeData } from "./recordFlatDataExtractor";
+import { extractRowNodeData, RowData } from "./recordFlatDataExtractor";
 
 type FlatDataExportJobContext = JobMobileContext & {
   survey: ArenaSurvey;
@@ -35,9 +41,12 @@ export type FlatDataExportJobResult = {
   outputFileUri: string;
 };
 
-export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
+export class FlatDataExportJob extends JobMobile<
+  FlatDataExportJobContext,
+  FlatDataExportJobResult
+> {
   private tempFolderUri?: string;
-  private nodeDefsToExport?: ArenaNodeDef<any>[];
+  private nodeDefsToExport?: ArenaAnyNodeDef[];
   private dataExportModelByNodeDefUuid: ArenaDictionary<FlatDataExportModel> =
     {};
   private readonly uniqueFileNameGenerator: UniqueFileNamesGenerator =
@@ -52,10 +61,10 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     });
   }
 
-  determineNodeDefsToExport(): ArenaNodeDef<any>[] {
+  determineNodeDefsToExport(): ArenaAnyNodeDef[] {
     const { survey, cycle, options } = this.context;
     const { exportSingleEntitiesIntoSeparateFiles } = options;
-    const result: ArenaNodeDef<any>[] = [];
+    const result: ArenaAnyNodeDef[] = [];
     Surveys.visitDescendantsAndSelfNodeDef({
       survey,
       cycle,
@@ -147,7 +156,11 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     }
   }
 
-  private async exportRecord({ recordSummary }: { recordSummary: any }) {
+  private async exportRecord({
+    recordSummary,
+  }: {
+    recordSummary: RecordSummary;
+  }) {
     const { survey, options } = this.context;
     const { nullsToEmpty, includeFiles } = options;
 
@@ -192,7 +205,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     fileValues,
   }: {
     record: ArenaMobileRecord;
-    fileValues: any[];
+    fileValues: ArenaRecordNodeValueFile[];
   }) {
     const { survey } = this.context;
     const surveyId = survey.id!;
@@ -252,19 +265,19 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     nodeDef,
     record,
   }: {
-    nodeDef: ArenaNodeDef<any>;
+    nodeDef: ArenaAnyNodeDef;
     record: ArenaMobileRecord;
-  }): { rowsData: any[][]; fileValues: any[] } {
+  }): { rowsData: RowData[]; fileValues: ArenaRecordNodeValueFile[] } {
     const { survey, cycle, options } = this.context;
     const { addCycle } = options;
 
-    const rowsData = [];
-    const totalFileValues: any[] = [];
+    const rowsData: RowData[] = [];
+    const totalFileValues: ArenaRecordNodeValueFile[] = [];
 
     const nodes = Records.getNodesByDefUuid(nodeDef.uuid)(record);
     for (const node of nodes) {
       // every node will be a row in the CSV file
-      const csvRowData = [];
+      const csvRowData: RowData = [];
       if (addCycle) {
         csvRowData.push(cycle);
       }
@@ -297,17 +310,17 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
     nodeDefAncestor,
   }: {
     record: ArenaMobileRecord;
-    nodeDef: ArenaNodeDef<any>;
+    nodeDef: ArenaAnyNodeDef;
     node: ArenaRecordNode;
-    nodeDefAncestor: ArenaNodeDef<any>;
-  }): { rowData: any[]; fileValues: any[] } {
+    nodeDefAncestor: ArenaAnyNodeDef;
+  }): { rowData: RowData; fileValues: ArenaRecordNodeValueFile[] } {
     const { context, uniqueFileNameGenerator } = this;
     const { survey, cycle, options } = context;
     const { includeAncestorAttributes, includeFiles } = options;
     const dataExportModel = this.dataExportModelByNodeDefUuid[nodeDef.uuid]!;
 
-    const rowData: any[] = [];
-    const fileValues: any[] = [];
+    const rowData: RowData = [];
+    const fileValues: ArenaRecordNodeValueFile[] = [];
 
     const ancestorNode = Records.getAncestor(
       node,
@@ -340,7 +353,7 @@ export class FlatDataExportJob extends JobMobile<FlatDataExportJobContext> {
       ) {
         const value = ancestorAttributeNode.value;
         if (value) {
-          fileValues.push(value);
+          fileValues.push(value as ArenaRecordNodeValueFile);
         }
       }
     }

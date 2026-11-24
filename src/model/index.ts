@@ -2,6 +2,7 @@ export type { ArenaMobileRecord } from "./ArenaMobileRecord";
 export type {
   RecordSummary,
   RecordSummaryValues,
+  RecordSummaryWithSyncStatus,
   RemoteRecordSummary,
 } from "./RecordSummary";
 export { BatteryState } from "./BatteryState";
@@ -28,6 +29,7 @@ export { RecordEditViewMode } from "./RecordEditViewMode";
 export { RecordLoadStatus } from "./RecordLoadStatus";
 export { RecordOrigin } from "./RecordOrigin";
 export { RecordPageNavigator } from "./RecordPageNavigator";
+export type { RecordPageEntityPointer } from "./RecordPageNavigator";
 export { RecordSyncStatus } from "./RecordSyncStatus";
 export { RecordUpdateConflictResolutionStrategy } from "./RecordUpdateConflictResolutionStrategy";
 export { ScreenOrientation } from "./ScreenOrientation";
@@ -37,6 +39,11 @@ export type { SettingsObject } from "./SettingsModel";
 export { Sort, SortUtils } from "./Sort";
 export type { SortObject } from "./Sort";
 export type { SurveyMobile } from "./SurveyMobile";
+export type {
+  SurveySearchable,
+  SurveySummaryLocal,
+  SurveySummaryRemote,
+} from "./SurveySummary";
 export { SurveyStatus } from "./SurveyStatus";
 export { Taxa } from "./Taxa";
 export { Themes, ThemesSettings } from "./Themes";

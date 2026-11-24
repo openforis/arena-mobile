@@ -5,7 +5,7 @@ import { GpsSourceSetting } from "model/GpsSourceSettings";
 import { ThemesSettings } from "model/Themes";
 import { LanguageConstants } from "model/LanguageSettings";
 import { MapLayers, MapProvider } from "model/MapLayers";
-import { SettingKey, SettingsObject } from "model/SettingsModel";
+import { SettingsObject } from "model/SettingsModel";
 import { AMConstants } from "utils/AMConstants";
 import { SystemUtils } from "utils/SystemUtils";
 
@@ -39,16 +39,17 @@ type SystemSettingApplier = ({
   key,
   value,
 }: {
-  key?: SettingKey;
-  value: any;
-}) => Promise<any>;
+  key?: keyof SettingsObject;
+  value: unknown;
+}) => Promise<unknown>;
 
 const systemSettingApplierByKey: Partial<
-  Record<SettingKey, SystemSettingApplier>
+  Record<keyof SettingsObject, SystemSettingApplier>
 > = {
-  fullScreen: async ({ value }: any) => SystemUtils.setFullScreen(value),
-  keepScreenAwake: async ({ value }: any) =>
-    SystemUtils.setKeepScreenAwake(value),
+  fullScreen: async ({ value }) =>
+    SystemUtils.setFullScreen(value as SettingsObject["fullScreen"]),
+  keepScreenAwake: async ({ value }) =>
+    SystemUtils.setKeepScreenAwake(value as SettingsObject["keepScreenAwake"]),
 };
 
 // key of the imported maps up to version 2.11.3 (PDF maps only)
@@ -82,12 +83,12 @@ const settingsStore = new SettingsStore(
 
 const fetchSettings = (): Promise<SettingsObject> => settingsStore.fetch();
 
-const updateSetting = async ({
+const updateSetting = async <K extends keyof SettingsObject>({
   key,
   value,
 }: {
-  key: SettingKey;
-  value: any;
+  key: K;
+  value: SettingsObject[K];
 }): Promise<SettingsObject> => {
   const settingsNext = await settingsStore.updateValue(key, value);
   await systemSettingApplierByKey[key]?.({ key, value });
@@ -102,7 +103,7 @@ const updateSettings = (
 const saveSettings = (settings: SettingsObject): Promise<SettingsObject> =>
   settingsStore.save(settings);
 
-const testServerUrl = async (serverUrl: any) => {
+const testServerUrl = async (serverUrl: string) => {
   try {
     const testResult = await API.test({ serverUrl, uri: "healthcheck" });
     return testResult;

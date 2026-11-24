@@ -169,7 +169,10 @@ export const SettingsItem = (props: SettingsItemProps) => {
           descriptionKey={descriptionKey}
         >
           <SegmentedButtons
-            buttons={options!}
+            buttons={options!.map(({ key, label }) => ({
+              value: String(key),
+              label,
+            }))}
             onChange={onValueChange}
             value={value as string}
           />
