@@ -31,7 +31,7 @@ const getPixelToCrs = async (
     image.getGeoKeys()?.GTRasterTypeGeoKey === RASTER_PIXEL_IS_POINT;
   const shift = pixelIsPoint ? -0.5 : 0;
   const transformation: number[] | undefined = await fileDirectory.loadValue(
-    "ModelTransformation" as any,
+    "ModelTransformation",
   );
   if (transformation) {
     const [a, b, , c, d, e, , f] = transformation;
@@ -40,12 +40,10 @@ const getPixelToCrs = async (
       d! * (column + shift) + e! * (row + shift) + f!,
     ];
   }
-  const tiePoint: number[] | undefined = await fileDirectory.loadValue(
-    "ModelTiepoint" as any,
-  );
-  const scale: number[] | undefined = await fileDirectory.loadValue(
-    "ModelPixelScale" as any,
-  );
+  const tiePoint: number[] | undefined =
+    await fileDirectory.loadValue("ModelTiepoint");
+  const scale: number[] | undefined =
+    await fileDirectory.loadValue("ModelPixelScale");
   if (!tiePoint || !scale) return null;
   const [i0, j0, , x0, y0] = tiePoint;
   const [scaleX, scaleY] = scale;
@@ -64,7 +62,7 @@ const hasDatumShift = (proj4String: string): boolean => {
 const getCrs = (image: GeoTIFFImage): GeoTiffCrs | null => {
   const geoKeys = image.getGeoKeys();
   if (!geoKeys) return null;
-  const projection = toProj4(geoKeys as any);
+  const projection = toProj4(geoKeys);
   const converter = proj4(projection.proj4, "WGS84");
   return {
     proj4: projection.proj4,

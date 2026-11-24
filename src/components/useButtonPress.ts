@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { GestureResponderEvent } from "react-native";
 
 export const useButtonOnPress = ({
   avoidMultiplePress,
@@ -9,14 +10,17 @@ export const useButtonOnPress = ({
   avoidMultiplePress?: boolean;
   loading?: boolean;
   multiplePressAvoidanceTimeout?: number;
-  onPressProp?: (event: any) => Promise<void> | void;
-}): { actualLoading: boolean; onPress: (event: any) => Promise<void> } => {
+  onPressProp?: (event: GestureResponderEvent) => Promise<void> | void;
+}): {
+  actualLoading: boolean;
+  onPress: (event: GestureResponderEvent) => Promise<void>;
+} => {
   const [temporaryLoading, setTemporaryLoading] = useState(false);
 
   const actualLoading = loading || temporaryLoading;
 
   const onPress = useCallback(
-    async (event: any) => {
+    async (event: GestureResponderEvent) => {
       if (actualLoading) return;
 
       if (avoidMultiplePress) {

@@ -7,7 +7,7 @@ export const useToast = () => {
   const dispatch = useAppDispatch();
 
   return useCallback(
-    (textKey: any, textParams = {}) => {
+    (textKey: string, textParams: Record<string, unknown> = {}) => {
       dispatch(ToastActions.show(textKey, textParams));
     },
     [dispatch],

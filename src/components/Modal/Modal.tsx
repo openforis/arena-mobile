@@ -7,6 +7,7 @@ import { Text } from "../Text";
 
 import { BaseModal } from "./BaseModal";
 import styles from "./styles";
+import type { TranslateParams } from "localization";
 
 type ModalProps = {
   children: React.ReactNode;
@@ -15,7 +16,7 @@ type ModalProps = {
   // custom title content (used when titleKey is not specified)
   title?: React.ReactNode;
   titleKey?: string;
-  titleParams?: any;
+  titleParams?: TranslateParams;
 };
 
 export const Modal = (props: ModalProps) => {

@@ -2,6 +2,17 @@ const UNAUTHORIZED = 401;
 const NOT_FOUND = 404;
 const NOT_IMPLEMENTED = 501;
 
+type ErrorWithStatus =
+  | {
+      status?: unknown;
+      response?: { status?: unknown } | null;
+    }
+  | null
+  | undefined;
+
+const asErrorWithStatus = (error: unknown): ErrorWithStatus =>
+  typeof error === "object" ? (error as ErrorWithStatus) : undefined;
+
 const toStatus = (value: unknown): number | undefined => {
   if (value === undefined || value === null || value === "") return undefined;
   const status = Number(value);
@@ -9,27 +20,29 @@ const toStatus = (value: unknown): number | undefined => {
 };
 
 // HTTP status of the response attached to an axios-like error
-const getResponseStatus = (error: any): number | undefined =>
-  toStatus(error?.response?.status);
+const getResponseStatus = (error: unknown): number | undefined =>
+  toStatus(asErrorWithStatus(error)?.response?.status);
 
 // status set directly on the error (e.g. wrapped errors) or else the response one
-const getStatus = (error: any): number | undefined =>
-  toStatus(error?.status) ?? getResponseStatus(error);
+const getStatus = (error: unknown): number | undefined =>
+  toStatus(asErrorWithStatus(error)?.status) ?? getResponseStatus(error);
 
-const hasResponseStatus = (error: any, status: number): boolean =>
+const hasResponseStatus = (error: unknown, status: number): boolean =>
   getResponseStatus(error) === status;
 
 // checks both error.status and error.response.status
-const hasStatus = (error: any, status: number): boolean =>
-  toStatus(error?.status) === status || hasResponseStatus(error, status);
+const hasStatus = (error: unknown, status: number): boolean =>
+  toStatus(asErrorWithStatus(error)?.status) === status ||
+  hasResponseStatus(error, status);
 
-const isUnauthorizedResponse = (error: any): boolean =>
+const isUnauthorizedResponse = (error: unknown): boolean =>
   hasResponseStatus(error, UNAUTHORIZED);
 
-const isUnauthorized = (error: any): boolean => hasStatus(error, UNAUTHORIZED);
+const isUnauthorized = (error: unknown): boolean =>
+  hasStatus(error, UNAUTHORIZED);
 
 // returned by older servers not exposing the requested endpoint yet
-const isEndpointNotSupported = (error: any): boolean => {
+const isEndpointNotSupported = (error: unknown): boolean => {
   const status = getResponseStatus(error);
   return status === NOT_FOUND || status === NOT_IMPLEMENTED;
 };

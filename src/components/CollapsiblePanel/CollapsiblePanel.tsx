@@ -8,6 +8,7 @@ import { Text } from "../Text";
 import { VView } from "../VView";
 
 import { useStyles } from "./styles";
+import type { TranslateParams } from "localization";
 
 type CollapsiblePanelProps = {
   children?: React.ReactNode;
@@ -15,7 +16,7 @@ type CollapsiblePanelProps = {
   contentStyle?: StyleProp<ViewStyle>;
   headerContent?: React.ReactNode;
   headerKey?: string;
-  headerParams?: any;
+  headerParams?: TranslateParams;
   initiallyCollapsed?: boolean;
 };
 

@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { Pressable } from "react-native";
+import { GestureResponderEvent, Pressable } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { TextInput as RNPTextInput } from "react-native-paper";
 
@@ -16,7 +16,7 @@ type DateTimePickerProps = {
   format: string;
   mode?: "date" | "time";
   onChange: (date: Date | null) => void;
-  value?: any;
+  value?: Date | null;
 };
 
 export const DateTimePicker = (props: DateTimePickerProps) => {
@@ -41,7 +41,7 @@ export const DateTimePicker = (props: DateTimePickerProps) => {
   }, []);
 
   const onConfirm = useCallback(
-    (selectedDate: any) => {
+    (selectedDate: Date) => {
       hidePicker();
       onChangeProp(selectedDate);
     },
@@ -49,7 +49,7 @@ export const DateTimePicker = (props: DateTimePickerProps) => {
   );
 
   const onClear = useCallback(
-    async (event: any) => {
+    async (event: GestureResponderEvent) => {
       event.stopPropagation();
       if (await confirm({ messageKey: "common:confirmClearSelectedValue" })) {
         hidePicker();
@@ -75,7 +75,7 @@ export const DateTimePicker = (props: DateTimePickerProps) => {
             ) : undefined
           }
           style={textInputStyle}
-          value={Dates.format(value, format)}
+          value={Dates.format(value as Date | undefined, format)}
         />
       </Pressable>
       <IconButton disabled={!editable} icon={icon} onPress={showPicker} />

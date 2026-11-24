@@ -31,19 +31,21 @@ const version = nativeApplicationVersion ?? defaultVersion;
 const appId = "am";
 const { isAndroid, isExpoGo, platform } = Environment;
 
-let SystemNavigationBar: any;
+let SystemNavigationBar:
+  (typeof import("react-native-system-navigation-bar"))["default"] | undefined;
 if (!isExpoGo && isAndroid) {
   SystemNavigationBar = require("react-native-system-navigation-bar")?.default;
 }
 
-let Clipboard: any;
+let Clipboard:
+  (typeof import("@react-native-clipboard/clipboard"))["default"] | undefined;
 if (!isExpoGo) {
   Clipboard = require("@react-native-clipboard/clipboard")?.default;
 }
 
-const copyValueToClipboard = (value: any) => {
+const copyValueToClipboard = (value: string | undefined) => {
   try {
-    Clipboard?.setString(value);
+    Clipboard?.setString(value as string);
     return true;
   } catch {
     // clipboard not available: ignore it
@@ -74,7 +76,7 @@ const getRecordAppInfo = (): ArenaMobileAppInfo => ({
   platform,
 });
 
-const setFullScreen = async (fullScreen: any) => {
+const setFullScreen = async (fullScreen: boolean | undefined) => {
   try {
     await SystemNavigationBar?.stickyImmersive(fullScreen);
   } catch (e) {
@@ -82,7 +84,7 @@ const setFullScreen = async (fullScreen: any) => {
   }
 };
 
-const setKeepScreenAwake = async (keepScreenAwake: any) => {
+const setKeepScreenAwake = async (keepScreenAwake: boolean | undefined) => {
   if (keepScreenAwake) {
     await activateKeepAwakeAsync();
   } else {
@@ -95,7 +97,9 @@ const getOrientation = async () => {
   return ScreenOrientation.fromExpoOrientation(orientationExpo);
 };
 
-const addOrientationChangeListener = (handler: any) =>
+const addOrientationChangeListener = (
+  handler: (orientation: number | null) => void,
+) =>
   ExpoScreenOrientation.addOrientationChangeListener((event) => {
     const orientationNext = event?.orientationInfo?.orientation;
     handler(ScreenOrientation.fromExpoOrientation(orientationNext));

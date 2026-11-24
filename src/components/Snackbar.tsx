@@ -1,7 +1,7 @@
 import { Snackbar as RNPSnackbar } from "react-native-paper";
 
 type Props = {
-  content?: any;
+  content?: React.ReactNode;
   onDismiss: () => void;
   // shows a close icon button that dismisses the snackbar
   showCloseButton?: boolean;

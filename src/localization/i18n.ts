@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import i18n, { InitOptions, LanguageDetectorAsyncModule } from "i18next";
 import { initReactI18next } from "react-i18next";
 
 import { LanguageConstants } from "model/LanguageSettings";
@@ -9,7 +9,7 @@ import en from "./en";
 
 export { useTranslation } from "react-i18next";
 
-type LanguageBundle = Record<string, Record<string, any>>;
+type LanguageBundle = Record<string, Record<string, unknown>>;
 
 // static requires (Metro can't resolve computed paths), evaluated only when the language is used
 const bundleLoaders: Record<string, () => LanguageBundle> = {
@@ -31,12 +31,12 @@ const supportedLngs = Object.keys(bundleLoaders);
 const fallbackLng = "en";
 const sysLng = SystemUtils.getLanguageCode();
 
-const toSupportedLanguage = (lang: any) =>
-  supportedLngs.includes(lang) ? lang : fallbackLng;
+const toSupportedLanguage = (lang: string | null | undefined): string =>
+  lang && supportedLngs.includes(lang) ? lang : fallbackLng;
 
 const systemLanguageOrDefault = toSupportedLanguage(sysLng);
 
-const toFinalSuppotedLang = (lang: any) =>
+const toFinalSuppotedLang = (lang: string | null | undefined): string =>
   lang === LanguageConstants.system
     ? systemLanguageOrDefault
     : toSupportedLanguage(lang);
@@ -53,10 +53,10 @@ const ensureLanguageLoaded = (lang: string) => {
   loadedLngs.add(lang);
 };
 
-const languageDetector = {
+const languageDetector: LanguageDetectorAsyncModule = {
   type: "languageDetector",
   async: true,
-  detect: (callback: any) => {
+  detect: (callback) => {
     const onDetected = (lang: string) => {
       ensureLanguageLoaded(lang);
       callback(lang);
@@ -70,7 +70,7 @@ const languageDetector = {
         onDetected(systemLanguageOrDefault);
       });
   },
-} as any;
+};
 
 i18n
   .use(languageDetector)
@@ -86,9 +86,10 @@ i18n
       useSuspense: false,
     },
     supportedLngs,
-  } as any);
+    // compatibilityJSON not in the InitOptions type anymore
+  } as InitOptions);
 
-const changeLanguage = (lang: any) => {
+const changeLanguage = (lang: string | null | undefined) => {
   const supportedLang = toFinalSuppotedLang(lang);
   ensureLanguageLoaded(supportedLang);
   i18n.changeLanguage(supportedLang);

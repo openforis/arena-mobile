@@ -30,12 +30,12 @@ type ImageInfoState = {
   width: number;
   height: number;
   size: string;
-  latitude: number;
-  longitude: number;
+  latitude?: number;
+  longitude?: number;
 } | null;
 
 type ImageInfoProps = {
-  imageUri: string | null;
+  imageUri: string | null | undefined;
   showGeotagInfo?: boolean;
 };
 
@@ -61,8 +61,6 @@ const ImageInfo = (props: ImageInfoProps) => {
 
   const [info, setInfo] = useState(null as ImageInfoState);
 
-  const { width, height, size, latitude, longitude } = (info ?? {}) as any;
-
   useEffect(() => {
     if (imageUri) {
       fetchImageInfo(imageUri)
@@ -75,11 +73,13 @@ const ImageInfo = (props: ImageInfoProps) => {
 
   if (!info) return <LoadingIcon />;
 
+  const { width, height, size, latitude, longitude } = info;
+
   const isValidLocation =
     Objects.isNotEmpty(latitude) && Objects.isNotEmpty(longitude);
 
   const locationString = isValidLocation
-    ? `${Numbers.formatDecimal(latitude, 4)}, ${Numbers.formatDecimal(longitude, 4)}`
+    ? `${Numbers.formatDecimal(latitude as number, 4)}, ${Numbers.formatDecimal(longitude as number, 4)}`
     : "-";
 
   const locationStringFull = isValidLocation
@@ -88,8 +88,8 @@ const ImageInfo = (props: ImageInfoProps) => {
 
   const locationPoint = isValidLocation
     ? PointFactory.createInstance({
-        x: longitude,
-        y: latitude,
+        x: longitude as number,
+        y: latitude as number,
       })
     : null;
 
