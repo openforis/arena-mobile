@@ -238,6 +238,8 @@ Haluatko hakea sen uudelleen palvelimelta?`,
     headingSourceMagnetometer: "Anturi",
     headingSourceLocation: "GPS",
     keepXAndY: "Säilytä X ja Y",
+    locationCannotBeConvertedToSrs:
+      "GPS-sijaintia ei voi muuntaa koordinaattijärjestelmään {{srs}}",
     locationHeadingNotAvailable: "GPS-suunta ei ole saatavilla!",
     magnetometerNotAvailable: "Magnetometri ei ole käytettävissä!",
     navigateToTarget: "Navigoi kohteeseen",

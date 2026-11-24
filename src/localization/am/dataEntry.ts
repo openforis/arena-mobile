@@ -218,6 +218,8 @@ export default {
     headingSourceMagnetometer: "ሴንሰር",
     headingSourceLocation: "GPS",
     keepXAndY: "X እና Y ን ያቆዩ",
+    locationCannotBeConvertedToSrs:
+      "የGPS አካባቢው ወደ መጋጠሚያ ስርዓት {{srs}} ሊቀየር አይችልም",
     locationHeadingNotAvailable: "የGPS አቅጣጫ አይገኝም!",
     magnetometerNotAvailable: "ማግኔቶሜትር የለም!",
     navigateToTarget: "ወደ መድረሻ ይሂዱ",

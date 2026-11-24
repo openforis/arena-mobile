@@ -232,6 +232,8 @@ Deseja obtê-las novamente do servidor?`,
     headingSourceMagnetometer: "Sensor",
     headingSourceLocation: "GPS",
     keepXAndY: "Manter X e Y",
+    locationCannotBeConvertedToSrs:
+      "A localização GPS não pode ser convertida para o sistema de coordenadas {{srs}}",
     locationHeadingNotAvailable: "Direção por GPS não disponível!",
     magnetometerNotAvailable: "Magnetômetro não disponível!",
     navigateToTarget: "Navegar para o alvo",
