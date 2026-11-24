@@ -8,10 +8,17 @@ import { MapAppChooserDialog } from "components/MapAppChooserDialog";
 import { MapApp, MapAppsService } from "service/mapApps";
 import { log } from "utils";
 
+// coordinates can still be strings while being edited
+type MapPoint = {
+  srs?: string;
+  x?: number | string | null;
+  y?: number | string | null;
+};
+
 type Props = {
   icon?: string;
   nodeUuid?: string; // when set, the point can be moved in the in-app map
-  point?: ArenaPoint | null;
+  point?: ArenaPoint | MapPoint | null;
   size?: number;
   srsIndex?: ArenaSRSIndex;
   testID?: string;

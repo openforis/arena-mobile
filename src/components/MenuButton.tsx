@@ -12,7 +12,7 @@ export type MenuButtonItem = {
   icon?: string;
   label: string;
   labelIsI18nKey?: boolean;
-  onPress: () => void;
+  onPress?: () => void;
   keepMenuOpenOnPress?: boolean;
 };
 
@@ -92,7 +92,7 @@ export const MenuButton = (props: Props) => {
               if (!keepMenuOpenOnPress) {
                 closeMenu();
               }
-              onPress();
+              onPress?.();
             }}
             title={label}
           />

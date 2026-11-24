@@ -17,7 +17,7 @@ type Props = {
   buttons: ButtonItem[];
   onChange: (value: string) => void;
   style?: StyleProp<ViewStyle>;
-  value?: string;
+  value?: string | null;
 };
 
 export const SegmentedButtons = (props: Props) => {
