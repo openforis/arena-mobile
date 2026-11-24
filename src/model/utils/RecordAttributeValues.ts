@@ -35,12 +35,14 @@ const cleanupAttributeValue = ({
   attributeDef,
   sideEffect = false,
 }: {
-  value: any;
+  value: unknown;
   attributeDef: ArenaAnyNodeDef;
   sideEffect?: boolean;
-}) => {
+}): unknown => {
   if (NodeDefs.getType(attributeDef) === NodeDefType.coordinate) {
-    const valueUpdated = sideEffect ? value : { ...value };
+    // coordinate values are objects
+    const coordinateValue = value as Record<string, unknown>;
+    const valueUpdated = sideEffect ? coordinateValue : { ...coordinateValue };
     const additionalFields: ReadonlySet<string> = new Set(
       NodeDefs.getCoordinateAdditionalFields(
         attributeDef as ArenaNodeDefCoordinate,

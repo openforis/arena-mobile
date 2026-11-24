@@ -84,7 +84,7 @@ export const extractAttributeValue = ({
 }: {
   state: RootState;
   attribute: ArenaRecordNode | undefined;
-}) => {
+}): unknown => {
   const { nodeDefUuid, value } = attribute ?? {};
   if (!value) return value;
   const survey = SurveySelectors.selectCurrentSurvey(state)!;
