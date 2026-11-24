@@ -109,7 +109,7 @@ const _onExportFileGenerationError = ({
     .map((validationError) =>
       ValidationUtils.getJointErrorText({
         validation: validationError,
-        t,
+        t: (key, params) => t(key, { ...params }),
       }),
     )
     .join(";\n");

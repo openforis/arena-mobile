@@ -21,14 +21,14 @@ export const migration_008_record_validation_counts = async (
     );
     // validations stored without counts: counted here, in batches
     const backfillNextBatch = async (): Promise<void> => {
-      const rows: any[] = await tx.many(
+      const rows = await tx.many<{ id: number; validation: string }>(
         `SELECT id, json_extract(content, '$.validation') AS validation
         FROM record
         WHERE errors_count IS NULL AND json_valid(content)
           AND json_type(content, '$.validation') = 'object'
         LIMIT ${backfillBatchSize}`,
       );
-      await Promises.each(rows, async ({ id, validation }: any) => {
+      await Promises.each(rows, async ({ id, validation }) => {
         const counts = Validations.calculateCounts(JSON.parse(validation));
         await tx.runSql(
           `UPDATE record SET errors_count = ?, warnings_count = ? WHERE id = ?`,

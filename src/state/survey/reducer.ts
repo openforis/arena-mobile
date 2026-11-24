@@ -1,6 +1,8 @@
 import { LanguageCode, Surveys, ArenaUserGroup } from "@openforis/arena-core";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+import type { SurveySummaryLocal } from "model";
+
 import type { SurveyState } from "./state";
 import { determinePreferredSurveyLanguage } from "./surveyStateUtils";
 
@@ -55,7 +57,7 @@ const surveySlice = createSlice({
       state.currentSurveyUserGroup = null;
       state.currentSurveyUserGroupReady = false;
     },
-    surveysLocalSet: (state, action: PayloadAction<any[]>) => {
+    surveysLocalSet: (state, action: PayloadAction<SurveySummaryLocal[]>) => {
       state.surveysLocal = action.payload;
     },
   },

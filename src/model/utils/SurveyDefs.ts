@@ -4,7 +4,7 @@ import {
   NodeDefType,
   Categories,
   ArenaSurvey,
-  ArenaNodeDef,
+  ArenaAnyNodeDef,
   ArenaNodeDefEntity,
   LanguageCode,
   ArenaNodeDefCode,
@@ -22,21 +22,40 @@ const mobileNodeDefFilter =
   }: {
     cycle: string;
   }): ((
-    value: ArenaNodeDef<any>,
+    value: ArenaAnyNodeDef,
     index?: number,
-    array?: ArenaNodeDef<any>[],
+    array?: ArenaAnyNodeDef[],
   ) => boolean) =>
   (childDef) =>
     !NodeDefs.isHidden(childDef) &&
     !NodeDefs.isHiddenInMobile(cycle)(childDef) &&
     NodeDefs.isInCycle(cycle)(childDef);
 
-const getRootKeyDefs = ({ survey, cycle }: any) => {
+const getRootKeyDefs = ({
+  survey,
+  cycle,
+}: {
+  survey: ArenaSurvey;
+  cycle?: string | null;
+}) => {
   const rootDef = Surveys.getNodeDefRoot({ survey });
-  return Surveys.getNodeDefKeys({ survey, nodeDef: rootDef, cycle });
+  return Surveys.getNodeDefKeys({
+    survey,
+    nodeDef: rootDef,
+    // passed as is: a null cycle is not checked by arena-core (like an undefined one)
+    cycle: cycle as string | undefined,
+  });
 };
 
-const isRootKeyDef = ({ survey, cycle, nodeDef }: any) => {
+const isRootKeyDef = ({
+  survey,
+  cycle,
+  nodeDef,
+}: {
+  survey: ArenaSurvey;
+  cycle?: string | null;
+  nodeDef: ArenaAnyNodeDef;
+}) => {
   if (!NodeDefs.isKey(nodeDef)) return false;
   const rootKeyDefs = getRootKeyDefs({ survey, cycle });
   return rootKeyDefs.includes(nodeDef);
@@ -48,7 +67,7 @@ const getChildrenDefs = ({
   cycle,
 }: {
   survey: ArenaSurvey;
-  nodeDef: ArenaNodeDef<any>;
+  nodeDef: ArenaAnyNodeDef;
   cycle: string;
 }) =>
   Surveys.getNodeDefChildrenSorted({
