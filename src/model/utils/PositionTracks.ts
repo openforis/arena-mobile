@@ -1,5 +1,6 @@
 import {
   ArenaAnyNodeDef,
+  ArenaGeoTrackFeature,
   NodeDefs,
   ArenaRecord,
   ArenaSurvey,
@@ -17,8 +18,7 @@ export type TrackPoint = {
 
 export type TrackSegment = TrackPoint[];
 
-export type TrackFeature = {
-  type: "Feature";
+export type TrackFeature = ArenaGeoTrackFeature & {
   properties: {
     startTime: string;
     endTime: string;
@@ -266,13 +266,7 @@ const toFeature = (segments: TrackSegment[]): TrackFeature | null => {
 };
 
 // GeoJSON line feature (node value), not validated
-type LineFeatureLike =
-  | {
-      geometry?: { type?: string; coordinates?: unknown };
-      properties?: { coordTimes?: unknown[]; accuracies?: unknown[] };
-    }
-  | null
-  | undefined;
+type LineFeatureLike = ArenaGeoTrackFeature | null | undefined;
 
 const isTrackValue = (value: unknown): boolean =>
   lineGeometryTypes.has((value as LineFeatureLike)?.geometry?.type);
@@ -285,10 +279,8 @@ const hasTrackPoints = (value: unknown): boolean =>
 const extractLineCoordinates = (value: unknown): number[][][] => {
   const geometry = (value as LineFeatureLike)?.geometry;
   if (!geometry || !Array.isArray(geometry.coordinates)) return [];
-  if (geometry.type === "LineString")
-    return [geometry.coordinates as number[][]];
-  if (geometry.type === "MultiLineString")
-    return geometry.coordinates as number[][][];
+  if (geometry.type === "LineString") return [geometry.coordinates];
+  if (geometry.type === "MultiLineString") return geometry.coordinates;
   return [];
 };
 
