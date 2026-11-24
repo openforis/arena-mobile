@@ -20,7 +20,10 @@ export type ImportedMapImportJobResult = {
   importedMap: ImportedMap;
 };
 
-export class ImportedMapImportJob extends JobMobile<ImportedMapImportJobContext> {
+export class ImportedMapImportJob extends JobMobile<
+  ImportedMapImportJobContext,
+  ImportedMapImportJobResult
+> {
   private tilesCount = 0;
   private sizeBytes = 0;
 

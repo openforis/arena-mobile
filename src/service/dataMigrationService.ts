@@ -32,8 +32,12 @@ const fixRecordCycle = async () => {
   });
 };
 
-const migrateData = async ({ prevDbVersion }: any) => {
-  if (prevDbVersion <= 2) {
+const migrateData = async ({
+  prevDbVersion,
+}: {
+  prevDbVersion: number | undefined;
+}) => {
+  if (prevDbVersion !== undefined && prevDbVersion <= 2) {
     await fixRecordCycle();
   }
 };

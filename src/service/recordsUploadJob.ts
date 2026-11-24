@@ -1,18 +1,28 @@
+import { ArenaJobSerialized } from "@openforis/arena-core";
 import { isCancel } from "axios";
 
 import { JobMobile, SurveyMobile } from "model";
 
 import { RecordsUploadAndProcessJobContext } from "./RecordsUploadAndProcessJobContext";
 import { RecordService } from "./recordService";
+import type { UploadProgress } from "./recordRemoteService";
+import type { RecordsUploadResult } from "./recordsUploadAndProcessJob";
 
 // a stable identifier for this job class, independent of `this.constructor.name` (which a
 // minified production build isn't guaranteed to preserve) - read by RecordsUploadAndProcessJob's
 // caller (see actionsRecordsUpload.ts) to tell which of its inner jobs is currently active/failed
 export const RECORDS_UPLOAD_JOB_TYPE = "RecordsUploadJob";
 
-export class RecordsUploadJob extends JobMobile<RecordsUploadAndProcessJobContext> {
-  cancelUpload: any;
-  remoteJob: any;
+export type RecordsUploadJobResult = {
+  remoteJob: ArenaJobSerialized<RecordsUploadResult> | null;
+};
+
+export class RecordsUploadJob extends JobMobile<
+  RecordsUploadAndProcessJobContext,
+  RecordsUploadJobResult
+> {
+  cancelUpload: (() => void) | null;
+  remoteJob: ArenaJobSerialized<RecordsUploadResult> | null;
   constructor(context: RecordsUploadAndProcessJobContext) {
     super({
       ...context,
@@ -53,7 +63,7 @@ export class RecordsUploadJob extends JobMobile<RecordsUploadAndProcessJobContex
       onChunkUploaded: (chunk: number) => {
         uploadState.nextChunk = chunk + 1;
       },
-      onUploadProgress: (progressEvent: any) => {
+      onUploadProgress: (progressEvent: UploadProgress) => {
         const { loaded, total } = progressEvent;
         this.total = total;
         this.processed = loaded;
@@ -81,7 +91,7 @@ export class RecordsUploadJob extends JobMobile<RecordsUploadAndProcessJobContex
     await super.cancel();
   }
 
-  override generateResult() {
+  override generateResult(): Promise<RecordsUploadJobResult> {
     const { remoteJob } = this;
     return Promise.resolve({ remoteJob });
   }

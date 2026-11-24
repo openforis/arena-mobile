@@ -1,20 +1,23 @@
+import type { io as socketIo, Socket } from "socket.io-client";
+
 import { AuthService } from "./authService";
 import { RemoteService } from "./remoteService";
 import { Environment } from "utils";
 
-let io: any;
+let io: typeof socketIo | undefined;
 
 if (!Environment.isExpoGo || Environment.isAndroid) {
   io = require("socket.io-client")?.io;
 }
 
-let webSocketInstance: any = null;
+let webSocketInstance: Socket | null | undefined = null;
 
 const EVENTS = {
   jobUpdate: "jobUpdate",
 };
 
-const open = async () => {
+// undefined when socket.io is not available (Expo Go on iOS)
+const open = async (): Promise<Socket | undefined> => {
   close();
 
   const serverUrl = await RemoteService.getServerUrl();
@@ -25,9 +28,9 @@ const open = async () => {
       token: authToken,
     },
   };
-  webSocketInstance = io?.(serverUrl, options);
-
-  return webSocketInstance;
+  const socket = io?.(serverUrl, options);
+  webSocketInstance = socket;
+  return socket;
 };
 
 const close = () => {

@@ -4,10 +4,10 @@ import { log } from "utils/Logger";
 
 export type JobMobileContext = ArenaJobContext;
 
-export abstract class JobMobile<C extends JobMobileContext> extends JobBase<
-  C,
-  any
-> {
+export abstract class JobMobile<
+  C extends JobMobileContext,
+  R = unknown,
+> extends JobBase<C, R> {
   private readonly tempFolderUris: string[] = [];
 
   createLogger(): ArenaLogger {
@@ -16,10 +16,10 @@ export abstract class JobMobile<C extends JobMobileContext> extends JobBase<
       isInfoEnabled: () => true,
       isWarnEnabled: () => true,
       isErrorEnabled: () => true,
-      debug: (message: any) => log.debug(message),
-      error: (message: any) => log.error(message),
-      info: (message: any) => log.info(message),
-      warn: (message: any) => log.warn(message),
+      debug: (message: unknown) => log.debug(message),
+      error: (message: unknown) => log.error(message),
+      info: (message: unknown) => log.info(message),
+      warn: (message: unknown) => log.warn(message),
     };
   }
 

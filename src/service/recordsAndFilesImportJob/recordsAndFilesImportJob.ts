@@ -3,9 +3,16 @@ import { Files } from "utils";
 
 import { FilesImportJob } from "./filesImportJob";
 import { RecordsAndFilesImportJobContext } from "./RecordsAndFilesImportJobContext";
-import { RecordsImportJob } from "./recordsImportJob";
+import { RecordsImportJob, RecordsImportJobResult } from "./recordsImportJob";
 
-export class RecordsAndFilesImportJob extends JobMobile<RecordsAndFilesImportJobContext> {
+export type RecordsAndFilesImportJobResult = RecordsImportJobResult & {
+  processedRecords: number;
+};
+
+export class RecordsAndFilesImportJob extends JobMobile<
+  RecordsAndFilesImportJobContext,
+  RecordsAndFilesImportJobResult
+> {
   constructor(context: RecordsAndFilesImportJobContext) {
     const {
       survey,
@@ -45,7 +52,7 @@ export class RecordsAndFilesImportJob extends JobMobile<RecordsAndFilesImportJob
     this.context.unzippedFolderUri = unzippedFolderUri;
   }
 
-  override generateResult() {
+  override generateResult(): Promise<RecordsAndFilesImportJobResult> {
     const recordsImportJob = this.innerJobs?.[0];
     const { result = {}, processed = 0 } = recordsImportJob ?? {};
     return Promise.resolve({ ...result, processedRecords: processed });

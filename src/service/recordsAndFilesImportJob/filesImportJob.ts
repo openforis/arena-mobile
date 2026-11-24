@@ -20,7 +20,7 @@ export class FilesImportJob extends JobMobile<RecordsAndFilesImportJobContext> {
     });
     if (!filesSummaryObj) return;
 
-    const filesSummary = filesSummaryObj as any[];
+    const filesSummary = filesSummaryObj as { uuid: string }[];
 
     this.total = filesSummary.length;
 

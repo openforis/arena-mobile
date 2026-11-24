@@ -1,5 +1,5 @@
 import {
-  ArenaNodeDef,
+  ArenaAnyNodeDef,
   NodeDefs,
   ArenaRecord,
   ArenaSurvey,
@@ -42,20 +42,23 @@ const defaultSimplifyTolerance = 3;
 // a GeoJSON LineString needs at least 2 positions
 const minPointsPerSegment = 2;
 
-const lineGeometryTypes = new Set(["LineString", "MultiLineString"]);
+const lineGeometryTypes = new Set<string | undefined>([
+  "LineString",
+  "MultiLineString",
+]);
 
 const isPositionTrackingNodeDef = (
-  nodeDef: ArenaNodeDef<any> | null | undefined,
+  nodeDef: ArenaAnyNodeDef | null | undefined,
 ) =>
   !!nodeDef && NodeDefs.isGeo(nodeDef) && NodeDefs.isPositionTracking(nodeDef);
 
-const isTrackableNodeDef = (nodeDef: ArenaNodeDef<any> | null | undefined) =>
+const isTrackableNodeDef = (nodeDef: ArenaAnyNodeDef | null | undefined) =>
   !!nodeDef &&
   isPositionTrackingNodeDef(nodeDef) &&
   NodeDefs.isSingle(nodeDef) &&
   !NodeDefs.isReadOnly(nodeDef);
 
-const getTrackableNodeDefs = (survey: ArenaSurvey): ArenaNodeDef<any>[] =>
+const getTrackableNodeDefs = (survey: ArenaSurvey): ArenaAnyNodeDef[] =>
   Surveys.getNodeDefsArray(survey).filter(isTrackableNodeDef);
 
 const isInSingleEntitiesOnly = ({
@@ -63,7 +66,7 @@ const isInSingleEntitiesOnly = ({
   nodeDef,
 }: {
   survey: ArenaSurvey;
-  nodeDef: ArenaNodeDef<any>;
+  nodeDef: ArenaAnyNodeDef;
 }): boolean => {
   let parentDef = Surveys.getNodeDefParent({ survey, nodeDef });
   while (parentDef) {
@@ -262,31 +265,46 @@ const toFeature = (segments: TrackSegment[]): TrackFeature | null => {
   };
 };
 
-const isTrackValue = (value: any): boolean =>
-  lineGeometryTypes.has(value?.geometry?.type);
+// GeoJSON line feature (node value), not validated
+type LineFeatureLike =
+  | {
+      geometry?: { type?: string; coordinates?: unknown };
+      properties?: { coordTimes?: unknown[]; accuracies?: unknown[] };
+    }
+  | null
+  | undefined;
+
+const isTrackValue = (value: unknown): boolean =>
+  lineGeometryTypes.has((value as LineFeatureLike)?.geometry?.type);
 
 // true if the value is a track with at least one recorded point
-const hasTrackPoints = (value: any): boolean =>
+const hasTrackPoints = (value: unknown): boolean =>
   isTrackValue(value) &&
   extractLineCoordinates(value).some((line) => line.length > 0);
 
-const extractLineCoordinates = (value: any): number[][][] => {
-  const geometry = value?.geometry;
+const extractLineCoordinates = (value: unknown): number[][][] => {
+  const geometry = (value as LineFeatureLike)?.geometry;
   if (!geometry || !Array.isArray(geometry.coordinates)) return [];
-  if (geometry.type === "LineString") return [geometry.coordinates];
-  if (geometry.type === "MultiLineString") return geometry.coordinates;
+  if (geometry.type === "LineString")
+    return [geometry.coordinates as number[][]];
+  if (geometry.type === "MultiLineString")
+    return geometry.coordinates as number[][][];
   return [];
 };
 
-const fromFeature = (value: any): TrackSegment[] => {
+const fromFeature = (value: unknown): TrackSegment[] => {
+  const feature = value as LineFeatureLike;
   const lines = extractLineCoordinates(value);
-  const coordTimes = value?.properties?.coordTimes;
-  const accuracies = value?.properties?.accuracies;
+  const coordTimes = feature?.properties?.coordTimes;
+  const accuracies = feature?.properties?.accuracies;
   // LineString values have flat coordTimes/accuracies
-  const isSingleLine = value?.geometry?.type === "LineString";
+  const isSingleLine = feature?.geometry?.type === "LineString";
   return lines.map((line, lineIndex) => {
-    const lineTimes = isSingleLine ? coordTimes : coordTimes?.[lineIndex];
-    const lineAccuracies = isSingleLine ? accuracies : accuracies?.[lineIndex];
+    const lineTimes = (isSingleLine ? coordTimes : coordTimes?.[lineIndex]) as
+      (string | undefined)[] | undefined;
+    const lineAccuracies = (
+      isSingleLine ? accuracies : accuracies?.[lineIndex]
+    ) as (number | null | undefined)[] | undefined;
     return line
       .filter((position) => Array.isArray(position) && position.length >= 2)
       .map((position, pointIndex) => {

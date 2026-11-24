@@ -1,5 +1,6 @@
 import * as Crypto from "expo-crypto";
 import * as WebBrowser from "expo-web-browser";
+import { AxiosResponse } from "axios";
 
 import { ArenaDictionary, ArenaUser } from "@openforis/arena-core";
 
@@ -55,10 +56,19 @@ const extractCookieValue = (
   );
 };
 
-const extractAuthTokens = (response: any) => {
+// axios-like error of a failed request
+type RequestError = {
+  message?: string;
+  response?: { data?: { message?: string } };
+};
+
+const extractAuthTokens = (response: AxiosResponse) => {
   const { data, headers } = response;
   const { authToken } = data;
-  const refreshToken = extractCookieValue(headers, refreshTokenCookieName);
+  const refreshToken = extractCookieValue(
+    headers as ArenaDictionary<string>,
+    refreshTokenCookieName,
+  );
   return { authToken, refreshToken };
 };
 
@@ -76,15 +86,15 @@ const generateAuthorizationHeaders = () =>
 const getServerUrl = async () =>
   (await SettingsService.fetchSettings()).serverUrl;
 
-const extractErrorMessageFromLoginError = (err: any): { error: string } => {
-  const { response } = err;
+const extractErrorMessageFromLoginError = (err: unknown): { error: string } => {
+  const { response, message } = err as RequestError;
   if (!response) {
     return { error: invalidServerUrlError };
   }
   if (HttpErrors.isUnauthorizedResponse(err)) {
     return { error: invalidCredentialsError };
   }
-  return { error: err.message };
+  return { error: message! };
 };
 
 export type LoginResponse = {
@@ -100,8 +110,8 @@ const onLoginSuccess = async ({
   data,
   response,
 }: {
-  data: any;
-  response: any;
+  data: LoginResponse;
+  response: AxiosResponse;
 }): Promise<LoginResponse> => {
   const { authToken, refreshToken } = extractAuthTokens(response);
   if (authToken && refreshToken) {
@@ -172,7 +182,7 @@ const login = async ({
       await storeCredentials({ serverUrl, email, password });
     }
     return result;
-  } catch (err: any) {
+  } catch (err) {
     // the 2FA code is sent only after the password has been accepted
     if (twoFactorToken && HttpErrors.isUnauthorizedResponse(err)) {
       return { error: invalidTwoFactorCodeError };
@@ -196,7 +206,7 @@ const loginWithTempAuthToken = async ({
       data: { token, appInfo },
     });
     return onLoginSuccess({ data, response });
-  } catch (err: any) {
+  } catch (err) {
     return extractErrorMessageFromLoginError(err);
   }
 };
@@ -310,9 +320,9 @@ const loginWithExternalLoginCode = async ({
       await clearStoredCredentials(serverUrl);
     }
     return result;
-  } catch (err: any) {
+  } catch (err) {
     if (HttpErrors.isUnauthorizedResponse(err)) {
-      const message = err.response?.data?.message;
+      const message = (err as RequestError).response?.data?.message;
       if (twoFactorToken && message === "externalLogin.invalidTwoFactorCode") {
         return { error: invalidTwoFactorCodeError };
       }
@@ -331,22 +341,23 @@ const logout = async () => {
       config: { headers: generateAuthorizationHeaders() },
     });
     return data;
-  } catch (err: any) {
-    if (!err.response) {
+  } catch (err) {
+    const { response, message } = err as RequestError;
+    if (!response) {
       return { error: invalidServerUrlError };
     }
     // access token expired: the server session is already over
     if (HttpErrors.isUnauthorizedResponse(err)) {
       return {};
     }
-    return { error: err.message };
+    return { error: message };
   } finally {
     setAuthToken(null);
   }
 };
 
 // the server answers 401 when the refresh token is invalid, expired or revoked
-const isRefreshTokenRejected = (error: any): boolean =>
+const isRefreshTokenRejected = (error: unknown): boolean =>
   HttpErrors.isUnauthorizedResponse(error);
 
 // returns true if the user has been logged in again with the credentials stored in the keychain

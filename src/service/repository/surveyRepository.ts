@@ -3,7 +3,7 @@ import LZString from "lz-string";
 import { Objects, ArenaSurvey, Surveys } from "@openforis/arena-core";
 
 import { DbUtils, dbClient } from "db";
-import { SurveyMobile } from "model";
+import { SurveyMobile, SurveySummaryLocal } from "model";
 
 type SurveyRow = {
   id: number;
@@ -83,7 +83,7 @@ const fetchSurveyById = async (id: number) => {
   return survey;
 };
 
-const fetchSurveySummaries = async () => {
+const fetchSurveySummaries = async (): Promise<SurveySummaryLocal[]> => {
   const surveys = await dbClient.many<
     Omit<SurveyRow, "content" | "date_created">
   >(
@@ -91,7 +91,9 @@ const fetchSurveySummaries = async () => {
     FROM survey
     ORDER BY name`,
   );
-  return surveys.map((survey) => Objects.camelize(survey));
+  return surveys.map(
+    (survey) => Objects.camelize(survey) as SurveySummaryLocal,
+  );
 };
 
 // foreign keys are not enforced: dependent rows are deleted explicitly

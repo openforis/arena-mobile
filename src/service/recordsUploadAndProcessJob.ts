@@ -25,7 +25,10 @@ export type RecordsUploadResult = {
 // this (rather than running them as two separate job-monitor calls) gets one continuous 0-100%
 // progress bar for free from JobBase's own inner-job progress weighting, instead of needing to
 // fake it the way the zip-preparation -> this bridge still does.
-export class RecordsUploadAndProcessJob extends JobMobile<RecordsUploadAndProcessJobContext> {
+export class RecordsUploadAndProcessJob extends JobMobile<
+  RecordsUploadAndProcessJobContext,
+  RecordsUploadResult | undefined
+> {
   constructor(context: RecordsUploadAndProcessJobContext) {
     const { user, survey } = context;
     const contextWithDefaults = {

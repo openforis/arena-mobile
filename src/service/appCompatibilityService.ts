@@ -46,11 +46,14 @@ const fetchMinAppVersionIfNotSupported = async ({
   }
 };
 
-const isAppVersionNotSupportedError = (error: any): boolean =>
+const isAppVersionNotSupportedError = (error: unknown): boolean =>
   HttpErrors.getStatus(error) === appVersionNotSupportedStatusCode;
 
-const getMinVersionFromError = (error: any): string | undefined =>
-  error?.response?.data?.params?.minVersion;
+const getMinVersionFromError = (error: unknown): string | undefined =>
+  (
+    error as
+      { response?: { data?: { params?: { minVersion?: string } } } } | undefined
+  )?.response?.data?.params?.minVersion;
 
 export const AppCompatibilityService = {
   fetchMinAppVersionIfNotSupported,

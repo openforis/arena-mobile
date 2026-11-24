@@ -1,7 +1,8 @@
-import { JobStatus, Surveys } from "@openforis/arena-core";
+import { ArenaSurvey, JobStatus, Surveys } from "@openforis/arena-core";
 
 import { AppCompatibilityOperation } from "service/appCompatibilityService";
 import { RecordService } from "service/recordService";
+import type { RecordsExportJobResult } from "service/recordRemoteService";
 import { RecordsAndFilesImportJob } from "service/recordsAndFilesImportJob";
 import { JobMonitorActions } from "../jobMonitor/actions";
 import { MessageActions } from "../message";
@@ -13,14 +14,22 @@ import { JobCancelError } from "model/JobCancelError";
 import { log } from "utils";
 
 import { AutoSyncActions } from "../autoSync/actions";
-import type { AppDispatch, AppGetState } from "../store";
+import type { JobSummary } from "../jobMonitor/jobProgress";
+import type { AppDispatch, AppGetState, RootState } from "../store";
+
+type OnImportComplete = () => unknown;
 
 const handleImportErrors = ({
   dispatch,
   error = null,
   errors = null,
   silent = false,
-}: any) => {
+}: {
+  dispatch: AppDispatch;
+  error?: unknown;
+  errors?: Record<string, unknown> | null;
+  silent?: boolean;
+}) => {
   if (
     dispatch(
       AppCompatibilityActions.handleAppVersionNotSupportedError({
@@ -31,7 +40,9 @@ const handleImportErrors = ({
   ) {
     return;
   }
-  const details = error?.toString() ?? JSON.stringify(errors);
+  const details =
+    (error as { toString(): string } | null)?.toString() ??
+    JSON.stringify(errors);
   if (silent) {
     // an unattended fetch (see exportRecords: auto-sync replacing a record with its merged
     // version) must never surface a toast; shown through the sync status icon instead, which also
@@ -51,7 +62,13 @@ export const importRecordsFromFile =
     mergeKeepLocalOriginRecordUuids,
     // true when not started by the user (see fetchRecordsFromServer): no dialog nor message
     silent = false,
-  }: any) =>
+  }: {
+    fileUri: string;
+    onImportComplete?: OnImportComplete;
+    overwriteExistingRecords?: boolean;
+    mergeKeepLocalOriginRecordUuids?: string[];
+    silent?: boolean;
+  }) =>
   async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const user = RemoteConnectionSelectors.selectLoggedUserSafe(state);
@@ -84,7 +101,7 @@ export const importRecordsFromFile =
       const { status, errors, result } = importJob;
 
       if (status === JobStatus.succeeded) {
-        const { processedRecords, insertedRecords, updatedRecords } = result;
+        const { processedRecords, insertedRecords, updatedRecords } = result!;
         dispatch(
           MessageActions.setMessage({
             content: "recordsList:importCompleteSuccessfully",
@@ -95,16 +112,17 @@ export const importRecordsFromFile =
             },
           }),
         );
-        await onImportComplete();
+        await onImportComplete?.();
       } else {
         handleImportErrors({ dispatch, errors });
       }
-    } catch (error: any) {
+    } catch (error) {
+      const failedJob = error as JobSummary | undefined;
       if (silent && error instanceof JobCancelError) {
         // canceled by the user, do nothing
-      } else if (silent && error?.errors) {
+      } else if (silent && failedJob?.errors) {
         // failed job (see JobMonitorActions.startAsync)
-        handleImportErrors({ dispatch, errors: error.errors, silent });
+        handleImportErrors({ dispatch, errors: failedJob.errors, silent });
       } else {
         handleImportErrors({ dispatch, error, silent });
       }
@@ -118,9 +136,16 @@ const _onExportFromServerJobComplete = async ({
   onImportComplete,
   mergeKeepLocalOriginRecordUuids,
   silent,
-}: any) => {
+}: {
+  dispatch: AppDispatch;
+  state: RootState;
+  job: JobSummary<RecordsExportJobResult> | undefined;
+  onImportComplete?: OnImportComplete;
+  mergeKeepLocalOriginRecordUuids?: string[];
+  silent: boolean;
+}) => {
   try {
-    const { outputFileName: fileName } = job.result;
+    const { outputFileName: fileName } = job!.result!;
 
     const survey = SurveySelectors.selectCurrentSurvey(state);
 
@@ -128,7 +153,7 @@ const _onExportFromServerJobComplete = async ({
 
     const fileUri =
       await RecordService.downloadExportedRecordsFileFromRemoteServer({
-        survey,
+        survey: survey!,
         fileName,
       });
 
@@ -145,7 +170,15 @@ const _onExportFromServerJobComplete = async ({
   }
 };
 
-const checkCanImportRecords = ({ dispatch, survey, silent = false }: any) => {
+const checkCanImportRecords = ({
+  dispatch,
+  survey,
+  silent = false,
+}: {
+  dispatch: AppDispatch;
+  survey: ArenaSurvey;
+  silent?: boolean;
+}) => {
   let errorKey;
   if (!Surveys.isVisibleInMobile(survey)) {
     errorKey = "recordsList:fetchRecords.error.surveyNotVisibleInMobile";
@@ -171,11 +204,16 @@ export const fetchRecordsFromServer =
     // true when not started by the user (auto-sync replacing a record with its merged version):
     // nothing is shown, neither while fetching nor at the end
     silent = false,
-  }: any) =>
+  }: {
+    recordUuids: string[];
+    onImportComplete?: OnImportComplete;
+    mergeKeepLocalOriginRecordUuids?: string[];
+    silent?: boolean;
+  }) =>
   async (dispatch: AppDispatch, getState: AppGetState) => {
     try {
       const state = getState();
-      const survey = SurveySelectors.selectCurrentSurvey(state);
+      const survey = SurveySelectors.selectCurrentSurvey(state)!;
       const cycle = SurveySelectors.selectCurrentSurveyCycle(state);
 
       if (!checkCanImportRecords({ dispatch, survey, silent })) return;
@@ -199,12 +237,13 @@ export const fetchRecordsFromServer =
         recordUuids,
         excludedFileUuids,
       });
-      const jobComplete = await JobMonitorActions.startAsync({
-        dispatch,
-        jobUuid: job.uuid,
-        titleKey: "recordsList:fetchRecords.title",
-        silent,
-      });
+      const jobComplete =
+        await JobMonitorActions.startAsync<RecordsExportJobResult>({
+          dispatch,
+          jobUuid: job.uuid,
+          titleKey: "recordsList:fetchRecords.title",
+          silent,
+        });
       await _onExportFromServerJobComplete({
         dispatch,
         state,

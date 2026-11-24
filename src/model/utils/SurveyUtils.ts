@@ -1,11 +1,16 @@
 import { Dates, ArenaSurvey } from "@openforis/arena-core";
 
+type SurveyLastUpdateDates = Pick<
+  ArenaSurvey,
+  "datePublished" | "dateModified"
+>;
+
 const hasUpdates = ({
   localSurvey,
   remoteSurvey,
 }: {
-  localSurvey: ArenaSurvey;
-  remoteSurvey: ArenaSurvey;
+  localSurvey: SurveyLastUpdateDates;
+  remoteSurvey: SurveyLastUpdateDates;
 }) => {
   const remoteSurveyLastUpdate =
     remoteSurvey.datePublished ?? remoteSurvey.dateModified;

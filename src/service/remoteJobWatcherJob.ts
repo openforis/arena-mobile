@@ -1,9 +1,12 @@
-import { JobStatus } from "@openforis/arena-core";
+import { ArenaJobSerialized, JobStatus } from "@openforis/arena-core";
 
 import { JobMobile } from "model";
 import { RemoteJobService, WebSocketService } from "service";
 
 import { RecordsUploadAndProcessJobContext } from "./RecordsUploadAndProcessJobContext";
+import type { RecordsUploadResult } from "./recordsUploadAndProcessJob";
+
+type RemoteJobSummary = Partial<ArenaJobSerialized<RecordsUploadResult>>;
 
 // a stable identifier for this job class, independent of `this.constructor.name` (which a
 // minified production build isn't guaranteed to preserve) - read by RecordsUploadAndProcessJob's
@@ -20,8 +23,11 @@ const MAX_CONSECUTIVE_FAILED_POLLS = 10;
 // this job existed - the difference is this now runs as a regular inner job (see
 // RecordsUploadAndProcessJob), so its progress folds into one continuous bar together with the
 // upload phase instead of restarting the job monitor's progress from 0%
-export class RemoteJobWatcherJob extends JobMobile<RecordsUploadAndProcessJobContext> {
-  private settle: ((error?: any) => void) | null = null;
+export class RemoteJobWatcherJob extends JobMobile<
+  RecordsUploadAndProcessJobContext,
+  RecordsUploadResult
+> {
+  private settle: ((error?: Error) => void) | null = null;
   private failedPolls = 0;
 
   constructor({ user, survey }: RecordsUploadAndProcessJobContext) {
@@ -55,13 +61,16 @@ export class RemoteJobWatcherJob extends JobMobile<RecordsUploadAndProcessJobCon
         }
       };
 
-      ws.on(WebSocketService.EVENTS.jobUpdate, (remoteJobSummary: any) => {
-        // the server notifies all the jobs of the user
-        const { uuid } = remoteJobSummary ?? {};
-        if (!uuid || uuid === remoteJobUuid) {
-          this.onRemoteJobUpdate(remoteJobSummary);
-        }
-      });
+      ws!.on(
+        WebSocketService.EVENTS.jobUpdate,
+        (remoteJobSummary: RemoteJobSummary | undefined) => {
+          // the server notifies all the jobs of the user
+          const { uuid } = remoteJobSummary ?? {};
+          if (!uuid || uuid === remoteJobUuid) {
+            this.onRemoteJobUpdate(remoteJobSummary);
+          }
+        },
+      );
     });
   }
 
@@ -101,7 +110,7 @@ export class RemoteJobWatcherJob extends JobMobile<RecordsUploadAndProcessJobCon
     }
   }
 
-  private onRemoteJobUpdate(remoteJobSummary: any) {
+  private onRemoteJobUpdate(remoteJobSummary: RemoteJobSummary | undefined) {
     this.failedPolls = 0;
     const { status, errors, processed, total, progressPercent, result } =
       remoteJobSummary ?? {};

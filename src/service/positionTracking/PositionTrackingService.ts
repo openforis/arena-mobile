@@ -183,7 +183,7 @@ const start = async ({
   surveyId: number;
   recordUuid: string;
   nodeUuid: string;
-  baseValue: any;
+  baseValue: unknown;
   settings: PositionTrackingSettings;
 }) => {
   reset();
