@@ -23,11 +23,17 @@ export enum SettingGroup {
   images = "images",
 }
 
+export type SettingsPropertyOption = {
+  key: string | number;
+  label: string;
+  labelIsI18nKey?: boolean;
+};
+
 type SettingsProperty = {
   type: PropertyType;
   group: SettingGroup;
-  options?: any[];
-  isDisabled?: ({ settings }: any) => boolean;
+  options?: SettingsPropertyOption[];
+  isDisabled?: ({ settings }: { settings: SettingsObject }) => boolean;
   minValue?: number;
   maxValue?: number;
   step?: number;
@@ -101,7 +107,7 @@ const properties: SettingsProperties = {
     minValue: 1,
     maxValue: 15,
     step: 1,
-    isDisabled: ({ settings }: any) => !settings.autoSyncEnabled,
+    isDisabled: ({ settings }) => !settings.autoSyncEnabled,
   },
   autoSyncSlowCheckIntervalMinutes: {
     type: PropertyType.slider,
@@ -109,7 +115,7 @@ const properties: SettingsProperties = {
     minValue: 2,
     maxValue: 60,
     step: 1,
-    isDisabled: ({ settings }: any) => !settings.autoSyncEnabled,
+    isDisabled: ({ settings }) => !settings.autoSyncEnabled,
   },
   dataUploadChunkSizeKB: {
     type: PropertyType.dropdown,
@@ -197,7 +203,7 @@ const properties: SettingsProperties = {
     minValue: 0.5,
     maxValue: 10,
     step: 0.5,
-    isDisabled: ({ settings }: any) => settings.imageSizeUnlimited,
+    isDisabled: ({ settings }) => settings.imageSizeUnlimited,
   },
 };
 

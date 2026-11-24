@@ -159,7 +159,9 @@ const connect = async (sourceId: string): Promise<ExternalGpsConnection> => {
       deviceClass: device.deviceClass,
       type: device.type,
       // not exposed by the library's BluetoothDevice typings
-      protocolStrings: (device as any)._nativeDevice?.protocolStrings,
+      protocolStrings: (
+        device as unknown as { _nativeDevice?: { protocolStrings?: string[] } }
+      )._nativeDevice?.protocolStrings,
     },
   );
 

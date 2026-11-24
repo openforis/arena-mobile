@@ -1,13 +1,52 @@
-import { Surveys, Records, NodeDefs, RecordNodes } from "@openforis/arena-core";
+import {
+  ArenaNodeDefEntity,
+  ArenaRecord,
+  ArenaRecordNode,
+  ArenaSurvey,
+  NodeDefs,
+  RecordNodes,
+  Records,
+  Surveys,
+} from "@openforis/arena-core";
 
 import { RecordUtils } from "model/utils/RecordUtils";
 
-const getSingleChildNodeUuid = ({ record, entityDef, parentEntity }: any) =>
+import type { RecordCurrentPageEntity } from "./RecordCurrentPageEntity";
+
+// null uuids: root entity (no parent) or list of entities (no entity selected)
+export type RecordPageEntityPointer = {
+  parentEntityUuid: string | null | undefined;
+  entityDef: ArenaNodeDefEntity;
+  entityUuid: string | null | undefined;
+  index?: number;
+};
+
+type SurveyAndRecord = { survey: ArenaSurvey; record: ArenaRecord };
+
+type CurrentEntityPointerParams = {
+  survey: ArenaSurvey | undefined;
+  record: ArenaRecord;
+  currentEntityPointer: RecordCurrentPageEntity;
+};
+
+const getSingleChildNodeUuid = ({
+  record,
+  entityDef,
+  parentEntity,
+}: {
+  record: ArenaRecord;
+  entityDef: ArenaNodeDefEntity;
+  parentEntity: ArenaRecordNode | null | undefined;
+}) =>
   NodeDefs.isMultiple(entityDef)
     ? null
-    : Records.getChild(parentEntity, entityDef.uuid)(record)?.uuid;
+    : Records.getChild(parentEntity!, entityDef.uuid)(record)?.uuid;
 
-const getAncestorMultipleEntity = ({ survey, record, entity }: any) => {
+const getAncestorMultipleEntity = ({
+  survey,
+  record,
+  entity,
+}: SurveyAndRecord & { entity: ArenaRecordNode }): ArenaRecordNode => {
   let currentEntity = entity;
   let currentEntityDef = Surveys.getNodeDefByUuid({
     survey,
@@ -17,7 +56,7 @@ const getAncestorMultipleEntity = ({ survey, record, entity }: any) => {
     !NodeDefs.isRoot(currentEntityDef) &&
     !NodeDefs.isMultiple(currentEntityDef)
   ) {
-    currentEntity = Records.getParent(currentEntity)(record);
+    currentEntity = Records.getParent(currentEntity)(record)!;
     currentEntityDef = Surveys.getNodeDefByUuid({
       survey,
       uuid: currentEntity.nodeDefUuid,
@@ -31,7 +70,10 @@ const getNextOrPreviousMultipleEntityPointer = ({
   record,
   entity,
   offset,
-}: any) => {
+}: SurveyAndRecord & {
+  entity: ArenaRecordNode;
+  offset: number;
+}): RecordPageEntityPointer | null => {
   if (RecordNodes.isRoot(entity)) return null;
 
   const parentEntity = Records.getParent(entity)(record);
@@ -39,7 +81,7 @@ const getNextOrPreviousMultipleEntityPointer = ({
   const entityDef = Surveys.getNodeDefByUuid({
     survey,
     uuid: entityDefUuid,
-  });
+  }) as ArenaNodeDefEntity;
   const { siblingNode, siblingIndex } = RecordUtils.getSiblingNode({
     record,
     parentEntity,
@@ -66,18 +108,27 @@ const findSiblingEntityPointer = ({
   entityDef,
   offset,
   includeSingleEntities = false,
-}: any) => {
+}: SurveyAndRecord & {
+  cycle: string | undefined;
+  parentEntity: ArenaRecordNode | null | undefined;
+  entityDef: ArenaNodeDefEntity;
+  offset: number;
+  includeSingleEntities?: boolean;
+}): {
+  entityDef: ArenaNodeDefEntity;
+  parentEntity: ArenaRecordNode | null | undefined;
+} | null => {
   let visitedParentEntity = parentEntity;
-  let visitedEntityDef = entityDef;
-  let visitedParentEntityDef: any = null;
+  let visitedEntityDef: ArenaNodeDefEntity | undefined = entityDef;
+  let visitedParentEntityDef: ArenaNodeDefEntity | null | undefined = null;
 
   const getVisitedParentEntityDef = () =>
-    Surveys.getNodeDefParent({ survey, nodeDef: visitedEntityDef });
+    Surveys.getNodeDefParent({ survey, nodeDef: visitedEntityDef! });
 
   const getVisitedParentEntity = () =>
     visitedParentEntityDef
       ? Records.getAncestor(
-          visitedParentEntity,
+          visitedParentEntity!,
           visitedParentEntityDef.uuid,
         )(record)
       : null;
@@ -86,8 +137,8 @@ const findSiblingEntityPointer = ({
     visitedParentEntityDef = getVisitedParentEntityDef();
     const siblingEntityDefs = RecordUtils.getApplicableChildrenEntityDefs({
       survey,
-      nodeDef: visitedParentEntityDef,
-      parentEntity: visitedParentEntity,
+      nodeDef: visitedParentEntityDef!,
+      parentEntity: visitedParentEntity!,
       cycle,
       onlyInOwnPage: true,
     });
@@ -100,11 +151,11 @@ const findSiblingEntityPointer = ({
       return { entityDef: siblingEntityDef, parentEntity: visitedParentEntity };
     }
     if (
-      NodeDefs.isSingle(visitedParentEntityDef) &&
-      !NodeDefs.isRoot(visitedParentEntityDef)
+      NodeDefs.isSingle(visitedParentEntityDef!) &&
+      !NodeDefs.isRoot(visitedParentEntityDef!)
     ) {
       // visit parent entity and find siblings there
-      visitedEntityDef = visitedParentEntityDef;
+      visitedEntityDef = visitedParentEntityDef!;
       visitedParentEntityDef = getVisitedParentEntityDef();
       visitedParentEntity = getVisitedParentEntity();
       if (includeSingleEntities) {
@@ -128,7 +179,13 @@ const getNextOrPrevSiblingEntityPointer = ({
   offset,
   entityUuid = null,
   includeSingleEntities = false,
-}: any) => {
+}: SurveyAndRecord & {
+  entityDef: ArenaNodeDefEntity;
+  parentEntity: ArenaRecordNode | null | undefined;
+  offset: number;
+  entityUuid?: string | null;
+  includeSingleEntities?: boolean;
+}): RecordPageEntityPointer | null => {
   if (NodeDefs.isRoot(entityDef)) {
     return null;
   }
@@ -153,7 +210,7 @@ const getNextOrPrevSiblingEntityPointer = ({
 
   if (siblingEntityDef)
     return {
-      parentEntityUuid: siblingParentEntity.uuid,
+      parentEntityUuid: siblingParentEntity!.uuid,
       entityDef: siblingEntityDef,
       entityUuid: getSingleChildNodeUuid({
         record,
@@ -170,18 +227,22 @@ const getFirstChildEntityPointer = ({
   entityDef,
   entityUuid,
   actualEntity,
-}: any) => {
+}: SurveyAndRecord & {
+  entityDef: ArenaNodeDefEntity;
+  entityUuid: string;
+  actualEntity: ArenaRecordNode | null | undefined;
+}): RecordPageEntityPointer | null => {
   const { cycle } = record;
   const childrenEntityDefs = RecordUtils.getApplicableChildrenEntityDefs({
     survey,
     nodeDef: entityDef,
-    parentEntity: actualEntity,
+    parentEntity: actualEntity!,
     cycle,
     onlyInOwnPage: true,
   });
 
   if (childrenEntityDefs.length > 0) {
-    const firstChildEntityDef = childrenEntityDefs[0];
+    const firstChildEntityDef = childrenEntityDefs[0]!;
     return {
       parentEntityUuid: entityUuid,
       entityDef: firstChildEntityDef,
@@ -196,10 +257,12 @@ const getFirstChildEntityPointer = ({
 };
 
 const getNextEntityPointer = ({
-  survey,
+  survey: surveyParam,
   record,
   currentEntityPointer,
-}: any) => {
+}: CurrentEntityPointerParams): RecordPageEntityPointer | null => {
+  // the current survey is always set while editing a record
+  const survey = surveyParam!;
   const { parentEntityUuid, entityDef, entityUuid } = currentEntityPointer;
 
   const parentEntity = parentEntityUuid
@@ -222,7 +285,7 @@ const getNextEntityPointer = ({
   } else {
     // multiple entity list view
     const { cycle } = record;
-    if (!NodeDefs.isDisplayInOwnPage(cycle)(entityDef)) {
+    if (!NodeDefs.isDisplayInOwnPage(cycle!)(entityDef)) {
       // entity shown inside parent page: do not allow go to "next" entity;
       // user should go to the parent page and continue filling it
       return null;
@@ -250,12 +313,12 @@ const getNextEntityPointer = ({
   const ancestorMultipleEntity = getAncestorMultipleEntity({
     survey,
     record,
-    entity: actualEntity,
+    entity: actualEntity!,
   });
   const ancestorMultipleEntityDef = Surveys.getNodeDefByUuid({
     survey,
     uuid: ancestorMultipleEntity.nodeDefUuid,
-  });
+  }) as ArenaNodeDefEntity;
   if (NodeDefs.isRoot(ancestorMultipleEntityDef)) {
     return null;
   }
@@ -276,10 +339,12 @@ const getNextEntityPointer = ({
 };
 
 const getPrevEntityPointer = ({
-  survey,
+  survey: surveyParam,
   record,
   currentEntityPointer,
-}: any) => {
+}: CurrentEntityPointerParams): RecordPageEntityPointer | null => {
+  // the current survey is always set while editing a record
+  const survey = surveyParam!;
   const { parentEntityUuid, entityDef, entityUuid } = currentEntityPointer;
 
   const parentEntityDef = Surveys.getNodeDefParent({

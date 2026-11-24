@@ -13,11 +13,15 @@ export const MessageCallbacksRegistry =
 
 export type MessageState = {
   content?: string;
-  contentParams?: Record<string, any> | null;
+  contentParams?: Record<string, unknown> | null;
   details?: string | null;
-  detailsParams?: Record<string, any> | null;
+  detailsParams?: Record<string, unknown> | null;
   onDismissId?: number | null;
   title?: string;
+};
+
+type MessageSetParams = Omit<MessageState, "onDismissId"> & {
+  onDismiss?: (() => void) | null;
 };
 
 const initialState: MessageState = {};
@@ -47,7 +51,7 @@ export const MessageActions = {
       detailsParams = null,
       onDismiss = null,
       title = "common:info",
-    }: any) =>
+    }: MessageSetParams) =>
     (dispatch: Dispatch, getState: () => unknown) => {
       // the message currently shown (if any) is replaced: its callback won't be used anymore
       MessageCallbacksRegistry.remove(getOnDismissId(getState));
@@ -65,9 +69,9 @@ export const MessageActions = {
         }),
       );
     },
-  setInfo: (contentKey: any, contentParams?: any) =>
+  setInfo: (contentKey: string, contentParams?: Record<string, unknown>) =>
     MessageActions.setMessage({ content: contentKey, contentParams }),
-  setWarning: (contentKey: any, contentParams?: any) =>
+  setWarning: (contentKey: string, contentParams?: Record<string, unknown>) =>
     MessageActions.setMessage({
       content: contentKey,
       contentParams,

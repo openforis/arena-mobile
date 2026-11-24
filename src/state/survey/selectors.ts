@@ -1,8 +1,8 @@
 import {
+  ArenaAnyNodeDef,
   LanguageCode,
   Objects,
   ArenaSRSIndex,
-  ArenaSurvey,
   Surveys,
   ArenaUserGroup,
 } from "@openforis/arena-core";
@@ -11,14 +11,13 @@ import { SurveyDefs } from "model";
 import { SurveyService } from "service";
 
 import { determinePreferredSurveyLanguage } from "./surveyStateUtils";
+import type { CurrentSurvey } from "./state";
 import type { RootState } from "../store";
 import { useAppSelector } from "../storeHooks";
 
 const getSurveyState = (state: RootState) => state.survey;
 
-const selectCurrentSurvey = (
-  state: RootState,
-): (ArenaSurvey & { remoteId?: number }) | undefined =>
+const selectCurrentSurvey = (state: RootState): CurrentSurvey | undefined =>
   getSurveyState(state).currentSurvey ?? undefined;
 
 const selectIsCurrentSurveyDemo = (state: RootState): boolean =>
@@ -38,17 +37,18 @@ const selectCurrentSurveySrsIndex = (
 };
 
 const selectIsNodeDefEnumerator =
-  (nodeDef: any) =>
+  (nodeDef: ArenaAnyNodeDef) =>
   (state: RootState): boolean => {
     const survey = selectCurrentSurvey(state);
     return survey ? Surveys.isNodeDefEnumerator({ survey, nodeDef }) : false;
   };
 
-const selectIsNodeDefRootKey = (nodeDef: any) => (state: RootState) => {
-  const survey = selectCurrentSurvey(state);
-  const keyDefs = SurveyDefs.getRootKeyDefs({ survey });
-  return keyDefs.includes(nodeDef);
-};
+const selectIsNodeDefRootKey =
+  (nodeDef: ArenaAnyNodeDef) => (state: RootState) => {
+    const survey = selectCurrentSurvey(state)!;
+    const keyDefs = SurveyDefs.getRootKeyDefs({ survey });
+    return keyDefs.includes(nodeDef);
+  };
 
 const selectSurveysLocal = (state: RootState) =>
   getSurveyState(state).surveysLocal;
@@ -94,9 +94,9 @@ export const SurveySelectors = {
   useCurrentSurveyUserGroup: () => useAppSelector(selectCurrentSurveyUserGroup),
   useCurrentSurveyUserGroupReady: () =>
     useAppSelector(selectCurrentSurveyUserGroupReady),
-  useIsNodeDefEnumerator: (nodeDef: any) =>
+  useIsNodeDefEnumerator: (nodeDef: ArenaAnyNodeDef) =>
     useAppSelector(selectIsNodeDefEnumerator(nodeDef)),
-  useIsNodeDefRootKey: (nodeDef: any) =>
+  useIsNodeDefRootKey: (nodeDef: ArenaAnyNodeDef) =>
     useAppSelector(selectIsNodeDefRootKey(nodeDef)),
   useSurveysLocal: () => useAppSelector(selectSurveysLocal),
 };

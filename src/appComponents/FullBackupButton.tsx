@@ -40,6 +40,8 @@ export const FullBackupButton = () => {
     ) {
       try {
         const fullBackupUri = await AppService.generateFullBackup();
+        // backup canceled
+        if (!fullBackupUri) return;
         const dialogTitle = t("app:fullBackup.shareTitle");
         await Files.shareFile({ url: fullBackupUri, dialogTitle });
       } catch (error) {

@@ -1,16 +1,18 @@
-import { DatabaseSync } from "node:sqlite";
+import { DatabaseSync, SQLInputValue } from "node:sqlite";
 
-import SQLiteClient from "../SQLiteClient";
+import SQLiteClient, { DbMigration, SqlParams } from "../SQLiteClient";
 
 // expo-sqlite binds undefined as null, node:sqlite rejects it
-const toParams = (params: any[] = []) => params.map((param) => param ?? null);
+// booleans are bound as 0/1 by expo-sqlite: not used by the tested queries
+const toParams = (params: SqlParams = []) =>
+  params.map((param) => param ?? null) as SQLInputValue[];
 
 // tests only: SQLiteClient backed by an in-memory node:sqlite database instead of expo-sqlite
-export const createNodeSQLiteClient = (migrations: any[] = []) => {
+export const createNodeSQLiteClient = (migrations: DbMigration[] = []) => {
   const db = new DatabaseSync(":memory:");
   const client = new SQLiteClient("test", migrations);
   client.privateDb = {
-    runAsync: (sql: string, params?: any[]) => {
+    runAsync: (sql: string, params?: SqlParams) => {
       const { lastInsertRowid, changes } = db
         .prepare(sql)
         .run(...toParams(params));
@@ -20,9 +22,9 @@ export const createNodeSQLiteClient = (migrations: any[] = []) => {
       });
     },
     execAsync: (sql: string) => Promise.resolve(db.exec(sql)),
-    getFirstAsync: (sql: string, params?: any[]) =>
+    getFirstAsync: (sql: string, params?: SqlParams) =>
       Promise.resolve(db.prepare(sql).get(...toParams(params)) ?? null),
-    getAllAsync: (sql: string, params?: any[]) =>
+    getAllAsync: (sql: string, params?: SqlParams) =>
       Promise.resolve(db.prepare(sql).all(...toParams(params))),
     withTransactionAsync: async (task: () => Promise<void>) => {
       db.exec("BEGIN");
@@ -34,6 +36,7 @@ export const createNodeSQLiteClient = (migrations: any[] = []) => {
         throw error;
       }
     },
-  } as any;
+    // only the methods used by SQLiteClient
+  } as unknown as SQLiteClient["privateDb"];
   return { client, db };
 };

@@ -1,4 +1,5 @@
 import {
+  ArenaRecord,
   LanguageCode,
   NodeDefs,
   RecordNodes,
@@ -8,7 +9,7 @@ import {
   Validations,
 } from "@openforis/arena-core";
 
-import { SurveyDefs } from "model";
+import { ArenaMobileRecord, SurveyDefs } from "model";
 import { RecordService } from "service/recordService";
 
 import { Errors, log, StringUtils } from "utils";
@@ -25,7 +26,7 @@ import type { AppDispatch, AppGetState } from "../store";
 
 export const handleError = (
   dispatch: AppDispatch,
-  error: any,
+  error: unknown,
   messageKey: string,
   messageParams = {},
 ) => {
@@ -53,14 +54,21 @@ export const isRecordSyncInProgress = (
   return true;
 };
 
-export const prepareRecordForStorage = ({ record }: any) => {
+export const prepareRecordForStorage = <R extends ArenaRecord>({
+  record,
+}: {
+  record: R;
+}): R => {
   const validation = Validations.getValidation(record);
   const validationUpdated = Validations.updateCounts(validation);
   return { ...record, validation: validationUpdated };
 };
 
 // the editor may have been closed (or another record opened) while the update was being prepared
-const isRecordStillOpen = (getState: AppGetState, record: any): boolean =>
+const isRecordStillOpen = (
+  getState: AppGetState,
+  record: ArenaRecord,
+): boolean =>
   DataEntrySelectors.selectRecordUnsafe(getState())?.uuid === record.uuid;
 
 export const updateRecord = async ({
@@ -71,8 +79,8 @@ export const updateRecord = async ({
 }: {
   dispatch: AppDispatch;
   getState: AppGetState;
-  survey: any;
-  record: any;
+  survey: ArenaSurvey;
+  record: ArenaMobileRecord;
 }) => {
   let recordUpdated = prepareRecordForStorage({ record });
   // in preview mode the record is kept in memory only

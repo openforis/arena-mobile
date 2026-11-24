@@ -12,12 +12,21 @@ import { SurveySelectors } from "../survey";
 import { DataEntryActionsRecordPreviousCycle } from "./actionsRecordPreviousCycle";
 import { DataEntrySliceActions } from "./reducer";
 import { DataEntrySelectors } from "./selectors";
+import type { Navigator } from "navigation/navigator";
 import type { AppDispatch, AppGetState } from "../store";
 
 const { updatePreviousCyclePageEntity } = DataEntryActionsRecordPreviousCycle;
 
 export const selectCurrentPageEntity =
-  ({ parentEntityUuid, entityDefUuid, entityUuid = undefined }: any) =>
+  ({
+    parentEntityUuid,
+    entityDefUuid,
+    entityUuid = undefined,
+  }: {
+    parentEntityUuid?: string | null;
+    entityDefUuid: string;
+    entityUuid?: string | null;
+  }) =>
   async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const surveyId = SurveySelectors.selectCurrentSurveyId(state);
@@ -40,10 +49,11 @@ export const selectCurrentPageEntity =
       return;
     }
 
+    // null uuids (root entity parent, list of entities) are not part of the pointer type yet
     const payload = {
-      parentEntityUuid,
+      parentEntityUuid: parentEntityUuid as string | undefined,
       entityDefUuid,
-      entityUuid: nextEntityUuid,
+      entityUuid: nextEntityUuid as string | undefined,
       locked,
     };
 
@@ -64,7 +74,7 @@ export const selectCurrentPageEntity =
   };
 
 export const selectCurrentPageEntityActiveChildIndex =
-  (index: any) => (dispatch: AppDispatch, getState: AppGetState) => {
+  (index: number) => (dispatch: AppDispatch, getState: AppGetState) => {
     dispatch(DataEntrySliceActions.pageEntityActiveChildIndexSet(index));
     const state = getState();
     const isPhone = DeviceInfoSelectors.selectIsPhone(state);
@@ -103,7 +113,7 @@ export const toggleRecordEditLock = (
 };
 
 export const navigateToRecordsList =
-  ({ navigator }: any) =>
+  ({ navigator }: { navigator: Navigator }) =>
   (dispatch: AppDispatch) =>
     dispatch(
       ConfirmActions.show({

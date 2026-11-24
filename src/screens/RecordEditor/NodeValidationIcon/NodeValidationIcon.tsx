@@ -166,7 +166,8 @@ export const NodeValidationIcon = (props: NodeValidationIconProps) => {
     const warnMsg = getJointWarningText({ validation, t, customMessageLang });
     return (
       <ValidationIcon
-        messageKey={errMsg ?? warnMsg}
+        // not valid: it has at least one error or warning
+        messageKey={(errMsg ?? warnMsg)!}
         severity={
           errMsg ? ValidationSeverity.error : ValidationSeverity.warning
         }

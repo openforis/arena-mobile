@@ -1,9 +1,18 @@
-import { CanceledError } from "axios";
+import { ArenaJobSerialized } from "@openforis/arena-core";
+import { AxiosProgressEvent, AxiosResponse, CanceledError } from "axios";
 
 import { Files, Functions, log, RNFileProcessor } from "utils";
 import { HttpErrors } from "utils/HttpErrors";
 import { RemoteService } from "./remoteService";
+import { RemoteRecordSummary } from "model/RecordSummary";
 import { SurveyMobile } from "model/SurveyMobile";
+
+type SurveyWithRemoteId = { remoteId?: number };
+
+export type UploadProgress = { total: number; loaded: number };
+
+// result of the server-side records export job
+export type RecordsExportJobResult = { outputFileName: string };
 
 // fallback used if no chunk size is provided - see settings:dataUploadChunkSizeKB
 const DEFAULT_UPLOAD_CHUNK_SIZE = 2 * 1024 * 1024; // 2MB
@@ -26,7 +35,13 @@ const calculateUploadedBytes = ({
   return Math.min(totalFileSize, uploadedBytes);
 };
 
-const fetchRecordsSummaries = async ({ surveyRemoteId, cycle }: any) => {
+const fetchRecordsSummaries = async ({
+  surveyRemoteId,
+  cycle,
+}: {
+  surveyRemoteId: number | undefined;
+  cycle: string | null | undefined;
+}): Promise<RemoteRecordSummary[]> => {
   const { data } = await RemoteService.get(
     `api/survey/${surveyRemoteId}/records/summary`,
     { cycle },
@@ -42,14 +57,17 @@ const fetchRecordsSummaries = async ({ surveyRemoteId, cycle }: any) => {
 const fetchFileUuidsByRecordUuid = async ({
   surveyRemoteId,
   recordUuids,
-}: any): Promise<Record<string, string[]>> => {
+}: {
+  surveyRemoteId: number | undefined;
+  recordUuids: string[];
+}): Promise<Record<string, string[]>> => {
   try {
     const { data } = await RemoteService.post(
       `api/mobile/survey/${surveyRemoteId}/records/file-uuids`,
       { recordUuids },
     );
     return data?.fileUuidsByRecordUuid ?? {};
-  } catch (error: any) {
+  } catch (error) {
     if (HttpErrors.isEndpointNotSupported(error)) {
       // expected with older servers - not worth a warning on every (auto-)sync
       log.debug(
@@ -69,7 +87,12 @@ const startExportRecords = async ({
   cycle,
   recordUuids,
   excludedFileUuids = [],
-}: any) => {
+}: {
+  survey: SurveyWithRemoteId;
+  cycle: string | undefined;
+  recordUuids: string[];
+  excludedFileUuids?: string[];
+}): Promise<ArenaJobSerialized<RecordsExportJobResult>> => {
   const { remoteId: surveyRemoteId } = survey;
   const params = {
     cycle,
@@ -86,7 +109,13 @@ const startExportRecords = async ({
   return job;
 };
 
-const downloadExportedRecordsFile = async ({ survey, fileName }: any) => {
+const downloadExportedRecordsFile = async ({
+  survey,
+  fileName,
+}: {
+  survey: SurveyWithRemoteId;
+  fileName: string;
+}): Promise<string> => {
   const { remoteId: surveyRemoteId } = survey;
   const fileUri = await RemoteService.getFileOrThrow(
     `api/survey/${surveyRemoteId}/records/export/download`,
@@ -116,25 +145,25 @@ const uploadRecords = ({
   skipMissingFiles?: boolean;
   chunkSize?: number;
   onChunkUploaded?: (chunk: number) => void;
-  onUploadProgress: (progressEvent: any) => void;
-}): { promise: Promise<any>; cancel: () => void } => {
+  onUploadProgress: (progressEvent: UploadProgress) => void;
+}): { promise: Promise<AxiosResponse>; cancel: () => void } => {
   const surveyRemoteId = survey.remoteId;
   let fileProcessor: RNFileProcessor | undefined;
 
   const debouncedUploadProgress = Functions.throttle(
-    ({ total, loaded }: any) => {
+    ({ total, loaded }: UploadProgress) => {
       onUploadProgress({ total, loaded });
     },
     1000,
   );
 
-  let lastRequestCancel: any = null;
+  let lastRequestCancel: (() => void) | null = null;
   let chunkFileUri: string | undefined;
   const deleteChunkFile = async () => {
     if (chunkFileUri) await Files.del(chunkFileUri, true);
   };
-  let end: (error: any, result?: any) => void = () => {};
-  const promise = new Promise((resolve, reject) => {
+  let end: (error: unknown, result?: AxiosResponse) => void = () => {};
+  const promise = new Promise<AxiosResponse>((resolve, reject) => {
     let ended = false;
     end = (error, result) => {
       if (ended) return;
@@ -142,7 +171,7 @@ const uploadRecords = ({
       fileProcessor?.close();
       void deleteChunkFile();
       if (error) reject(error);
-      else resolve(result);
+      else resolve(result!);
     };
     fileProcessor = new RNFileProcessor({
       fileId,
@@ -153,7 +182,8 @@ const uploadRecords = ({
         totalChunks,
         totalFileSize,
       }) => {
-        chunkFileUri = (content as any).uri;
+        // RNFileProcessor chunks are file descriptors
+        chunkFileUri = (content as unknown as { uri: string }).uri;
         if (chunk > totalChunks) {
           // e.g. retry after the last chunk was already uploaded
           throw new Error(`chunk ${chunk} out of range (${totalChunks})`);
@@ -171,11 +201,11 @@ const uploadRecords = ({
           conflictResolutionStrategy,
           skipMissingFiles,
         };
-        const progressHandler = (progressEvent: any) => {
+        const progressHandler = (progressEvent: AxiosProgressEvent) => {
           const { progress: uploadedChunkPercent } = progressEvent;
           const uploadedBytes = calculateUploadedBytes({
             chunk,
-            uploadedChunkPercent,
+            uploadedChunkPercent: uploadedChunkPercent!,
             totalFileSize,
             chunkSize,
           });

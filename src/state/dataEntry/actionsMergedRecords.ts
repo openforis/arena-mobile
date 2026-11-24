@@ -1,3 +1,5 @@
+import { ArenaSurvey, LanguageCode } from "@openforis/arena-core";
+
 import { RecordService } from "service";
 
 import { RecordUtils } from "model";
@@ -12,21 +14,29 @@ import { i18n } from "localization";
 
 const { t } = i18n;
 
+type MergedRecordsParams = {
+  dispatch: AppDispatch;
+  survey: ArenaSurvey;
+  lang: LanguageCode;
+  cycle?: string | null;
+  recordUuids: string[];
+};
+
 const showMergedRecordsMessage = async ({
   dispatch,
   survey,
   lang,
   cycle,
   recordUuids,
-}: any) => {
+}: MergedRecordsParams) => {
   const recordsSummary = await RecordService.fetchRecords({
     survey,
     cycle,
     onlyLocal: false,
   });
   const recordsList = recordsSummary
-    .filter((recordSummary: any) => recordUuids.includes(recordSummary.uuid))
-    .map((recordSummary: any) => {
+    .filter((recordSummary) => recordUuids.includes(recordSummary.uuid))
+    .map((recordSummary) => {
       const keyValuesByName = RecordUtils.getRecordSummaryValuesByKeyFormatted({
         survey,
         lang,
@@ -63,7 +73,10 @@ export const fetchMergedRecordsAndNotify = async ({
   recordUuids,
   mergeKeepLocalOriginRecordUuids,
   silent = false,
-}: any): Promise<boolean> => {
+}: MergedRecordsParams & {
+  mergeKeepLocalOriginRecordUuids?: string[];
+  silent?: boolean;
+}): Promise<boolean> => {
   let fetched = false;
   await dispatch(
     fetchRecordsFromServer({
@@ -97,7 +110,11 @@ export const getMergedSameRecordUuidsToFetch = ({
   getState,
   mergedSameRecordUuids,
   silent,
-}: any): string[] => {
+}: {
+  getState: AppGetState;
+  mergedSameRecordUuids: string[];
+  silent: boolean;
+}): string[] => {
   if (!silent) return mergedSameRecordUuids;
   const state = getState();
   if (DataEntrySelectors.selectRecordSyncInProgress(state))
@@ -118,7 +135,7 @@ export const fetchMergedSameRecordsSilently = async ({
   lang,
   cycle,
   recordUuids,
-}: any) => {
+}: MergedRecordsParams & { getState: AppGetState }) => {
   await DataEntryActionsRecordSync.runReplacingRecords(
     recordUuids,
     async () => {

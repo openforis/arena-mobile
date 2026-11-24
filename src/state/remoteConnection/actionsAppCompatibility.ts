@@ -64,7 +64,7 @@ const checkAppVersionSupported =
 
 // shows the "app version not supported" dialog (returning true) if the error is the one returned by the server in that case
 const handleAppVersionNotSupportedError =
-  ({ error, silent = false }: { error: any; silent?: boolean }) =>
+  ({ error, silent = false }: { error: unknown; silent?: boolean }) =>
   (dispatch: AppDispatch): boolean => {
     // unattended operations handle it as any other error
     if (

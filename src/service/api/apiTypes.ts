@@ -4,6 +4,6 @@ import { ArenaDictionary } from "@openforis/arena-core";
 export type RequestOptions = {
   serverUrl: string;
   uri: string;
-  data?: ArenaDictionary<any>;
+  data?: ArenaDictionary<unknown>;
   config?: AxiosRequestConfig;
 };

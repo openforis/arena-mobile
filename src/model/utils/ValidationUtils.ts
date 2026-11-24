@@ -1,13 +1,31 @@
-import { Validations, ValidationSeverity } from "@openforis/arena-core";
+import {
+  ArenaValidation,
+  ArenaValidationResult,
+  LanguageCode,
+  Validations,
+  ValidationSeverity,
+} from "@openforis/arena-core";
+
+export type ValidationTranslateFunction = (
+  key: string,
+  params?: Record<string, unknown>,
+) => string;
+
+type JointTextsParams = {
+  validation: ArenaValidation;
+  t: ValidationTranslateFunction;
+  // language of the custom validation messages
+  customMessageLang?: string;
+};
 
 const customValidationKey = "record.attribute.customValidation";
 
 const validationResultToMessage =
-  ({ customMessageLang, t }: any) =>
-  (validationResult: any) => {
+  ({ customMessageLang, t }: Omit<JointTextsParams, "validation">) =>
+  (validationResult: ArenaValidationResult): string => {
     const { key, params, messages } = validationResult;
     if (key === customValidationKey) {
-      const message = messages[customMessageLang];
+      const message = messages?.[customMessageLang as LanguageCode];
       if (message) {
         return message;
       }
@@ -15,8 +33,13 @@ const validationResultToMessage =
     return t(`validation:${key}`, params);
   };
 
-const getJointTexts = ({ validation, severity, t, customMessageLang }: any) => {
-  const result: any = [];
+const getJointTexts = ({
+  validation,
+  severity,
+  t,
+  customMessageLang,
+}: JointTextsParams & { severity: ValidationSeverity }): string | null => {
+  const result: string[] = [];
 
   Validations.traverse((v) => {
     const validationResults =
@@ -31,7 +54,11 @@ const getJointTexts = ({ validation, severity, t, customMessageLang }: any) => {
   return result.length > 0 ? result.join(", ") : null;
 };
 
-const getJointErrorText = ({ validation, t, customMessageLang }: any) =>
+const getJointErrorText = ({
+  validation,
+  t,
+  customMessageLang,
+}: JointTextsParams) =>
   getJointTexts({
     validation,
     severity: ValidationSeverity.error,
@@ -39,7 +66,11 @@ const getJointErrorText = ({ validation, t, customMessageLang }: any) =>
     customMessageLang,
   });
 
-const getJointWarningText = ({ validation, t, customMessageLang }: any) =>
+const getJointWarningText = ({
+  validation,
+  t,
+  customMessageLang,
+}: JointTextsParams) =>
   getJointTexts({
     validation,
     severity: ValidationSeverity.warning,

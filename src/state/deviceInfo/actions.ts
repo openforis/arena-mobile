@@ -54,7 +54,7 @@ const initDeviceInfo = () => async (dispatch: AppDispatch) => {
 
   orientationChangeSubscription?.remove();
   orientationChangeSubscription = SystemUtils.addOrientationChangeListener(
-    (orientation: any) => {
+    (orientation: number | null) => {
       dispatch(updateOrientation(orientation));
     },
   );
@@ -79,7 +79,13 @@ const determineBatteryStateUpdateActionPayload = ({
   batteryStateChanged,
   batteryLevelMeasureStartTime,
   batteryLevelAtStartTime,
-}: any): Partial<DeviceInfoState> => {
+}: Pick<
+  DeviceInfoState,
+  | "batteryLevel"
+  | "batteryState"
+  | "batteryLevelMeasureStartTime"
+  | "batteryLevelAtStartTime"
+> & { batteryStateChanged: boolean }): Partial<DeviceInfoState> => {
   const payload: Partial<DeviceInfoState> = {};
   Object.assign(payload, {
     batteryLevel,
@@ -168,9 +174,10 @@ const updateIsNetworkConnected =
     dispatch(DeviceInfoSliceActions.update({ isNetworkConnected }));
   };
 
-const updateOrientation = (orientation: any) => (dispatch: AppDispatch) => {
-  dispatch(DeviceInfoSliceActions.update({ orientation }));
-};
+const updateOrientation =
+  (orientation: number | null) => (dispatch: AppDispatch) => {
+    dispatch(DeviceInfoSliceActions.update({ orientation }));
+  };
 
 export const DeviceInfoActions = {
   setDeviceInfo,

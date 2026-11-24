@@ -29,7 +29,13 @@ const initSettings = () => async (dispatch: AppDispatch) => {
 };
 
 const updateSetting =
-  ({ key, value }: any) =>
+  <K extends keyof SettingsObject>({
+    key,
+    value,
+  }: {
+    key: K;
+    value: SettingsObject[K];
+  }) =>
   async (dispatch: AppDispatch) => {
     let canPersist = true;
 
@@ -40,7 +46,7 @@ const updateSetting =
         _stopGpsLocking();
       }
     } else if (key === SettingsModel.SettingKey.language) {
-      changeLanguage(value);
+      changeLanguage(value as SettingsObject["language"]);
     }
     if (canPersist) {
       const settingsUpdated = await SettingsService.updateSetting({

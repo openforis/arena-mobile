@@ -227,9 +227,15 @@ const _fetchRecordFromPreviousCycleAndLinkIt = async ({
   }
 };
 
-const _askPreviousCycleKey = async ({ dispatch, getState }: any) => {
+const _askPreviousCycleKey = async ({
+  dispatch,
+  getState,
+}: {
+  dispatch: AppDispatch;
+  getState: AppGetState;
+}) => {
   const state = getState();
-  const survey = SurveySelectors.selectCurrentSurvey(state);
+  const survey = SurveySelectors.selectCurrentSurvey(state)!;
   const record = DataEntrySelectors.selectRecord(state);
   const { cycle: cycleKey } = record;
   const prevCycleKeys = Cycles.getPrevCycleKeys({ survey, cycleKey });
@@ -281,10 +287,10 @@ const linkToRecordInPreviousCycle =
           lang,
         });
       const { keyValues, prevCycleRecordIds } =
-        (await fetchRecordFromPreviousCycleInternal()) ?? ({} as any);
+        (await fetchRecordFromPreviousCycleInternal()) ?? {};
 
       if (
-        prevCycleRecordIds.length === 0 &&
+        prevCycleRecordIds!.length === 0 &&
         (await ConfirmUtils.confirm({
           dispatch,
           messageKey:
@@ -302,8 +308,8 @@ const linkToRecordInPreviousCycle =
         });
         await fetchRecordFromPreviousCycleInternal();
       }
-    } catch (error: any) {
-      log.error(`${error} - ${error?.stack}`);
+    } catch (error) {
+      log.error(`${error} - ${(error as Error | undefined)?.stack}`);
       dispatch(
         ToastActions.show("dataEntry:recordInPreviousCycle.fetchError", {
           details: String(error),

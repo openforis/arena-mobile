@@ -68,11 +68,16 @@ const fetchCategoryItems = ({
   survey,
   categoryUuid,
   parentItemUuid = null,
-}: any) => {
+}: {
+  survey: ArenaSurvey;
+  categoryUuid: string | undefined;
+  parentItemUuid?: string | null;
+}) => {
   const items = Surveys.getCategoryItems({
     survey,
-    categoryUuid,
-    parentItemUuid,
+    categoryUuid: categoryUuid!,
+    // null and undefined both mean "top level items"
+    parentItemUuid: parentItemUuid ?? undefined,
   });
   items.sort(
     (itemA, itemB) => (itemA.props.index ?? -1) - (itemB.props.index ?? -1),
@@ -81,7 +86,7 @@ const fetchCategoryItems = ({
 };
 
 const fetchSurveySummariesRemote = async (): Promise<
-  { surveys: any[] } | { errorKey: string }
+  { surveys: ArenaSurvey[] } | { errorKey: string }
 > => {
   try {
     const { data } = await RemoteService.get("api/surveys", { draft: false });
@@ -92,14 +97,20 @@ const fetchSurveySummariesRemote = async (): Promise<
   }
 };
 
-const fetchSurveySummaryRemote = async ({ id, name }: any) => {
+const fetchSurveySummaryRemote = async ({
+  id,
+  name,
+}: {
+  id: number;
+  name: string;
+}) => {
   try {
     const { data } = await RemoteService.get("api/surveys", {
       draft: false,
       search: name,
     });
     const { list: surveys } = data;
-    const survey = surveys.find((s: any) => s.id === id);
+    const survey = surveys.find((s: ArenaSurvey) => s.id === id);
     return survey;
   } catch (error) {
     return RemoteService.handleError({ error });
@@ -290,21 +301,27 @@ const withSurveyRemote = async (
   }
 };
 
-const importSurveyRemote = async ({ id }: any) =>
+const importSurveyRemote = async ({ id }: { id: number }) =>
   withSurveyRemote(id, _insertSurvey);
 
-const updateSurveyRemote = async ({ surveyId, surveyRemoteId }: any) =>
+const updateSurveyRemote = async ({
+  surveyId,
+  surveyRemoteId,
+}: {
+  surveyId: number;
+  surveyRemoteId: number;
+}) =>
   withSurveyRemote(surveyRemoteId, (survey) =>
     _updateSurvey({ id: surveyId, survey }),
   );
 
-const deleteSurveys = async (surveyIds: any) => {
+const deleteSurveys = async (surveyIds: number[]) => {
   await SurveyRepository.deleteSurveys(surveyIds);
   // the survey is already gone: a file left behind must not fail the delete
-  const logError = (error: any) =>
+  const logError = (error: unknown) =>
     log.warn(`error deleting survey files: ${error}`);
   await Promise.all(
-    surveyIds.flatMap((surveyId: any) => [
+    surveyIds.flatMap((surveyId) => [
       SurveyFSRepository.deleteSurveyFile({ surveyId }).catch(logError),
       RecordFileService.deleteSurveyRecordFiles({ surveyId }).catch(logError),
     ]),

@@ -60,7 +60,10 @@ export type RecordsExportFileGenerationJobResult = {
   recordsWithMissingFiles: RecordWithMissingFiles[];
 };
 
-export class RecordsExportFileGenerationJob extends JobMobile<RecordsExportFileGenerationJobContext> {
+export class RecordsExportFileGenerationJob extends JobMobile<
+  RecordsExportFileGenerationJobContext,
+  RecordsExportFileGenerationJobResult
+> {
   outputFileUri?: string;
   recordsWithMissingFiles: RecordWithMissingFiles[] = [];
 

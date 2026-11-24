@@ -23,7 +23,10 @@ export type OfflineMapAreaDownloadJobResult = {
   area: OfflineMapArea;
 };
 
-export class OfflineMapAreaDownloadJob extends JobMobile<OfflineMapAreaDownloadJobContext> {
+export class OfflineMapAreaDownloadJob extends JobMobile<
+  OfflineMapAreaDownloadJobContext,
+  OfflineMapAreaDownloadJobResult
+> {
   private downloadedTilesCount = 0;
   private sizeBytes = 0;
   private readonly createdDirUris = new Set<string>();

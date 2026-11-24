@@ -4,15 +4,19 @@ import {
   ArenaUserGroup,
 } from "@openforis/arena-core";
 
+import type { SurveySummaryLocal } from "model";
+
 const stateKey = "survey";
 
+export type CurrentSurvey = ArenaSurvey & { remoteId?: number };
+
 export type SurveyState = {
-  currentSurvey?: (ArenaSurvey & { remoteId?: number }) | null;
+  currentSurvey?: CurrentSurvey | null;
   currentSurveyPreferredLanguage?: LanguageCode | null;
   currentSurveyCycle?: string | null;
   currentSurveyUserGroup?: ArenaUserGroup | null;
   currentSurveyUserGroupReady?: boolean;
-  surveysLocal: any[];
+  surveysLocal: SurveySummaryLocal[];
 };
 
 export const SurveyState = {

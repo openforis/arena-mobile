@@ -9,6 +9,11 @@ export type RecordSummary = ArenaMobileRecord & {
   summaryAttributesObj?: RecordSummaryValues;
 };
 
+// record summary in the records list: the sync status is set only when compared with the server
+export type RecordSummaryWithSyncStatus = RecordSummary & {
+  syncStatus?: string;
+};
+
 // record summary fetched from the server
 export type RemoteRecordSummary = {
   uuid: string;

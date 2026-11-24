@@ -1,4 +1,10 @@
 import {
+  ArenaAnyNodeDef,
+  ArenaRecord,
+  ArenaRecordNode,
+  ArenaRecordNodeValueFile,
+  ArenaSurvey,
+  LanguageCode,
   NodeDefs,
   NodeDefType,
   Numbers,
@@ -26,7 +32,7 @@ import { DataEntryActionsRecordPreviousCycle } from "./actionsRecordPreviousCycl
 import { DataEntrySelectors } from "./selectors";
 import { serializeRecordUpdate } from "./recordUpdateQueue";
 import { selectRecordUpdaterParams } from "./recordUpdaterParams";
-import type { AppDispatch, AppGetState } from "../store";
+import type { AppDispatch, AppGetState, RootState } from "../store";
 import {
   confirmClearNewlyInapplicableValues,
   handleError,
@@ -38,7 +44,19 @@ import {
 const { unlinkFromRecordInPreviousCycle, updatePreviousCyclePageEntity } =
   DataEntryActionsRecordPreviousCycle;
 
-const _isRootKeyDuplicate = async ({ survey, record, lang }: any) => {
+type FileValue = ArenaRecordNodeValueFile | null | undefined;
+
+type SurveyRecordAndLang = {
+  survey: ArenaSurvey;
+  record: ArenaRecord;
+  lang: LanguageCode;
+};
+
+const _isRootKeyDuplicate = async ({
+  survey,
+  record,
+  lang,
+}: SurveyRecordAndLang) => {
   // no other records in preview mode
   if (PreviewMode.isActive) return false;
   const recordSummaries = await RecordService.findRecordSummariesWithSameKeys({
@@ -52,14 +70,23 @@ const _isRootKeyDuplicate = async ({ survey, record, lang }: any) => {
   );
 };
 
-const saveRecordNodeFile = async ({ survey, fileUri, value }: any) => {
+const saveRecordNodeFile = async ({
+  survey,
+  fileUri,
+  value,
+}: {
+  survey: ArenaSurvey;
+  fileUri: string | null;
+  value: FileValue;
+}) => {
   if (!fileUri) return;
   log.debug(
     `Saving record node file with value ${JSON.stringify(value)} and fileUri ${fileUri}`,
   );
   await RecordFileService.saveRecordFile({
-    surveyId: survey.id,
-    fileUuid: value?.fileUuid,
+    surveyId: survey.id!,
+    // set in file values
+    fileUuid: value?.fileUuid as string,
     sourceFileUri: fileUri,
   });
 };
@@ -70,13 +97,18 @@ const deletePreviousRecordNodeFile = async ({
   value,
   node,
   dispatch,
-}: any) => {
-  const fileUuidPrev = node.value?.fileUuid;
+}: {
+  survey: ArenaSurvey;
+  value: FileValue;
+  node: ArenaRecordNode;
+  dispatch: AppDispatch;
+}) => {
+  const fileUuidPrev = (node.value as FileValue)?.fileUuid;
   if (fileUuidPrev && fileUuidPrev !== value?.fileUuid) {
     log.debug(`Deleting previous file with uuid ${fileUuidPrev}`);
     try {
       await RecordFileService.deleteRecordFile({
-        surveyId: survey.id,
+        surveyId: survey.id!,
         fileUuid: fileUuidPrev,
       });
     } catch (error) {
@@ -95,7 +127,12 @@ const checkAndConfirmUpdateNode = async ({
   getState,
   node,
   nodeDef,
-}: any) => {
+}: {
+  dispatch: AppDispatch;
+  getState: AppGetState;
+  node: ArenaRecordNode;
+  nodeDef: ArenaAnyNodeDef;
+}) => {
   const state = getState();
   const survey = SurveySelectors.selectCurrentSurvey(state)!;
   const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
@@ -127,7 +164,11 @@ const _onAttributeUpdated = async ({
   record,
   nodeDef,
   lang,
-}: any) => {
+}: SurveyRecordAndLang & {
+  dispatch: AppDispatch;
+  state: RootState;
+  nodeDef: ArenaAnyNodeDef;
+}) => {
   const cycle = Records.getCycle(record);
   const isRootKeyDef = SurveyDefs.isRootKeyDef({ survey, cycle, nodeDef });
   if (
@@ -165,7 +206,8 @@ export const updateAttribute = ({
   fileUri = null,
 }: {
   uuid: string;
-  value: any;
+  // attribute value: its shape depends on the attribute type
+  value: unknown;
   fileUri?: string | null;
 }) =>
   // resolves to true when the record has the value (applied or already set)
@@ -230,7 +272,11 @@ export const updateAttribute = ({
 
       const isFileDef = NodeDefs.getType(nodeDef) === NodeDefType.file;
       if (isFileDef) {
-        await saveRecordNodeFile({ survey, fileUri, value });
+        await saveRecordNodeFile({
+          survey,
+          fileUri,
+          value: value as FileValue,
+        });
       }
 
       // a sync started meanwhile would be overwritten
@@ -238,7 +284,12 @@ export const updateAttribute = ({
 
       await updateRecord({ dispatch, getState, survey, record: recordUpdated });
       if (isFileDef) {
-        await deletePreviousRecordNodeFile({ survey, value, node, dispatch });
+        await deletePreviousRecordNodeFile({
+          survey,
+          value: value as FileValue,
+          node,
+          dispatch,
+        });
       }
       await _onAttributeUpdated({
         dispatch,
@@ -257,7 +308,7 @@ export const updateAttribute = ({
   });
 
 const performCoordinateValueSrsConversion =
-  ({ nodeUuid, srsTo }: any) =>
+  ({ nodeUuid, srsTo }: { nodeUuid: string; srsTo: string }) =>
   (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
@@ -279,7 +330,15 @@ const performCoordinateValueSrsConversion =
   };
 
 export const updateCoordinateValueFromLatLong =
-  ({ nodeUuid, latitude, longitude }: any) =>
+  ({
+    nodeUuid,
+    latitude,
+    longitude,
+  }: {
+    nodeUuid: string;
+    latitude: number;
+    longitude: number;
+  }) =>
   (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
@@ -305,8 +364,15 @@ export const updateCoordinateValueFromLatLong =
   };
 
 export const updateCoordinateValueSrs =
-  ({ nodeUuid, srsTo }: any) =>
+  ({
+    nodeUuid: nodeUuidParam,
+    srsTo,
+  }: {
+    nodeUuid: string | undefined;
+    srsTo: string | undefined;
+  }) =>
   (dispatch: AppDispatch, getState: AppGetState) => {
+    const nodeUuid = nodeUuidParam!;
     const state = getState();
     const record = DataEntrySelectors.selectRecord(state);
 
@@ -332,7 +398,9 @@ export const updateCoordinateValueSrs =
           confirmButtonTextKey: "dataEntry:coordinate.convert",
           cancelButtonTextKey: "dataEntry:coordinate.keepXAndY",
           onConfirm: () =>
-            dispatch(performCoordinateValueSrsConversion({ nodeUuid, srsTo })),
+            dispatch(
+              performCoordinateValueSrsConversion({ nodeUuid, srsTo: srsTo! }),
+            ),
           onCancel: async () => {
             await dispatch(
               updateAttribute({ uuid: nodeUuid, value: nextValue }),
@@ -347,14 +415,18 @@ export const addNewAttribute = ({
   nodeDef,
   parentNodeUuid,
   value = null,
-}: any) =>
+}: {
+  nodeDef: ArenaAnyNodeDef;
+  parentNodeUuid: string | undefined;
+  value?: unknown;
+}) =>
   serializeRecordUpdate(async (dispatch, getState) => {
     if (isRecordSyncInProgress(dispatch, getState)) return;
     const state = getState();
     const updaterParams = selectRecordUpdaterParams(state);
     const { survey } = updaterParams;
     const record = DataEntrySelectors.selectRecord(state);
-    const parentNode = Records.getNodeByUuid(parentNodeUuid)(record);
+    const parentNode = Records.getNodeByUuid(parentNodeUuid!)(record);
 
     const { record: recordUpdated, nodes: nodesCreated } =
       await RecordUpdater.createNodeAndDescendants({

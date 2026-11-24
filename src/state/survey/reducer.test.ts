@@ -93,7 +93,19 @@ describe("SurveyReducer", () => {
       SurveySliceActions.currentSurveyCycleSet("1"),
     );
     expect(state.currentSurveyCycle).toBe("1");
-    state = SurveyReducer(state, SurveySliceActions.surveysLocalSet([survey]));
-    expect(state.surveysLocal).toEqual([survey]);
+    const surveySummary = {
+      id: 1,
+      serverUrl: "localhost",
+      remoteId: 1,
+      uuid: survey.uuid,
+      name: "survey",
+      label: null,
+      dateModified: "2024-01-01",
+    };
+    state = SurveyReducer(
+      state,
+      SurveySliceActions.surveysLocalSet([surveySummary]),
+    );
+    expect(state.surveysLocal).toEqual([surveySummary]);
   });
 });
