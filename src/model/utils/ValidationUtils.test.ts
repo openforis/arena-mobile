@@ -1,6 +1,11 @@
+import type {
+  ArenaValidation,
+  ArenaValidationResult,
+} from "@openforis/arena-core";
+
 import { ValidationUtils } from "./ValidationUtils";
 
-const t = (key: string, params?: any) =>
+const t = (key: string, params?: Record<string, unknown>) =>
   params ? `${key}${JSON.stringify(params)}` : key;
 
 const customValidationKey = "record.attribute.customValidation";
@@ -11,11 +16,11 @@ const validation = ({
   fields,
   valid = false,
 }: {
-  errors?: any[];
-  warnings?: any[];
-  fields?: any;
+  errors?: Partial<ArenaValidationResult>[];
+  warnings?: Partial<ArenaValidationResult>[];
+  fields?: Record<string, ArenaValidation>;
   valid?: boolean;
-}) => ({ valid, errors, warnings, fields });
+}) => ({ valid, errors, warnings, fields }) as ArenaValidation;
 
 describe("ValidationUtils", () => {
   test("returns null when there are no messages", () => {

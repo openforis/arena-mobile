@@ -1,10 +1,10 @@
-import { Sort } from "model/Sort";
+import { Sort, SortObject } from "model/Sort";
 
 import { ArrayUtils } from "./ArrayUtils";
 
 const { findByUuid, indexByUuid, sortByProps } = ArrayUtils;
 
-const sorted = (array: any[], sortObj: any) => {
+const sorted = <T extends object>(array: T[], sortObj: SortObject) => {
   const copy = [...array];
   sortByProps(sortObj)(copy);
   return copy;

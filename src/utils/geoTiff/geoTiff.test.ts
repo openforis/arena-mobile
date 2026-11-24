@@ -25,7 +25,10 @@ const expectedByFile: Record<string, Expected> = JSON.parse(
 
 const openImage = async (fileName: string) => {
   const source = GeoTiffFileSource.open(path.join(FIXTURES_DIR, fileName));
-  const tiff = await GeoTIFF.fromSource(source as any);
+  // implements the fetch() of the geotiff BaseSource (not a subclass)
+  const tiff = await GeoTIFF.fromSource(
+    source as unknown as Parameters<typeof GeoTIFF.fromSource>[0],
+  );
   return { source, tiff, image: await tiff.getImage(0) };
 };
 

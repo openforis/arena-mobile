@@ -1,4 +1,6 @@
 import {
+  ArenaRecord,
+  ArenaSurvey,
   Records,
   RecordBuilder,
   RecordNodeBuilders,
@@ -39,10 +41,14 @@ const buildUserGroup = (teamValue: string): ArenaUserGroup =>
     },
   }) as ArenaUserGroup;
 
-const getAttributeValue = (record: any, name: string, survey: any) => {
-  const nodeDef = Object.values(survey.nodeDefs).find(
-    (def: any) => def.props.name === name,
-  ) as any;
+const getAttributeValue = (
+  record: ArenaRecord,
+  name: string,
+  survey: ArenaSurvey,
+) => {
+  const nodeDef = Object.values(survey.nodeDefs ?? {}).find(
+    (def) => def.props.name === name,
+  )!;
   return Records.getNodesByDefUuid(nodeDef.uuid)(record)[0]?.value;
 };
 

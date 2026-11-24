@@ -1,5 +1,4 @@
 import { configureStore, UnknownAction } from "@reduxjs/toolkit";
-import type { ArenaRecord, ArenaSurvey } from "@openforis/arena-core";
 
 import type { AppDispatch, AppGetState } from "state/store";
 

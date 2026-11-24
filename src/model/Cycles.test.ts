@@ -1,3 +1,5 @@
+import type { ArenaSurvey } from "@openforis/arena-core";
+
 import { Cycles } from "./Cycles";
 
 const surveyWithCycles = (cycleKeys: string[]) =>
@@ -5,7 +7,7 @@ const surveyWithCycles = (cycleKeys: string[]) =>
     props: {
       cycles: Object.fromEntries(cycleKeys.map((key) => [key, {}])),
     },
-  }) as any;
+  }) as ArenaSurvey;
 
 describe("Cycles", () => {
   test("getPrevCycleKey", () => {
@@ -23,7 +25,10 @@ describe("Cycles", () => {
     ]);
     expect(Cycles.getPrevCycleKeys({ survey, cycleKey: "0" })).toEqual([]);
     expect(
-      Cycles.getPrevCycleKeys({ survey: { props: {} } as any, cycleKey: "0" }),
+      Cycles.getPrevCycleKeys({
+        survey: { props: {} } as ArenaSurvey,
+        cycleKey: "0",
+      }),
     ).toEqual([]);
   });
 

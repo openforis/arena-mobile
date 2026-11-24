@@ -1,3 +1,5 @@
+import type { ArenaSurvey } from "@openforis/arena-core";
+
 import { Files } from "utils/Files";
 
 import { AreaOfInterestProviderDefault } from "./areaOfInterestProvider";
@@ -6,8 +8,13 @@ jest.mock("utils/Files", () => ({ Files: { readJsonFromFile: jest.fn() } }));
 
 jest.mock("./repository/surveyFSRepository", () => ({
   SurveyFSRepository: {
-    getSurveyPackageFileUri: ({ surveyId, fileUuid }: any) =>
-      `${surveyId}/surveyfiles/${fileUuid}.bin`,
+    getSurveyPackageFileUri: ({
+      surveyId,
+      fileUuid,
+    }: {
+      surveyId: number;
+      fileUuid: string;
+    }) => `${surveyId}/surveyfiles/${fileUuid}.bin`,
   },
 }));
 
@@ -25,17 +32,18 @@ const polygon = {
   ],
 };
 
-const newSurvey = (id: number): any => ({
-  id,
-  props: {
-    areasOfInterest: [
-      { name: "valid", fileUuid: "file-valid" },
-      { name: "invalid", fileUuid: "file-invalid" },
-    ],
-  },
-});
+const newSurvey = (id: number) =>
+  ({
+    id,
+    props: {
+      areasOfInterest: [
+        { name: "valid", fileUuid: "file-valid" },
+        { name: "invalid", fileUuid: "file-invalid" },
+      ],
+    },
+  }) as unknown as ArenaSurvey;
 
-const contentByUri: Record<string, any> = {
+const contentByUri: Record<string, object> = {
   "1/surveyfiles/file-valid.bin": polygon,
   "1/surveyfiles/file-invalid.bin": { type: "Point", coordinates: [0, 0] },
   "2/surveyfiles/file-valid.bin": polygon,
@@ -47,7 +55,7 @@ describe("AreaOfInterestProviderDefault", () => {
   beforeEach(() => {
     readJsonFromFileMock.mockReset();
     readJsonFromFileMock.mockImplementation(
-      async ({ fileUri }: any) => contentByUri[fileUri] ?? null,
+      async ({ fileUri }: { fileUri: string }) => contentByUri[fileUri] ?? null,
     );
   });
 

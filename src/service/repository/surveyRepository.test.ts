@@ -1,3 +1,5 @@
+import type { ArenaSurvey } from "@openforis/arena-core";
+
 import { dbClient } from "db";
 
 import { SurveyRepository } from "./surveyRepository";
@@ -22,18 +24,19 @@ const buildSurvey = ({
 }: {
   uuid?: string;
   descriptions?: Record<string, string>;
-}): any => ({
-  id: 10,
-  uuid,
-  dateCreated: "2026-01-01T10:00:00.000Z",
-  datePublished: "2026-01-02T10:00:00.000Z",
-  props: {
-    name: `survey_${uuid}`,
-    languages: ["fr", "en"],
-    labels: { en: "Survey", fr: "Enquête" },
-    descriptions,
-  },
-});
+}) =>
+  ({
+    id: 10,
+    uuid,
+    dateCreated: "2026-01-01T10:00:00.000Z",
+    datePublished: "2026-01-02T10:00:00.000Z",
+    props: {
+      name: `survey_${uuid}`,
+      languages: ["fr", "en"],
+      labels: { en: "Survey", fr: "Enquête" },
+      descriptions,
+    },
+  }) as ArenaSurvey;
 
 const fetchSummary = async (id: number) =>
   (await SurveyRepository.fetchSurveySummaries()).find(
