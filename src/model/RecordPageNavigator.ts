@@ -11,13 +11,12 @@ import {
 
 import { RecordUtils } from "model/utils/RecordUtils";
 
-import type { RecordCurrentPageEntity } from "./RecordCurrentPageEntity";
-
-// null uuids: root entity (no parent) or list of entities (no entity selected)
+// empty uuids: root entity (no parent) or list of entities (no entity selected);
+// the current page entity (RecordCurrentPageEntity) is a pointer too
 export type RecordPageEntityPointer = {
-  parentEntityUuid: string | null | undefined;
+  parentEntityUuid?: string | null;
   entityDef: ArenaNodeDefEntity;
-  entityUuid: string | null | undefined;
+  entityUuid?: string | null;
   index?: number;
 };
 
@@ -26,7 +25,7 @@ type SurveyAndRecord = { survey: ArenaSurvey; record: ArenaRecord };
 type CurrentEntityPointerParams = {
   survey: ArenaSurvey | undefined;
   record: ArenaRecord;
-  currentEntityPointer: RecordCurrentPageEntity;
+  currentEntityPointer: RecordPageEntityPointer;
 };
 
 const getSingleChildNodeUuid = ({
