@@ -17,6 +17,7 @@ type SurveyRow = {
   uuid: string;
   name: string;
   label: string | null;
+  description: string | null;
   content: string;
   date_created: string;
   date_modified: string;
@@ -25,20 +26,24 @@ type SurveyRow = {
 const getSurveyLabel = (survey: ArenaSurveyOrSummary) =>
   Surveys.getLabel(Surveys.getDefaultLanguage(survey))(survey);
 
+const getSurveyDescription = (survey: ArenaSurveyOrSummary): string | null =>
+  Surveys.getDescription()(survey) || null;
+
 const insertSurvey = async (survey: ArenaSurvey): Promise<SurveyMobile> => {
   const { id, uuid, dateCreated, datePublished, dateModified } = survey;
   const surveyMobile = survey as SurveyMobile;
   const name = Surveys.getName(survey);
   const label = getSurveyLabel(survey);
   const { insertId } = await dbClient.runSql(
-    `INSERT INTO survey (server_url, remote_id, uuid, name, label, content, date_created, date_modified)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO survey (server_url, remote_id, uuid, name, label, description, content, date_created, date_modified)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       surveyMobile.serverUrl || "localhost",
       id,
       uuid,
       name,
       label,
+      getSurveyDescription(survey),
       "", // always save empty content (stored in FS)
       dateCreated,
       datePublished ?? dateModified,
@@ -58,11 +63,12 @@ const updateSurvey = async ({
 }): Promise<SurveyMobile> => {
   const surveyMobile = survey as SurveyMobile;
   await dbClient.runSql(
-    `UPDATE survey SET name = ?, label = ?, content = ?, date_created = ?, date_modified = ?
+    `UPDATE survey SET name = ?, label = ?, description = ?, content = ?, date_created = ?, date_modified = ?
      WHERE id = ?`,
     [
       survey.props.name,
       getSurveyLabel(survey),
+      getSurveyDescription(survey),
       "", // always set content to empty (stored in FS)
       survey.dateCreated,
       survey.datePublished ?? survey.dateModified,
@@ -72,6 +78,19 @@ const updateSurvey = async ({
   surveyMobile.remoteId = survey.id!;
   surveyMobile.id = id;
   return surveyMobile;
+};
+
+const updateSurveyDescription = async ({
+  id,
+  survey,
+}: {
+  id: number;
+  survey: ArenaSurveyOrSummary;
+}) => {
+  await dbClient.runSql(`UPDATE survey SET description = ? WHERE id = ?`, [
+    getSurveyDescription(survey),
+    id,
+  ]);
 };
 
 const fetchSurveyById = async (id: number) => {
@@ -92,7 +111,7 @@ const fetchSurveySummaries = async (): Promise<SurveySummaryLocal[]> => {
   const surveys = await dbClient.many<
     Omit<SurveyRow, "content" | "date_created">
   >(
-    `SELECT id, server_url, remote_id, uuid, name, label, date_modified
+    `SELECT id, server_url, remote_id, uuid, name, label, description, date_modified
     FROM survey
     ORDER BY name`,
   );
@@ -128,5 +147,6 @@ export const SurveyRepository = {
   fetchSurveySummaries,
   insertSurvey,
   updateSurvey,
+  updateSurveyDescription,
   deleteSurveys,
 };

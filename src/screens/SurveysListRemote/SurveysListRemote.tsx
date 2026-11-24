@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { useNavigator } from "navigation/navigator";
 
-import { DateFormats, Dates, Surveys } from "@openforis/arena-core";
+import { Surveys } from "@openforis/arena-core";
 
 import {
   DataVisualizer,
@@ -10,7 +10,6 @@ import {
   Loader,
   Searchbar,
   Text,
-  ViewMoreText,
   VView,
 } from "components";
 import { useNavigationFocus } from "hooks";
@@ -25,6 +24,10 @@ import {
 } from "state";
 
 import type { SurveySummaryLocal, SurveySummaryRemote } from "model";
+import {
+  SurveyDatePublishedCell,
+  SurveyDescriptionCell,
+} from "../SurveysList/SurveyCells";
 import { useSurveysSearch } from "../SurveysList/useSurveysSearch";
 import { getSurveyLoadStatusKey } from "./surveyLoadStatus";
 
@@ -44,30 +47,11 @@ const minSurveysToShowSearchBar = 5;
 
 type SurveyRemoteItem = SurveySummaryRemote & {
   key: string;
+  description: string | null;
   loadStatusKey: string;
 };
 
 type SurveyRemoteCellProps = DataVisualizerCellProps<SurveyRemoteItem>;
-
-const DescriptionCellRenderer = ({ item }: SurveyRemoteCellProps) => {
-  const defaultLanguage = Surveys.getDefaultLanguage(item);
-  const description = item.props?.descriptions?.[defaultLanguage];
-  return description ? (
-    <ViewMoreText numberOfLines={3}>
-      <Text>{description}</Text>
-    </ViewMoreText>
-  ) : null;
-};
-
-const DatePublishedCellRenderer = ({ item }: SurveyRemoteCellProps) => (
-  <Text>
-    {Dates.convertDate({
-      dateStr: item.datePublished,
-      formatFrom: DateFormats.datetimeStorage,
-      formatTo: DateFormats.datetimeDisplay,
-    })}
-  </Text>
-);
 
 // loadStatusKey is computed with the items
 const StatusCell = ({ item }: SurveyRemoteCellProps) => (
@@ -96,13 +80,13 @@ export const SurveysListRemote = () => {
           key: "description",
           header: "surveys:description",
           cardRole: "body",
-          cellRenderer: DescriptionCellRenderer,
+          cellRenderer: SurveyDescriptionCell,
         },
         {
           key: "datePublished",
           header: "surveys:publishedOn",
           cardRole: "footer",
-          cellRenderer: DatePublishedCellRenderer,
+          cellRenderer: SurveyDatePublishedCell,
         },
       ];
       return cardFields;
@@ -123,13 +107,13 @@ export const SurveysListRemote = () => {
         key: "description",
         header: "surveys:description",
         optional: true,
-        cellRenderer: DescriptionCellRenderer,
+        cellRenderer: SurveyDescriptionCell,
       },
       {
         key: "datePublished",
         header: "surveys:publishedOn",
         optional: true,
-        cellRenderer: DatePublishedCellRenderer,
+        cellRenderer: SurveyDatePublishedCell,
       },
       {
         key: "loadStatus",
@@ -232,6 +216,7 @@ export const SurveysListRemote = () => {
       surveysFiltered.map((survey) => ({
         key: survey.uuid,
         ...survey,
+        description: Surveys.getDescription()(survey) ?? null,
         loadStatusKey: getSurveyLoadStatusKey({
           survey,
           localSurvey: surveysLocalByUuid.get(survey.uuid),

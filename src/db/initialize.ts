@@ -7,6 +7,7 @@ import { migration_005_record_date_modified_synced } from "./migrations/005";
 import { migration_006_record_indexes } from "./migrations/006";
 import { migration_007_record_fixed_for } from "./migrations/007";
 import { migration_008_record_validation_counts } from "./migrations/008";
+import { migration_009_survey_description } from "./migrations/009";
 
 const dbName = "arena_mobile.db";
 const debug = true;
@@ -19,6 +20,7 @@ export const dbMigrations: DbMigration[] = [
   migration_006_record_indexes,
   migration_007_record_fixed_for,
   migration_008_record_validation_counts,
+  migration_009_survey_description,
 ];
 
 /** Application's SQLite client */
