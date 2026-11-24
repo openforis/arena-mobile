@@ -10,20 +10,20 @@ describe("getSurveyLoadStatusKey", () => {
     );
   });
 
-  test("updated when the remote survey was published later", () => {
+  test("updated when the remote survey was published after the local copy", () => {
     expect(
       getSurveyLoadStatusKey({
         survey: { datePublished: newer },
-        localSurvey: { datePublished: older },
+        localSurvey: { dateModified: older },
       }),
     ).toBe("surveys:loadStatus.updated");
   });
 
-  test("up to date", () => {
+  test("up to date when the local copy has the same publish date", () => {
     expect(
       getSurveyLoadStatusKey({
         survey: { datePublished: older },
-        localSurvey: { datePublished: older },
+        localSurvey: { dateModified: older },
       }),
     ).toBe("surveys:loadStatus.upToDate");
   });
