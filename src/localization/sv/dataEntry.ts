@@ -238,6 +238,8 @@ Vill du hämta den igen från servern?`,
     headingSourceMagnetometer: "Sensor",
     headingSourceLocation: "GPS",
     keepXAndY: "Behåll X och Y",
+    locationCannotBeConvertedToSrs:
+      "GPS-positionen kan inte konverteras till koordinatsystemet {{srs}}",
     locationHeadingNotAvailable: "GPS-riktning är inte tillgänglig!",
     magnetometerNotAvailable: "Magnetometer inte tillgänglig!",
     navigateToTarget: "Navigera till mål",

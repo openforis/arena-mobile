@@ -290,6 +290,7 @@ export default {
     headingSourceMagnetometer: "センサー",
     headingSourceLocation: "GPS",
     keepXAndY: "XとYを保持",
+    locationCannotBeConvertedToSrs: "GPS位置を座標系 {{srs}} に変換できません",
     locationHeadingNotAvailable: "GPS方位が利用できません！",
     magnetometerNotAvailable: "方位センサーが利用できません！",
     navigateToTarget: "目標に向かってナビゲート",

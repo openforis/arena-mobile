@@ -292,6 +292,8 @@ Fetch the list of records from the server and try again?`,
     headingSourceMagnetometer: "Sensor",
     headingSourceLocation: "GPS",
     keepXAndY: "Keep X and Y",
+    locationCannotBeConvertedToSrs:
+      "The GPS location cannot be converted to the coordinate system {{srs}}",
     locationHeadingNotAvailable: "GPS heading not available!",
     magnetometerNotAvailable: "Magnetometer not available!",
     navigateToTarget: "Navigate to target",
