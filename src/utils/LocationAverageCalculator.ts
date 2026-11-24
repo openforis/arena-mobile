@@ -103,69 +103,40 @@ export class LocationAverager {
     }
 
     // --- 6. Average the remaining (filtered) coordinates ---
-    const finalTotal: {
-      latitude: number;
-      longitude: number;
-      accuracy: number;
-    } & OptionalSummableProps = {
-      latitude: 0,
-      longitude: 0,
-      accuracy: 0,
-      altitude: null,
-      altitudeAccuracy: null,
-      speed: null,
-    };
-    for (const filteredReading of filteredReadings) {
-      finalTotal.latitude += filteredReading.latitude;
-      finalTotal.longitude += filteredReading.longitude;
-      finalTotal.accuracy += filteredReading.accuracy!;
-      addPropertyFromSource(finalTotal, filteredReading, "altitude");
-      addPropertyFromSource(finalTotal, filteredReading, "altitudeAccuracy");
-      addPropertyFromSource(finalTotal, filteredReading, "speed");
-    }
+    const valuesOf = <K extends keyof LocationPoint>(key: K) =>
+      filteredReadings.map((reading) => reading[key]);
 
-    const count = filteredReadings.length;
+    // accuracy is never null here: readings without it were filtered out
+    const averageOf = (key: "latitude" | "longitude" | "accuracy") =>
+      averageOfAvailable(valuesOf(key))!;
 
     return {
-      latitude: finalTotal.latitude / count,
-      longitude: finalTotal.longitude / count,
-      accuracy: finalTotal.accuracy / count,
-      altitude:
-        finalTotal.altitude === null
-          ? null
-          : (finalTotal.altitude as number) / count,
-      altitudeAccuracy:
-        finalTotal.altitudeAccuracy === null
-          ? null
-          : (finalTotal.altitudeAccuracy as number) / count,
-      heading: calculateCircularMean(
-        filteredReadings.map((reading) => reading.heading),
-      ),
-      speed:
-        finalTotal.speed === null ? null : (finalTotal.speed as number) / count,
-      count,
+      latitude: averageOf("latitude"),
+      longitude: averageOf("longitude"),
+      accuracy: averageOf("accuracy"),
+      altitude: averageOfAvailable(valuesOf("altitude")),
+      altitudeAccuracy: averageOfAvailable(valuesOf("altitudeAccuracy")),
+      heading: calculateCircularMean(valuesOf("heading")),
+      speed: averageOfAvailable(valuesOf("speed")),
+      count: filteredReadings.length,
     };
   }
 }
 
-type OptionalSummableProps = {
-  altitude?: number | null;
-  altitudeAccuracy?: number | null;
-  speed?: number | null;
-};
-
-const addPropertyFromSource = (
-  target: OptionalSummableProps,
-  source: OptionalSummableProps,
-  property: keyof OptionalSummableProps,
-) => {
-  const targetValue = target[property];
-  const sourceValue = source[property];
-  if (targetValue === undefined || targetValue === null) {
-    target[property] = sourceValue;
-  } else if (sourceValue !== undefined && sourceValue !== null) {
-    target[property] = targetValue + sourceValue;
+/**
+ * Averages the values that are available (not null or undefined); null if none is.
+ */
+const averageOfAvailable = (
+  values: (number | null | undefined)[],
+): number | null => {
+  let sum = 0;
+  let count = 0;
+  for (const value of values) {
+    if (value === null || value === undefined) continue;
+    sum += value;
+    count += 1;
   }
+  return count === 0 ? null : sum / count;
 };
 
 // --- Helper Methods ---
