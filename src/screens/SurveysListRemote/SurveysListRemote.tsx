@@ -179,7 +179,7 @@ export const SurveysListRemote = () => {
       ...statePrev,
       errorKey,
       loading: false,
-      surveys: _surveys.filter(Surveys.isVisibleInMobile),
+      surveys: _surveys.filter((survey) => Surveys.isVisibleInMobile(survey)),
     }));
   }, [dispatch, navigator]);
 

@@ -62,9 +62,7 @@ export type AppBarProps = {
   options: NativeStackHeaderProps["options"] & AppBarScreenOptions;
 };
 
-type Props = AppBarProps;
-
-type AppBarInternalProps = Props & {
+type AppBarInternalProps = AppBarProps & {
   editingRecord: boolean;
   isInTwoRows: boolean;
   screenKey: string;
@@ -241,7 +239,7 @@ const AppBarInternal = (props: AppBarInternalProps) => {
   );
 };
 
-const RecordEditorAppBar = (props: Props) => {
+const RecordEditorAppBar = (props: AppBarProps) => {
   const editingRecord = DataEntrySelectors.useIsEditingRecord();
   const isLandscape = DeviceInfoSelectors.useOrientationIsLandscape();
   const showRecordCompletion = SettingsSelectors.useShowRecordCompletion();
@@ -259,7 +257,7 @@ const RecordEditorAppBar = (props: Props) => {
   );
 };
 
-export const AppBar = (props: Props) => {
+export const AppBar = (props: AppBarProps) => {
   const screenKey = useScreenKey();
   return screenKey === screenKeys.recordEditor ? (
     <RecordEditorAppBar {...props} />
