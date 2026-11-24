@@ -24,6 +24,7 @@ import { LocationNavigator } from "./LocationNavigator";
 import { CoordinateTargetMapButton } from "./CoordinateTargetMapButton";
 import { useCoordinateMapTitleParams } from "./useCoordinateMapTitleParams";
 import { NodeComponentProps } from "../nodeComponentPropTypes";
+import { CoordinateUiField } from "./coordinateValueTypes";
 
 import styles from "./styles";
 
@@ -81,7 +82,7 @@ export const NodeCoordinateComponent = memo((props: Props) => {
       fieldKey,
       labelStyle = styles.formItemLabel,
     }: {
-      fieldKey: string;
+      fieldKey: CoordinateUiField;
       labelStyle?: StyleProp<TextStyle>;
     }) => (
       <HView key={fieldKey} style={styles.formItem}>

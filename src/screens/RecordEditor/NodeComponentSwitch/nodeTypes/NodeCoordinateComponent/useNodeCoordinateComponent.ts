@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 
 import {
   ArenaNodeDefCoordinate,
+  ArenaRecordNodeValueCoordinate,
   NodeDefs,
   Numbers,
   Objects,
@@ -26,10 +27,7 @@ import { log } from "utils";
 import { useNodeComponentLocalState } from "../../../useNodeComponentLocalState";
 import { useCoordinateDistanceTarget } from "./useCoordinateDistanceTarget";
 import { NodeComponentProps } from "../nodeComponentPropTypes";
-import {
-  CoordinateUiValue,
-  CoordinateValueWithExtraFields,
-} from "./coordinateValueTypes";
+import { CoordinateUiField, CoordinateUiValue } from "./coordinateValueTypes";
 
 const stringToNumber = (str: string | undefined) => Numbers.toNumber(str);
 const numberToString = (
@@ -85,10 +83,7 @@ const locationToUiValue = ({
   });
 
   for (const field of includedExtraFields) {
-    result[field] = numberToString(
-      (location as Partial<Record<string, number | null>>)[field],
-      2,
-    );
+    result[field] = numberToString(location[field], 2);
   }
   // always include accuracy
   result.accuracy = numberToString(accuracy, 2);
@@ -128,7 +123,7 @@ export const useNodeCoordinateComponent = (
   const { compassNavigatorVisible } = state;
 
   const nodeValueToUiValue = useCallback(
-    (nodeValue: CoordinateValueWithExtraFields | null): CoordinateUiValue => {
+    (nodeValue: ArenaRecordNodeValueCoordinate | null): CoordinateUiValue => {
       const { x, y, srs = defaultSrsCode } = nodeValue ?? {};
 
       const result = pointToUiValue({ x, y, srs });
@@ -143,12 +138,12 @@ export const useNodeCoordinateComponent = (
   const uiValueToNodeValue = useCallback(
     (
       uiValue: CoordinateUiValue | null,
-    ): CoordinateValueWithExtraFields | null => {
+    ): ArenaRecordNodeValueCoordinate | null => {
       const { x, y, srs } = uiValue ?? {};
 
       if (Objects.isEmpty(x) && Objects.isEmpty(y)) return null;
 
-      const result: CoordinateValueWithExtraFields = {
+      const result: ArenaRecordNodeValueCoordinate = {
         x: stringToNumber(x),
         y: stringToNumber(y),
         srs: srs!,
@@ -163,24 +158,23 @@ export const useNodeCoordinateComponent = (
 
   const isNodeValueEqual = useCallback(
     (
-      nodeValueA: CoordinateValueWithExtraFields | null,
-      nodeValueB: CoordinateValueWithExtraFields | null,
+      nodeValueA: ArenaRecordNodeValueCoordinate | null,
+      nodeValueB: ArenaRecordNodeValueCoordinate | null,
     ) => {
       const transformCoordinateValue = (
-        coordVal: CoordinateValueWithExtraFields | null,
+        coordVal: ArenaRecordNodeValueCoordinate | null,
       ) => {
         if (!coordVal) return null;
-        const coordValCleaned = Object.entries(coordVal).reduce(
-          (acc, [key, value]) => {
-            if (includedFields.has(key)) {
-              acc[key] = nonNumericFields.has(key)
-                ? value
-                : Numbers.toNumber(value);
-            }
-            return acc;
-          },
-          {} as CoordinateValueWithExtraFields,
-        );
+        const coordValCleaned = Object.entries(coordVal).reduce<
+          Record<string, unknown>
+        >((acc, [key, value]) => {
+          if (includedFields.has(key)) {
+            acc[key] = nonNumericFields.has(key)
+              ? value
+              : Numbers.toNumber(value);
+          }
+          return acc;
+        }, {});
 
         if (!coordValCleaned.srs) {
           coordValCleaned.srs = defaultSrsCode;
@@ -232,7 +226,7 @@ export const useNodeCoordinateComponent = (
   );
 
   const onChangeValueField = useCallback(
-    (fieldKey: string) => (val: string) => {
+    (fieldKey: CoordinateUiField) => (val: string) => {
       const valueNext = { ...uiValue, [fieldKey]: val } as CoordinateUiValue;
       onValueChange({ value: valueNext });
     },
