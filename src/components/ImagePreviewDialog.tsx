@@ -79,7 +79,7 @@ const ImageInfo = (props: ImageInfoProps) => {
     Objects.isNotEmpty(latitude) && Objects.isNotEmpty(longitude);
 
   const locationString = isValidLocation
-    ? `${Numbers.formatDecimal(latitude as number, 4)}, ${Numbers.formatDecimal(longitude as number, 4)}`
+    ? `${Numbers.formatDecimal(latitude, 4)}, ${Numbers.formatDecimal(longitude, 4)}`
     : "-";
 
   const locationStringFull = isValidLocation

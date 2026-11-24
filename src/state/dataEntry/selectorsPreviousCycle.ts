@@ -65,7 +65,7 @@ const selectPreviousCycleRecordPageEntity = (
 
 const selectPreviousCycleRecordAttributeValues =
   ({ nodeDef, parentNodeUuid }: PreviousCycleAttributeValuesParams) =>
-  (state: RootState): { uuid: string; value: any }[] | null => {
+  (state: RootState): { uuid: string; value: unknown }[] | null => {
     if (!parentNodeUuid) {
       return null;
     }
@@ -121,7 +121,7 @@ export const PreviousCycleSelectors = {
     nodeDef,
     parentNodeUuid,
   }: PreviousCycleAttributeValuesParams):
-    { uuid: string; value: any }[] | null =>
+    { uuid: string; value: unknown }[] | null =>
     useAppSelector(
       selectPreviousCycleRecordAttributeValues({ nodeDef, parentNodeUuid }),
       Objects.isEqual,

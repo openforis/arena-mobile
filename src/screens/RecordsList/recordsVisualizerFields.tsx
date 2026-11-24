@@ -76,11 +76,11 @@ const getSyncStatusCellRenderer = ({
   syncStatusLoading ? LoadingIconCellRenderer : RecordSyncStatusIcon;
 
 const RecordErrorsListCellRenderer = ({ item }: RecordListCellProps) => (
-  <Text>{Validations.getErrorsCount(item.validation!)}</Text>
+  <Text>{Validations.getErrorsCount(item.validation)}</Text>
 );
 
 const RecordWarningsListCellRenderer = ({ item }: RecordListCellProps) => (
-  <Text>{Validations.getWarningsCount(item.validation!)}</Text>
+  <Text>{Validations.getWarningsCount(item.validation)}</Text>
 );
 
 export const buildKeySummaryFields = ({

@@ -1,4 +1,4 @@
-import type { ArenaSurvey } from "@openforis/arena-core";
+import type { ArenaSurveySummary } from "@openforis/arena-core";
 
 // survey stored in the device db (content not loaded)
 export type SurveySummaryLocal = {
@@ -13,11 +13,8 @@ export type SurveySummaryLocal = {
 };
 
 // survey summary returned by the server (only published surveys are fetched)
-export type SurveySummaryRemote = ArenaSurvey & {
+export type SurveySummaryRemote = ArenaSurveySummary & {
   id: number;
-  name?: string;
-  label?: string;
-  defaultLabel?: string;
   datePublished: string;
 };
 

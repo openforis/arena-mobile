@@ -1,4 +1,4 @@
-import { ArenaSurvey, LanguageCode, Surveys } from "@openforis/arena-core";
+import { LanguageCode, Surveys } from "@openforis/arena-core";
 
 import { i18n } from "localization";
 import type { Navigator } from "navigation/navigator";
@@ -14,6 +14,7 @@ import { SurveySliceActions } from "./reducer";
 import { SurveySelectors } from "./selectors";
 import { log } from "utils/Logger";
 import { SurveyUtils } from "model/index";
+import type { SurveySummaryRemote } from "model/SurveySummary";
 import type { AppDispatch, AppGetState } from "../store";
 import type { CurrentSurvey } from "./state";
 
@@ -181,7 +182,7 @@ const fetchAndSetRemoteSurveyIfOnlyOne =
 
       const { surveys: remoteSurveys = [] } =
         (await SurveyService.fetchSurveySummariesRemote()) as {
-          surveys?: ArenaSurvey[];
+          surveys?: SurveySummaryRemote[];
         };
       const remoteSurveysVisibleInMobile = remoteSurveys.filter((survey) =>
         Surveys.isVisibleInMobile(survey),

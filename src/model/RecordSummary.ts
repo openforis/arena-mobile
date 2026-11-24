@@ -1,3 +1,5 @@
+import type { ArenaRecordSummary } from "@openforis/arena-core";
+
 import { ArenaMobileRecord } from "./ArenaMobileRecord";
 
 // key or summary attribute values by node def name
@@ -15,16 +17,4 @@ export type RecordSummaryWithSyncStatus = RecordSummary & {
 };
 
 // record summary fetched from the server
-export type RemoteRecordSummary = {
-  uuid: string;
-  cycle: string;
-  dateCreated?: string | number;
-  dateModified?: string | number;
-  ownerUuid?: string;
-  ownerName?: string;
-  readOnly?: boolean;
-  // record step in the server workflow (1 = entry)
-  step?: number;
-  keysObj?: RecordSummaryValues;
-  summaryAttributesObj?: RecordSummaryValues;
-};
+export type RemoteRecordSummary = ArenaRecordSummary;

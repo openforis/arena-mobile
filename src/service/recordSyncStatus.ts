@@ -54,7 +54,7 @@ const determineLocalRecordSyncStatus = ({
   if (!recordSummaryRemote) {
     return RecordSyncStatus.new;
   }
-  if (recordSummaryRemote.step! > 1) {
+  if (Number(recordSummaryRemote.step) > 1) {
     return RecordSyncStatus.notInEntryStepAnymore;
   }
   if (recordSummaryRemote.uuid !== recordSummaryLocal.uuid) {

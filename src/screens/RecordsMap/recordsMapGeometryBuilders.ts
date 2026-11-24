@@ -76,7 +76,7 @@ export const buildCoordinateAttributeFeatures = ({
     const label = recordLabelByUuid[recordUuid];
     if (label === undefined) continue;
     const point = toLatLong({
-      point: Points.parse(value as string | object),
+      point: Points.parse(value),
       srsIndex,
     });
     if (!point) continue;

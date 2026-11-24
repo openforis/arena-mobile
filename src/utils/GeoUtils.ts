@@ -1,5 +1,7 @@
 import { Region } from "react-native-maps";
 
+import type { ArenaGeoPolygonFeature } from "@openforis/arena-core";
+
 import type { LatLng } from "model/LocationPoint";
 
 const defaultCoordinateEpsilon = 0.000001;
@@ -90,19 +92,16 @@ const hasCoordinate = (
 ): boolean =>
   coordinates.some((item) => isSameCoordinate(item, coordinate, epsilon));
 
-type GeoJsonFeatureValue =
-  | { geometry?: { type?: string; coordinates?: [number, number][][] } }
-  | null
-  | undefined;
+// node value, not validated
+type GeoJsonFeatureValue = ArenaGeoPolygonFeature | null | undefined;
 
 const extractPolygonCoordinatesFromGeoJson = (
   geoJsonValueParam: unknown,
 ): LatLng[] | null => {
   const geoJsonValue = geoJsonValueParam as GeoJsonFeatureValue;
-  const geometryType = geoJsonValue?.geometry?.type;
-  if (geometryType && geometryType !== "Polygon") return null;
-  const coordinates: [number, number][] | undefined =
-    geoJsonValue?.geometry?.coordinates?.[0];
+  const geometry = geoJsonValue?.geometry;
+  if (geometry?.type && geometry.type !== "Polygon") return null;
+  const coordinates = geometry?.coordinates?.[0];
   if (!coordinates?.length) return null;
 
   // Map from [longitude, latitude] tuples to { latitude, longitude } objects

@@ -60,13 +60,13 @@ const selectRecordNodePointerValidationChildrenCount =
 const selectRecordIsNotValid = (state: RootState): boolean => {
   const record = selectRecordUnsafe(state);
   const validation = record ? Validations.getValidation(record) : null;
-  return !!validation && Validations.isNotValid(validation);
+  return Validations.isNotValid(validation);
 };
 
 const selectRecordHasErrors = (state: RootState): boolean => {
   const record = selectRecordUnsafe(state);
   const validation = record ? Validations.getValidation(record) : null;
-  return !!validation && Validations.getErrorsCount(validation) > 0;
+  return Validations.getErrorsCount(validation) > 0;
 };
 
 // shared by the progress bars (app bar and drawer): computed once per record change

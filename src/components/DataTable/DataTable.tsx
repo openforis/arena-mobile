@@ -107,7 +107,7 @@ const DataTableRow = memo(function DataTableRow<T extends DataVisualizerItem>(
               {CellRenderer ? (
                 <CellRenderer item={item} viewMode={ScreenViewMode.table} />
               ) : (
-                String(Objects.path(fKey.split("."))(item) ?? "")
+                String(Objects.path<unknown>(fKey.split("."))(item) ?? "")
               )}
             </RNPDataTable.Cell>
           ),

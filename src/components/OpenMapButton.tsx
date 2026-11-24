@@ -44,7 +44,7 @@ export const OpenMapButton = (props: Props) => {
   const [chooser, setChooser] = useState<ChooserState | null>(null);
 
   const pointLatLng = useMemo(
-    () => Points.toLatLong(point as ArenaPoint, srsIndex as ArenaSRSIndex),
+    () => Points.toLatLong(point as ArenaPoint, srsIndex),
     [point, srsIndex],
   );
 
