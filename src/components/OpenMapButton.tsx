@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useNavigator } from "navigation/navigator";
 
-import { Points } from "@openforis/arena-core";
+import { ArenaPoint, ArenaSRSIndex, Points } from "@openforis/arena-core";
 
 import { IconButton } from "components/IconButton";
 import { MapAppChooserDialog } from "components/MapAppChooserDialog";
@@ -11,9 +11,9 @@ import { log } from "utils";
 type Props = {
   icon?: string;
   nodeUuid?: string; // when set, the point can be moved in the in-app map
-  point?: any;
+  point?: ArenaPoint | null;
   size?: number;
-  srsIndex?: any;
+  srsIndex?: ArenaSRSIndex;
   testID?: string;
   titleKey?: string;
   titleParams?: Record<string, string>;
@@ -37,7 +37,7 @@ export const OpenMapButton = (props: Props) => {
   const [chooser, setChooser] = useState<ChooserState | null>(null);
 
   const pointLatLng = useMemo(
-    () => Points.toLatLong(point, srsIndex),
+    () => Points.toLatLong(point as ArenaPoint, srsIndex as ArenaSRSIndex),
     [point, srsIndex],
   );
 

@@ -1,6 +1,13 @@
 import { ProgressBar } from "../ProgressBar";
+import { StyleProp, ViewStyle } from "react-native";
 
-const calculateProgress = ({ accuracy, accuracyThreshold }: any) => {
+const calculateProgress = ({
+  accuracy,
+  accuracyThreshold,
+}: {
+  accuracy?: number;
+  accuracyThreshold: number;
+}) => {
   if (!accuracy) return { progress: 0.25, color: "red" };
 
   if (accuracy <= accuracyThreshold) return { progress: 1, color: "green" };
@@ -13,7 +20,7 @@ const calculateProgress = ({ accuracy, accuracyThreshold }: any) => {
 type Props = {
   accuracy?: number;
   accuracyThreshold: number;
-  style?: any;
+  style?: StyleProp<ViewStyle>;
 };
 
 export const AccuracyProgressBar = (props: Props) => {

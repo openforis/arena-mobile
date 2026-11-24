@@ -1,10 +1,16 @@
 import { useMemo } from "react";
-import { StyleProp, StyleSheet, TextStyle, View } from "react-native";
+import {
+  StyleProp,
+  StyleSheet,
+  TextStyle,
+  View,
+  ViewStyle,
+} from "react-native";
 
 import { useTranslation } from "localization";
 
 import { HView } from "./HView";
-import { Text } from "./Text";
+import { Text, TextVariant } from "./Text";
 
 type Props = {
   children?: React.ReactNode;
@@ -12,9 +18,9 @@ type Props = {
   labelKey: string;
   labelNumberOfLines?: number;
   labelStyle?: StyleProp<TextStyle>;
-  labelVariant?: string;
-  style?: any;
-  textVariant?: string;
+  labelVariant?: TextVariant;
+  style?: StyleProp<ViewStyle>;
+  textVariant?: TextVariant;
 };
 
 const styles = StyleSheet.create({
@@ -47,12 +53,12 @@ export const FormItem = ({
       <Text
         numberOfLines={labelNumberOfLines}
         style={labelStyle}
-        variant={labelVariant as any}
+        variant={labelVariant}
       >
         {label}
       </Text>
       {hasTextContent ? (
-        <Text variant={textVariant as any}>{children}</Text>
+        <Text variant={textVariant}>{children}</Text>
       ) : (
         children
       )}

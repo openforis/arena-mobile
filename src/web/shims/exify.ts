@@ -2,5 +2,5 @@
 export const read = (_uri: string): Promise<undefined> =>
   Promise.resolve(undefined);
 
-export const write = (_uri: string, _data: any): Promise<undefined> =>
+export const write = (_uri: string, _data: unknown): Promise<undefined> =>
   Promise.resolve(undefined);

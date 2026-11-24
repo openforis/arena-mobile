@@ -11,6 +11,9 @@ export type RNFileProcessorArgs = ArenaFileProcessorConstructorArgs & {
   fileId: string;
 };
 
+// filePath and chunkSize are private in FileProcessor
+type FileProcessorPrivateProps = { filePath: string; chunkSize: number };
+
 export class RNFileProcessor extends FileProcessor {
   fileId: string;
   fileHandle: FileHandle;
@@ -27,19 +30,20 @@ export class RNFileProcessor extends FileProcessor {
   }
 
   override async calculateFileSize() {
-    const { filePath: fileUri } = this as any;
+    const { filePath: fileUri } = this as unknown as FileProcessorPrivateProps;
     return Files.getSize(fileUri);
   }
 
   override async extractCurrentFileChunk() {
-    const { currentChunkNumber, chunkSize } = this as any;
+    const { currentChunkNumber } = this;
+    const { chunkSize } = this as unknown as FileProcessorPrivateProps;
 
     if (!this.fileHandle?.size) {
       throw new Error(
         "File handle is not initialized or file size is unavailable.",
       );
     }
-    let tempFileUri;
+    let tempFileUri: string | undefined;
     try {
       const tempFileName = `${this.fileId}_chunk_${currentChunkNumber}.tmp`;
       const start = (currentChunkNumber - 1) * chunkSize;
@@ -63,11 +67,11 @@ export class RNFileProcessor extends FileProcessor {
         uri: tempFileUri,
         type: "application/octet-stream",
         name: tempFileName,
-      } as any;
+      } as unknown as Blob;
     } catch (error) {
       // Clean up temp file in case of error
-      if (await Files.exists(tempFileUri)) {
-        await Files.del(tempFileUri!, true);
+      if (tempFileUri && (await Files.exists(tempFileUri))) {
+        await Files.del(tempFileUri, true);
       }
       throw error;
     }

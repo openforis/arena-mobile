@@ -1,3 +1,5 @@
+import type { TranslateKeyFunction } from "localization";
+
 const msInOneSecond = 1000;
 const msInOneMinute = 60 * msInOneSecond;
 const msInOneHour = msInOneMinute * 60;
@@ -41,11 +43,15 @@ const formatRemainingTime = ({
   time,
   upToTimePart = TimePart.minute,
   t,
-}: any) => {
+}: {
+  time: number | null | undefined;
+  upToTimePart?: `${TimePart}`;
+  t: TranslateKeyFunction;
+}) => {
   if (!time) return "";
 
   const timePartsValues = Object.values(TimePart);
-  const upToTimePartIndex = timePartsValues.indexOf(upToTimePart);
+  const upToTimePartIndex = timePartsValues.indexOf(upToTimePart as TimePart);
   const timePartsValuesFiltered = timePartsValues.slice(
     0,
     upToTimePartIndex + 1,
@@ -66,7 +72,9 @@ const formatRemainingTime = ({
   });
 };
 
-const extractParts = (time: any): TimePartsDictionary | null => {
+const extractParts = (
+  time: number | null | undefined,
+): TimePartsDictionary | null => {
   if (!time) return null;
   const timeParts = {} as TimePartsDictionary;
   for (const timePart of Object.values(TimePart)) {
@@ -80,7 +88,12 @@ const _formatRemainingHoursAndMinutes = ({
   minutes,
   t,
   formatMode,
-}: any) => {
+}: {
+  hours: number;
+  minutes: number;
+  t: TranslateKeyFunction;
+  formatMode: string;
+}) => {
   switch (formatMode) {
     case formatModes.full:
       return t("common:remainingTime.canLastHoursAndMinutes", {
@@ -100,7 +113,17 @@ const _formatRemainingHoursAndMinutes = ({
   }
 };
 
-const _formatRemainingTimePart = ({ timePart, count, t, formatMode }: any) => {
+const _formatRemainingTimePart = ({
+  timePart,
+  count,
+  t,
+  formatMode,
+}: {
+  timePart: TimePart;
+  count: number;
+  t: TranslateKeyFunction;
+  formatMode: string;
+}) => {
   const timePartText = t(`common:timePart.${timePart}`, { count });
   switch (formatMode) {
     case formatModes.full:
@@ -122,7 +145,11 @@ const formatRemainingTimeIfLessThan1Day = ({
   time,
   t,
   formatMode = formatModes.full,
-}: any) => {
+}: {
+  time: number | null | undefined;
+  t: TranslateKeyFunction;
+  formatMode?: string;
+}) => {
   const parts = extractParts(time);
   if (!parts) return "";
 

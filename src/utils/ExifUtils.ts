@@ -5,17 +5,27 @@ import { Objects } from "@openforis/arena-core";
 import { AMConstants } from "./AMConstants";
 import { Environment } from "./Environment";
 
-let Exify: any;
+type ExifyModule = typeof import("@lodev09/react-native-exify");
+type ExifTags = import("@lodev09/react-native-exify").ExifTags;
+
+let Exify: ExifyModule | undefined;
 if (!Environment.isExpoGo) {
   Exify = require("@lodev09/react-native-exify");
 }
 
-const readData = async ({ fileUri }: any) => await Exify?.read(fileUri);
+const readData = async ({ fileUri }: { fileUri: string }) =>
+  await Exify?.read(fileUri);
 
-const writeData = async ({ fileUri, data }: any) =>
-  await Exify?.write(fileUri, data);
+// data can contain values not matching ExifTags (e.g. GPSTimeStamp as array)
+const writeData = async ({
+  fileUri,
+  data,
+}: {
+  fileUri: string;
+  data: Record<string, unknown>;
+}) => await Exify?.write(fileUri, data as ExifTags);
 
-const hasGpsData = async ({ fileUri }: any) => {
+const hasGpsData = async ({ fileUri }: { fileUri: string }) => {
   const data = await readData({ fileUri });
   if (!data) {
     return false;

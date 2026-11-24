@@ -17,7 +17,7 @@ type Props = {
   buttons: ButtonItem[];
   onChange: (value: string) => void;
   style?: StyleProp<ViewStyle>;
-  value?: any;
+  value?: string;
 };
 
 export const SegmentedButtons = (props: Props) => {
@@ -38,7 +38,7 @@ export const SegmentedButtons = (props: Props) => {
 
   return (
     <RNPSegmentedButtons
-      buttons={buttons.map(({ icon, label, value }: any) => ({
+      buttons={buttons.map(({ icon, label, value }) => ({
         icon,
         label: t(label),
         value,
@@ -46,7 +46,7 @@ export const SegmentedButtons = (props: Props) => {
       onValueChange={onChange}
       style={style}
       theme={buttonsTheme}
-      value={value}
+      value={value as string}
     />
   );
 };

@@ -5,22 +5,23 @@ import { Environment, Files } from "utils";
 const defaultImageExtension = "jpg";
 
 // on Android the file can be previewed without extension; on iOS a copy with extension is needed
-const needsTempFileWithExtension = (uri: any) =>
+const needsTempFileWithExtension = (uri: string | null | undefined) =>
   Environment.isIOS && !!uri && !Files.hasExtension(uri);
 
 export const useImageFile = (
-  uri: any,
+  uri: string | null | undefined,
   defaultExtension = defaultImageExtension,
 ) => {
-  const tempFileUriRef = useRef(null as any);
-  const tempFileSourceUriRef = useRef(null as any);
+  const tempFileUriRef = useRef<string | null>(null);
+  const tempFileSourceUriRef = useRef<string | null | undefined>(null);
   // null until the temp file is ready, so the extensionless uri is not used on iOS
   const [finalUri, setFinalUri] = useState(() =>
     needsTempFileWithExtension(uri) ? null : uri,
   );
 
   const copyToTempFileWithExtension = useCallback(
-    async () => Files.copyUriToTempFile({ uri, defaultExtension }),
+    // called only when uri is set (see needsTempFileWithExtension)
+    async () => Files.copyUriToTempFile({ uri: uri!, defaultExtension }),
     [defaultExtension, uri],
   );
 

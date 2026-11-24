@@ -2,9 +2,11 @@
 const fileSizeUnits = ["kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
 
 const toHumanReadableFileSize = (
-  bytes: any,
+  bytesParam: number | undefined,
   { decimalPlaces = 1 } = {},
 ): string => {
+  // undefined yields "NaN" like before
+  let bytes = bytesParam as number;
   const threshold = 1024;
 
   if (Math.abs(bytes) < threshold) {

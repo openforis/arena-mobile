@@ -12,7 +12,7 @@ type Props = {
   mode?: DateTimeInputMode;
   onCancel: () => void;
   onConfirm: (date: Date) => void;
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 // Web replacement of react-native-modal-datetime-picker: dialog with a text input in the app formats

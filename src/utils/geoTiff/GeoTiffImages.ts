@@ -4,6 +4,7 @@ import {
   GeoTIFFImage,
   addDecoder,
   getDecoder,
+  globals,
 } from "geotiff";
 
 import { PromiseUtils } from "utils/PromiseUtils";
@@ -72,8 +73,8 @@ const registerDecoders = (): void => {
   decodersRegistered = true;
 };
 
-const loadValue = (image: GeoTIFFImage, tag: string): Promise<any> =>
-  image.fileDirectory.loadValue(tag as any);
+const loadValue = <T extends globals.TagName>(image: GeoTIFFImage, tag: T) =>
+  image.fileDirectory.loadValue(tag);
 
 const getCompression = async (image: GeoTIFFImage): Promise<number> =>
   (await loadValue(image, "Compression")) ?? COMPRESSION.none;
@@ -119,7 +120,7 @@ const toPixelFormat = async ({
   hasAlpha,
 }: {
   image: GeoTIFFImage;
-  photometric: number;
+  photometric: number | undefined;
   compression: number;
   hasAlpha: boolean;
 }): Promise<PixelFormat | null> => {
@@ -143,7 +144,9 @@ const toPixelFormat = async ({
       return {
         ...base,
         kind: "palette",
-        colorMap: toColorMap8(await loadValue(image, "ColorMap")),
+        colorMap: toColorMap8(
+          (await loadValue(image, "ColorMap")) as ArrayLike<number>,
+        ),
       };
     case PHOTOMETRIC.ycbcr:
       // only JPEG: the JPEG decoder gives full resolution YCbCr pixels
@@ -201,7 +204,7 @@ const createTileSource = async (image: GeoTIFFImage): Promise<TileSource> => {
     predictor: (await loadValue(image, "Predictor")) ?? 1,
     // used by the JPEG decoder
     JPEGTables: await loadValue(image, "JPEGTables"),
-  } as any);
+  } as Parameters<typeof getDecoder>[1]);
   const yieldIfBusy = createTimeSlicer();
   // one tile at a time, so that the UI can be updated between two decodings
   const enqueue = PromiseUtils.createSerialQueue();
