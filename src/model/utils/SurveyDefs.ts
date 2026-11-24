@@ -42,8 +42,7 @@ const getRootKeyDefs = ({
   return Surveys.getNodeDefKeys({
     survey,
     nodeDef: rootDef,
-    // passed as is: a null cycle is not checked by arena-core (like an undefined one)
-    cycle: cycle as string | undefined,
+    cycle,
   });
 };
 

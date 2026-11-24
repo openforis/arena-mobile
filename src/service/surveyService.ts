@@ -77,8 +77,7 @@ const fetchCategoryItems = ({
   const items = Surveys.getCategoryItems({
     survey,
     categoryUuid: categoryUuid!,
-    // null and undefined both mean "top level items"
-    parentItemUuid: parentItemUuid ?? undefined,
+    parentItemUuid,
   });
   items.sort(
     (itemA, itemB) => (itemA.props.index ?? -1) - (itemB.props.index ?? -1),
