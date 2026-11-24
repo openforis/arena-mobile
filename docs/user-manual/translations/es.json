@@ -404,6 +404,10 @@
   "target": "<s1>Se le redirigirá a la página con la lista de registros recopilados con esa encuesta.</s1>"
  },
  {
+  "source": "<s1>As in the list of the surveys in the server, the view mode button in the top bar switches the view from a table to cards: every card shows the label and the name of the survey, its </s1><s2>Description</s2><s3> and the date it was published (</s3><s4>Published on</s4><s5>); the survey you are working with is marked as </s5><s6>Current survey</s6><s7>.</s7>",
+  "target": "<s1>Como en la lista de encuestas del servidor, el botón de modo de vista de la barra superior cambia la vista de tabla a tarjetas: cada tarjeta muestra la etiqueta y el nombre de la encuesta, su </s1><s2>Descripción</s2><s3> y la fecha de publicación (</s3><s4>Publicado el</s4><s5>); la encuesta con la que está trabajando aparece marcada como </s5><s6>Encuesta actual</s6><s7>.</s7>"
+ },
+ {
   "source": "<s1>4.2. Updating a survey</s1>",
   "target": "<s1>4.2. Actualizar una encuesta</s1>"
  },
@@ -744,6 +748,10 @@
   "target": "<s1>Los valores que ve en X e Y son los que se almacenan en los datos.</s1>"
  },
  {
+  "source": "<s1>If the location cannot be converted to the selected </s1><s2>SRS</s2><s3>, it is not used: a message warns you and the current values are kept; select another </s3><s4>SRS</s4><s5>.</s5>",
+  "target": "<s1>Si la ubicación no se puede convertir al </s1><s2>SRS</s2><s3> seleccionado, no se utiliza: un mensaje se lo advierte y se mantienen los valores actuales; seleccione otro </s3><s4>SRS</s4><s5>.</s5>"
+ },
+ {
   "source": "<s1>When the accuracy threshold or the fetch timeout is reached (specified in the settings), the GPS antenna is automatically stopped.</s1>",
   "target": "<s1>Cuando se alcanza el umbral de precisión o el tiempo de espera de la obtención (especificados en los ajustes), la antena GPS se detiene automáticamente.</s1>"
  },
@@ -1026,6 +1034,10 @@
  {
   "source": "<s1>Following the arrow and the distance to the target will guide you to reach the target location without looking at a map. Press </s1><s2>Use current location</s2><s3> to use your current location as the value of the coordinate attribute.</s3>",
   "target": "<s1>Siguiendo la flecha y la distancia al objetivo, llegará a la ubicación objetivo sin necesidad de mirar un mapa. Presione </s1><s2>Usar ubicación actual</s2><s3> para usar su ubicación actual como valor del atributo de coordenadas.</s3>"
+ },
+ {
+  "source": "<s1>If your current location cannot be converted to the </s1><s2>SRS</s2><s3> of the coordinate attribute, it is not used and a message warns you.</s3>",
+  "target": "<s1>Si su ubicación actual no se puede convertir al </s1><s2>SRS</s2><s3> del atributo de coordenadas, no se utiliza y un mensaje se lo advierte.</s3>"
  },
  {
   "source": "<s1>6.6. Finding the closest sampling point</s1>",
