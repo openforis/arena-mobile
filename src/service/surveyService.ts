@@ -152,8 +152,12 @@ const fetchCurrentUserGroupRemote = async ({
 
 // insert/update and dependency graph building set top-level props (id, remoteId, dependencyGraph)
 // of the survey object: always pass a (shallow) copy of the bundled one
+// (cast: JSON types widen string literals, e.g. language codes, and auth groups and owner are missing)
 const cloneDemoSurvey = (): ArenaSurvey => ({
-  ...(getDemoSurvey() as unknown as ArenaSurvey),
+  ...(getDemoSurvey() satisfies Pick<
+    ArenaSurvey,
+    "id" | "uuid" | "published" | "draft" | "dateCreated" | "dateModified"
+  > as unknown as ArenaSurvey),
 });
 
 const importDemoSurvey = async () => _insertSurvey(cloneDemoSurvey());

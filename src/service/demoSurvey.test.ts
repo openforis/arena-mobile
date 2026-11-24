@@ -160,6 +160,11 @@ describe("Demo survey", () => {
       );
     });
 
+    // stored as remote_id (INTEGER column): existing installs already have the number 1
+    test("has a numeric id", () => {
+      expect(demoSurveyJson.id).toBe(1);
+    });
+
     test("keeps the same UUID and root keys", () => {
       expect(survey.uuid).toBe(demoSurveyUuid);
       const rootDef = Surveys.getNodeDefRoot({ survey });
