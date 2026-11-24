@@ -18,6 +18,12 @@ export class BackupJob extends JobMobile<BackupJobContext, BackupJobResult> {
   override async execute() {
     await super.onStart();
 
+    const { documentDirectory } = Files;
+    if (!documentDirectory) {
+      // e.g. on web
+      throw new Error("BackupJob: document directory not available");
+    }
+
     const timestamp = Dates.format(new Date(), DateFormats.datetimeDefault);
     const outputFileName = `${outputFileNamePrefix}${timestamp}.zip`;
 
@@ -47,7 +53,7 @@ export class BackupJob extends JobMobile<BackupJobContext, BackupJobResult> {
     );
     try {
       await dbClient.withConsistentDbFile(() =>
-        Files.zip(Files.documentDirectory!, outputFileUri),
+        Files.zip(documentDirectory, outputFileUri),
       );
     } finally {
       await Promise.all(
