@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { StyleSheet } from "react-native";
 
-import { ArenaNodeDef, NodeDefs } from "@openforis/arena-core";
+import { ArenaAnyNodeDef, NodeDefs } from "@openforis/arena-core";
 
 import { Modal, Text } from "components";
 import {
@@ -24,8 +24,8 @@ export const TrackDialog = ({
   nodeDef,
   onDismiss,
 }: {
-  node: { uuid: string; value?: any };
-  nodeDef: ArenaNodeDef<any>;
+  node: { uuid: string; value?: unknown };
+  nodeDef: ArenaAnyNodeDef;
   onDismiss: () => void;
 }) => {
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();

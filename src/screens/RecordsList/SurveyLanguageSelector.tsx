@@ -22,7 +22,7 @@ export const SurveyLanguageSelector = () => {
 
   const items = useMemo(
     () =>
-      languages.map((langCode: any) => ({
+      languages.map((langCode) => ({
         value: langCode,
         label: langLabelFn(langCode),
       })),

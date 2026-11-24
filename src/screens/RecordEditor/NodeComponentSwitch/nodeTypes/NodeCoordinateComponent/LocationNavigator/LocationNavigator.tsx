@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 
+import { ArenaPoint } from "@openforis/arena-core";
+
 import {
   Button,
   FlexWrapView,
@@ -14,6 +16,7 @@ import {
   VView,
 } from "components";
 import { useMinScreenDimension } from "hooks";
+import { LocationPoint } from "model";
 import { DeviceInfoSelectors, SettingsSelectors } from "state";
 import { useAppTheme } from "theme";
 
@@ -148,9 +151,9 @@ const determineWarningKey = (
 };
 
 type LocationNavigatorProps = {
-  targetPoint: any;
+  targetPoint: ArenaPoint;
   onDismiss: () => void;
-  onUseCurrentLocation: (location: any) => void;
+  onUseCurrentLocation: (location: LocationPoint) => void;
 };
 
 const normalizeRelativeAngle = (relativeAngle: number) =>

@@ -14,6 +14,7 @@ import {
   latLongSrsCode,
   RecordsMapAreaPolygon,
   RecordsMapLayer,
+  RecordsMapNodeValue,
   RecordsMapPointFeature,
   RecordsMapPointProperties,
   RecordsMapPreloadedLayerShapes,
@@ -63,7 +64,7 @@ export const buildCoordinateAttributeFeatures = ({
 }: {
   survey: ArenaSurvey;
   layer: RecordsMapLayer;
-  nodeValues: { recordUuid: string; nodeDefUuid: string; value: any }[];
+  nodeValues: RecordsMapNodeValue[];
   recordLabelByUuid: Record<string, string>;
 }): RecordsMapPointFeature[] => {
   const srsIndex = Surveys.getSRSIndex(survey);
@@ -74,7 +75,10 @@ export const buildCoordinateAttributeFeatures = ({
     // records not in the selected cycle or deleted are not in the labels index
     const label = recordLabelByUuid[recordUuid];
     if (label === undefined) continue;
-    const point = toLatLong({ point: Points.parse(value), srsIndex });
+    const point = toLatLong({
+      point: Points.parse(value as string | object),
+      srsIndex,
+    });
     if (!point) continue;
     const feature = createPointFeature({
       point,
@@ -96,7 +100,7 @@ export const buildTrackFeatures = ({
   recordLabelByUuid,
 }: {
   layer: RecordsMapLayer;
-  nodeValues: { recordUuid: string; nodeDefUuid: string; value: any }[];
+  nodeValues: RecordsMapNodeValue[];
   recordLabelByUuid: Record<string, string>;
 }): RecordsMapTrackFeature[] => {
   const features: RecordsMapTrackFeature[] = [];

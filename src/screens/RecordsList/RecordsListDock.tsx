@@ -19,9 +19,10 @@ import {
 } from "state";
 
 import styles from "./styles";
+import type { useRecordsExport } from "./useRecordsExport";
 
 type RecordsListDockProps = {
-  downloadMenuItems: any[];
+  downloadMenuItems: ReturnType<typeof useRecordsExport>["downloadMenuItems"];
   // undefined when new records can't be created (e.g. a cycle other than the default one is selected)
   onNewRecordPress?: () => void;
   onSendDataPress: () => void;

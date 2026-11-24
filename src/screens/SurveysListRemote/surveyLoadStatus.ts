@@ -4,13 +4,13 @@ export const getSurveyLoadStatusKey = ({
   survey,
   localSurvey,
 }: {
-  survey: { datePublished?: any };
-  localSurvey?: { datePublished?: any } | null;
+  survey: { datePublished?: string };
+  localSurvey?: { datePublished?: string; dateModified?: string } | null;
 }): string => {
   if (!localSurvey) {
     return "surveys:loadStatus.notInDevice";
   }
-  if (Dates.isAfter(survey.datePublished, localSurvey.datePublished)) {
+  if (Dates.isAfter(survey.datePublished!, localSurvey.datePublished!)) {
     return "surveys:loadStatus.updated";
   }
   return "surveys:loadStatus.upToDate";

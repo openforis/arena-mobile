@@ -23,7 +23,7 @@ const isNumericByType: Record<string, boolean> = {
   [NodeDefType.integer]: true,
 };
 
-const nodeValueToUiValue = (value: any) =>
+const nodeValueToUiValue = (value: string | number | null) =>
   Objects.isEmpty(value) ? "" : String(value);
 
 type Props = NodeComponentProps<
@@ -39,7 +39,7 @@ export const NodeTextComponent = memo((props: Props) => {
   const viewMode = SurveyOptionsSelectors.useRecordEditViewMode();
   const isActiveChild =
     DataEntrySelectors.useIsNodeDefCurrentActiveChild(nodeDef);
-  const inputRef = useRef(null as any);
+  const inputRef = useRef<{ focus: () => void }>(null);
 
   const styles = useStyles();
 
@@ -52,7 +52,7 @@ export const NodeTextComponent = memo((props: Props) => {
     NodeDefs.getTextInputType(nodeDef) === NodeDefTextInputType.multiLine;
 
   const uiValueToNodeValue = useCallback(
-    (uiValue: any) => {
+    (uiValue: string | null) => {
       if (Objects.isEmpty(uiValue)) return null;
       if (isNumeric) {
         return Number(String(uiValue).replaceAll(",", "."));
@@ -63,7 +63,7 @@ export const NodeTextComponent = memo((props: Props) => {
   );
 
   const { applicable, invalidValue, uiValue, updateNodeValue } =
-    useNodeComponentLocalState({
+    useNodeComponentLocalState<string | number, string>({
       nodeUuid,
       updateDelay: 500,
       nodeValueToUiValue,
@@ -71,7 +71,7 @@ export const NodeTextComponent = memo((props: Props) => {
     });
 
   const onChange = useCallback(
-    (value: any) => {
+    (value: string) => {
       updateNodeValue({ value });
     },
     [updateNodeValue],
@@ -124,7 +124,7 @@ export const NodeTextComponent = memo((props: Props) => {
       numberOfLines={multiline ? undefined : 1}
       onChange={onChange}
       testID={nodeDefName}
-      value={uiValue}
+      value={uiValue as string | undefined}
     />
   );
 

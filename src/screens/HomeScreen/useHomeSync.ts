@@ -13,10 +13,11 @@ import {
 import { fetchRecordsWithSyncStatus } from "../RecordsList/fetchRecordsWithSyncStatus";
 import { useRecordsExport } from "../RecordsList/useRecordsExport";
 import { RecordsListState } from "../RecordsList/useRecordsList";
+import type { RecordSummaryWithSyncStatus } from "../RecordsList/recordsListTypes";
 
 type Props = {
   onSyncEnd: () => void;
-  records: any[];
+  records: RecordSummaryWithSyncStatus[];
 };
 
 // same "Send data" flow as the records list (confirmation, conflicts resolution, upload job)

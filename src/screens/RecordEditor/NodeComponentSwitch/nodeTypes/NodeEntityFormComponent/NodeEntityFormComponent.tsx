@@ -1,8 +1,12 @@
 import React, { memo, useCallback, useEffect, useRef } from "react";
-import { ListRenderItemInfo, VirtualizedList } from "react-native";
+import {
+  ListRenderItemInfo,
+  VirtualizedList,
+  type VirtualizedListInstance,
+} from "react-native";
 
 import {
-  ArenaNodeDef,
+  ArenaAnyNodeDef,
   ArenaNodeDefEntity,
   NodeDefs,
 } from "@openforis/arena-core";
@@ -15,11 +19,11 @@ import { NodeComponentProps } from "../nodeComponentPropTypes";
 
 import styles from "./styles";
 
-const keyExtractor = (childDef: ArenaNodeDef<any>) => childDef.uuid;
+const keyExtractor = (childDef: ArenaAnyNodeDef) => childDef.uuid;
 
-const getItem = (data: ArenaNodeDef<any>[], index: number) => data[index]!;
+const getItem = (data: ArenaAnyNodeDef[], index: number) => data[index]!;
 
-const getItemCount = (data: ArenaNodeDef<any>[]) => data.length;
+const getItemCount = (data: ArenaAnyNodeDef[]) => data.length;
 
 type Props = NodeComponentProps<ArenaNodeDefEntity>;
 
@@ -28,19 +32,19 @@ export const NodeEntityFormComponent = memo((props: Props) => {
 
   log.debug(`rendering NodeDefEntityForm for ${NodeDefs.getName(nodeDef)}`);
 
-  const listRef = useRef(null);
+  const listRef = useRef<VirtualizedListInstance>(null);
 
   const childrenDefs = DataEntrySelectors.useRecordEntityChildDefs({
     nodeDef,
   });
 
   useEffect(() => {
-    const listEl: any = listRef.current;
+    const listEl = listRef.current;
     listEl?.scrollToOffset?.({ offset: 0, animated: false });
   }, [nodeDef, parentNodeUuid]);
 
   const renderItem = useCallback(
-    ({ item: childDef }: ListRenderItemInfo<ArenaNodeDef<any>>) => (
+    ({ item: childDef }: ListRenderItemInfo<ArenaAnyNodeDef>) => (
       <NodeDefFormItem nodeDef={childDef} parentNodeUuid={parentNodeUuid} />
     ),
     [parentNodeUuid],

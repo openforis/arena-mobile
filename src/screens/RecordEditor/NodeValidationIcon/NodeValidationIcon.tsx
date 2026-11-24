@@ -8,7 +8,7 @@ import {
 } from "react-native";
 
 import {
-  ArenaNodeDef,
+  ArenaAnyNodeDef,
   NodeDefs,
   Validations,
   ValidationSeverity,
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
 type ValidationIconProps = {
   severity: ValidationSeverity;
   messageKey: string;
-  messageParams?: any;
+  messageParams?: Record<string, unknown>;
 };
 
 // the tooltip shows only one line: messages longer than that are shown in a dialog
@@ -120,7 +120,7 @@ const ValidationIcon = (props: ValidationIconProps) => {
 };
 
 type NodeValidationIconProps = {
-  nodeDef: ArenaNodeDef<any>;
+  nodeDef: ArenaAnyNodeDef;
   parentNodeUuid?: string;
 };
 

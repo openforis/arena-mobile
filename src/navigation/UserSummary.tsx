@@ -1,5 +1,5 @@
 import { useCallback, useContext, useMemo } from "react";
-import { StyleSheet } from "react-native";
+import { StyleProp, StyleSheet, ViewStyle } from "react-native";
 import { NavigationContext } from "@react-navigation/native";
 
 import { Button, HView, Text, VView } from "components";
@@ -27,7 +27,7 @@ type UserSummaryProps = {
   onButtonPress?: (() => void) | null;
   profileIconSize?: number;
   showLogoutButton?: boolean;
-  style?: any;
+  style?: StyleProp<ViewStyle>;
 };
 
 export const UserSummary = ({

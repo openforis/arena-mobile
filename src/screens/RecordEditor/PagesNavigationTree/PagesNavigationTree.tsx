@@ -13,7 +13,7 @@ import { EntityButton } from "./EntityButton";
 import { Indicator } from "./Indicator";
 import styles from "./PagesNavigationTreeStyles";
 import { TreeLines } from "./TreeLines";
-import { useTreeData } from "./useTreeData";
+import { type TreeItem, useTreeData } from "./useTreeData";
 
 const TreeNodeRow = ({
   node: treeNode,
@@ -35,7 +35,10 @@ const TreeNodeRow = ({
           />
         </TouchableOpacity>
       )}
-      <EntityButton treeNode={treeNode} isCurrentEntity={isCurrentEntity} />
+      <EntityButton
+        treeNode={treeNode as TreeItem}
+        isCurrentEntity={isCurrentEntity}
+      />
     </HView>
   );
 };

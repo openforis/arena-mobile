@@ -16,14 +16,15 @@ export const useOfflineMapAreaDownload = () => {
     async (area: OfflineMapArea): Promise<OfflineMapArea | null> => {
       const job = OfflineMapsService.createDownloadJob(area);
       try {
-        const jobComplete = await JobMonitorActions.startAsync({
+        const jobComplete = await JobMonitorActions.startAsync<{
+          area?: OfflineMapArea;
+        }>({
           dispatch,
           job,
           titleKey: "offlineMaps:download.title",
           autoDismiss: true,
         });
-        const areaUpdated: OfflineMapArea | undefined = (jobComplete as any)
-          ?.result?.area;
+        const areaUpdated = jobComplete?.result?.area;
         if (areaUpdated) {
           const { downloadedTilesCount, tilesCount, sizeBytes } = areaUpdated;
           toaster(

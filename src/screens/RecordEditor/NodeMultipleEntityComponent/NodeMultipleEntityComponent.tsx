@@ -1,4 +1,4 @@
-import { NodeDefs } from "@openforis/arena-core";
+import { ArenaNodeDefEntity, NodeDefs } from "@openforis/arena-core";
 
 import { RecordEditViewMode } from "model";
 import { SurveyOptionsSelectors } from "state";
@@ -8,7 +8,7 @@ import { NodeMultipleEntityListComponent } from "./NodeMultipleEntityListCompone
 import { RecordNodesCarousel } from "../RecordNodesCarousel";
 
 type NodeMultipleEntityComponentProps = {
-  entityDef: any;
+  entityDef: ArenaNodeDefEntity;
   parentEntityUuid?: string;
   entityUuid?: string;
 };

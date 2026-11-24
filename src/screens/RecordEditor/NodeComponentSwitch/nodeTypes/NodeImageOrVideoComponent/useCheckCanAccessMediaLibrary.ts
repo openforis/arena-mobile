@@ -21,8 +21,18 @@ const checkCanAccessMediaLibrary = async ({
   toaster,
   t,
   geotagInfoShown,
-}: any) => {
-  const onPermissionRequestError = ({ permission, error }: any) => {
+}: {
+  toaster: ReturnType<typeof useToast>;
+  t: ReturnType<typeof useTranslation>["t"];
+  geotagInfoShown: boolean;
+}) => {
+  const onPermissionRequestError = ({
+    permission,
+    error,
+  }: {
+    permission: MediaLibraryPermission;
+    error: unknown;
+  }) => {
     toaster("permissions:errorRequestingPermission", {
       permission,
       details: String(error),
@@ -58,7 +68,7 @@ export const useCheckCanAccessMediaLibrary = () => {
   const toaster = useToast();
 
   return useCallback(
-    async ({ geotagInfoShown }: any) => {
+    async ({ geotagInfoShown }: { geotagInfoShown: boolean }) => {
       let canAccess = await checkCanAccessMediaLibrary({
         toaster,
         t,

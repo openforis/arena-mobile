@@ -1,6 +1,11 @@
 import { useCallback, useMemo, useState } from "react";
 
-import { NodeDefs, Objects, Records } from "@openforis/arena-core";
+import {
+  ArenaNodeDefEntity,
+  NodeDefs,
+  Objects,
+  Records,
+} from "@openforis/arena-core";
 
 import {
   Button,
@@ -28,7 +33,7 @@ import { ArrayUtils, log } from "utils";
 import { NewNodeButton } from "../NewNodeButton";
 import { useConfirmDeleteNodes } from "../useConfirmDeleteNodes";
 import { EntityListColumnsDialog } from "./EntityListColumnsDialog";
-import { EntityRowsCache } from "./entityRowsCache";
+import { EntityRow, EntityRowsCache } from "./entityRowsCache";
 import { NodeValidationIcon } from "../NodeValidationIcon";
 
 import styles from "./styles";
@@ -37,7 +42,11 @@ const determineMaxSummaryDefs = ({
   isDrawerOpen,
   isTablet,
   isLandscape,
-}: any) => {
+}: {
+  isDrawerOpen: boolean;
+  isTablet: boolean;
+  isLandscape: boolean;
+}) => {
   const result = isTablet && !isDrawerOpen ? 5 : 3;
   return isLandscape ? result + 2 : result;
 };
@@ -46,7 +55,7 @@ const determineMaxSummaryDefs = ({
 const maxDefaultLandscapeColumns = 10;
 
 type NodeMultipleEntityListComponentProps = {
-  entityDef: any;
+  entityDef: ArenaNodeDefEntity;
   parentEntityUuid?: string;
 };
 
@@ -162,7 +171,7 @@ export const NodeMultipleEntityListComponent = (
   );
 
   const onRowPress = useCallback(
-    ({ uuid }: any) => {
+    ({ uuid }: EntityRow) => {
       dispatch(
         DataEntryActions.selectCurrentPageEntity({
           parentEntityUuid,

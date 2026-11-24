@@ -5,7 +5,7 @@ import { Objects, Surveys, Validations } from "@openforis/arena-core";
 
 import { DataVisualizer, SelectedItemsAction } from "components";
 import { useTranslation } from "localization";
-import { Cycles, RecordUtils, Sort, SurveyDefs } from "model";
+import { Cycles, RecordUtils, Sort, SortObject, SurveyDefs } from "model";
 import {
   DataEntryActions,
   RemoteConnectionSelectors,
@@ -24,7 +24,9 @@ import {
   buildSyncStatusFields,
   formatDateToDateTimeDisplay,
   RecordListField,
+  RecordListItem,
 } from "./recordsVisualizerFields";
+import type { RecordSummaryWithSyncStatus } from "./recordsListTypes";
 
 // table view only: the list and cards views are virtualized
 const recordsPerPage = 50;
@@ -36,7 +38,7 @@ type RecordsDataVisualizerProps = {
   onFetchSelectedRecordUuids: (uuids: string[]) => void;
   onRevalidateSelectedRecordUuids: (uuids: string[]) => void;
   onSelectedRecordUuidsChange?: (uuids: string[]) => void;
-  records: any[];
+  records: RecordSummaryWithSyncStatus[];
   showRemoteProps?: boolean;
   syncStatusFetched?: boolean;
   syncStatusLoading?: boolean;
@@ -76,16 +78,16 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
 
   const screenViewMode = ScreenOptionsSelectors.useCurrentScreenViewMode();
   const [selectedRecordUuids, setSelectedRecordUuids] = useState<string[]>([]);
-  const [sort, setSort] = useState({ dateModified: Sort.desc });
+  const [sort, setSort] = useState<SortObject>({ dateModified: Sort.desc });
 
   const recordsHaveReadOnly = useMemo(
-    () => records.some((r: any) => r.readOnly),
+    () => records.some((r) => r.readOnly),
     [records],
   );
 
   const recordsHaveErrorsOrWarnings = useMemo(
     () =>
-      records.some((r: any) => {
+      records.some((r) => {
         const validation = Validations.getValidation(r);
         return (
           Validations.getErrorsCount(validation) ||
@@ -112,7 +114,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
   }, [survey, cycle]);
 
   const recordToItem = useCallback(
-    (recordSummary: any) => {
+    (recordSummary: RecordSummaryWithSyncStatus) => {
       const valuesByKey = RecordUtils.getRecordSummaryValuesByKeyFormatted({
         survey,
         lang,
@@ -155,7 +157,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
   }, [records, recordToItem, sort]);
 
   const onItemPress = useCallback(
-    (recordSummary: any) => {
+    (recordSummary: RecordListItem) => {
       dispatch(
         DataEntryActions.fetchAndEditRecord({
           navigator,
@@ -195,7 +197,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
   );
 
   const onSelectionChange = useCallback(
-    (selection: any) => {
+    (selection: string[]) => {
       setSelectedRecordUuids(selection);
       onSelectedRecordUuidsChange?.(selection);
     },
@@ -235,7 +237,7 @@ export const RecordsDataVisualizer = (props: RecordsDataVisualizerProps) => {
     onRevalidateSelectedRecordUuids(selectedRecordUuids);
   }, [selectedRecordUuids, onRevalidateSelectedRecordUuids]);
 
-  const onSortChange = useCallback((sortNext: any) => {
+  const onSortChange = useCallback((sortNext: SortObject) => {
     setSort(sortNext);
   }, []);
 

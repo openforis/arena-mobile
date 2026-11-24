@@ -1,12 +1,15 @@
 import React from "react";
 
+import { ArenaRecordNodeValueTaxon } from "@openforis/arena-core";
+
 import { Text, VView } from "components";
 import { Taxa } from "model/Taxa";
 import { NodeValuePreviewProps } from "./NodeValuePreviewPropTypes";
 import { useTaxonByNodeValue } from "./useTaxonByNodeValue";
 
 export const TaxonValuePreview = (props: NodeValuePreviewProps) => {
-  const { nodeDef, value } = props;
+  const { nodeDef } = props;
+  const value = props.value as ArenaRecordNodeValueTaxon | undefined;
 
   const taxon = useTaxonByNodeValue({ value });
 

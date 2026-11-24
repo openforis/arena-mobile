@@ -1,7 +1,12 @@
 import { useCallback, useMemo, useState } from "react";
 import { TouchableHighlight } from "react-native";
 
-import { NodeDefFileType, NodeDefs } from "@openforis/arena-core";
+import {
+  ArenaNodeDefFile,
+  ArenaRecordNodeValueFile,
+  NodeDefFileType,
+  NodeDefs,
+} from "@openforis/arena-core";
 
 import { IconButton, Image, ImagePreviewDialog, Text, VView } from "components";
 import { RecordFileService } from "service";
@@ -13,14 +18,15 @@ import { NodeValuePreviewProps } from "./NodeValuePreviewPropTypes";
 import styles from "./imageOrVideoValuePreviewStyles";
 
 export const ImageOrVideoValuePreview = (props: NodeValuePreviewProps) => {
-  const { nodeDef, value } = props;
+  const nodeDef = props.nodeDef as ArenaNodeDefFile;
+  const value = props.value as ArenaRecordNodeValueFile | undefined;
 
   const fileType = NodeDefs.getFileType(nodeDef) ?? NodeDefFileType.other;
 
   const surveyId = SurveySelectors.useCurrentSurveyId();
   const [imagePreviewOpen, setImagePreviewOpen] = useState(false);
 
-  const { fileName: valueFileName, fileNameCalculated, fileUuid } = value || {};
+  const { fileName: valueFileName, fileNameCalculated, fileUuid } = value ?? {};
 
   const fileName = fileNameCalculated ?? valueFileName;
 
@@ -41,7 +47,7 @@ export const ImageOrVideoValuePreview = (props: NodeValuePreviewProps) => {
   );
 
   const onFileOpenPress = useCallback(async () => {
-    const mimeType = Files.getMimeTypeFromName(fileName);
+    const mimeType = Files.getMimeTypeFromName(fileName!);
     await Files.shareFile({ url: fileUri!, mimeType });
   }, [fileName, fileUri]);
 
@@ -69,7 +75,7 @@ export const ImageOrVideoValuePreview = (props: NodeValuePreviewProps) => {
       )}
       {imagePreviewOpen && (
         <ImagePreviewDialog
-          fileName={fileName}
+          fileName={fileName!}
           imageUri={fileUri}
           onClose={closeImagePreview}
           showGeotagInfo={NodeDefs.isGeotagInformationShown(nodeDef)}

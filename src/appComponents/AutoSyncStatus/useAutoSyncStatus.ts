@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 
-import { JobStatus } from "@openforis/arena-core";
+import { ArenaUser, JobStatus } from "@openforis/arena-core";
 
 import { useIsNetworkConnected } from "hooks";
 import { SettingsModel } from "model";
@@ -54,7 +54,7 @@ const computeConnectionIssue = ({
 }: {
   autoSyncEnabled: boolean;
   networkConnected: boolean;
-  user: any;
+  user: ArenaUser | null;
   status: AutoSyncStatus;
 }): AutoSyncConnectionIssue => {
   if (!autoSyncEnabled) return null;

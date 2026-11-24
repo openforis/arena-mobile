@@ -5,6 +5,7 @@ import { useCallback, useMemo, useState } from "react";
 
 import {
   ArenaNodeDefFile,
+  ArenaRecordNodeValueFile,
   NodeDefFileType,
   NodeDefs,
   Objects,
@@ -71,7 +72,7 @@ const extractFileNameFromAsset = (
     : Files.getNameFromUri(asset.uri);
 };
 
-const setLocationInFile = async (fileUri: any) => {
+const setLocationInFile = async (fileUri: string) => {
   // get current location and set it in file exif metadata
   try {
     if (await Permissions.requestLocationForegroundPermission()) {
@@ -87,16 +88,16 @@ const setLocationInFile = async (fileUri: any) => {
 };
 
 const resizeImage = async (
-  sourceFileUri: any,
-  sourceFileSize: any,
-  maxSize: any,
-  maxSizeMB: any,
-  setResizing: any,
-  toaster: any,
+  sourceFileUri: string,
+  sourceFileSize: number,
+  maxSize: number,
+  maxSizeMB: number | undefined,
+  setResizing: (resizing: boolean) => void,
+  toaster: ReturnType<typeof useToast>,
 ) => {
   setResizing(true);
   try {
-    let fileUri, fileSize;
+    let fileUri: string, fileSize: number;
 
     const imageScaleResult = await ImageUtils.resizeToFitMaxSize({
       fileUri: sourceFileUri,
@@ -114,7 +115,7 @@ const resizeImage = async (
 
     if (!error && resizedFileUri) {
       fileUri = resizedFileUri;
-      fileSize = resizedFileSize;
+      fileSize = resizedFileSize!;
 
       toaster("dataEntry:fileAttributeImage.pictureResizedToSize", {
         size: Files.toHumanReadableFileSize(resizedFileSize),
@@ -169,7 +170,7 @@ export const useNodeFileComponent = ({
     value,
     updateNodeValue,
     onClearPress: onDeletePress,
-  } = useNodeComponentLocalState({
+  } = useNodeComponentLocalState<ArenaRecordNodeValueFile>({
     nodeUuid,
     clearConfirmMessageKey: "dataEntry:fileAttribute.deleteConfirmMessage",
   });
@@ -268,7 +269,11 @@ export const useNodeFileComponent = ({
         logDebug("location in file set");
       }
       logDebug("updating node value...");
-      const valueUpdated = { fileUuid: UUIDs.v4(), fileName, fileSize };
+      const valueUpdated = {
+        fileUuid: UUIDs.v4(),
+        fileName,
+        fileSize,
+      } as ArenaRecordNodeValueFile;
       updateNodeValue({
         value: valueUpdated,
         fileUri,

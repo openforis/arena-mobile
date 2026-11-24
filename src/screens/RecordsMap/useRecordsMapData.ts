@@ -7,7 +7,7 @@ import {
   useToast,
 } from "hooks";
 import { useTranslation } from "localization";
-import { LatLng, RecordUtils } from "model";
+import { LatLng, RecordSummary, RecordUtils } from "model";
 import { RecordService } from "service";
 import { SurveySelectors } from "state";
 import { ArrayUtils } from "utils/ArrayUtils";
@@ -25,17 +25,16 @@ import {
   RecordsMapAreaPolygon,
   RecordsMapLayer,
   RecordsMapLayerType,
+  RecordsMapNodeValue,
   RecordsMapPointFeature,
   RecordsMapPreloadedLayerShapes,
   RecordsMapTrackFeature,
 } from "./recordsMapLayers";
 
-type NodeValue = { recordUuid: string; nodeDefUuid: string; value: any };
-
 type DataState = {
   loading: boolean;
-  recordSummaries: any[];
-  nodeValues: NodeValue[];
+  recordSummaries: RecordSummary[];
+  nodeValues: RecordsMapNodeValue[];
 };
 
 // bounding box corners (to fit the map without passing all the points of tracks and areas)
@@ -168,7 +167,7 @@ export const useRecordsMapData = () => {
     [cycle, focusCount, survey.id, visibleTrackDefUuidsJoint],
     {
       enabled: !!visibleTrackDefUuidsJoint,
-      initialValue: [] as NodeValue[],
+      initialValue: [] as RecordsMapNodeValue[],
       onError: (error) =>
         toaster("recordsMap:errorLoadingData", { details: String(error) }),
     },
@@ -231,7 +230,7 @@ export const useRecordsMapData = () => {
           acc[recordSummary.uuid] = recordSummary;
           return acc;
         },
-        {} as Record<string, any>,
+        {} as Record<string, RecordSummary>,
       ),
     [recordSummaries],
   );

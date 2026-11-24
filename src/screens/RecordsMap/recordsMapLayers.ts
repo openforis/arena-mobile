@@ -20,6 +20,7 @@ export type {
   RecordsMapAreaPolygon,
   RecordsMapLayer,
   RecordsMapLine,
+  RecordsMapNodeValue,
   RecordsMapPointFeature,
   RecordsMapPointProperties,
   RecordsMapPreloadedLayerShapes,
