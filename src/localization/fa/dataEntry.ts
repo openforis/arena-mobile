@@ -236,6 +236,8 @@ export default {
     headingSourceMagnetometer: "حسگر",
     headingSourceLocation: "GPS",
     keepXAndY: "نگه داشتن X و Y",
+    locationCannotBeConvertedToSrs:
+      "موقعیت GPS را نمی‌توان به سیستم مختصات {{srs}} تبدیل کرد",
     locationHeadingNotAvailable: "جهت GPS در دسترس نیست!",
     magnetometerNotAvailable: "مگنتومتر در دسترس نیست!",
     navigateToTarget: "هدایت به هدف",

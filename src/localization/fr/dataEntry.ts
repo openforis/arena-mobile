@@ -240,6 +240,8 @@ Voulez-vous les récupérer à nouveau depuis le serveur ?`,
     headingSourceMagnetometer: "Capteur",
     headingSourceLocation: "GPS",
     keepXAndY: "Conserver X et Y",
+    locationCannotBeConvertedToSrs:
+      "La position GPS ne peut pas être convertie dans le système de coordonnées {{srs}}",
     locationHeadingNotAvailable: "Cap GPS non disponible !",
     magnetometerNotAvailable: "Magnétomètre non disponible!",
     navigateToTarget: "Naviguer vers la cible",
