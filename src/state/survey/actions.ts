@@ -183,8 +183,8 @@ const fetchAndSetRemoteSurveyIfOnlyOne =
         (await SurveyService.fetchSurveySummariesRemote()) as {
           surveys?: ArenaSurvey[];
         };
-      const remoteSurveysVisibleInMobile = remoteSurveys.filter(
-        Surveys.isVisibleInMobile,
+      const remoteSurveysVisibleInMobile = remoteSurveys.filter((survey) =>
+        Surveys.isVisibleInMobile(survey),
       );
       if (remoteSurveysVisibleInMobile.length !== 1) {
         return;
