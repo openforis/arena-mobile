@@ -163,7 +163,7 @@ const login = async ({
   const serverUrl = serverUrlParam ?? (await getServerUrl());
   const appInfo = await SystemUtils.getApplicationInfo();
   try {
-    const { data, response } = await API.post({
+    const { data, response } = await API.post<LoginResponse>({
       serverUrl,
       uri: "/auth/login",
       data: {
@@ -200,7 +200,7 @@ const loginWithTempAuthToken = async ({
 }): Promise<LoginResponse> => {
   try {
     const appInfo = await SystemUtils.getApplicationInfo();
-    const { data, response } = await API.post({
+    const { data, response } = await API.post<LoginResponse>({
       serverUrl,
       uri: "/auth/login/temp",
       data: { token, appInfo },
@@ -305,7 +305,7 @@ const loginWithExternalLoginCode = async ({
 }): Promise<LoginResponse> => {
   try {
     const appInfo = await SystemUtils.getApplicationInfo();
-    const { data, response } = await API.post({
+    const { data, response } = await API.post<LoginResponse>({
       serverUrl,
       uri: "/auth/oidc/_mobile-token",
       data: { code, codeVerifier, twoFactorToken, appInfo },
