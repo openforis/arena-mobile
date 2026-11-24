@@ -19,12 +19,12 @@ import { PositionTracks } from "./PositionTracks";
 // also satisfied by the i18next TFunction
 export type SimpleTranslateFunction = (key: string) => string;
 
-export type SummaryValueFormatterParams = {
+export type SummaryValueFormatterParams<V = unknown> = {
   survey: ArenaSurvey;
   cycle: string;
   nodeDef: ArenaAnyNodeDef;
   node?: ArenaRecordNode;
-  value: any;
+  value: V;
   showLabel?: boolean;
   lang?: LanguageCode;
   t: SimpleTranslateFunction;
@@ -131,8 +131,13 @@ const formatGeoValue = ({
   return value?.geometry?.type ?? "";
 };
 
+export type SummaryValueFormatter<V = unknown> = (
+  params: SummaryValueFormatterParams<V>,
+) => string;
+
+// each formatter accepts only the values of its node def type
 const formatterByNodeDefType: Partial<
-  Record<NodeDefType, (params: SummaryValueFormatterParams) => string>
+  Record<NodeDefType, SummaryValueFormatter<never>>
 > = {
   [NodeDefType.boolean]: formatBooleanValue,
   [NodeDefType.coordinate]: formatCoordinateValue,
@@ -140,10 +145,15 @@ const formatterByNodeDefType: Partial<
   [NodeDefType.geo]: formatGeoValue,
 };
 
+const getFormatter = (
+  nodeDefType: NodeDefType,
+): SummaryValueFormatter | undefined =>
+  formatterByNodeDefType[nodeDefType] as SummaryValueFormatter | undefined;
+
 export const RecordValueFormatters = {
   formatBooleanValue,
   formatCoordinateValue,
   formatFileValue,
   formatGeoValue,
-  formatterByNodeDefType,
+  getFormatter,
 };
