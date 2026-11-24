@@ -148,7 +148,7 @@ const uploadRecords = ({
   onUploadProgress: (progressEvent: UploadProgress) => void;
 }): { promise: Promise<AxiosResponse>; cancel: () => void } => {
   const surveyRemoteId = survey.remoteId;
-  let fileProcessor: RNFileProcessor | undefined;
+  let fileProcessor: RNFileProcessor<AxiosResponse> | undefined;
 
   const debouncedUploadProgress = Functions.throttle(
     ({ total, loaded }: UploadProgress) => {
@@ -182,8 +182,7 @@ const uploadRecords = ({
         totalChunks,
         totalFileSize,
       }) => {
-        // RNFileProcessor chunks are file descriptors
-        chunkFileUri = (content as unknown as { uri: string }).uri;
+        chunkFileUri = content.uri;
         if (chunk > totalChunks) {
           // e.g. retry after the last chunk was already uploaded
           throw new Error(`chunk ${chunk} out of range (${totalChunks})`);
