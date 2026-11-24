@@ -160,8 +160,8 @@ describe("record validation counts columns", () => {
         {
           uuid: "remote-1",
           cycle: "0",
-          dateCreated: Date.now(),
-          dateModified: Date.now(),
+          dateCreated: new Date().toISOString(),
+          dateModified: new Date().toISOString(),
         },
       ],
     });

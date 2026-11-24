@@ -7,6 +7,7 @@ import {
 } from "@openforis/arena-core";
 
 import { SurveyPackage } from "model/SurveyPackage";
+import type { SurveySummaryRemote } from "model/SurveySummary";
 import { Files, log } from "utils";
 import { HttpErrors } from "utils/HttpErrors";
 
@@ -86,7 +87,7 @@ const fetchCategoryItems = ({
 };
 
 const fetchSurveySummariesRemote = async (): Promise<
-  { surveys: ArenaSurvey[] } | { errorKey: string }
+  { surveys: SurveySummaryRemote[] } | { errorKey: string }
 > => {
   try {
     const { data } = await RemoteService.get("api/surveys", { draft: false });
@@ -110,7 +111,7 @@ const fetchSurveySummaryRemote = async ({
       search: name,
     });
     const { list: surveys } = data;
-    const survey = surveys.find((s: ArenaSurvey) => s.id === id);
+    const survey = surveys.find((s: SurveySummaryRemote) => s.id === id);
     return survey;
   } catch (error) {
     return RemoteService.handleError({ error });
