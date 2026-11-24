@@ -2,18 +2,21 @@ import { JobStatus } from "@openforis/arena-core";
 
 import { RemoteJobService, WebSocketService } from "service";
 
+import type { RecordsUploadAndProcessJobContext } from "./RecordsUploadAndProcessJobContext";
 import { RemoteJobWatcherJob } from "./remoteJobWatcherJob";
+
+type TestJobSummary = { uuid: string; status: JobStatus; result?: unknown };
 
 jest.mock("model", () => ({
   JobMobile: class {
-    context: any;
-    errors: any = {};
+    context: unknown;
+    errors: Record<string, unknown> = {};
     logger = { debug: jest.fn(), warn: jest.fn() };
-    result: any;
-    constructor(context: any) {
+    result: unknown;
+    constructor(context: unknown) {
       this.context = context;
     }
-    setResult(result: any) {
+    setResult(result: unknown) {
       this.result = result;
     }
   },
@@ -32,14 +35,17 @@ const remoteJobUuid = "job-1";
 const fetchJobMock = RemoteJobService.fetchJob as jest.Mock;
 
 const startJob = async () => {
-  let emitJobUpdate: (summary: any) => void = () => {};
+  let emitJobUpdate: (summary: TestJobSummary) => void = () => {};
   (WebSocketService.open as jest.Mock).mockResolvedValue({
-    on: (_event: string, handler: any) => {
+    on: (_event: string, handler: (summary: TestJobSummary) => void) => {
       emitJobUpdate = handler;
     },
   });
-  const job: any = new RemoteJobWatcherJob({} as any);
-  job.context.remoteJobUuid = remoteJobUuid;
+  const job = new RemoteJobWatcherJob({} as RecordsUploadAndProcessJobContext);
+  // context is protected: set by the job that starts the remote one
+  (
+    job as unknown as { context: RecordsUploadAndProcessJobContext }
+  ).context.remoteJobUuid = remoteJobUuid;
   let ended = false;
   const execution = job.execute().finally(() => {
     ended = true;
@@ -49,7 +55,7 @@ const startJob = async () => {
     job,
     execution,
     isEnded: () => ended,
-    emitJobUpdate: (summary: any) => emitJobUpdate(summary),
+    emitJobUpdate: (summary: TestJobSummary) => emitJobUpdate(summary),
   };
 };
 

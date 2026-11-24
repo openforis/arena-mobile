@@ -1,4 +1,7 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, UnknownAction } from "@reduxjs/toolkit";
+import type { ArenaRecord, ArenaSurvey } from "@openforis/arena-core";
+
+import type { AppDispatch, AppGetState } from "state/store";
 
 import { PositionTrackingActions } from "./actions";
 import { PositionTrackingReducer } from "./reducer";
@@ -19,7 +22,7 @@ const trackValue = {
 };
 
 const mockService = {
-  track: null as any,
+  track: null as { id: number; recordUuid: string; nodeUuid: string } | null,
   watching: false,
   startError: null as Error | null,
 };
@@ -58,11 +61,19 @@ jest.mock("service/positionTracking", () => {
       })),
       getTrack: jest.fn(() => mockService.track),
       isWatching: jest.fn(() => mockService.watching),
-      start: jest.fn(async ({ recordUuid, nodeUuid }: any) => {
-        if (mockService.startError) throw mockService.startError;
-        mockService.track = { id: 1, recordUuid, nodeUuid };
-        mockService.watching = true;
-      }),
+      start: jest.fn(
+        async ({
+          recordUuid,
+          nodeUuid,
+        }: {
+          recordUuid: string;
+          nodeUuid: string;
+        }) => {
+          if (mockService.startError) throw mockService.startError;
+          mockService.track = { id: 1, recordUuid, nodeUuid };
+          mockService.watching = true;
+        },
+      ),
       pause: jest.fn(async () => {
         mockService.watching = false;
       }),
@@ -85,7 +96,7 @@ jest.mock("service/positionTracking", () => {
   };
 });
 
-const mockConfirm = jest.fn(async (): Promise<any> => ({}));
+const mockConfirm = jest.fn(async (): Promise<unknown> => ({}));
 jest.mock("../confirm/utils", () => ({
   ConfirmUtils: { confirm: () => mockConfirm() },
 }));
@@ -99,17 +110,20 @@ jest.mock("../toast", () => ({
 jest.mock("../dataEntry/actions", () => ({
   DataEntryActions: {
     updateAttribute:
-      ({ uuid, value }: any) =>
-      (dispatch: any) =>
+      ({ uuid, value }: { uuid: string; value: unknown }) =>
+      (dispatch: (action: UnknownAction) => unknown) =>
         dispatch({ type: "TEST_NODE_VALUE_SET", uuid, value }),
   },
 }));
 
 jest.mock("../dataEntry/selectors", () => ({
   DataEntrySelectors: {
-    selectRecordUnsafe: (state: any) => state.dataEntry.record,
-    selectRecord: (state: any) => state.dataEntry.record,
-    selectCanEditRecord: (state: any) => state.dataEntry.canEdit,
+    selectRecordUnsafe: (state: { dataEntry: { record: unknown } }) =>
+      state.dataEntry.record,
+    selectRecord: (state: { dataEntry: { record: unknown } }) =>
+      state.dataEntry.record,
+    selectCanEditRecord: (state: { dataEntry: { canEdit: boolean } }) =>
+      state.dataEntry.canEdit,
   },
 }));
 
@@ -119,14 +133,14 @@ jest.mock("../settings/selectors", () => ({
 
 jest.mock("../survey/selectors", () => ({
   SurveySelectors: {
-    selectCurrentSurvey: (state: any) => state.survey,
+    selectCurrentSurvey: (state: { survey: unknown }) => state.survey,
   },
 }));
 
 const trackDefUuid = "track-def";
 const otherTrackDefUuid = "other-track-def";
 
-const survey: any = {
+const survey = {
   id: 1,
   nodeDefs: {
     root: { uuid: "root", type: "entity", props: { name: "root" } },
@@ -145,7 +159,16 @@ const survey: any = {
   },
 };
 
-const createRecord = () => ({
+type TestNode = {
+  uuid: string;
+  nodeDefUuid: string;
+  parentUuid?: string;
+  value?: unknown;
+};
+type TestRecord = { uuid: string; nodes: Record<string, TestNode> };
+type TestDataEntryState = { record: TestRecord; canEdit: boolean };
+
+const createRecord = (): TestRecord => ({
   uuid: "record-1",
   nodes: {
     "root-node": { uuid: "root-node", nodeDefUuid: "root" },
@@ -163,33 +186,36 @@ const createRecord = () => ({
 });
 
 const dataEntryReducer = (
-  state: any = { record: createRecord(), canEdit: true },
-  action: any,
-) => {
+  state: TestDataEntryState = { record: createRecord(), canEdit: true },
+  action: UnknownAction,
+): TestDataEntryState => {
   if (action.type === "TEST_NODE_VALUE_SET") {
-    const node = state.record.nodes[action.uuid];
+    const uuid = action["uuid"] as string;
+    const node = state.record.nodes[uuid]!;
     return {
       ...state,
       record: {
         ...state.record,
         nodes: {
           ...state.record.nodes,
-          [action.uuid]: { ...node, value: action.value },
+          [uuid]: { ...node, value: action["value"] },
         },
       },
     };
   }
   if (action.type === "TEST_CAN_EDIT_SET") {
-    return { ...state, canEdit: action.canEdit };
+    return { ...state, canEdit: action["canEdit"] as boolean };
   }
   if (action.type === "TEST_RECORD_SET") {
-    return { ...state, record: action.record };
+    return { ...state, record: action["record"] as TestRecord };
   }
   return state;
 };
 
-const toastReducer = (state: string[] = [], action: any) =>
-  action.type === "TOAST_SHOW" ? [...state, action.textKey] : state;
+const toastReducer = (state: string[] = [], action: UnknownAction) =>
+  action.type === "TOAST_SHOW"
+    ? [...state, action["textKey"] as string]
+    : state;
 
 const createStore = () =>
   configureStore({
@@ -203,8 +229,17 @@ const createStore = () =>
       getDefaultMiddleware({ serializableCheck: false }),
   });
 
-const getTrackedNodeValue = (store: any, nodeUuid = "track-node") =>
-  store.getState().dataEntry.record.nodes[nodeUuid].value;
+type TestStore = ReturnType<typeof createStore>;
+
+// the thunks are typed for the app store (RootState)
+const dispatchThunk = <R>(
+  store: TestStore,
+  thunk: (dispatch: AppDispatch, getState: AppGetState) => R,
+): R =>
+  store.dispatch(thunk as unknown as Parameters<TestStore["dispatch"]>[0]) as R;
+
+const getTrackedNodeValue = (store: TestStore, nodeUuid = "track-node") =>
+  store.getState().dataEntry.record.nodes[nodeUuid]?.value;
 
 describe("PositionTrackingActions", () => {
   beforeEach(() => {
@@ -221,7 +256,7 @@ describe("PositionTrackingActions", () => {
 
   test("auto-start tracks the first trackable attribute of the new record", async () => {
     const store = createStore();
-    await store.dispatch(PositionTrackingActions.autoStartTracking() as any);
+    await dispatchThunk(store, PositionTrackingActions.autoStartTracking());
     const state = store.getState().positionTracking;
     expect(state.status).toBe(PositionTrackingStatus.tracking);
     expect(state.nodeUuid).toBe("track-node");
@@ -230,10 +265,11 @@ describe("PositionTrackingActions", () => {
 
   test("pausing writes the track into the attribute", async () => {
     const store = createStore();
-    await store.dispatch(
-      PositionTrackingActions.startTracking({ nodeUuid: "track-node" }) as any,
+    await dispatchThunk(
+      store,
+      PositionTrackingActions.startTracking({ nodeUuid: "track-node" }),
     );
-    await store.dispatch(PositionTrackingActions.pauseTracking() as any);
+    await dispatchThunk(store, PositionTrackingActions.pauseTracking());
     expect(store.getState().positionTracking.status).toBe(
       PositionTrackingStatus.paused,
     );
@@ -242,24 +278,28 @@ describe("PositionTrackingActions", () => {
 
   test("the track is written into the attribute periodically", async () => {
     const store = createStore();
-    await store.dispatch(
-      PositionTrackingActions.startTracking({ nodeUuid: "track-node" }) as any,
+    await dispatchThunk(
+      store,
+      PositionTrackingActions.startTracking({ nodeUuid: "track-node" }),
     );
     expect(getTrackedNodeValue(store)).toBeUndefined();
     await jest.advanceTimersByTimeAsync(60000);
     expect(getTrackedNodeValue(store)).toEqual(trackValue);
-    await store.dispatch(
-      PositionTrackingActions.stopTracking({ confirm: false }) as any,
+    await dispatchThunk(
+      store,
+      PositionTrackingActions.stopTracking({ confirm: false }),
     );
   });
 
   test("stopping writes the track and removes it", async () => {
     const store = createStore();
-    await store.dispatch(
-      PositionTrackingActions.startTracking({ nodeUuid: "track-node" }) as any,
+    await dispatchThunk(
+      store,
+      PositionTrackingActions.startTracking({ nodeUuid: "track-node" }),
     );
-    const stopped = await store.dispatch(
-      PositionTrackingActions.stopTracking() as any,
+    const stopped = await dispatchThunk(
+      store,
+      PositionTrackingActions.stopTracking(),
     );
     expect(stopped).toBe(true);
     expect(getTrackedNodeValue(store)).toEqual(trackValue);
@@ -271,31 +311,35 @@ describe("PositionTrackingActions", () => {
 
   test("stopping is cancelled when not confirmed", async () => {
     const store = createStore();
-    await store.dispatch(
-      PositionTrackingActions.startTracking({ nodeUuid: "track-node" }) as any,
+    await dispatchThunk(
+      store,
+      PositionTrackingActions.startTracking({ nodeUuid: "track-node" }),
     );
     mockConfirm.mockImplementation(async () => null);
-    await store.dispatch(PositionTrackingActions.stopTracking() as any);
+    await dispatchThunk(store, PositionTrackingActions.stopTracking());
     expect(store.getState().positionTracking.status).toBe(
       PositionTrackingStatus.tracking,
     );
-    await store.dispatch(
-      PositionTrackingActions.stopTracking({ confirm: false }) as any,
+    await dispatchThunk(
+      store,
+      PositionTrackingActions.stopTracking({ confirm: false }),
     );
   });
 
   test("the track is kept when it cannot be written into the attribute", async () => {
     const store = createStore();
-    await store.dispatch(
-      PositionTrackingActions.startTracking({ nodeUuid: "track-node" }) as any,
+    await dispatchThunk(
+      store,
+      PositionTrackingActions.startTracking({ nodeUuid: "track-node" }),
     );
     // another record open
     store.dispatch({
       type: "TEST_RECORD_SET",
       record: { ...createRecord(), uuid: "record-2" },
     });
-    const stopped = await store.dispatch(
-      PositionTrackingActions.stopTracking({ confirm: false }) as any,
+    const stopped = await dispatchThunk(
+      store,
+      PositionTrackingActions.stopTracking({ confirm: false }),
     );
     expect(stopped).toBe(false);
     expect(mockService.track).not.toBeNull();
@@ -309,27 +353,31 @@ describe("PositionTrackingActions", () => {
 
   test("only one track at a time: the current one is stopped after confirmation", async () => {
     const store = createStore();
-    await store.dispatch(
-      PositionTrackingActions.startTracking({ nodeUuid: "track-node" }) as any,
+    await dispatchThunk(
+      store,
+      PositionTrackingActions.startTracking({ nodeUuid: "track-node" }),
     );
-    await store.dispatch(
+    await dispatchThunk(
+      store,
       PositionTrackingActions.startTracking({
         nodeUuid: "other-track-node",
-      }) as any,
+      }),
     );
     expect(mockConfirm).toHaveBeenCalledTimes(1);
     expect(getTrackedNodeValue(store)).toEqual(trackValue);
     expect(store.getState().positionTracking.nodeUuid).toBe("other-track-node");
-    await store.dispatch(
-      PositionTrackingActions.stopTracking({ confirm: false }) as any,
+    await dispatchThunk(
+      store,
+      PositionTrackingActions.stopTracking({ confirm: false }),
     );
   });
 
   test("tracking is not started when the record cannot be edited", async () => {
     const store = createStore();
     store.dispatch({ type: "TEST_CAN_EDIT_SET", canEdit: false });
-    await store.dispatch(
-      PositionTrackingActions.startTracking({ nodeUuid: "track-node" }) as any,
+    await dispatchThunk(
+      store,
+      PositionTrackingActions.startTracking({ nodeUuid: "track-node" }),
     );
     expect(store.getState().positionTracking.status).toBe(
       PositionTrackingStatus.idle,
@@ -344,8 +392,9 @@ describe("PositionTrackingActions", () => {
       "dataEntry:positionTracking.error.permissionDenied",
     );
     const store = createStore();
-    await store.dispatch(
-      PositionTrackingActions.startTracking({ nodeUuid: "track-node" }) as any,
+    await dispatchThunk(
+      store,
+      PositionTrackingActions.startTracking({ nodeUuid: "track-node" }),
     );
     const state = store.getState().positionTracking;
     expect(state.status).toBe(PositionTrackingStatus.idle);
@@ -371,26 +420,29 @@ describe("PositionTrackingActions", () => {
 
     test("starting again appends to the recorded track", async () => {
       const store = createStoreWithTrack();
-      await store.dispatch(
+      await dispatchThunk(
+        store,
         PositionTrackingActions.startTracking({
           nodeUuid: "track-node",
-        }) as any,
+        }),
       );
       expect(PositionTrackingService.start).toHaveBeenCalledWith(
         expect.objectContaining({ baseValue: trackValue }),
       );
       expect(mockConfirm).not.toHaveBeenCalled();
-      await store.dispatch(
-        PositionTrackingActions.stopTracking({ confirm: false }) as any,
+      await dispatchThunk(
+        store,
+        PositionTrackingActions.stopTracking({ confirm: false }),
       );
     });
 
     test("restart deletes the recorded track after confirmation", async () => {
       const store = createStoreWithTrack();
-      await store.dispatch(
+      await dispatchThunk(
+        store,
         PositionTrackingActions.restartTracking({
           nodeUuid: "track-node",
-        }) as any,
+        }),
       );
       expect(mockConfirm).toHaveBeenCalledTimes(1);
       expect(getTrackedNodeValue(store)).toBeNull();
@@ -400,18 +452,20 @@ describe("PositionTrackingActions", () => {
       expect(store.getState().positionTracking.status).toBe(
         PositionTrackingStatus.tracking,
       );
-      await store.dispatch(
-        PositionTrackingActions.stopTracking({ confirm: false }) as any,
+      await dispatchThunk(
+        store,
+        PositionTrackingActions.stopTracking({ confirm: false }),
       );
     });
 
     test("restart keeps the recorded track when not confirmed", async () => {
       mockConfirm.mockImplementation(async () => null);
       const store = createStoreWithTrack();
-      await store.dispatch(
+      await dispatchThunk(
+        store,
         PositionTrackingActions.restartTracking({
           nodeUuid: "track-node",
-        }) as any,
+        }),
       );
       expect(getTrackedNodeValue(store)).toEqual(trackValue);
       expect(PositionTrackingService.start).not.toHaveBeenCalled();
@@ -419,8 +473,9 @@ describe("PositionTrackingActions", () => {
 
     test("delete clears the recorded track after confirmation", async () => {
       const store = createStoreWithTrack();
-      await store.dispatch(
-        PositionTrackingActions.deleteTrack({ nodeUuid: "track-node" }) as any,
+      await dispatchThunk(
+        store,
+        PositionTrackingActions.deleteTrack({ nodeUuid: "track-node" }),
       );
       expect(mockConfirm).toHaveBeenCalledTimes(1);
       expect(getTrackedNodeValue(store)).toBeNull();
@@ -430,26 +485,30 @@ describe("PositionTrackingActions", () => {
     test("delete keeps the recorded track when not confirmed", async () => {
       mockConfirm.mockImplementation(async () => null);
       const store = createStoreWithTrack();
-      await store.dispatch(
-        PositionTrackingActions.deleteTrack({ nodeUuid: "track-node" }) as any,
+      await dispatchThunk(
+        store,
+        PositionTrackingActions.deleteTrack({ nodeUuid: "track-node" }),
       );
       expect(getTrackedNodeValue(store)).toEqual(trackValue);
     });
 
     test("delete is not possible while tracking", async () => {
       const store = createStoreWithTrack();
-      await store.dispatch(
+      await dispatchThunk(
+        store,
         PositionTrackingActions.startTracking({
           nodeUuid: "track-node",
-        }) as any,
+        }),
       );
-      await store.dispatch(
-        PositionTrackingActions.deleteTrack({ nodeUuid: "track-node" }) as any,
+      await dispatchThunk(
+        store,
+        PositionTrackingActions.deleteTrack({ nodeUuid: "track-node" }),
       );
       expect(mockConfirm).not.toHaveBeenCalled();
       expect(getTrackedNodeValue(store)).toEqual(trackValue);
-      await store.dispatch(
-        PositionTrackingActions.stopTracking({ confirm: false }) as any,
+      await dispatchThunk(
+        store,
+        PositionTrackingActions.stopTracking({ confirm: false }),
       );
     });
   });

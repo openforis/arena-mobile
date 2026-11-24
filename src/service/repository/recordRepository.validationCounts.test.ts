@@ -1,4 +1,6 @@
 import {
+  ArenaSurvey,
+  ArenaValidation,
   RecordBuilder,
   RecordNodeBuilders,
   SurveyBuilder,
@@ -29,18 +31,24 @@ const { entity, attribute } = RecordNodeBuilders;
 
 const user = UserFactory.createInstance({ email: "t@t.org", name: "t" });
 
-const validationWithoutCounts = {
+const validationWithoutCounts: ArenaValidation = {
   valid: false,
   fields: {
-    n1: { valid: false, errors: [{ key: "required" }, { key: "required" }] },
-    n2: { valid: false, warnings: [{ key: "custom" }] },
+    n1: {
+      valid: false,
+      errors: [
+        { key: "required", valid: false },
+        { key: "required", valid: false },
+      ],
+    },
+    n2: { valid: false, warnings: [{ key: "custom", valid: false }] },
   },
 };
 
-let survey: any;
+let survey: ArenaSurvey;
 
-const buildRecord = (validation: any) => {
-  const record: any = new RecordBuilder(
+const buildRecord = (validation: ArenaValidation) => {
+  const record = new RecordBuilder(
     user,
     survey,
     entity("plot", attribute("plot_id", 1)),
@@ -63,23 +71,25 @@ describe("record validation counts columns", () => {
     await dbClient.runSql(
       `INSERT INTO survey (uuid, name, content, date_created, date_modified) VALUES ('s', 's', '{}', 'd', 'd')`,
     );
-    survey = await new SurveyBuilder(
-      user,
-      entityDef("plot", integerDef("plot_id").key()),
-    ).build();
-    survey.id = 1;
+    survey = {
+      ...(await new SurveyBuilder(
+        user,
+        entityDef("plot", integerDef("plot_id").key()),
+      ).build()),
+      id: 1,
+    };
   });
 
   test("summaries get the counts of the inserted record validation", async () => {
     const record = buildRecord(validationWithoutCounts);
     await RecordRepository.insertRecord({ survey, record });
 
-    const summary: any = await fetchSummary(record.uuid);
+    const summary = await fetchSummary(record.uuid);
     expect(summary.validation).toEqual({
       valid: false,
       counts: { errors: 2, warnings: 1 },
     });
-    expect(summary.errorsCount).toBeUndefined();
+    expect((summary as { errorsCount?: number }).errorsCount).toBeUndefined();
   });
 
   test("the full record keeps the whole validation", async () => {
@@ -114,12 +124,16 @@ describe("record validation counts columns", () => {
       survey: { ...survey, datePublished: "2026-11-01T10:00:00.000Z" },
       recordId,
     });
-    const row: any = await dbClient.one(
+    const row = await dbClient.one<{
+      fixed_for: string | null;
+      errors_count: number;
+      warnings_count: number;
+    }>(
       `SELECT fixed_for, errors_count, warnings_count FROM record WHERE id = ?`,
       [recordId],
     );
-    expect(row.fixed_for).not.toBeNull();
-    expect([row.errors_count, row.warnings_count]).toEqual([2, 1]);
+    expect(row!.fixed_for).not.toBeNull();
+    expect([row!.errors_count, row!.warnings_count]).toEqual([2, 1]);
   });
 
   test("updating the record or its validation updates the counts", async () => {

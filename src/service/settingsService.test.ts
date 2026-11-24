@@ -1,3 +1,5 @@
+import type { ImportedMap } from "model/ImportedMap";
+
 import { SettingsService } from "./settingsService";
 
 const mockStorage: Record<string, string> = {};
@@ -11,7 +13,7 @@ jest.mock("./asyncStorage/AsyncStorageUtils", () => {
         await tick();
         return mockStorage[key] ? JSON.parse(mockStorage[key]) : null;
       },
-      setItem: async (key: string, value: any) => {
+      setItem: async (key: string, value: unknown) => {
         await tick();
         mockStorage[key] = JSON.stringify(value);
       },
@@ -24,11 +26,11 @@ jest.mock("utils/SystemUtils", () => ({ SystemUtils: {} }));
 describe("SettingsService.updateSetting", () => {
   it("persists overlapping updates", async () => {
     await Promise.all([
-      SettingsService.updateSetting({ key: "fontScale", value: 2 } as any),
+      SettingsService.updateSetting({ key: "fontScale", value: 2 }),
       SettingsService.updateSetting({
         key: "animationsEnabled",
         value: false,
-      } as any),
+      }),
     ]);
     const stored = JSON.parse(Object.values(mockStorage)[0]!);
     expect(stored.fontScale).toBe(2);
@@ -39,10 +41,10 @@ describe("SettingsService.updateSetting", () => {
 describe("SettingsService.updateSettings", () => {
   it("doesn't drop updates made while other updates are pending", async () => {
     await Promise.all([
-      SettingsService.updateSetting({ key: "fontScale", value: 3 } as any),
+      SettingsService.updateSetting({ key: "fontScale", value: 3 }),
       SettingsService.updateSettings((settings) => ({
         ...settings,
-        importedMaps: [{ id: "map" } as any],
+        importedMaps: [{ id: "map" } as ImportedMap],
       })),
     ]);
     const stored = JSON.parse(Object.values(mockStorage)[0]!);
@@ -65,7 +67,7 @@ describe("SettingsService.fetchSettings", () => {
     expect(settings.importedMaps).toEqual([{ id: "map" }]);
     expect(settings).not.toHaveProperty("pdfMaps");
 
-    await service!.updateSetting({ key: "fontScale", value: 3 } as any);
+    await service!.updateSetting({ key: "fontScale", value: 3 });
     const stored = JSON.parse(mockStorage["@settings"]!);
     expect(stored.importedMaps).toEqual([{ id: "map" }]);
     expect(stored).not.toHaveProperty("pdfMaps");

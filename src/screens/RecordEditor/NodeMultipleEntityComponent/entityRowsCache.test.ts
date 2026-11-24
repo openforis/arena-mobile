@@ -1,32 +1,54 @@
+import type {
+  ArenaAnyNodeDef,
+  ArenaRecord,
+  ArenaRecordNode,
+  ArenaSurvey,
+} from "@openforis/arena-core";
+
 import { EntityRowsCache } from "./entityRowsCache";
+
+type TestNode = { uuid: string; value: unknown };
+// only what the mocked Records.getChildren reads
+type TestRecord = {
+  cycle: string;
+  childrenByEntityAndDef: Record<string, TestNode[]>;
+};
 
 const mockGetEntitySummaryValuesByNameFormatted = jest.fn();
 
 jest.mock("model/utils/RecordUtils", () => ({
   RecordUtils: {
-    getEntitySummaryValuesByNameFormatted: (params: any) =>
+    getEntitySummaryValuesByNameFormatted: (params: unknown) =>
       mockGetEntitySummaryValuesByNameFormatted(params),
   },
 }));
 
 jest.mock("@openforis/arena-core", () => ({
   Records: {
-    getChildren: (entity: any, defUuid: string) => (record: any) =>
-      record.childrenByEntityAndDef[`${entity.uuid}_${defUuid}`] ?? [],
+    getChildren:
+      (entity: { uuid: string }, defUuid: string) => (record: TestRecord) =>
+        record.childrenByEntityAndDef[`${entity.uuid}_${defUuid}`] ?? [],
   },
 }));
 
-const survey: any = {};
+const survey = {} as ArenaSurvey;
 const t = jest.fn();
-const summaryDefs: any[] = [{ uuid: "def1" }];
-const entity: any = { uuid: "entity1" };
+const summaryDefs = [{ uuid: "def1" }] as ArenaAnyNodeDef[];
+const entity = { uuid: "entity1" } as ArenaRecordNode;
 
-const createRecord = (summaryNode: any): any => ({
-  cycle: "0",
-  childrenByEntityAndDef: { entity1_def1: [summaryNode] },
-});
+const createRecord = (summaryNode: TestNode): ArenaRecord => {
+  const record: TestRecord = {
+    cycle: "0",
+    childrenByEntityAndDef: { entity1_def1: [summaryNode] },
+  };
+  return record as unknown as ArenaRecord;
+};
 
-const getRow = (params: any) =>
+const getRow = (
+  params: Partial<Parameters<typeof EntityRowsCache.getEntityRow>[0]> & {
+    record: ArenaRecord;
+  },
+) =>
   EntityRowsCache.getEntityRow({
     survey,
     entity,
@@ -40,8 +62,8 @@ describe("EntityRowsCache.getEntityRow", () => {
   beforeEach(() => {
     mockGetEntitySummaryValuesByNameFormatted.mockReset();
     mockGetEntitySummaryValuesByNameFormatted.mockImplementation(
-      ({ record }: any) => ({
-        def1: record.childrenByEntityAndDef.entity1_def1[0].value,
+      ({ record }: { record: TestRecord }) => ({
+        def1: record.childrenByEntityAndDef["entity1_def1"]![0]!.value,
       }),
     );
   });
