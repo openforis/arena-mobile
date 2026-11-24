@@ -27,6 +27,8 @@ import { RecordListConstants } from "./recordListConstants";
 
 // record summary as shown in the records list (only the props read by the cell renderers)
 export type RecordListItem = DataVisualizerItem & {
+  id?: number;
+  uuid: string;
   loadStatus?: RecordLoadStatus;
   origin?: RecordOrigin;
   readOnly?: boolean;

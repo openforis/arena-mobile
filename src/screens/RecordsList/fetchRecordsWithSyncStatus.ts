@@ -8,7 +8,7 @@ import { log } from "utils";
 import { HttpErrors } from "utils/HttpErrors";
 import type { AppDispatch } from "state/store";
 
-import type { RecordSummaryWithSyncStatus } from "./recordsListTypes";
+import type { RecordSummaryWithSyncStatus } from "model";
 
 type FetchRecordsWithSyncStatusParams = {
   cycle: string | undefined;

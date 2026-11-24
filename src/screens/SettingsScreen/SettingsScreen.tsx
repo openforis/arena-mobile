@@ -72,7 +72,13 @@ export const SettingsScreen = () => {
       if (value === oldValue) return;
       setPendingValues((prev) => ({ ...prev, [key]: value }));
       try {
-        await dispatch(SettingsActions.updateSetting({ key, value }));
+        // the value edited by the item of this setting
+        await dispatch(
+          SettingsActions.updateSetting({
+            key,
+            value: value as SettingsObject[typeof key],
+          }),
+        );
       } finally {
         setPendingValues((prev) => {
           if (!Object.is(prev[key], value)) return prev;

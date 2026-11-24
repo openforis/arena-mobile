@@ -26,7 +26,7 @@ import {
   RecordListField,
   RecordListItem,
 } from "./recordsVisualizerFields";
-import type { RecordSummaryWithSyncStatus } from "./recordsListTypes";
+import type { RecordSummaryWithSyncStatus } from "model";
 
 // table view only: the list and cards views are virtualized
 const recordsPerPage = 50;

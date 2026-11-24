@@ -365,7 +365,7 @@ const fetchAndEditRecord =
     recordSummary,
   }: {
     navigator: Navigator;
-    recordSummary: RecordSummary;
+    recordSummary: Pick<RecordSummary, "id" | "uuid" | "origin" | "loadStatus">;
   }) =>
   async (dispatch: AppDispatch, getState: AppGetState) => {
     const state = getState();

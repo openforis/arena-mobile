@@ -8,7 +8,7 @@ import { DataEntryActions, useAppDispatch, useConfirm } from "state";
 import { Files } from "utils";
 
 import { dataImportOptions, importFileExtension } from "./recordsListUtils";
-import type { RecordSummaryWithSyncStatus } from "./recordsListTypes";
+import type { RecordSummaryWithSyncStatus } from "model";
 
 type UseRecordsListActionsParams = {
   confirm: ReturnType<typeof useConfirm>;
@@ -179,7 +179,7 @@ export const useRecordsListActions = ({
     (selectedRecordUuids: string[]) => {
       const recordIds = records
         .filter((record) => selectedRecordUuids.includes(record.uuid))
-        .map((record) => record.id);
+        .map((record) => record.id!);
       dispatch(
         DataEntryActions.revalidateRecords({
           recordIds,
@@ -193,7 +193,8 @@ export const useRecordsListActions = ({
   const onRevalidateAllRecordsPress = useCallback(() => {
     dispatch(
       DataEntryActions.revalidateRecords({
-        recordIds: records.map((record) => record.id),
+        // stored records always have an id
+        recordIds: records.map((record) => record.id!),
         callback: loadRecords,
       }),
     );

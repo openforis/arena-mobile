@@ -1,24 +1,17 @@
 import { useCallback, useMemo } from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 
-import { ArenaAnyNodeDef, NodeDefs, Objects } from "@openforis/arena-core";
+import { NodeDefs, Objects } from "@openforis/arena-core";
 
 import { Button } from "components";
+import type { RecordPageEntityPointer } from "model";
 import { ButtonIconPosition, ButtonMode } from "components/Button";
 import { DataEntryActions, SurveySelectors, useAppDispatch } from "state";
 
 import buttonStyles from "./buttonStyles";
 
-// entity page pointer returned by RecordPageNavigator
-type EntityPagePointer = {
-  parentEntityUuid?: string;
-  entityDef: ArenaAnyNodeDef;
-  entityUuid?: string | null;
-  index?: number;
-};
-
 type Props = {
-  entityPointer: EntityPagePointer;
+  entityPointer: RecordPageEntityPointer;
   icon?: string;
   iconPosition?: ButtonIconPosition;
   mode?: ButtonMode;

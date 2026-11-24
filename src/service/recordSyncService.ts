@@ -1,7 +1,7 @@
 import { ArenaSurvey } from "@openforis/arena-core";
 
 import { RecordLoadStatus, RecordOrigin, RecordSummaries } from "model";
-import type { ArenaMobileRecord } from "model";
+import type { ArenaMobileRecord, RecordSummaryWithSyncStatus } from "model";
 import { ArrayUtils } from "utils";
 
 import { RecordRepository } from "./repository/recordRepository";
@@ -12,8 +12,6 @@ import {
 } from "./recordSyncStatus";
 
 type RecordsSyncSurvey = ArenaSurvey & { remoteId?: number };
-
-type RecordSummaryWithSyncStatus = ArenaMobileRecord & { syncStatus?: string };
 
 const {
   fetchRecords,

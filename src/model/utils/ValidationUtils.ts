@@ -38,7 +38,7 @@ const getJointTexts = ({
   severity,
   t,
   customMessageLang,
-}: JointTextsParams & { severity: ValidationSeverity }) => {
+}: JointTextsParams & { severity: ValidationSeverity }): string | null => {
   const result: string[] = [];
 
   Validations.traverse((v) => {
@@ -51,8 +51,7 @@ const getJointTexts = ({
     result.push(...messages);
   })(validation);
 
-  // typed loosely: callers don't handle null yet
-  return (result.length > 0 ? result.join(", ") : null) as any;
+  return result.length > 0 ? result.join(", ") : null;
 };
 
 const getJointErrorText = ({

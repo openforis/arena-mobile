@@ -46,7 +46,7 @@ const updateSetting =
         _stopGpsLocking();
       }
     } else if (key === SettingsModel.SettingKey.language) {
-      changeLanguage(value);
+      changeLanguage(value as SettingsObject["language"]);
     }
     if (canPersist) {
       const settingsUpdated = await SettingsService.updateSetting({

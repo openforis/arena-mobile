@@ -24,10 +24,7 @@ import {
   useAppDispatch,
 } from "state";
 
-import type {
-  SurveySummaryLocal,
-  SurveySummaryRemote,
-} from "../SurveysList/surveySummaryTypes";
+import type { SurveySummaryLocal, SurveySummaryRemote } from "model";
 import { useSurveysSearch } from "../SurveysList/useSurveysSearch";
 import { getSurveyLoadStatusKey } from "./surveyLoadStatus";
 

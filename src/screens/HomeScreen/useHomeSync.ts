@@ -13,7 +13,7 @@ import {
 import { fetchRecordsWithSyncStatus } from "../RecordsList/fetchRecordsWithSyncStatus";
 import { useRecordsExport } from "../RecordsList/useRecordsExport";
 import { RecordsListState } from "../RecordsList/useRecordsList";
-import type { RecordSummaryWithSyncStatus } from "../RecordsList/recordsListTypes";
+import type { RecordSummaryWithSyncStatus } from "model";
 
 type Props = {
   onSyncEnd: () => void;

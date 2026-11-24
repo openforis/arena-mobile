@@ -46,8 +46,10 @@ type SystemSettingApplier = ({
 const systemSettingApplierByKey: Partial<
   Record<keyof SettingsObject, SystemSettingApplier>
 > = {
-  fullScreen: async ({ value }) => SystemUtils.setFullScreen(value),
-  keepScreenAwake: async ({ value }) => SystemUtils.setKeepScreenAwake(value),
+  fullScreen: async ({ value }) =>
+    SystemUtils.setFullScreen(value as SettingsObject["fullScreen"]),
+  keepScreenAwake: async ({ value }) =>
+    SystemUtils.setKeepScreenAwake(value as SettingsObject["keepScreenAwake"]),
 };
 
 // key of the imported maps up to version 2.11.3 (PDF maps only)

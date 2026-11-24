@@ -20,8 +20,8 @@ const estimateFullBackupSize = async () => {
   return dbSize + surveysSize + recordFilesSize;
 };
 
-// FullBackupButton expects a string: the null (canceled) result is not typed yet
-const generateFullBackup = async (): Promise<any> => {
+// null if the backup job has been canceled
+const generateFullBackup = async (): Promise<string | null> => {
   const job = new BackupJob({ user: {} as ArenaUser });
   await job.start();
 

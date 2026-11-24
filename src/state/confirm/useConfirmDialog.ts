@@ -13,8 +13,7 @@ import { useAppDispatch, useAppSelector } from "state/storeHooks";
 type ConfirmDialogLocalState = {
   confirmInProgress: boolean;
   selectedMultipleChoiceValues: string[];
-  // null when nothing is selected (AppConfirmDialog does not accept null yet)
-  selectedSingleChoiceValue: any;
+  selectedSingleChoiceValue: string | null | undefined;
   swipeConfirmed: boolean;
   textInputValue: string;
 };
