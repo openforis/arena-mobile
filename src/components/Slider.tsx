@@ -20,9 +20,10 @@ export const Slider = (props: Props) => {
   const theme = useTheme();
 
   const onChange = useCallback(
-    (val: any) => {
+    // the Dropdown fallback passes the value as a string
+    (val: number | string) => {
       if (val !== value) {
-        onValueChange?.(val);
+        onValueChange?.(val as number);
       }
     },
     [onValueChange, value],

@@ -53,11 +53,25 @@ const addPolygon = (
   });
 };
 
+// loosely typed GeoJSON object (parsed from user files)
+type GeoJsonObject = {
+  type?: string;
+  coordinates?: unknown;
+  geometries?: unknown;
+  geometry?: unknown;
+  properties?: Record<string, unknown> | null;
+  features?: unknown;
+};
+
+const asGeoJsonObject = (value: unknown): GeoJsonObject | undefined =>
+  value && typeof value === "object" ? (value as GeoJsonObject) : undefined;
+
 const addGeoJsonGeometry = (
   result: MapLayerFileGeometries,
-  geometry: any,
+  geometryParam: unknown,
   name?: string,
 ) => {
+  const geometry = asGeoJsonObject(geometryParam);
   const coordinates = geometry?.coordinates;
   switch (geometry?.type) {
     case "Point": {
@@ -87,26 +101,30 @@ const addGeoJsonGeometry = (
       }
       break;
     case "GeometryCollection":
-      for (const child of asArray(geometry.geometries)) {
+      for (const child of asArray(geometry?.geometries)) {
         addGeoJsonGeometry(result, child, name);
       }
       break;
   }
 };
 
-const getGeoJsonFeatureName = (properties: any): string | undefined => {
+const getGeoJsonFeatureName = (
+  properties: GeoJsonObject["properties"],
+): string | undefined => {
   const name = properties?.name ?? properties?.Name ?? properties?.NAME;
   return name === null || name === undefined ? undefined : String(name);
 };
 
 // FeatureCollection, Feature or bare geometry
-const parseGeoJson = (geoJson: any): MapLayerFileGeometries => {
+const parseGeoJson = (geoJsonParam: unknown): MapLayerFileGeometries => {
   const result = createEmptyGeometries();
+  const geoJson = asGeoJsonObject(geoJsonParam);
   const items =
     geoJson?.type === "FeatureCollection"
       ? asArray(geoJson.features)
-      : [geoJson];
-  for (const item of items as any[]) {
+      : [geoJsonParam];
+  for (const itemParam of items) {
+    const item = asGeoJsonObject(itemParam);
     if (item?.type === "Feature") {
       addGeoJsonGeometry(
         result,
@@ -114,7 +132,7 @@ const parseGeoJson = (geoJson: any): MapLayerFileGeometries => {
         getGeoJsonFeatureName(item.properties),
       );
     } else {
-      addGeoJsonGeometry(result, item);
+      addGeoJsonGeometry(result, itemParam);
     }
   }
   return result;

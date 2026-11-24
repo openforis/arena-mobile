@@ -1,11 +1,22 @@
 import React from "react";
-import { StyleProp, TextStyle, ViewStyle } from "react-native";
+import {
+  GestureResponderEvent,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+} from "react-native";
 import { MD3TypescaleKey, Button as RNPButton } from "react-native-paper";
 
 import { Objects } from "@openforis/arena-core";
 
 import { useEffectiveTheme } from "hooks/useEffectiveTheme";
-import { TextDirection, useTextDirection, useTranslation } from "localization";
+import {
+  TextDirection,
+  TranslateFunction,
+  TranslateParams,
+  useTextDirection,
+  useTranslation,
+} from "localization";
 import { BaseStyles } from "utils/BaseStyles";
 import { useButtonOnPress } from "./useButtonPress";
 
@@ -17,8 +28,8 @@ const determineText = ({
 }: {
   textIsI18nKey: boolean;
   textKey: string | undefined;
-  textParams: any;
-  t: (key?: string | null, params?: any) => string;
+  textParams: TranslateParams | undefined;
+  t: TranslateFunction;
 }) => {
   if (Objects.isEmpty(textKey)) {
     return null;
@@ -45,7 +56,7 @@ export type ButtonProps = {
   color?: ButtonColor;
   compact?: boolean;
   disabled?: boolean;
-  icon?: any;
+  icon?: React.ComponentProps<typeof RNPButton>["icon"];
   iconColor?: string;
   iconPosition?: ButtonIconPosition;
   labelStyle?: StyleProp<TextStyle>;
@@ -53,13 +64,13 @@ export type ButtonProps = {
   loading?: boolean;
   mode?: ButtonMode;
   multiplePressAvoidanceTimeout?: number;
-  onPress?: (event: any) => Promise<void> | void;
+  onPress?: (event: GestureResponderEvent) => Promise<void> | void;
   style?: StyleProp<ViewStyle>;
   testID?: string;
   textColor?: string;
   textIsI18nKey?: boolean;
   textKey?: string;
-  textParams?: any;
+  textParams?: TranslateParams;
 };
 
 export const Button = (props: ButtonProps) => {

@@ -7,7 +7,7 @@ const formattedValueLength = (format: string): number =>
   format.replaceAll("[", "").replaceAll("]", "").length;
 
 const determineDateFormat = (
-  value: any,
+  value: string,
   dateFormats = [
     DateFormats.dateDisplay,
     DateFormats.datetimeDisplay,
@@ -38,7 +38,7 @@ const getTimeSafely = (date: Date | undefined): number =>
  * Compares two property values (propA and propB) based on their type.
  * Handles string, number, and date comparisons.
  */
-const compareValues = (propA: any, propB: any): number => {
+const compareValues = (propA: unknown, propB: unknown): number => {
   // --- Date Comparison ---
   if (typeof propA === "string" && typeof propB === "string") {
     const dateFormat = determineDateFormat(propA);
@@ -56,7 +56,7 @@ const compareValues = (propA: any, propB: any): number => {
     return propA.localeCompare(propB);
   }
   // --- Numeric/Default Comparison ---
-  return propA - propB;
+  return (propA as number) - (propB as number);
 };
 
 /**
@@ -65,7 +65,7 @@ const compareValues = (propA: any, propB: any): number => {
  */
 const sortCompareFn =
   (sortProp: string, sortDirection: Sort) =>
-  (itemA: any, itemB: any): number => {
+  (itemA: object, itemB: object): number => {
     const sortPropPath = sortProp?.split(".");
     const propA = Objects.path(sortPropPath)(itemA);
     const propB = Objects.path(sortPropPath)(itemB);
@@ -89,25 +89,35 @@ const sortCompareFn =
     return comparisonResult * sortDirectionFactor;
   };
 
-const findByUuid = (uuid: any) => (array: any) =>
-  array.find((item: any) => item.uuid === uuid);
+type ItemWithUuid = { uuid: string };
 
-const sortByProps = (sortObj: SortObject) => (array: any) => {
-  array.sort((itemA: any, itemB: any) => {
-    let sortResult = 0;
-    Object.entries(sortObj).some(([sortProp, sortDirection]) => {
-      sortResult = sortCompareFn(sortProp, sortDirection)(itemA, itemB);
-      return sortResult !== 0;
+const findByUuid =
+  (uuid: string) =>
+  <T extends ItemWithUuid>(array: T[]): T | undefined =>
+    array.find((item) => item.uuid === uuid);
+
+const sortByProps =
+  (sortObj: SortObject) =>
+  <T extends object>(array: T[]): void => {
+    array.sort((itemA, itemB) => {
+      let sortResult = 0;
+      Object.entries(sortObj).some(([sortProp, sortDirection]) => {
+        sortResult = sortCompareFn(sortProp, sortDirection)(itemA, itemB);
+        return sortResult !== 0;
+      });
+      return sortResult;
     });
-    return sortResult;
-  });
-};
+  };
 
-const indexByUuid = (array: any) =>
-  array.reduce((acc: any, item: any) => {
-    acc[item.uuid] = item;
-    return acc;
-  }, {});
+// loosely typed values: some callers rely on them (e.g. RecordSummary.dateModified)
+const indexByUuid = <T extends ItemWithUuid>(array: T[]): Record<string, any> =>
+  array.reduce(
+    (acc, item) => {
+      acc[item.uuid] = item;
+      return acc;
+    },
+    {} as Record<string, T>,
+  );
 
 // adds the item if missing, removes it otherwise
 const toggleItem = <T>(array: T[], item: T): T[] =>

@@ -4,7 +4,7 @@ import { Animated } from "react-native";
 type Props = {
   duration?: number;
   visible?: boolean;
-  style?: any;
+  style?: React.ComponentProps<typeof Animated.View>["style"];
   children?: React.ReactNode;
 };
 

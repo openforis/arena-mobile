@@ -1,8 +1,13 @@
 import { Languages, LanguagesISO639part2 } from "@openforis/arena-core";
 
-const getLanguageLabel = (langCode: any) => {
+type LanguageLabelsMap = Record<string, Record<string, string> | undefined>;
+
+const getLanguageLabel = (
+  langCode: string | null | undefined,
+): string | null => {
   if (!langCode) return null;
-  const languageMap = langCode.length === 2 ? Languages : LanguagesISO639part2;
+  const languageMap: LanguageLabelsMap =
+    langCode.length === 2 ? Languages : LanguagesISO639part2;
   const item = languageMap?.[langCode];
   return item?.["en"] ?? langCode;
 };

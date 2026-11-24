@@ -5,7 +5,7 @@ import { useImageFile } from "hooks";
 
 type Props = {
   defaultExtension?: string;
-  source: any;
+  source: { uri?: string | null } | null | undefined;
   style?: StyleProp<ImageStyle>;
 };
 

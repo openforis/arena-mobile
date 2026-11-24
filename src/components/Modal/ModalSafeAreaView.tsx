@@ -1,4 +1,4 @@
-import { StyleSheet, View, ViewProps } from "react-native";
+import { StyleSheet, View, ViewProps, ViewStyle } from "react-native";
 import { Edge, useSafeAreaInsets } from "react-native-safe-area-context";
 
 type ModalSafeAreaViewProps = ViewProps & {
@@ -31,16 +31,16 @@ const edgeToAxisPaddingProp: Record<
 export const ModalSafeAreaView = (props: ModalSafeAreaViewProps) => {
   const { edges = defaultEdges, style, children, ...otherProps } = props;
   const insets = useSafeAreaInsets();
-  const flatStyle: any = StyleSheet.flatten(style) ?? {};
+  const flatStyle: ViewStyle = StyleSheet.flatten(style) ?? {};
 
   const additivePadding = edges.reduce((acc: Record<string, number>, edge) => {
     const paddingProp = edgeToPaddingProp[edge];
     const axisPaddingProp = edgeToAxisPaddingProp[edge];
-    const basePadding =
-      flatStyle[paddingProp] ??
+    // numeric paddings expected (percentages not supported)
+    const basePadding = (flatStyle[paddingProp] ??
       flatStyle[axisPaddingProp] ??
       flatStyle.padding ??
-      0;
+      0) as number;
     acc[paddingProp] = basePadding + insets[edge];
     return acc;
   }, {});

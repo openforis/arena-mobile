@@ -56,9 +56,11 @@ export const PreviewInitializer = ({ children }: Props) => {
           setError(null);
           setReady(true);
         },
-        (err: any) => {
+        (err: unknown) => {
           log.error("Error starting survey preview", err);
-          const message = String(err?.message ?? err);
+          const message = String(
+            (err as { message?: unknown } | null | undefined)?.message ?? err,
+          );
           setError(message);
           postToParent({ type: PreviewMessageType.error, message });
         },

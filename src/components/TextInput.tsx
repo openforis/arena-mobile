@@ -15,7 +15,7 @@ const multilineStyle = { lineHeight: 24 };
 type Props = {
   autoFocus?: boolean;
   autoCapitalize?: "none" | "sentences" | "words" | "characters";
-  defaultValue?: any;
+  defaultValue?: string;
   disabled?: boolean;
   editable?: boolean;
   error?: boolean;
