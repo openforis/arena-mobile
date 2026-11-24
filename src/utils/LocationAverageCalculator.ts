@@ -103,27 +103,22 @@ export class LocationAverager {
     }
 
     // --- 6. Average the remaining (filtered) coordinates ---
-    const count = filteredReadings.length;
-    const average = (values: number[]) =>
-      values.reduce((sum, value) => sum + value, 0) / values.length;
+    const valuesOf = <K extends keyof LocationPoint>(key: K) =>
+      filteredReadings.map((reading) => reading[key]);
+
+    // accuracy is never null here: readings without it were filtered out
+    const averageOf = (key: "latitude" | "longitude" | "accuracy") =>
+      averageOfAvailable(valuesOf(key))!;
 
     return {
-      latitude: average(filteredReadings.map((reading) => reading.latitude)),
-      longitude: average(filteredReadings.map((reading) => reading.longitude)),
-      accuracy: average(filteredReadings.map((reading) => reading.accuracy!)),
-      altitude: averageOfAvailable(
-        filteredReadings.map((reading) => reading.altitude),
-      ),
-      altitudeAccuracy: averageOfAvailable(
-        filteredReadings.map((reading) => reading.altitudeAccuracy),
-      ),
-      heading: calculateCircularMean(
-        filteredReadings.map((reading) => reading.heading),
-      ),
-      speed: averageOfAvailable(
-        filteredReadings.map((reading) => reading.speed),
-      ),
-      count,
+      latitude: averageOf("latitude"),
+      longitude: averageOf("longitude"),
+      accuracy: averageOf("accuracy"),
+      altitude: averageOfAvailable(valuesOf("altitude")),
+      altitudeAccuracy: averageOfAvailable(valuesOf("altitudeAccuracy")),
+      heading: calculateCircularMean(valuesOf("heading")),
+      speed: averageOfAvailable(valuesOf("speed")),
+      count: filteredReadings.length,
     };
   }
 }
