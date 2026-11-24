@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
 const polygonFillColor = "rgba(21, 101, 192, 0.2)";
 const polygonStrokeColor = "rgba(21, 101, 192, 0.95)";
 
-const NodeGeoTrackValuePreview = ({ value }: { value: any }) => {
+const NodeGeoTrackValuePreview = ({ value }: { value: unknown }) => {
   const segments = useMemo(() => PositionTracks.fromFeature(value), [value]);
   return (
     <VView style={styles.container}>

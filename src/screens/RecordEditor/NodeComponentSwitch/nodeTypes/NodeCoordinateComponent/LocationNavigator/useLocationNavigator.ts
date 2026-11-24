@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { Numbers, Objects, Points } from "@openforis/arena-core";
+import { ArenaPoint, Numbers, Objects, Points } from "@openforis/arena-core";
 
 import {
   useLocationHeading,
@@ -21,7 +21,7 @@ const arrowToTargetVisibleDistanceThreshold = PROXIMITY_THRESHOLD_METRES;
 type NavigatorState = {
   currentLocation: LocationPoint | null;
   angleToTarget: number;
-  accuracy: number | null;
+  accuracy: number | null | undefined;
   distance: number;
 };
 
@@ -33,9 +33,9 @@ const initialState: NavigatorState = {
 };
 
 type UseLocationNavigatorProps = {
-  targetPoint: any;
+  targetPoint: ArenaPoint;
   onDismiss: () => void;
-  onUseCurrentLocation: (location: any) => void;
+  onUseCurrentLocation: (location: LocationPoint) => void;
 };
 
 export const useLocationNavigator = ({
@@ -54,12 +54,20 @@ export const useLocationNavigator = ({
   const [state, setState] = useState<NavigatorState>(initialState);
 
   const locationCallback = useCallback(
-    ({ location, locationAccuracy, pointLatLong }: any) => {
+    ({
+      location,
+      locationAccuracy,
+      pointLatLong,
+    }: {
+      location: LocationPoint | null;
+      locationAccuracy: number | null | undefined;
+      pointLatLong: ArenaPoint | null;
+    }) => {
       if (!location) return;
       const angleToTargetNew =
-        Points.bearing(pointLatLong, targetPoint, srsIndex) ?? 0;
+        Points.bearing(pointLatLong!, targetPoint, srsIndex) ?? 0;
       const distanceNew =
-        Points.distance(pointLatLong, targetPoint, srsIndex) ?? Infinity;
+        Points.distance(pointLatLong!, targetPoint, srsIndex) ?? Infinity;
       setState((prev) => ({
         ...prev,
         currentLocation: location,
@@ -131,7 +139,7 @@ export const useLocationNavigator = ({
   }, [currentLocation]);
 
   const onUseCurrentLocationPress = useCallback(() => {
-    onUseCurrentLocation(currentLocation);
+    onUseCurrentLocation(currentLocation!);
     onDismiss();
   }, [currentLocation, onDismiss, onUseCurrentLocation]);
 

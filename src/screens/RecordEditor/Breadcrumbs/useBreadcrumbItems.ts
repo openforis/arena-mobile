@@ -1,6 +1,14 @@
 import { useCallback, useMemo } from "react";
 
-import { NodeDefs, Objects, Records, Surveys } from "@openforis/arena-core";
+import {
+  ArenaAnyNodeDef,
+  ArenaRecord,
+  ArenaRecordNode,
+  NodeDefs,
+  Objects,
+  Records,
+  Surveys,
+} from "@openforis/arena-core";
 
 import { useTranslation } from "localization";
 import { RecordUtils } from "model";
@@ -27,7 +35,17 @@ export const useBreadcrumbItems = () => {
   const entityDefUuid = entityDef.uuid;
 
   const itemLabelFunction = useCallback(
-    ({ nodeDef, record = null, entity = null, parentEntity = null }: any) => {
+    ({
+      nodeDef,
+      record = null,
+      entity = null,
+      parentEntity = null,
+    }: {
+      nodeDef: ArenaAnyNodeDef;
+      record?: ArenaRecord | null;
+      entity?: ArenaRecordNode | null;
+      parentEntity?: ArenaRecordNode | null;
+    }) => {
       const nodeDefLabel = NodeDefs.getLabelOrName(nodeDef, lang);
 
       if (
@@ -37,8 +55,9 @@ export const useBreadcrumbItems = () => {
         const keyValuesByName =
           RecordUtils.getEntitySummaryValuesByNameFormatted({
             survey,
-            record,
-            entity,
+            // set when parentEntity is set; the root entity is the first item
+            record: record!,
+            entity: entity!,
             lang,
             emptyValue: null,
             t,

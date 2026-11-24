@@ -15,11 +15,12 @@ import {
 import { log } from "utils";
 
 import { fetchRecordsWithSyncStatus } from "./fetchRecordsWithSyncStatus";
+import type { RecordSummaryWithSyncStatus } from "./recordsListTypes";
 
 export type RecordsListState = {
   loading: boolean;
   onlyLocal: boolean;
-  records: any[];
+  records: RecordSummaryWithSyncStatus[];
   searchValue: string;
   syncStatusLoading: boolean;
   syncStatusFetched: boolean;

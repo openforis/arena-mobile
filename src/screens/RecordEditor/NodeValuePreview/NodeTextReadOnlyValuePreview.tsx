@@ -27,7 +27,8 @@ const styles = StyleSheet.create({
 });
 
 export const NodeTextReadOnlyValuePreview = (props: NodeValuePreviewProps) => {
-  const { nodeDef, value, valueFormatted } = props;
+  const { nodeDef, valueFormatted } = props;
+  const value = props.value as string;
 
   const cycle = DataEntrySelectors.useRecordCycle();
   const [normalizedUrl, setNormalizedUrl] = useState<string | null>(null);

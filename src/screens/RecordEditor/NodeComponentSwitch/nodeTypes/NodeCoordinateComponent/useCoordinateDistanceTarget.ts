@@ -1,4 +1,4 @@
-import { ArenaNodeDef, Objects, Records } from "@openforis/arena-core";
+import { ArenaAnyNodeDef, Objects, Records } from "@openforis/arena-core";
 
 import { useAsyncValueEffect } from "hooks";
 import { RecordUtils } from "model/utils/RecordUtils";
@@ -8,7 +8,7 @@ export const useCoordinateDistanceTarget = ({
   nodeDef,
   nodeUuid,
 }: {
-  nodeDef: ArenaNodeDef<any>;
+  nodeDef: ArenaAnyNodeDef;
   nodeUuid: string;
 }) => {
   const survey = SurveySelectors.useCurrentSurvey()!;

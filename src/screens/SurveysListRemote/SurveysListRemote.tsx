@@ -1,12 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { useNavigator } from "navigation/navigator";
 
-import {
-  DateFormats,
-  Dates,
-  ArenaSurvey,
-  Surveys,
-} from "@openforis/arena-core";
+import { DateFormats, Dates, Surveys } from "@openforis/arena-core";
 
 import {
   DataVisualizer,
@@ -29,10 +24,20 @@ import {
   useAppDispatch,
 } from "state";
 
+import type {
+  SurveySummaryLocal,
+  SurveySummaryRemote,
+} from "../SurveysList/surveySummaryTypes";
 import { useSurveysSearch } from "../SurveysList/useSurveysSearch";
 import { getSurveyLoadStatusKey } from "./surveyLoadStatus";
 
-const INITIAL_STATE = {
+type SurveysListRemoteState = {
+  surveys: SurveySummaryRemote[];
+  loading: boolean;
+  errorKey: string | null | undefined;
+};
+
+const INITIAL_STATE: SurveysListRemoteState = {
   surveys: [],
   loading: true,
   errorKey: null,
@@ -40,9 +45,7 @@ const INITIAL_STATE = {
 
 const minSurveysToShowSearchBar = 5;
 
-// only published surveys are fetched
-type SurveyRemoteItem = ArenaSurvey & {
-  datePublished: string;
+type SurveyRemoteItem = SurveySummaryRemote & {
   key: string;
   loadStatusKey: string;
 };
@@ -146,8 +149,11 @@ export const SurveysListRemote = () => {
 
   const surveysLocalByUuid = useMemo(
     () =>
-      new Map<string, any>(
-        surveysLocal.map((surveyLocal: any) => [surveyLocal.uuid, surveyLocal]),
+      new Map<string, SurveySummaryLocal>(
+        (surveysLocal as SurveySummaryLocal[]).map((surveyLocal) => [
+          surveyLocal.uuid,
+          surveyLocal,
+        ]),
       ),
     [surveysLocal],
   );
@@ -156,7 +162,10 @@ export const SurveysListRemote = () => {
     setState(INITIAL_STATE);
 
     const data = await SurveyService.fetchSurveySummariesRemote();
-    const { surveys: _surveys = [], errorKey } = data as any;
+    const { surveys: _surveys = [], errorKey } = data as {
+      surveys?: SurveySummaryRemote[];
+      errorKey?: string;
+    };
 
     if (errorKey) {
       dispatch(
@@ -173,7 +182,7 @@ export const SurveysListRemote = () => {
       ...statePrev,
       errorKey,
       loading: false,
-      surveys: _surveys.filter(Surveys.isVisibleInMobile),
+      surveys: _surveys.filter((survey) => Surveys.isVisibleInMobile(survey)),
     }));
   }, [dispatch, navigator]);
 
@@ -183,7 +192,7 @@ export const SurveysListRemote = () => {
     useSurveysSearch({ surveys });
 
   const onRowPress = useCallback(
-    (surveySummary: any) => {
+    (surveySummary: SurveyRemoteItem) => {
       const surveyName = surveySummary.props.name;
       const localSurveyWithSameUuid = surveysLocalByUuid.get(
         surveySummary.uuid,
@@ -223,7 +232,7 @@ export const SurveysListRemote = () => {
 
   const items = useMemo(
     () =>
-      surveysFiltered.map((survey: any) => ({
+      surveysFiltered.map((survey) => ({
         key: survey.uuid,
         ...survey,
         loadStatusKey: getSurveyLoadStatusKey({

@@ -5,7 +5,7 @@ import { PROXIMITY_THRESHOLD_METRES } from "./locationNavigatorConstants";
 
 type AccuracyCircleProps = {
   size: number;
-  accuracy: number | null;
+  accuracy: number | null | undefined;
 };
 
 const fillColor = "rgba(100,180,255,0.12)";

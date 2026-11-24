@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
-import { ScrollView } from "react-native";
+import { ScrollView, type ScrollViewInstance } from "react-native";
 
 import { useIsTextDirectionRtl } from "localization";
 import { DataEntryActions } from "state/dataEntry/actions";
@@ -16,7 +16,7 @@ export const Breadcrumbs = () => {
   log.debug(`rendering Breadcrumbs`);
   const dispatch = useAppDispatch();
   const isRtl = useIsTextDirectionRtl();
-  const scrollViewRef = useRef(null as any);
+  const scrollViewRef = useRef<ScrollViewInstance>(null);
 
   const currentPageEntity = DataEntrySelectors.useCurrentPageEntity();
   const { entityDef } = currentPageEntity;

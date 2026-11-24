@@ -4,10 +4,13 @@ import { DateFormats, Dates } from "@openforis/arena-core";
 
 import { Text } from "components";
 import { useAppInfo } from "hooks";
+import type { ArenaMobileAppInfo } from "utils/SystemUtils";
 
 import styles from "./versionNumberInfoStyles";
 
-const getLastUpdateTimeText = (lastUpdateTime: any) => {
+const getLastUpdateTimeText = (
+  lastUpdateTime: ArenaMobileAppInfo["lastUpdateTime"],
+) => {
   if (!lastUpdateTime) return "";
   const lastUpdateTimeFormatted = Dates.convertDate({
     dateStr: lastUpdateTime,

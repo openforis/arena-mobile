@@ -18,7 +18,7 @@ const buildHeaderText = ({
   t,
 }: {
   summary: Summary;
-  t: (key: string, params?: any) => string;
+  t: (key: string, params?: Record<string, unknown>) => string;
 }) => {
   const {
     status,

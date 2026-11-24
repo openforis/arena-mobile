@@ -6,7 +6,7 @@ import {
 } from "expo-audio";
 import { useCallback, useMemo, useState } from "react";
 
-import { UUIDs } from "@openforis/arena-core";
+import { ArenaRecordNodeValueFile, UUIDs } from "@openforis/arena-core";
 
 import { useToast } from "hooks";
 import { useTranslation } from "localization";
@@ -30,7 +30,7 @@ export const useNodeAudioComponent = ({ nodeUuid }: { nodeUuid?: string }) => {
     value,
     updateNodeValue,
     onClearPress: onDeletePress,
-  } = useNodeComponentLocalState({
+  } = useNodeComponentLocalState<ArenaRecordNodeValueFile>({
     nodeUuid,
     clearConfirmMessageKey: "dataEntry:fileAttribute.deleteConfirmMessage",
   });
@@ -75,7 +75,7 @@ export const useNodeAudioComponent = ({ nodeUuid }: { nodeUuid?: string }) => {
         fileUuid: UUIDs.v4(),
         fileName: fileNameSelected,
         fileSize,
-      };
+      } as ArenaRecordNodeValueFile;
 
       updateNodeValue({ value: valueUpdated, fileUri: sourceFileUri });
     },

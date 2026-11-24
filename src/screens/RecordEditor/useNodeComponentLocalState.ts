@@ -10,32 +10,54 @@ import {
 } from "state";
 import { Functions } from "utils";
 
-const isNodeValueEqualDefault = (nodeValueA: any, nodeValueB: any) =>
+type UpdateAction = (dispatch: AppDispatch) => Promise<void>;
+type DebouncedUpdateAction = ReturnType<
+  typeof Functions.debounce<UpdateAction>
+>;
+
+type NodeComponentLocalStateParams<NodeValue, UiValue> = {
+  // optional in node component props, but always defined for attributes
+  nodeUuid: string | undefined;
+  updateDelay?: number;
+  uiValueToNodeValue?: (uiValue: UiValue | null) => NodeValue | null;
+  nodeValueToUiValue?: (nodeValue: NodeValue | null) => UiValue | null;
+  isNodeValueEqual?: (
+    nodeValueA: NodeValue | null,
+    nodeValueB: NodeValue | null,
+  ) => boolean;
+  clearConfirmMessageKey?: string;
+  onClearConfirmed?: () => void;
+};
+
+const isNodeValueEqualDefault = (nodeValueA: unknown, nodeValueB: unknown) =>
   Objects.isEqual(nodeValueA, nodeValueB) ||
   JSON.stringify(nodeValueA) === JSON.stringify(nodeValueB) ||
   (Objects.isEmpty(nodeValueA) && Objects.isEmpty(nodeValueB));
 
-export const useNodeComponentLocalState = ({
+// UiValue defaults to NodeValue: without conversion functions, the UI uses the node value as is
+export const useNodeComponentLocalState = <NodeValue, UiValue = NodeValue>({
   nodeUuid,
   updateDelay = 0,
-  uiValueToNodeValue = Functions.identity,
-  nodeValueToUiValue = Functions.identity,
+  uiValueToNodeValue = Functions.identity as (
+    uiValue: UiValue | null,
+  ) => NodeValue | null,
+  nodeValueToUiValue = Functions.identity as (
+    nodeValue: NodeValue | null,
+  ) => UiValue | null,
   isNodeValueEqual = isNodeValueEqualDefault,
   clearConfirmMessageKey = "dataEntry:confirmDeleteValue.message",
   onClearConfirmed = undefined,
-}: any) => {
+}: NodeComponentLocalStateParams<NodeValue, UiValue>) => {
   const dispatch = useAppDispatch();
-  const debouncedUpdateRef = useRef(null as any);
+  const debouncedUpdateRef = useRef<DebouncedUpdateAction | null>(null);
   const updateIdRef = useRef(0);
   const confirm = useConfirm();
 
-  const {
-    applicable,
-    value: nodeValue,
-    validation: nodeValidation,
-  } = DataEntrySelectors.useRecordAttributeInfo({
-    nodeUuid,
+  const attributeInfo = DataEntrySelectors.useRecordAttributeInfo({
+    nodeUuid: nodeUuid!,
   });
+  const { applicable, validation: nodeValidation } = attributeInfo;
+  const nodeValue = attributeInfo.value as NodeValue | null;
 
   const createInitialState = () => ({
     nodeUuid,
@@ -89,7 +111,7 @@ export const useNodeComponentLocalState = ({
       fileUri = null,
       ignoreDelay = false,
     }: {
-      value: any;
+      value: UiValue | null;
       fileUri?: string | null;
       ignoreDelay?: boolean;
     }): Promise<void> => {
@@ -109,10 +131,10 @@ export const useNodeComponentLocalState = ({
       }
       updateIdRef.current += 1;
       const updateId = updateIdRef.current;
-      const action = async (dispatch: AppDispatch) => {
+      const action: UpdateAction = async (dispatch) => {
         const applied = await dispatch(
           DataEntryActions.updateAttribute({
-            uuid: nodeUuid,
+            uuid: nodeUuid!,
             value: nodeValueUpdated,
             fileUri,
           }),

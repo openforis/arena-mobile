@@ -3,6 +3,7 @@ import { useCallback } from "react";
 import { DateFormats, Dates } from "@openforis/arena-core";
 
 import { useAsyncValueEffect, useNavigationIsFocused } from "hooks";
+import type { RecordSummary } from "model";
 import { RecordService } from "service";
 import { SurveySelectors } from "state";
 import { log } from "utils";
@@ -10,7 +11,7 @@ import { log } from "utils";
 export type RecordsSummary = {
   lastModified: string | null;
   notUploadedCount: number;
-  records: any[];
+  records: RecordSummary[];
   totalCount: number;
   withErrorsCount: number;
 };
@@ -23,7 +24,7 @@ const emptySummary: RecordsSummary = {
   withErrorsCount: 0,
 };
 
-const formatDateTime = (date: any) =>
+const formatDateTime = (date: string | number | Date) =>
   typeof date === "string"
     ? Dates.convertDate({
         dateStr: date,
@@ -33,12 +34,13 @@ const formatDateTime = (date: any) =>
     : Dates.format(date, DateFormats.datetimeDisplay);
 
 // local approximation (no server call): never synced or modified after the last sync
-const isNotUploaded = (record: any) =>
-  !record.dateSynced || Dates.isAfter(record.dateModified, record.dateSynced);
+const isNotUploaded = (record: RecordSummary) =>
+  !record.dateSynced || Dates.isAfter(record.dateModified!, record.dateSynced);
 
-const hasErrors = (record: any) => (record.validation?.counts?.errors ?? 0) > 0;
+const hasErrors = (record: RecordSummary) =>
+  (record.validation?.counts?.errors ?? 0) > 0;
 
-const summarize = (records: any[]): RecordsSummary => {
+const summarize = (records: RecordSummary[]): RecordsSummary => {
   // records are sorted by date modified (desc)
   const lastDateModified = records[0]?.dateModified;
   return {

@@ -43,7 +43,9 @@ const toGeoJsonPolygon = (coordinates: LatLng[]) => {
   };
 };
 
-const nodeValueToPolygon = (nodeValue: any): MapPolygonExtendedProps | null => {
+const nodeValueToPolygon = (
+  nodeValue: unknown,
+): MapPolygonExtendedProps | null => {
   const coordinates = GeoUtils.extractPolygonCoordinatesFromGeoJson(nodeValue);
   if (!coordinates) return null;
 

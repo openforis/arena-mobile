@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
+import type { NativeStackHeaderProps } from "@react-navigation/native-stack";
 
 import { Surveys } from "@openforis/arena-core";
 
@@ -42,13 +43,26 @@ const iconByScreenViewMode: Record<ScreenViewMode, string> = {
   [ScreenViewMode.cards]: "view-agenda-outline",
 };
 
-type Props = {
-  back?: any;
-  navigation: any;
-  options: any;
+// custom screen options (see screens/screens.ts)
+export type AppBarScreenOptions = {
+  hasBack?: boolean;
+  hasDrawer?: boolean;
+  hasOptionsMenuVisible?: boolean;
+  hasRecordsMap?: boolean;
+  hasToggleScreenView?: boolean;
+  surveyLabelAsTitle?: boolean;
+  title?: string;
+  titleParams?: Record<string, unknown>;
+  viewModes?: ScreenViewMode[];
 };
 
-type AppBarInternalProps = Props & {
+export type AppBarProps = {
+  back?: NativeStackHeaderProps["back"];
+  navigation: NativeStackHeaderProps["navigation"];
+  options: NativeStackHeaderProps["options"] & AppBarScreenOptions;
+};
+
+type AppBarInternalProps = AppBarProps & {
   editingRecord: boolean;
   isInTwoRows: boolean;
   screenKey: string;
@@ -225,7 +239,7 @@ const AppBarInternal = (props: AppBarInternalProps) => {
   );
 };
 
-const RecordEditorAppBar = (props: Props) => {
+const RecordEditorAppBar = (props: AppBarProps) => {
   const editingRecord = DataEntrySelectors.useIsEditingRecord();
   const isLandscape = DeviceInfoSelectors.useOrientationIsLandscape();
   const showRecordCompletion = SettingsSelectors.useShowRecordCompletion();
@@ -243,7 +257,7 @@ const RecordEditorAppBar = (props: Props) => {
   );
 };
 
-export const AppBar = (props: Props) => {
+export const AppBar = (props: AppBarProps) => {
   const screenKey = useScreenKey();
   return screenKey === screenKeys.recordEditor ? (
     <RecordEditorAppBar {...props} />

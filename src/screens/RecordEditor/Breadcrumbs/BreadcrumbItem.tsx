@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from "react";
+import type { StyleProp, ViewStyle } from "react-native";
 
 import { Button, EntityStatusIndicators, HView, Icon } from "components";
 import { useIsTextDirectionRtl } from "localization";
@@ -30,7 +31,7 @@ export const BreadcrumbItem = (props: Props) => {
   );
 
   const style = useMemo(() => {
-    const _style: any[] = [styles.item];
+    const _style: StyleProp<ViewStyle>[] = [styles.item];
     if (irRtl) {
       _style.push(styles.itemRtl);
     }

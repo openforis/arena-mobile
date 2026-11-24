@@ -27,8 +27,8 @@ import styles from "./styles";
 
 const batteryStatusAvailable = !Environment.isIOS;
 
-const getBatteryPercent = (batteryLevel: any) =>
-  `${Math.round(batteryLevel * 100)}%`;
+const getBatteryPercent = (batteryLevel: number | undefined) =>
+  `${Math.round(batteryLevel! * 100)}%`;
 
 type StatusBarPanelProps = {
   batteryLevel?: number;
@@ -147,14 +147,14 @@ export const StatusBar = memo(() => {
 
   const locationGpsLocked = SettingsSelectors.useLocationGpsLocked();
 
-  const formatRemainingTimeCompact = (time: any) =>
+  const formatRemainingTimeCompact = (time: number | null | undefined) =>
     TimeUtils.formatRemainingTimeIfLessThan1Day({
       time,
       t,
       formatMode: TimeUtils.formatModes.compact,
     });
 
-  const formatRemainingTimeShort = (time: any) =>
+  const formatRemainingTimeShort = (time: number | null | undefined) =>
     TimeUtils.formatRemainingTimeIfLessThan1Day({
       time,
       t,

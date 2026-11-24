@@ -1,5 +1,8 @@
 import { createSelector } from "@reduxjs/toolkit";
 import {
+  ArenaNodeDefEntity,
+  ArenaRecord,
+  ArenaSurvey,
   NodeDefs,
   RecordNodes,
   Objects,
@@ -20,7 +23,11 @@ const calculateIsMaxCountReached = ({
   entityDef,
   parentEntityUuid,
   record,
-}: any) => {
+}: {
+  entityDef: ArenaNodeDefEntity;
+  parentEntityUuid: string | undefined;
+  record: ArenaRecord;
+}) => {
   const parentNode = parentEntityUuid
     ? Records.getNodeByUuid(parentEntityUuid)(record)
     : null;
@@ -41,7 +48,12 @@ const calculateHasCurrentEntityKeysSpecified = ({
   entityDef,
   record,
   entityUuid,
-}: any) => {
+}: {
+  survey: ArenaSurvey;
+  entityDef: ArenaNodeDefEntity;
+  record: ArenaRecord;
+  entityUuid: string | undefined;
+}) => {
   const keyDefs = Surveys.getNodeDefKeys({ survey, nodeDef: entityDef });
   if (Objects.isEmpty(keyDefs)) return false;
 
@@ -78,7 +90,7 @@ const selectEntityNavigationInfo = createSelector(
         record,
       }),
       hasCurrentEntityKeysSpecified: calculateHasCurrentEntityKeysSpecified({
-        survey,
+        survey: survey!,
         entityDef,
         record,
         entityUuid,

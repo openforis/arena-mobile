@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import {
   NavigationProp,
+  ParamListBase,
   useNavigation,
   useRoute,
 } from "@react-navigation/native";
@@ -37,8 +38,11 @@ export type AppStackParamList = {
 
 type AppNavigation = NavigationProp<AppStackParamList>;
 
-export const createNavigator = (navigation: any) => {
-  const nav = navigation as AppNavigation;
+// the navigation object of any navigator in the app stack
+export const createNavigator = (
+  navigation: NavigationProp<ParamListBase> | ReturnType<typeof useNavigation>,
+) => {
+  const nav = navigation as unknown as AppNavigation;
   return {
     addListener: (type: "focus" | "blur", handler: () => void) =>
       nav.addListener(type, handler),

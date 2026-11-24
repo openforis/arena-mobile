@@ -18,6 +18,10 @@ import {
 import { ScreenViewMode, SurveyStatus, UpdateStatus } from "model";
 import { SurveyService } from "service";
 import { useIsNetworkConnected, useNavigationFocus } from "hooks";
+import type {
+  SurveySummaryLocal,
+  SurveySummaryRemote,
+} from "screens/SurveysList/surveySummaryTypes";
 import { useSurveysSearch } from "screens/SurveysList/useSurveysSearch";
 import {
   RemoteConnectionUtils,
@@ -37,10 +41,10 @@ const { checkLoggedInUser } = RemoteConnectionUtils;
 
 const minSurveysToShowSearchBar = 5;
 
-type SurveyLocalItem = SurveyStatusItem & {
-  id: number;
-  dateModified: string;
-};
+type SurveyLocalItem = SurveyStatusItem &
+  SurveySummaryLocal & {
+    labelOrName: string;
+  };
 
 const LoadingIconCellRenderer = (_props: DataVisualizerCellProps) => (
   <LoadingIcon />
@@ -71,7 +75,13 @@ const DatePublishedCellRenderer = ({
   </Text>
 );
 
-const determineSurveyStatus = ({ survey, remoteSurvey }: any) => {
+const determineSurveyStatus = ({
+  survey,
+  remoteSurvey,
+}: {
+  survey: SurveySummaryLocal;
+  remoteSurvey: SurveySummaryRemote | undefined;
+}) => {
   if (survey.uuid === SurveyService.demoSurveyUuid) return null;
 
   if (!remoteSurvey) {
@@ -86,7 +96,10 @@ const determineSurveyStatus = ({ survey, remoteSurvey }: any) => {
 const determineStatusFieldStyle = ({
   screenViewMode,
   updateStatusLoading,
-}: any) => {
+}: {
+  screenViewMode: ScreenViewMode;
+  updateStatusLoading?: boolean;
+}) => {
   if (screenViewMode === ScreenViewMode.table) {
     return { width: 10 };
   }
@@ -97,7 +110,7 @@ const determineStatusFieldStyle = ({
 };
 
 type SurveysListLocalState = {
-  surveys: any[];
+  surveys: SurveyLocalItem[];
   loading?: boolean;
   updateStatusLoading?: boolean;
   updateStatusChecked?: boolean;
@@ -124,9 +137,10 @@ export const SurveysListLocal = () => {
 
     setState((statePrev) => ({
       ...statePrev,
-      surveys: _surveys.map((survey: any) => ({
+      surveys: (_surveys as SurveySummaryLocal[]).map((survey) => ({
         ...survey,
-        key: survey.id,
+        // survey id (number) used as item key: it's passed to deleteSurveys as is
+        key: survey.id as unknown as string,
         labelOrName: survey.label || survey.name,
       })),
       loading: false,
@@ -141,7 +155,7 @@ export const SurveysListLocal = () => {
     useSurveysSearch({ surveys });
 
   const onDeleteSelectedItemIds = useCallback(
-    async (surveyIds: any) => {
+    async (surveyIds: string[]) => {
       if (
         await confirm({
           titleKey: "surveys:confirmDeleteSurvey.title",
@@ -159,7 +173,7 @@ export const SurveysListLocal = () => {
   );
 
   const onItemPress = useCallback(
-    (survey: any) => {
+    (survey: SurveyLocalItem) => {
       const {
         id: surveyId,
         name: surveyName,
@@ -207,7 +221,9 @@ export const SurveysListLocal = () => {
       updateStatusChecked: false,
     }));
     const { surveys: remoteSurveySummaries } =
-      (await SurveyService.fetchSurveySummariesRemote()) as any;
+      (await SurveyService.fetchSurveySummariesRemote()) as {
+        surveys: SurveySummaryRemote[];
+      };
     const remoteSurveySummariesByUuid = ArrayUtils.indexByUuid(
       remoteSurveySummaries,
     );
