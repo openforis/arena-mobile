@@ -8,6 +8,8 @@ export type SurveySummaryLocal = {
   uuid: string;
   name: string;
   label: string | null;
+  // in the default language
+  description: string | null;
   // date published (or modified) of the survey in the server
   dateModified: string;
 };

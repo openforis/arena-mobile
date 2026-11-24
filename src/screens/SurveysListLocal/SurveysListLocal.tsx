@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { useNavigator } from "navigation/navigator";
 
-import { DateFormats, Dates } from "@openforis/arena-core";
+import { Dates } from "@openforis/arena-core";
 import {
   Button,
   DataVisualizer,
@@ -24,6 +24,10 @@ import {
   SurveySummaryRemote,
   UpdateStatus,
 } from "model";
+import {
+  SurveyDatePublishedCell,
+  SurveyDescriptionCell,
+} from "screens/SurveysList/SurveyCells";
 import { useSurveysSearch } from "screens/SurveysList/useSurveysSearch";
 import {
   RemoteConnectionUtils,
@@ -46,6 +50,8 @@ const minSurveysToShowSearchBar = 5;
 type SurveyLocalItem = SurveyStatusItem &
   SurveySummaryLocal & {
     labelOrName: string;
+    // the local date_modified column stores the date published
+    datePublished: string;
   };
 
 const LoadingIconCellRenderer = (_props: DataVisualizerCellProps) => (
@@ -64,18 +70,6 @@ const CurrentSurveyBadge = ({
     </HView>
   );
 };
-
-const DatePublishedCellRenderer = ({
-  item,
-}: DataVisualizerCellProps<SurveyLocalItem>) => (
-  <Text variant="bodySmall">
-    {Dates.convertDate({
-      dateStr: item.dateModified,
-      formatFrom: DateFormats.datetimeStorage,
-      formatTo: DateFormats.datetimeDisplay,
-    })}
-  </Text>
-);
 
 const determineSurveyStatus = ({
   survey,
@@ -144,6 +138,7 @@ export const SurveysListLocal = () => {
         // survey id (number) used as item key: it's passed to deleteSurveys as is
         key: survey.id as unknown as string,
         labelOrName: survey.label || survey.name,
+        datePublished: survey.dateModified,
       })),
       loading: false,
       updateStatusChecked: false,
@@ -265,10 +260,16 @@ export const SurveysListLocal = () => {
             cellRenderer: CurrentSurveyBadge,
           },
           {
-            key: "dateModified",
+            key: "description",
+            header: "surveys:description",
+            cardRole: "body",
+            cellRenderer: SurveyDescriptionCell,
+          },
+          {
+            key: "datePublished",
             header: "surveys:publishedOn",
             cardRole: "footer",
-            cellRenderer: DatePublishedCellRenderer,
+            cellRenderer: SurveyDatePublishedCell,
           },
         ]
       : [
@@ -280,11 +281,18 @@ export const SurveysListLocal = () => {
             key: "label",
             header: "common:label",
           },
+          // optional: in a narrow table they move to the expanded row
           {
-            key: "dateModified",
+            key: "description",
+            header: "surveys:description",
+            optional: true,
+            cellRenderer: SurveyDescriptionCell,
+          },
+          {
+            key: "datePublished",
             header: "surveys:publishedOn",
-            tableDetail: true,
-            cellRenderer: DatePublishedCellRenderer,
+            optional: true,
+            cellRenderer: SurveyDatePublishedCell,
           },
         ];
     if (updateStatusChecked || updateStatusLoading) {
