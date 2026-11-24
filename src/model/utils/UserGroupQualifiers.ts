@@ -1,7 +1,7 @@
 import {
   ArenaAreaOfInterestProvider,
   ArenaRecord,
-  ArenaNodeDef,
+  ArenaAnyNodeDef,
   ArenaNodeDefCode,
   NodeDefs,
   NodeDefType,
@@ -48,9 +48,9 @@ const resolveQualifierNodeValue = ({
   qualifierValue,
 }: {
   survey: ArenaSurvey;
-  nodeDef: ArenaNodeDef<any>;
+  nodeDef: ArenaAnyNodeDef;
   qualifierValue: string;
-}): any => {
+}): unknown => {
   if (nodeDef.type === NodeDefType.code) {
     const categoryUuid = NodeDefs.getCategoryUuid(nodeDef as ArenaNodeDefCode);
     if (!categoryUuid) return undefined;

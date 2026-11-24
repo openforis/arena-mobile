@@ -1,9 +1,10 @@
-import { Surveys } from "@openforis/arena-core";
+import { ArenaSurvey, Surveys } from "@openforis/arena-core";
 
 import { ConfirmUtils } from "../confirm";
 import { RemoteConnectionActions } from "../remoteConnection";
 import { SurveyActions, SurveySelectors } from "../survey";
 import { ToastActions } from "../toast";
+import type { AppDispatch, AppGetState } from "../store";
 
 // Qualifier attributes are prefilled from the user's UserGroup (see UserGroupQualifiers.assignQualifierValues).
 // If the group hasn't been fetched yet (e.g. right after app startup or login, before the
@@ -14,7 +15,11 @@ export const ensureUserGroupReady = async ({
   dispatch,
   getState,
   survey,
-}: any): Promise<boolean> => {
+}: {
+  dispatch: AppDispatch;
+  getState: AppGetState;
+  survey: ArenaSurvey;
+}): Promise<boolean> => {
   if (Surveys.getQualifierDefs({ survey }).length === 0) return true;
 
   const isReady = () =>

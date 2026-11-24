@@ -8,7 +8,13 @@ import type { AppDispatch, AppGetState } from "../store";
 const textKeyPrefix = "recordsList:revalidateRecords.";
 
 export const revalidateRecords =
-  ({ recordIds, callback = null }: any) =>
+  ({
+    recordIds,
+    callback = null,
+  }: {
+    recordIds: number[];
+    callback?: (() => unknown) | null;
+  }) =>
   async (dispatch: AppDispatch, getState: AppGetState) => {
     if (recordIds.length === 0) return;
 

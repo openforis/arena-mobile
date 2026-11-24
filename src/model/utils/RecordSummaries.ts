@@ -1,4 +1,6 @@
 import {
+  ArenaAnyNodeDef,
+  ArenaSurvey,
   NodeDefs,
   RecordNodeValueFormatter,
   Objects,
@@ -6,25 +8,49 @@ import {
   Validations,
 } from "@openforis/arena-core";
 
+import type { RecordSummaryValues } from "../RecordSummary";
 import { SurveyDefs } from "./SurveyDefs";
 
-const getKeyValue = ({ keyDef, recordSummary }: any) =>
+// local or remote record summary
+type RecordSummaryWithKeys = {
+  cycle?: string;
+  keysObj?: RecordSummaryValues;
+};
+
+type SurveyAndRecordSummary = {
+  survey: ArenaSurvey;
+  recordSummary: RecordSummaryWithKeys;
+};
+
+const getKeyValue = ({
+  keyDef,
+  recordSummary,
+}: {
+  keyDef: ArenaAnyNodeDef;
+  recordSummary: RecordSummaryWithKeys;
+}): unknown =>
   Objects.path(["keysObj", NodeDefs.getName(keyDef)])(recordSummary);
 
-const getKeyValuesByDefUuid = ({ survey, recordSummary }: any) => {
+const getKeyValuesByDefUuid = ({
+  survey,
+  recordSummary,
+}: SurveyAndRecordSummary) => {
   const { cycle } = recordSummary;
   const rootKeyDefs = SurveyDefs.getRootKeyDefs({ survey, cycle });
-  return rootKeyDefs.reduce((acc: Record<string, any>, keyDef) => {
+  return rootKeyDefs.reduce((acc: Record<string, unknown>, keyDef) => {
     const value = getKeyValue({ recordSummary, keyDef });
     acc[keyDef.uuid] = value;
     return acc;
   }, {});
 };
 
-const getKeyValues = ({ survey, recordSummary }: any) =>
+const getKeyValues = ({ survey, recordSummary }: SurveyAndRecordSummary) =>
   Object.values(getKeyValuesByDefUuid({ survey, recordSummary }));
 
-const getKeyValuesFormatted = ({ survey, recordSummary }: any) => {
+const getKeyValuesFormatted = ({
+  survey,
+  recordSummary,
+}: SurveyAndRecordSummary) => {
   const { cycle } = recordSummary;
   const rootKeyDefs = SurveyDefs.getRootKeyDefs({ survey, cycle });
   const valuesByDefUuid = getKeyValuesByDefUuid({ survey, recordSummary });
@@ -32,7 +58,7 @@ const getKeyValuesFormatted = ({ survey, recordSummary }: any) => {
     const value = valuesByDefUuid[keyDef.uuid];
     const valueFormatted = RecordNodeValueFormatter.format({
       survey,
-      cycle,
+      cycle: cycle!,
       nodeDef: keyDef,
       value,
     });

@@ -401,16 +401,19 @@ export const exportRecords =
         dispatch,
         silent,
       });
-    } catch (error: any) {
+    } catch (error) {
+      // a failed job is rejected with its summary (see JobMonitorActions.startAsync)
+      const failedJob = error as
+        { status?: JobStatus; errors?: ExportFileGenerationErrors } | undefined;
       if (error instanceof JobCancelError) {
         // canceled by the user while preparing the export: nothing more to do
         log.debug("exportRecords: zip preparation canceled by the user");
-      } else if (error?.status === JobStatus.failed) {
+      } else if (failedJob?.status === JobStatus.failed) {
         log.warn(
-          `exportRecords: zip preparation failed: ${JSON.stringify(error.errors)}`,
+          `exportRecords: zip preparation failed: ${JSON.stringify(failedJob.errors)}`,
         );
         _onExportFileGenerationError({
-          errors: error.errors,
+          errors: failedJob.errors!,
           dispatch,
           silent,
         });

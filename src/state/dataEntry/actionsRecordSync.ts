@@ -1,6 +1,13 @@
 import { Keyboard } from "react-native";
 
-import { Records, Surveys } from "@openforis/arena-core";
+import {
+  ArenaRecord,
+  ArenaSurvey,
+  Records,
+  Surveys,
+} from "@openforis/arena-core";
+
+import type { RecordCurrentPageEntityPointer } from "model";
 
 import { RecordService } from "service/recordService";
 import { log } from "utils";
@@ -95,11 +102,19 @@ const lockOpenRecordForSync =
     }, SYNC_LOCK_WATCHDOG_INTERVAL_MS);
   };
 
-const isPageEntityPointerValid = ({ survey, record, pointer }: any) => {
+const isPageEntityPointerValid = ({
+  survey,
+  record,
+  pointer,
+}: {
+  survey: ArenaSurvey;
+  record: ArenaRecord;
+  pointer: RecordCurrentPageEntityPointer;
+}) => {
   const { parentEntityUuid, entityDefUuid, entityUuid } = pointer;
   return (
     !!Surveys.findNodeDefByUuid({ survey, uuid: entityDefUuid }) &&
-    !!Records.getNodeByUuid(parentEntityUuid)(record) &&
+    !!Records.getNodeByUuid(parentEntityUuid!)(record) &&
     (!entityUuid || !!Records.getNodeByUuid(entityUuid)(record))
   );
 };
