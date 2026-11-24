@@ -1,4 +1,4 @@
-import type { ArenaAuthGroup, ArenaSurveySummary } from "@openforis/arena-core";
+import type { ArenaSurveySummary } from "@openforis/arena-core";
 
 // survey stored in the device db (content not loaded)
 export type SurveySummaryLocal = {
@@ -13,9 +13,7 @@ export type SurveySummaryLocal = {
 };
 
 // survey summary returned by the server (only published surveys are fetched)
-// authGroups required to pass it to the Surveys getters (they take an ArenaSurvey)
 export type SurveySummaryRemote = ArenaSurveySummary & {
-  authGroups: ArenaAuthGroup[];
   id: number;
   datePublished: string;
 };

@@ -1,6 +1,11 @@
 import LZString from "lz-string";
 
-import { Objects, ArenaSurvey, Surveys } from "@openforis/arena-core";
+import {
+  ArenaSurvey,
+  ArenaSurveyOrSummary,
+  Objects,
+  Surveys,
+} from "@openforis/arena-core";
 
 import { DbUtils, dbClient } from "db";
 import { SurveyMobile, SurveySummaryLocal } from "model";
@@ -17,7 +22,7 @@ type SurveyRow = {
   date_modified: string;
 };
 
-const getSurveyLabel = (survey: ArenaSurvey) =>
+const getSurveyLabel = (survey: ArenaSurveyOrSummary) =>
   Surveys.getLabel(Surveys.getDefaultLanguage(survey))(survey);
 
 const insertSurvey = async (survey: ArenaSurvey): Promise<SurveyMobile> => {
