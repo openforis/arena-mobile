@@ -32,14 +32,13 @@ const buildSurvey = () =>
     ),
   ).build();
 
-const buildUserGroup = (teamValue: string): ArenaUserGroup =>
-  ({
-    uuid: "group-uuid",
-    props: {
-      name: "control",
-      qualifiers: [{ name: "team", value: teamValue }],
-    },
-  }) as ArenaUserGroup;
+const buildUserGroup = (teamValue: string): ArenaUserGroup => ({
+  uuid: "group-uuid",
+  props: {
+    name: "control",
+    qualifiers: [{ name: "team", value: teamValue }],
+  },
+});
 
 const getAttributeValue = (
   record: ArenaRecord,

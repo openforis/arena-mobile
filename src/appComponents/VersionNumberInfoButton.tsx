@@ -20,10 +20,10 @@ type State = {
 export const VersionNumberInfoButton = () => {
   const networkAvailable = useIsNetworkConnected();
   const toaster = useToast();
-  const [state, setState] = useState({
+  const [state, setState] = useState<State>({
     changelogDialogOpen: false,
     updateStatus: UpdateStatus.loading,
-  } as State);
+  });
   const { changelogDialogOpen, updateStatusError, updateUrl } = state;
   const updateStatus = networkAvailable
     ? state.updateStatus

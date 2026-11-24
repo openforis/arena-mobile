@@ -68,7 +68,7 @@ describe("SettingsService.fetchSettings", () => {
     expect(settings).not.toHaveProperty("pdfMaps");
 
     await service!.updateSetting({ key: "fontScale", value: 3 });
-    const stored = JSON.parse(mockStorage["@settings"]!);
+    const stored = JSON.parse(mockStorage["@settings"]);
     expect(stored.importedMaps).toEqual([{ id: "map" }]);
     expect(stored).not.toHaveProperty("pdfMaps");
   });

@@ -99,7 +99,7 @@ export const LocationWatchingMonitor = (
             preferredGpsSourceId === GpsSourceSetting.auto
               ? "check"
               : undefined,
-          onPress: () => onSelectGpsSource!(GpsSourceSetting.auto),
+          onPress: () => onSelectGpsSource(GpsSourceSetting.auto),
         },
         ...availableGpsSources.map((source) => ({
           key: source.id,
@@ -108,7 +108,7 @@ export const LocationWatchingMonitor = (
               ? "settings:preferredGpsSourceId.internal"
               : source.label,
           icon: preferredGpsSourceId === source.id ? "check" : undefined,
-          onPress: () => onSelectGpsSource!(source.id),
+          onPress: () => onSelectGpsSource(source.id),
         })),
       ]
     : [];

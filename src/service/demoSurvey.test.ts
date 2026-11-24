@@ -451,7 +451,7 @@ describe("Demo survey", () => {
           nodeUuids: [secondStem!.uuid],
           clearNonApplicableValues: true,
         });
-      expect([...clearedDefUuids!]).toEqual([
+      expect([...clearedDefUuids]).toEqual([
         getDef(survey, "regeneration_stems_note").uuid,
       ]);
       const [noteNode] = getNodesByName(

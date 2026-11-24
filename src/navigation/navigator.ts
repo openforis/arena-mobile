@@ -92,4 +92,4 @@ export const useNavigator = (): Navigator => {
 // Partial: a screen can be opened without (some of) its params
 export const useScreenParams = <K extends keyof AppStackParamList>(): Partial<
   NonNullable<AppStackParamList[K]>
-> => (useRoute().params ?? {}) as Partial<NonNullable<AppStackParamList[K]>>;
+> => useRoute().params ?? {};

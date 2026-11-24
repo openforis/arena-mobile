@@ -192,7 +192,7 @@ const fetchAndSetRemoteSurveyIfOnlyOne =
       }
 
       const remoteSurvey = remoteSurveysVisibleInMobile[0]!;
-      const remoteSurveyId = remoteSurvey.id!;
+      const remoteSurveyId = remoteSurvey.id;
       const surveysLocal = await SurveyService.fetchSurveySummariesLocal();
       const localSurveyWithSameUuid = surveysLocal.find(
         (surveyLocal) => surveyLocal.uuid === remoteSurvey.uuid,

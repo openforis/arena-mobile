@@ -108,7 +108,7 @@ const formatFileValue = ({
   if (Objects.isEmpty(fileName)) return "";
   // generated names (e.g. camera captures) are not meaningful
   if (!uuidInTextRegex.test(fileName!)) return fileName!;
-  const extension = FileNames.getExtension(fileName!).toUpperCase();
+  const extension = FileNames.getExtension(fileName).toUpperCase();
   const size = fileSize ? FileSizes.toHumanReadableFileSize(fileSize) : "";
   return [extension, size].filter((part) => Objects.isNotEmpty(part)).join(" ");
 };

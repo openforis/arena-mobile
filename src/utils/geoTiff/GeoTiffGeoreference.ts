@@ -73,7 +73,7 @@ const getCrs = (image: GeoTIFFImage): GeoTiffCrs | null => {
     toLatLng: (x, y) => {
       const point = projection.convertCoordinates({ x, y, z: 0 });
       const [longitude, latitude] = converter.forward([point.x, point.y]);
-      return { latitude: latitude!, longitude: longitude! };
+      return { latitude, longitude };
     },
   };
 };

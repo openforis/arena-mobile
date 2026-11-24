@@ -149,7 +149,7 @@ export class FlatDataExportJob extends JobMobile<
     if (includeFiles) {
       // create attached files subfolder
       const attachedFilesFolderUri = Files.path(
-        this.tempFolderUri!,
+        this.tempFolderUri,
         FlatDataFiles.attachedFilesSubfolderName,
       );
       await Files.mkDir(attachedFilesFolderUri);

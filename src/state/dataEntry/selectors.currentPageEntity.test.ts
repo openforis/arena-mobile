@@ -75,7 +75,7 @@ describe("current page entity selectors", () => {
     const childDefs2 =
       DataEntrySelectors.selectCurrentPageEntityRelevantChildDefs({
         ...state,
-      } as RootState);
+      });
 
     expect(childDefs1.map((def) => def.props.name)).toEqual([
       "cluster_id",

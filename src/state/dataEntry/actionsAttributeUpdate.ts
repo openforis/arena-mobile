@@ -318,7 +318,7 @@ const performCoordinateValueSrsConversion =
     const node = Records.getNodeByUuid(nodeUuid)(record);
     const prevValue = node?.value ?? {};
     const { x, y, srs } = prevValue;
-    const pointFrom = PointFactory.createInstance({ x, y, srs })!;
+    const pointFrom = PointFactory.createInstance({ x, y, srs });
     const pointTo = Points.transform(pointFrom, srsTo, srsIndex)!;
     const nextValue = {
       ...prevValue,
@@ -351,7 +351,7 @@ export const updateCoordinateValueFromLatLong =
     const pointLatLong = PointFactory.createInstance({
       x: longitude,
       y: latitude,
-    })!;
+    });
     const pointTo = Points.transform(pointLatLong, srsTo, srsIndex);
     if (!pointTo) return;
     const nextValue = {

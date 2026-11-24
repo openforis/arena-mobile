@@ -1,7 +1,6 @@
 import {
   ArenaCategoryItem,
   CategoryItems,
-  ArenaAnyNodeDef,
   ArenaNodeDefCode,
   NodeDefs,
   Objects,
@@ -45,7 +44,7 @@ const getSamplingPointRootKeyDefs = ({
   survey: ArenaSurvey;
   cycle: string;
 }): ArenaNodeDefCode[] =>
-  (SurveyDefs.getRootKeyDefs({ survey, cycle }) as ArenaAnyNodeDef[])
+  SurveyDefs.getRootKeyDefs({ survey, cycle })
     .filter((nodeDef) =>
       SurveyDefs.isCodeAttributeFromSamplingPointData({
         survey,

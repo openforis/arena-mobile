@@ -4,7 +4,8 @@ import { SystemUtils } from "utils";
 import { ArenaMobileAppInfo } from "utils/SystemUtils";
 
 export const useAppInfo = () => {
-  const [state, setState] = useState({} as ArenaMobileAppInfo);
+  // empty until the info is fetched
+  const [state, setState] = useState<Partial<ArenaMobileAppInfo>>({});
 
   useEffect(() => {
     void SystemUtils.getApplicationInfo().then((appInfo) => setState(appInfo));

@@ -133,7 +133,7 @@ export const SurveysListLocal = () => {
 
     setState((statePrev) => ({
       ...statePrev,
-      surveys: (_surveys as SurveySummaryLocal[]).map((survey) => ({
+      surveys: _surveys.map((survey) => ({
         ...survey,
         // survey id (number) used as item key: it's passed to deleteSurveys as is
         key: survey.id as unknown as string,

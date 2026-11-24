@@ -68,7 +68,7 @@ export const NodeMultipleEntityListComponent = (
   const lang = SurveySelectors.useCurrentSurveyPreferredLang();
   const confirmDeleteNodes = useConfirmDeleteNodes();
   const { t } = useTranslation();
-  const [sort, setSort] = useState(undefined as SortObject | undefined);
+  const [sort, setSort] = useState<SortObject | undefined>(undefined);
   const [columnsDialogVisible, setColumnsDialogVisible] = useState(false);
 
   log.debug(

@@ -22,7 +22,7 @@ export const Markdown = (props: MarkdownProps) => {
         color: theme.colors.onBackground,
       },
       ...styleProp,
-    } as MarkdownStyle;
+    };
   }, [styleProp, theme]);
 
   return <RNMarkdown style={style}>{content ?? ""}</RNMarkdown>;
