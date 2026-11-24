@@ -4213,7 +4213,6 @@
         "uuid": "cf078bd8-fac2-41db-bff4-e9f8bc827629",
         "published": true,
         "draft": false,
-        "categoryUuid": "1e76ba35-daf9-493c-bccc-3cc892b9ef1b",
         "parentUuid": null,
         "levelUuid": "108f4a73-4035-48a7-b60f-941324725137"
       },
@@ -4226,7 +4225,6 @@
         "uuid": "b08b9218-90e8-4614-8c34-0ce2012c8626",
         "published": true,
         "draft": false,
-        "categoryUuid": "1e76ba35-daf9-493c-bccc-3cc892b9ef1b",
         "parentUuid": null,
         "levelUuid": "108f4a73-4035-48a7-b60f-941324725137"
       },
@@ -4239,7 +4237,6 @@
         "uuid": "971a1533-1c19-4fda-818a-cac61a1e2294",
         "published": true,
         "draft": false,
-        "categoryUuid": "1e76ba35-daf9-493c-bccc-3cc892b9ef1b",
         "parentUuid": null,
         "levelUuid": "108f4a73-4035-48a7-b60f-941324725137"
       },
@@ -4252,7 +4249,6 @@
         "uuid": "ec8a726a-900a-4c32-a140-b80885647394",
         "published": true,
         "draft": false,
-        "categoryUuid": "1e76ba35-daf9-493c-bccc-3cc892b9ef1b",
         "parentUuid": null,
         "levelUuid": "108f4a73-4035-48a7-b60f-941324725137"
       },
@@ -4265,7 +4261,6 @@
         "uuid": "099557d1-7ca8-4043-b4eb-fa14c6660b28",
         "published": true,
         "draft": false,
-        "categoryUuid": "2e469098-e42d-4780-bef1-19c42ec54057",
         "parentUuid": null,
         "levelUuid": "c9cb5a89-1f5f-4c25-a03e-074b5b9a2946"
       },
@@ -4278,7 +4273,6 @@
         "uuid": "9f243008-f31d-4aba-9d6a-aaf421218260",
         "published": true,
         "draft": false,
-        "categoryUuid": "2e469098-e42d-4780-bef1-19c42ec54057",
         "parentUuid": null,
         "levelUuid": "c9cb5a89-1f5f-4c25-a03e-074b5b9a2946"
       },
@@ -4291,7 +4285,6 @@
         "uuid": "54b45e36-cc1d-4c2c-ac3c-b5bfd5c59a5f",
         "published": true,
         "draft": false,
-        "categoryUuid": "2e469098-e42d-4780-bef1-19c42ec54057",
         "parentUuid": null,
         "levelUuid": "c9cb5a89-1f5f-4c25-a03e-074b5b9a2946"
       },
@@ -4300,7 +4293,6 @@
         "uuid": "fbc11f7d-0da9-48aa-984a-e21881669388",
         "published": true,
         "draft": false,
-        "categoryUuid": "334ce9d6-702e-4fbd-8212-a672b45bbe4c",
         "parentUuid": null,
         "levelUuid": "9ab9f4c4-d7b1-4618-a771-71b0bbd2e026"
       },
@@ -4309,7 +4301,6 @@
         "uuid": "7062efb3-6888-46ed-8476-385862ab1416",
         "published": true,
         "draft": false,
-        "categoryUuid": "334ce9d6-702e-4fbd-8212-a672b45bbe4c",
         "parentUuid": null,
         "levelUuid": "9ab9f4c4-d7b1-4618-a771-71b0bbd2e026"
       },
@@ -4318,7 +4309,6 @@
         "uuid": "918807ac-9183-4b47-b112-d89b2833fc5f",
         "published": true,
         "draft": false,
-        "categoryUuid": "334ce9d6-702e-4fbd-8212-a672b45bbe4c",
         "parentUuid": null,
         "levelUuid": "9ab9f4c4-d7b1-4618-a771-71b0bbd2e026"
       },
@@ -4331,7 +4321,6 @@
         "uuid": "1c3b9b2c-cefb-413a-8b95-972b0504a174",
         "published": true,
         "draft": false,
-        "categoryUuid": "47cf5967-2562-4d0c-9907-d4d21611978d",
         "parentUuid": null,
         "levelUuid": "d15ba208-db3c-4662-8e3f-0801da01953d"
       },
@@ -4344,7 +4333,6 @@
         "uuid": "3af520a7-a20b-487e-a083-445791039da0",
         "published": true,
         "draft": false,
-        "categoryUuid": "47cf5967-2562-4d0c-9907-d4d21611978d",
         "parentUuid": null,
         "levelUuid": "d15ba208-db3c-4662-8e3f-0801da01953d"
       },
@@ -4357,7 +4345,6 @@
         "uuid": "1bd3880f-5985-4f66-8292-35cef0525524",
         "published": true,
         "draft": false,
-        "categoryUuid": "47cf5967-2562-4d0c-9907-d4d21611978d",
         "parentUuid": null,
         "levelUuid": "d15ba208-db3c-4662-8e3f-0801da01953d"
       },
@@ -4370,7 +4357,6 @@
         "uuid": "4761cb5b-0a90-4ed1-a744-801861e00b4e",
         "published": true,
         "draft": false,
-        "categoryUuid": "47cf5967-2562-4d0c-9907-d4d21611978d",
         "parentUuid": null,
         "levelUuid": "d15ba208-db3c-4662-8e3f-0801da01953d"
       },
@@ -4383,7 +4369,6 @@
         "uuid": "8b19d473-554d-47e3-bdaa-ca2791d4682e",
         "published": true,
         "draft": false,
-        "categoryUuid": "47cf5967-2562-4d0c-9907-d4d21611978d",
         "parentUuid": null,
         "levelUuid": "d15ba208-db3c-4662-8e3f-0801da01953d"
       },
@@ -4396,7 +4381,6 @@
         "uuid": "960f7a56-c420-4666-a14c-33b5d6bdba3d",
         "published": true,
         "draft": false,
-        "categoryUuid": "47cf5967-2562-4d0c-9907-d4d21611978d",
         "parentUuid": null,
         "levelUuid": "d15ba208-db3c-4662-8e3f-0801da01953d"
       },
@@ -4405,7 +4389,6 @@
         "uuid": "e6efb047-3211-4519-9158-1916fcf49fce",
         "published": true,
         "draft": false,
-        "categoryUuid": "47cf5967-2562-4d0c-9907-d4d21611978d",
         "parentUuid": null,
         "levelUuid": "d15ba208-db3c-4662-8e3f-0801da01953d"
       },
@@ -4414,7 +4397,6 @@
         "uuid": "da462f2b-a789-427d-8987-ac256d1775e4",
         "published": true,
         "draft": false,
-        "categoryUuid": "4c0d5f3f-8193-4a1f-9835-ce579224ed09",
         "parentUuid": null,
         "levelUuid": "ec66b667-780c-43ec-aa26-0652acdae50a"
       },
@@ -4423,7 +4405,6 @@
         "uuid": "9128eaeb-7ab9-4495-a39f-f37fbf4772e3",
         "published": true,
         "draft": false,
-        "categoryUuid": "4c0d5f3f-8193-4a1f-9835-ce579224ed09",
         "parentUuid": null,
         "levelUuid": "ec66b667-780c-43ec-aa26-0652acdae50a"
       },
@@ -4432,7 +4413,6 @@
         "uuid": "a6248f25-c565-4af2-bdf5-c9dab65d7fb3",
         "published": true,
         "draft": false,
-        "categoryUuid": "4c0d5f3f-8193-4a1f-9835-ce579224ed09",
         "parentUuid": null,
         "levelUuid": "ec66b667-780c-43ec-aa26-0652acdae50a"
       },
@@ -4441,7 +4421,6 @@
         "uuid": "a6e2b94a-803b-4347-bb2c-99a8e3f7f728",
         "published": true,
         "draft": false,
-        "categoryUuid": "4c0d5f3f-8193-4a1f-9835-ce579224ed09",
         "parentUuid": null,
         "levelUuid": "ec66b667-780c-43ec-aa26-0652acdae50a"
       },
@@ -4450,7 +4429,6 @@
         "uuid": "123cb833-7b4a-4095-972a-46b55db61fae",
         "published": true,
         "draft": false,
-        "categoryUuid": "4c0d5f3f-8193-4a1f-9835-ce579224ed09",
         "parentUuid": null,
         "levelUuid": "ec66b667-780c-43ec-aa26-0652acdae50a"
       },
@@ -4463,7 +4441,6 @@
         "uuid": "4b612112-a425-4041-9a21-bd2d997d4670",
         "published": true,
         "draft": false,
-        "categoryUuid": "60561944-2eb0-4d48-9eb6-a519dfba6cbe",
         "parentUuid": null,
         "levelUuid": "0f1633cc-b0a6-4ec3-a078-6499b9ec7f4d"
       },
@@ -4477,7 +4454,6 @@
         "uuid": "c8ec1078-c0d6-4fb4-8784-8665c53081df",
         "published": true,
         "draft": false,
-        "categoryUuid": "60561944-2eb0-4d48-9eb6-a519dfba6cbe",
         "parentUuid": null,
         "levelUuid": "0f1633cc-b0a6-4ec3-a078-6499b9ec7f4d"
       },
@@ -4490,7 +4466,6 @@
         "uuid": "0f9806b3-7963-4484-b95d-b1947254c590",
         "published": true,
         "draft": false,
-        "categoryUuid": "60561944-2eb0-4d48-9eb6-a519dfba6cbe",
         "parentUuid": null,
         "levelUuid": "0f1633cc-b0a6-4ec3-a078-6499b9ec7f4d"
       },
@@ -4503,7 +4478,6 @@
         "uuid": "18f7167d-adbb-498a-92c7-312e6af40ad7",
         "published": true,
         "draft": false,
-        "categoryUuid": "60561944-2eb0-4d48-9eb6-a519dfba6cbe",
         "parentUuid": null,
         "levelUuid": "0f1633cc-b0a6-4ec3-a078-6499b9ec7f4d"
       },
@@ -4516,7 +4490,6 @@
         "uuid": "f69d9eb3-b2b5-42b1-816f-c1c981b10310",
         "published": true,
         "draft": false,
-        "categoryUuid": "60e9e22e-9d56-4e21-97c2-d3af653af75b",
         "parentUuid": null,
         "levelUuid": "b21f09e1-1c43-410c-af62-cef24236177a"
       },
@@ -4525,7 +4498,6 @@
         "uuid": "f0f1a89c-8e9a-4b1a-b7d5-5945977294cc",
         "published": true,
         "draft": false,
-        "categoryUuid": "60e9e22e-9d56-4e21-97c2-d3af653af75b",
         "parentUuid": null,
         "levelUuid": "b21f09e1-1c43-410c-af62-cef24236177a"
       },
@@ -4538,7 +4510,6 @@
         "uuid": "4746dd3b-31c4-419b-89de-e9bc18cebed5",
         "published": true,
         "draft": false,
-        "categoryUuid": "60e9e22e-9d56-4e21-97c2-d3af653af75b",
         "parentUuid": null,
         "levelUuid": "b21f09e1-1c43-410c-af62-cef24236177a"
       },
@@ -4547,7 +4518,6 @@
         "uuid": "a59bb0f3-62b0-44e8-a2b1-3ec516c1051d",
         "published": true,
         "draft": false,
-        "categoryUuid": "60e9e22e-9d56-4e21-97c2-d3af653af75b",
         "parentUuid": null,
         "levelUuid": "b21f09e1-1c43-410c-af62-cef24236177a"
       },
@@ -4556,7 +4526,6 @@
         "uuid": "5852f4ca-22dc-4e91-9aec-5922f096a647",
         "published": true,
         "draft": false,
-        "categoryUuid": "62ad38df-fd0f-456e-bc70-a566a13d9c0c",
         "parentUuid": null,
         "levelUuid": "035de7f7-4db5-4db2-9257-db6da12e9296"
       },
@@ -4569,7 +4538,6 @@
         "uuid": "c5cc5f55-1623-4c75-bdd2-183eceff0ffe",
         "published": true,
         "draft": false,
-        "categoryUuid": "62ad38df-fd0f-456e-bc70-a566a13d9c0c",
         "parentUuid": null,
         "levelUuid": "035de7f7-4db5-4db2-9257-db6da12e9296"
       },
@@ -4582,7 +4550,6 @@
         "uuid": "29270ff3-1833-40af-941f-c9f4ae685d76",
         "published": true,
         "draft": false,
-        "categoryUuid": "62ad38df-fd0f-456e-bc70-a566a13d9c0c",
         "parentUuid": null,
         "levelUuid": "035de7f7-4db5-4db2-9257-db6da12e9296"
       },
@@ -4591,7 +4558,6 @@
         "uuid": "f46bfeb0-37f7-4138-ad42-e067abb3c05f",
         "published": true,
         "draft": false,
-        "categoryUuid": "62ad38df-fd0f-456e-bc70-a566a13d9c0c",
         "parentUuid": null,
         "levelUuid": "035de7f7-4db5-4db2-9257-db6da12e9296"
       },
@@ -4600,7 +4566,6 @@
         "uuid": "bc5564a1-97d8-413d-9450-7fb1a673ba42",
         "published": true,
         "draft": false,
-        "categoryUuid": "62ad38df-fd0f-456e-bc70-a566a13d9c0c",
         "parentUuid": null,
         "levelUuid": "035de7f7-4db5-4db2-9257-db6da12e9296"
       },
@@ -4609,7 +4574,6 @@
         "uuid": "ebf71e0c-af04-421b-98f9-8d2760e8b2c8",
         "published": true,
         "draft": false,
-        "categoryUuid": "62ad38df-fd0f-456e-bc70-a566a13d9c0c",
         "parentUuid": null,
         "levelUuid": "035de7f7-4db5-4db2-9257-db6da12e9296"
       },
@@ -4629,7 +4593,6 @@
         "uuid": "62e5a3c5-02ca-4b93-9a86-401919e0d1be",
         "published": true,
         "draft": false,
-        "categoryUuid": "850970bb-554e-4f61-a6fe-a37a273269a3",
         "parentUuid": null,
         "levelUuid": "211a3c0b-8f3e-411b-9e3a-2f426230ba87"
       },
@@ -4649,7 +4612,6 @@
         "uuid": "683b0623-8796-417a-a8da-2c443bf281a1",
         "published": true,
         "draft": false,
-        "categoryUuid": "850970bb-554e-4f61-a6fe-a37a273269a3",
         "parentUuid": null,
         "levelUuid": "211a3c0b-8f3e-411b-9e3a-2f426230ba87"
       },
@@ -4669,7 +4631,6 @@
         "uuid": "5ce7e320-97f4-4e59-8dcb-f4ca32cca016",
         "published": true,
         "draft": false,
-        "categoryUuid": "850970bb-554e-4f61-a6fe-a37a273269a3",
         "parentUuid": null,
         "levelUuid": "211a3c0b-8f3e-411b-9e3a-2f426230ba87"
       },
@@ -4689,7 +4650,6 @@
         "uuid": "c7917cf5-05b0-449e-9ff8-951a28b5ccbe",
         "published": true,
         "draft": false,
-        "categoryUuid": "850970bb-554e-4f61-a6fe-a37a273269a3",
         "parentUuid": null,
         "levelUuid": "211a3c0b-8f3e-411b-9e3a-2f426230ba87"
       },
@@ -4709,7 +4669,6 @@
         "uuid": "31793846-c328-4329-a659-1c3b66cc865b",
         "published": true,
         "draft": false,
-        "categoryUuid": "850970bb-554e-4f61-a6fe-a37a273269a3",
         "parentUuid": null,
         "levelUuid": "211a3c0b-8f3e-411b-9e3a-2f426230ba87"
       },
@@ -4729,7 +4688,6 @@
         "uuid": "2f92b60a-77b6-41e7-b5a4-0bcad2e99c6e",
         "published": true,
         "draft": false,
-        "categoryUuid": "850970bb-554e-4f61-a6fe-a37a273269a3",
         "parentUuid": null,
         "levelUuid": "211a3c0b-8f3e-411b-9e3a-2f426230ba87"
       },
@@ -4749,7 +4707,6 @@
         "uuid": "175bd7a9-8526-47a1-88f3-142e9f64e3e5",
         "published": true,
         "draft": false,
-        "categoryUuid": "850970bb-554e-4f61-a6fe-a37a273269a3",
         "parentUuid": null,
         "levelUuid": "211a3c0b-8f3e-411b-9e3a-2f426230ba87"
       },
@@ -4769,7 +4726,6 @@
         "uuid": "06eaf003-dad7-467a-8799-c360d9580c1a",
         "published": true,
         "draft": false,
-        "categoryUuid": "850970bb-554e-4f61-a6fe-a37a273269a3",
         "parentUuid": null,
         "levelUuid": "211a3c0b-8f3e-411b-9e3a-2f426230ba87"
       },
@@ -4789,7 +4745,6 @@
         "uuid": "1a375dab-58f3-4b57-bca8-acead01723dd",
         "published": true,
         "draft": false,
-        "categoryUuid": "850970bb-554e-4f61-a6fe-a37a273269a3",
         "parentUuid": null,
         "levelUuid": "211a3c0b-8f3e-411b-9e3a-2f426230ba87"
       },
@@ -4809,7 +4764,6 @@
         "uuid": "de8c0ec6-65d6-4c3c-a6ef-1d15215839dd",
         "published": true,
         "draft": false,
-        "categoryUuid": "850970bb-554e-4f61-a6fe-a37a273269a3",
         "parentUuid": null,
         "levelUuid": "211a3c0b-8f3e-411b-9e3a-2f426230ba87"
       },
@@ -4822,7 +4776,6 @@
         "uuid": "3981b1c5-d0bb-459d-ba5f-906df02542b0",
         "published": true,
         "draft": false,
-        "categoryUuid": "8dc237b9-809d-4ebb-8ba5-a4a7d2e548c4",
         "parentUuid": null,
         "levelUuid": "b8a7f462-3258-48aa-b65a-b07040472231"
       },
@@ -4835,7 +4788,6 @@
         "uuid": "0b161191-51b1-433a-8bee-6a91fae12fcc",
         "published": true,
         "draft": false,
-        "categoryUuid": "8dc237b9-809d-4ebb-8ba5-a4a7d2e548c4",
         "parentUuid": null,
         "levelUuid": "b8a7f462-3258-48aa-b65a-b07040472231"
       },
@@ -4844,7 +4796,6 @@
         "uuid": "b8bd85d0-e1d9-4135-bef8-f07f1ab5a4b9",
         "published": true,
         "draft": false,
-        "categoryUuid": "8dc237b9-809d-4ebb-8ba5-a4a7d2e548c4",
         "parentUuid": null,
         "levelUuid": "b8a7f462-3258-48aa-b65a-b07040472231"
       },
@@ -4853,7 +4804,6 @@
         "uuid": "e96fded5-e786-4535-8af9-ac018dcb0f4c",
         "published": true,
         "draft": false,
-        "categoryUuid": "cc3c212c-1d94-42b4-a2eb-9a03a58e43be",
         "parentUuid": null,
         "levelUuid": "c27ed04e-2bab-4dbf-83ca-922868bfebef"
       },
@@ -4862,7 +4812,6 @@
         "uuid": "29e56737-a34e-4f57-95a4-72cbc4a6d7a9",
         "published": true,
         "draft": false,
-        "categoryUuid": "cc3c212c-1d94-42b4-a2eb-9a03a58e43be",
         "parentUuid": null,
         "levelUuid": "c27ed04e-2bab-4dbf-83ca-922868bfebef"
       },
@@ -4871,7 +4820,6 @@
         "uuid": "a40676e7-ecde-454e-a3b1-77784511bf39",
         "published": true,
         "draft": false,
-        "categoryUuid": "d6921bd3-a02f-4edf-9cb7-b8040b6f2606",
         "parentUuid": null,
         "levelUuid": "604bbb77-7206-4b3d-b727-13fb280658d6"
       },
@@ -4880,7 +4828,6 @@
         "uuid": "4d0fd2c7-18d4-4413-89a7-a2a035fe997c",
         "published": true,
         "draft": false,
-        "categoryUuid": "d6921bd3-a02f-4edf-9cb7-b8040b6f2606",
         "parentUuid": null,
         "levelUuid": "604bbb77-7206-4b3d-b727-13fb280658d6"
       },
@@ -4889,7 +4836,6 @@
         "uuid": "e91ed912-527c-47bf-8266-be4257446857",
         "published": true,
         "draft": false,
-        "categoryUuid": "d6921bd3-a02f-4edf-9cb7-b8040b6f2606",
         "parentUuid": null,
         "levelUuid": "604bbb77-7206-4b3d-b727-13fb280658d6"
       },
@@ -4898,7 +4844,6 @@
         "uuid": "0a62bbf0-c6c0-4a59-97bf-2aaac972f999",
         "published": true,
         "draft": false,
-        "categoryUuid": "d6921bd3-a02f-4edf-9cb7-b8040b6f2606",
         "parentUuid": null,
         "levelUuid": "604bbb77-7206-4b3d-b727-13fb280658d6"
       },
@@ -4907,7 +4852,6 @@
         "uuid": "72ec08f3-278d-4df9-a8a5-e80b9a1b41ba",
         "published": true,
         "draft": false,
-        "categoryUuid": "d6921bd3-a02f-4edf-9cb7-b8040b6f2606",
         "parentUuid": null,
         "levelUuid": "604bbb77-7206-4b3d-b727-13fb280658d6"
       },
@@ -4916,7 +4860,6 @@
         "uuid": "27814fca-6637-4b75-97ef-9144f63334af",
         "published": true,
         "draft": false,
-        "categoryUuid": "d6921bd3-a02f-4edf-9cb7-b8040b6f2606",
         "parentUuid": null,
         "levelUuid": "604bbb77-7206-4b3d-b727-13fb280658d6"
       },
@@ -4925,7 +4868,6 @@
         "uuid": "7d5449d2-91ab-48f6-a95f-ee97387128bf",
         "published": true,
         "draft": false,
-        "categoryUuid": "d6921bd3-a02f-4edf-9cb7-b8040b6f2606",
         "parentUuid": null,
         "levelUuid": "604bbb77-7206-4b3d-b727-13fb280658d6"
       },
@@ -4938,7 +4880,6 @@
         "uuid": "e1f0bbd4-2dd3-4ae2-8a90-826ca0dec1a4",
         "published": true,
         "draft": false,
-        "categoryUuid": "d6921bd3-a02f-4edf-9cb7-b8040b6f2606",
         "parentUuid": null,
         "levelUuid": "604bbb77-7206-4b3d-b727-13fb280658d6"
       },
@@ -4947,7 +4888,6 @@
         "uuid": "88932198-f5d6-4fe9-9991-5f186ec8365d",
         "published": true,
         "draft": false,
-        "categoryUuid": "df391023-e5ff-4df0-b66c-4875f1236fb8",
         "parentUuid": null,
         "levelUuid": "1a546355-0fab-4280-8b9f-ba6de3d5206d"
       },
@@ -4956,7 +4896,6 @@
         "uuid": "94f12da4-8afe-4fc7-a192-12cb06fb44b8",
         "published": true,
         "draft": false,
-        "categoryUuid": "df391023-e5ff-4df0-b66c-4875f1236fb8",
         "parentUuid": null,
         "levelUuid": "1a546355-0fab-4280-8b9f-ba6de3d5206d"
       },
@@ -4969,7 +4908,6 @@
         "uuid": "46f97689-eb05-4969-b406-70a15554f262",
         "published": true,
         "draft": false,
-        "categoryUuid": "df391023-e5ff-4df0-b66c-4875f1236fb8",
         "parentUuid": null,
         "levelUuid": "1a546355-0fab-4280-8b9f-ba6de3d5206d"
       },
@@ -4982,7 +4920,6 @@
         "uuid": "dd74c7f0-b667-469c-bf44-b8083c0c97cc",
         "published": true,
         "draft": false,
-        "categoryUuid": "df391023-e5ff-4df0-b66c-4875f1236fb8",
         "parentUuid": null,
         "levelUuid": "1a546355-0fab-4280-8b9f-ba6de3d5206d"
       },
@@ -4991,7 +4928,6 @@
         "uuid": "9a3ac9fa-60fc-476d-a839-077645db6c84",
         "published": true,
         "draft": false,
-        "categoryUuid": "e52b8f32-e89b-455c-8f2b-36f315409731",
         "parentUuid": null,
         "levelUuid": "ce81b610-baa4-4009-bf79-8ace121d49d9"
       },
@@ -5004,7 +4940,6 @@
         "uuid": "a867cf8d-3488-4082-9266-24001b03ad04",
         "published": true,
         "draft": false,
-        "categoryUuid": "e52b8f32-e89b-455c-8f2b-36f315409731",
         "parentUuid": null,
         "levelUuid": "ce81b610-baa4-4009-bf79-8ace121d49d9"
       },
@@ -5017,7 +4952,6 @@
         "uuid": "50aa8325-1598-4287-bdac-1cd456ffb7dc",
         "published": true,
         "draft": false,
-        "categoryUuid": "e52b8f32-e89b-455c-8f2b-36f315409731",
         "parentUuid": null,
         "levelUuid": "ce81b610-baa4-4009-bf79-8ace121d49d9"
       },
@@ -5030,7 +4964,6 @@
         "uuid": "daf7b401-5320-4672-a246-1431a2f3b5b1",
         "published": true,
         "draft": false,
-        "categoryUuid": "e52b8f32-e89b-455c-8f2b-36f315409731",
         "parentUuid": null,
         "levelUuid": "ce81b610-baa4-4009-bf79-8ace121d49d9"
       },
@@ -5043,7 +4976,6 @@
         "uuid": "fadaacdc-708e-478c-b305-619fcac28a93",
         "published": true,
         "draft": false,
-        "categoryUuid": "e52b8f32-e89b-455c-8f2b-36f315409731",
         "parentUuid": null,
         "levelUuid": "ce81b610-baa4-4009-bf79-8ace121d49d9"
       },
@@ -5056,7 +4988,6 @@
         "uuid": "1e179cd5-0bc3-4da0-a8f5-d39ed9bb2353",
         "published": true,
         "draft": false,
-        "categoryUuid": "e52b8f32-e89b-455c-8f2b-36f315409731",
         "parentUuid": null,
         "levelUuid": "ce81b610-baa4-4009-bf79-8ace121d49d9"
       },
@@ -5065,7 +4996,6 @@
         "uuid": "26f22359-fbdd-40fb-bf19-c0a1f1e097f1",
         "published": true,
         "draft": false,
-        "categoryUuid": "ff7deb93-4362-4f3d-b1d1-1f13e3f614f0",
         "parentUuid": null,
         "levelUuid": "afbd4ef0-015d-4c60-be99-daa04a7be26f"
       },
@@ -5074,7 +5004,6 @@
         "uuid": "eecafb4e-4d88-4d03-b032-c85a895ba4e7",
         "published": true,
         "draft": false,
-        "categoryUuid": "ff7deb93-4362-4f3d-b1d1-1f13e3f614f0",
         "parentUuid": null,
         "levelUuid": "afbd4ef0-015d-4c60-be99-daa04a7be26f"
       },
@@ -5083,7 +5012,6 @@
         "uuid": "6225b8a6-6c76-44b8-92b6-b4386c90cd6e",
         "published": true,
         "draft": false,
-        "categoryUuid": "ff7deb93-4362-4f3d-b1d1-1f13e3f614f0",
         "parentUuid": null,
         "levelUuid": "afbd4ef0-015d-4c60-be99-daa04a7be26f"
       },
@@ -5096,7 +5024,6 @@
         "uuid": "0060b6e5-f9a5-45ca-a322-b644c0a8a49c",
         "published": true,
         "draft": false,
-        "categoryUuid": "fe3414d6-5d8d-4493-a2a2-388beb7154e4",
         "parentUuid": null,
         "levelUuid": "cd3d3edd-2f51-4198-acd4-f20c2c36d920"
       },
@@ -5109,7 +5036,6 @@
         "uuid": "605d79e5-fe43-4554-ab31-1f88b652ddf0",
         "published": true,
         "draft": false,
-        "categoryUuid": "fe3414d6-5d8d-4493-a2a2-388beb7154e4",
         "parentUuid": "0060b6e5-f9a5-45ca-a322-b644c0a8a49c",
         "levelUuid": "37979be5-5151-4584-aafa-d8b1f96233a1"
       },
@@ -5122,7 +5048,6 @@
         "uuid": "0079eead-a600-485f-a0f7-577b0fef7659",
         "published": true,
         "draft": false,
-        "categoryUuid": "fe3414d6-5d8d-4493-a2a2-388beb7154e4",
         "parentUuid": "0060b6e5-f9a5-45ca-a322-b644c0a8a49c",
         "levelUuid": "37979be5-5151-4584-aafa-d8b1f96233a1"
       },
@@ -5135,7 +5060,6 @@
         "uuid": "1331d2ad-8482-4959-a917-cbd52cd5139d",
         "published": true,
         "draft": false,
-        "categoryUuid": "fe3414d6-5d8d-4493-a2a2-388beb7154e4",
         "parentUuid": null,
         "levelUuid": "cd3d3edd-2f51-4198-acd4-f20c2c36d920"
       },
@@ -5148,7 +5072,6 @@
         "uuid": "fad6da2e-876e-4848-abc4-adc10f7e8c48",
         "published": true,
         "draft": false,
-        "categoryUuid": "fe3414d6-5d8d-4493-a2a2-388beb7154e4",
         "parentUuid": "1331d2ad-8482-4959-a917-cbd52cd5139d",
         "levelUuid": "37979be5-5151-4584-aafa-d8b1f96233a1"
       },
@@ -5161,7 +5084,6 @@
         "uuid": "c285abbb-eeb1-457b-a98e-40e40e154641",
         "published": true,
         "draft": false,
-        "categoryUuid": "fe3414d6-5d8d-4493-a2a2-388beb7154e4",
         "parentUuid": "1331d2ad-8482-4959-a917-cbd52cd5139d",
         "levelUuid": "37979be5-5151-4584-aafa-d8b1f96233a1"
       },
@@ -5174,7 +5096,6 @@
         "uuid": "fb1f3270-3837-4830-a7ed-9fe329b50fe0",
         "published": true,
         "draft": false,
-        "categoryUuid": "fe3414d6-5d8d-4493-a2a2-388beb7154e4",
         "parentUuid": "1331d2ad-8482-4959-a917-cbd52cd5139d",
         "levelUuid": "37979be5-5151-4584-aafa-d8b1f96233a1"
       },
@@ -5187,7 +5108,6 @@
         "uuid": "5445d145-7a5b-4c0e-ad6f-4984b7c83658",
         "published": true,
         "draft": false,
-        "categoryUuid": "fe3414d6-5d8d-4493-a2a2-388beb7154e4",
         "parentUuid": null,
         "levelUuid": "cd3d3edd-2f51-4198-acd4-f20c2c36d920"
       },
@@ -5200,7 +5120,6 @@
         "uuid": "19f8eb7d-2c9b-415e-ab3d-59935323df15",
         "published": true,
         "draft": false,
-        "categoryUuid": "fe3414d6-5d8d-4493-a2a2-388beb7154e4",
         "parentUuid": "5445d145-7a5b-4c0e-ad6f-4984b7c83658",
         "levelUuid": "37979be5-5151-4584-aafa-d8b1f96233a1"
       },
@@ -5213,7 +5132,6 @@
         "uuid": "27071bf3-ec99-4b97-aedd-f123ff62db63",
         "published": true,
         "draft": false,
-        "categoryUuid": "fe3414d6-5d8d-4493-a2a2-388beb7154e4",
         "parentUuid": "5445d145-7a5b-4c0e-ad6f-4984b7c83658",
         "levelUuid": "37979be5-5151-4584-aafa-d8b1f96233a1"
       },
@@ -5222,7 +5140,6 @@
         "uuid": "aa7421fa-ca70-4260-a81e-fc355491fa9d",
         "published": true,
         "draft": false,
-        "categoryUuid": "4b45478f-7ee9-470d-a3db-8b16392278e0",
         "parentUuid": null,
         "levelUuid": "a65fdccc-2ef9-4cb0-af83-984a22e4441e"
       },
@@ -5231,7 +5148,6 @@
         "uuid": "46f763c7-a0c6-4ee4-ab0f-0b7dd85f5b88",
         "published": true,
         "draft": false,
-        "categoryUuid": "4b45478f-7ee9-470d-a3db-8b16392278e0",
         "parentUuid": null,
         "levelUuid": "a65fdccc-2ef9-4cb0-af83-984a22e4441e"
       },
@@ -5240,7 +5156,6 @@
         "uuid": "3e260d04-633b-4300-a103-b63f5cfcda10",
         "published": true,
         "draft": false,
-        "categoryUuid": "4b45478f-7ee9-470d-a3db-8b16392278e0",
         "parentUuid": null,
         "levelUuid": "a65fdccc-2ef9-4cb0-af83-984a22e4441e"
       },
@@ -5249,7 +5164,6 @@
         "uuid": "3159c90f-9741-4b65-a65f-d033d29c93ed",
         "published": true,
         "draft": false,
-        "categoryUuid": "4b45478f-7ee9-470d-a3db-8b16392278e0",
         "parentUuid": null,
         "levelUuid": "a65fdccc-2ef9-4cb0-af83-984a22e4441e"
       },
@@ -5258,7 +5172,6 @@
         "uuid": "6ec36b9b-9cb5-4b69-a274-b2cc3c84988b",
         "published": true,
         "draft": false,
-        "categoryUuid": "4b45478f-7ee9-470d-a3db-8b16392278e0",
         "parentUuid": null,
         "levelUuid": "a65fdccc-2ef9-4cb0-af83-984a22e4441e"
       },
@@ -5267,7 +5180,6 @@
         "uuid": "2e4b6438-4d4e-407b-a7ac-8ffbc3c7de25",
         "published": true,
         "draft": false,
-        "categoryUuid": "4b45478f-7ee9-470d-a3db-8b16392278e0",
         "parentUuid": null,
         "levelUuid": "a65fdccc-2ef9-4cb0-af83-984a22e4441e"
       },
@@ -5276,7 +5188,6 @@
         "uuid": "b4494b91-6a2b-4b9c-a1a7-e2e87f002a89",
         "published": true,
         "draft": false,
-        "categoryUuid": "4b45478f-7ee9-470d-a3db-8b16392278e0",
         "parentUuid": null,
         "levelUuid": "a65fdccc-2ef9-4cb0-af83-984a22e4441e"
       },
@@ -5285,7 +5196,6 @@
         "uuid": "9e4a5ead-71e6-4dd2-a344-9d097c2db16d",
         "published": true,
         "draft": false,
-        "categoryUuid": "4b45478f-7ee9-470d-a3db-8b16392278e0",
         "parentUuid": null,
         "levelUuid": "a65fdccc-2ef9-4cb0-af83-984a22e4441e"
       },
@@ -5294,7 +5204,6 @@
         "uuid": "b7940aad-1122-4d2b-ac6e-e392f231dea8",
         "published": true,
         "draft": false,
-        "categoryUuid": "4b45478f-7ee9-470d-a3db-8b16392278e0",
         "parentUuid": null,
         "levelUuid": "a65fdccc-2ef9-4cb0-af83-984a22e4441e"
       },
@@ -5303,7 +5212,6 @@
         "uuid": "7f58a920-0fb4-4fbb-a9af-f5e507b59d42",
         "published": true,
         "draft": false,
-        "categoryUuid": "278c4b10-94d7-4de3-ad89-17cbad8cad96",
         "parentUuid": null,
         "levelUuid": "e18376d7-28b2-4ae2-ac0f-2665a29e4cef"
       },
@@ -5312,7 +5220,6 @@
         "uuid": "01d8bb5b-8091-4328-adf9-931ad9d413e3",
         "published": true,
         "draft": false,
-        "categoryUuid": "278c4b10-94d7-4de3-ad89-17cbad8cad96",
         "parentUuid": null,
         "levelUuid": "e18376d7-28b2-4ae2-ac0f-2665a29e4cef"
       },
@@ -5325,7 +5232,6 @@
         "uuid": "6fdac472-5f0f-4360-a073-bb4119b8e44f",
         "published": true,
         "draft": false,
-        "categoryUuid": "278c4b10-94d7-4de3-ad89-17cbad8cad96",
         "parentUuid": null,
         "levelUuid": "e18376d7-28b2-4ae2-ac0f-2665a29e4cef"
       },
@@ -5334,7 +5240,6 @@
         "uuid": "5e3c7583-58d5-4c01-af56-3f7b359c1710",
         "published": true,
         "draft": false,
-        "categoryUuid": "278c4b10-94d7-4de3-ad89-17cbad8cad96",
         "parentUuid": null,
         "levelUuid": "e18376d7-28b2-4ae2-ac0f-2665a29e4cef"
       },
@@ -5343,7 +5248,6 @@
         "uuid": "68ddb74b-6dc6-4d13-a125-6dc09d848177",
         "published": true,
         "draft": false,
-        "categoryUuid": "278c4b10-94d7-4de3-ad89-17cbad8cad96",
         "parentUuid": null,
         "levelUuid": "e18376d7-28b2-4ae2-ac0f-2665a29e4cef"
       },
@@ -5352,7 +5256,6 @@
         "uuid": "a9312a88-4a43-4bf6-a930-352f8d54293c",
         "published": true,
         "draft": false,
-        "categoryUuid": "278c4b10-94d7-4de3-ad89-17cbad8cad96",
         "parentUuid": null,
         "levelUuid": "e18376d7-28b2-4ae2-ac0f-2665a29e4cef"
       },
@@ -5365,7 +5268,6 @@
         "uuid": "228dfc4d-eb6d-4b07-a2cc-d0d121ba9961",
         "published": true,
         "draft": false,
-        "categoryUuid": "9e023da7-4de0-47d4-a023-cb5a4a3943cf",
         "parentUuid": null,
         "levelUuid": "37487b3a-8db1-45b5-ae03-a9d30957f947"
       },
@@ -5378,7 +5280,6 @@
         "uuid": "6ee10908-067b-4083-a042-5b34da666916",
         "published": true,
         "draft": false,
-        "categoryUuid": "9e023da7-4de0-47d4-a023-cb5a4a3943cf",
         "parentUuid": null,
         "levelUuid": "37487b3a-8db1-45b5-ae03-a9d30957f947"
       },
@@ -5391,7 +5292,6 @@
         "uuid": "3af15ebd-e965-4835-a74f-8749f8d79441",
         "published": true,
         "draft": false,
-        "categoryUuid": "9e023da7-4de0-47d4-a023-cb5a4a3943cf",
         "parentUuid": null,
         "levelUuid": "37487b3a-8db1-45b5-ae03-a9d30957f947"
       }
