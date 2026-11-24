@@ -196,7 +196,8 @@ export const NodeCoordinateComponent = memo((props: Props) => {
         <LocationNavigator
           onDismiss={hideCompassNavigator}
           onUseCurrentLocation={onCompassNavigatorUseCurrentLocation}
-          targetPoint={distanceTarget}
+          // opened only from the button shown when the target exists
+          targetPoint={distanceTarget!}
         />
       )}
     </VView>

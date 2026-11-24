@@ -13,6 +13,7 @@ import {
   ArenaSurvey,
   ArenaUser,
   ArenaAnyNodeDef,
+  ArenaPoint,
 } from "@openforis/arena-core";
 
 const coordinateAttributeMandatoryFields: Set<string> = new Set([
@@ -40,13 +41,15 @@ const cleanupAttributeValue = ({
 }) => {
   if (NodeDefs.getType(attributeDef) === NodeDefType.coordinate) {
     const valueUpdated = sideEffect ? value : { ...value };
-    const additionalFields = NodeDefs.getCoordinateAdditionalFields(
-      attributeDef as ArenaNodeDefCoordinate,
+    const additionalFields: ReadonlySet<string> = new Set(
+      NodeDefs.getCoordinateAdditionalFields(
+        attributeDef as ArenaNodeDefCoordinate,
+      ),
     );
     const fieldsToRemove = Object.keys(valueUpdated).filter(
       (field) =>
         !coordinateAttributeMandatoryFields.has(field) &&
-        !additionalFields.includes(field),
+        !additionalFields.has(field),
     );
     for (const field of fieldsToRemove) {
       delete valueUpdated[field];
@@ -136,7 +139,7 @@ const getCoordinateDistanceTarget = async ({
   nodeDef: ArenaAnyNodeDef;
   record: ArenaRecord;
   node: ArenaRecordNode | undefined;
-}) => {
+}): Promise<ArenaPoint | null> => {
   const distanceTargetExpression = extractDistanceTargetExpression({ nodeDef });
   if (distanceTargetExpression) {
     const distanceTarget = await new RecordExpressionEvaluator().evalExpression(

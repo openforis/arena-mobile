@@ -2181,9 +2181,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openforis/arena-core@npm:^3.1.3":
-  version: 3.1.3
-  resolution: "@openforis/arena-core@npm:3.1.3"
+"@openforis/arena-core@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "@openforis/arena-core@npm:3.2.0"
   dependencies:
     "@jsep-plugin/regex": "npm:^1.1.0"
     "@turf/bearing": "npm:^7.4.0"
@@ -2194,12 +2194,12 @@ __metadata:
     bignumber.js: "npm:^11.1.5"
     change-case: "npm:^5.4.4"
     dayjs: "npm:^1.11.23"
+    es-toolkit: "npm:^1.53.2"
     jsep: "npm:^1.6.0"
-    lodash.isequal: "npm:^4.5.0"
     n2words: "npm:^6.3.1"
     proj4: "npm:^2.23.0"
     uuid: "npm:^14.0.3"
-  checksum: 10c0/b4394d2fc5a9c4a50a7f8902ed869dda81c9d2a1ee342dc76323dddede3f1c7bbddd6a53d1aecc699d7239e0c35103adecf903d77cb915c04af016f879e77316
+  checksum: 10c0/d1917f8250b64fce27c226b1be9e97617fc3830313d12a91b6babafc31ace83340466f2f7eca84a166a0ab5a623a726089c9c1ee307cb87614464898360548b8
   languageName: node
   linkType: hard
 
@@ -3919,7 +3919,7 @@ __metadata:
     "@eslint/compat": "npm:^2.1.1"
     "@eslint/js": "npm:^10.0.1"
     "@lodev09/react-native-exify": "npm:^1.0.3"
-    "@openforis/arena-core": "npm:^3.1.3"
+    "@openforis/arena-core": "npm:^3.2.0"
     "@react-native-async-storage/async-storage": "npm:2.2.0"
     "@react-native-clipboard/clipboard": "npm:^1.17.0"
     "@react-native-community/datetimepicker": "npm:9.2.1"
@@ -5544,6 +5544,16 @@ __metadata:
     is-date-object: "npm:^1.1.0"
     is-symbol: "npm:^1.1.1"
   checksum: 10c0/b10029f8b0b13841bade224ff39005a13d76d9cb803cd1efb18cc96a24414e83e2e7ed15d7ad9d0d0bda66884afd211b7b579b8fa31940e05b060934aa7077d8
+  languageName: node
+  linkType: hard
+
+"es-toolkit@npm:^1.53.2":
+  version: 1.53.2
+  resolution: "es-toolkit@npm:1.53.2"
+  dependenciesMeta:
+    vitepress-plugin-sandpack@1.1.4:
+      unplugged: true
+  checksum: 10c0/5b0cad13f54e010d84fabd74dbc016a3db09cd9d3992bd97bc06fe54568af439333a61692e68494751c71fd2f453f882711cceb9c61239658a231f013882452a
   languageName: node
   linkType: hard
 
@@ -8257,13 +8267,6 @@ __metadata:
   version: 4.0.8
   resolution: "lodash.debounce@npm:4.0.8"
   checksum: 10c0/762998a63e095412b6099b8290903e0a8ddcb353ac6e2e0f2d7e7d03abd4275fe3c689d88960eb90b0dde4f177554d51a690f22a343932ecbc50a5d111849987
-  languageName: node
-  linkType: hard
-
-"lodash.isequal@npm:^4.5.0":
-  version: 4.5.0
-  resolution: "lodash.isequal@npm:4.5.0"
-  checksum: 10c0/dfdb2356db19631a4b445d5f37868a095e2402292d59539a987f134a8778c62a2810c2452d11ae9e6dcac71fc9de40a6fedcb20e2952a15b431ad8b29e50e28f
   languageName: node
   linkType: hard
 
