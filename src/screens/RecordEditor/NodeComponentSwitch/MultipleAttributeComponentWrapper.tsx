@@ -2,7 +2,7 @@ import { memo, useCallback } from "react";
 
 import {
   ArenaRecordNode,
-  ArenaNodeDef,
+  ArenaAnyNodeDef,
   NodeDefs,
   RecordNodes,
 } from "@openforis/arena-core";
@@ -26,7 +26,7 @@ import styles from "./multipleAttributeComponentWrapperStyles";
 
 type AttributeRowProps = {
   node: ArenaRecordNode;
-  nodeDef: ArenaNodeDef<any>;
+  nodeDef: ArenaAnyNodeDef;
   onDelete: (node: ArenaRecordNode) => void;
   parentNodeUuid?: string;
 };

@@ -5,7 +5,18 @@ import { LocationPoint } from "model";
 import { useLocationWatch } from "./useLocationWatch";
 import type { LocationWatchStatus } from "./useLocationWatch";
 
-const defaultState = {
+type LocationCallbackParams = Parameters<
+  Parameters<typeof useLocationWatch>[0]["locationCallback"]
+>[0];
+
+type LocationState = {
+  location: LocationPoint | null;
+  locationAccuracy: number | null | undefined;
+  locationFetched: boolean;
+  pointLatLong: ArenaPoint | null;
+};
+
+const defaultState: LocationState = {
   location: null,
   locationAccuracy: null,
   locationFetched: false,
@@ -14,7 +25,7 @@ const defaultState = {
 
 export const useLocation = (): {
   location: LocationPoint | null;
-  locationAccuracy: number | null;
+  locationAccuracy: number | null | undefined;
   locationAccuracyThreshold: number;
   locationFetched: boolean;
   locationWatchStatus: LocationWatchStatus;
@@ -31,7 +42,12 @@ export const useLocation = (): {
   const { location, locationAccuracy, locationFetched, pointLatLong } = state;
 
   const locationCallback = useCallback(
-    ({ location, locationAccuracy, pointLatLong, thresholdReached }: any) => {
+    ({
+      location,
+      locationAccuracy,
+      pointLatLong,
+      thresholdReached,
+    }: LocationCallbackParams) => {
       if (thresholdReached) {
         setState((statePrev) => ({
           ...statePrev,

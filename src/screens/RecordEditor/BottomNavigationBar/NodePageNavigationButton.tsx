@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
 import type { StyleProp, ViewStyle } from "react-native";
 
-import { NodeDefs, Objects } from "@openforis/arena-core";
+import { ArenaAnyNodeDef, NodeDefs, Objects } from "@openforis/arena-core";
 
 import { Button } from "components";
 import { ButtonIconPosition, ButtonMode } from "components/Button";
@@ -9,8 +9,16 @@ import { DataEntryActions, SurveySelectors, useAppDispatch } from "state";
 
 import buttonStyles from "./buttonStyles";
 
+// entity page pointer returned by RecordPageNavigator
+type EntityPagePointer = {
+  parentEntityUuid?: string;
+  entityDef: ArenaAnyNodeDef;
+  entityUuid?: string | null;
+  index?: number;
+};
+
 type Props = {
-  entityPointer?: any;
+  entityPointer: EntityPagePointer;
   icon?: string;
   iconPosition?: ButtonIconPosition;
   mode?: ButtonMode;
@@ -48,7 +56,7 @@ export const NodePageNavigationButton = (props: Props) => {
       textIsI18nKey={false}
       textKey={
         NodeDefs.getLabelOrName(entityDef, lang) +
-        (Objects.isEmpty(index) ? "" : `[${index + 1}]`)
+        (Objects.isEmpty(index) ? "" : `[${index! + 1}]`)
       }
       onPress={onPress}
     />

@@ -5,7 +5,7 @@ import { useAppDispatch } from "state/storeHooks";
 import { log } from "utils/Logger";
 
 type Props = {
-  error: any;
+  error: Error;
   resetError: () => void;
 };
 

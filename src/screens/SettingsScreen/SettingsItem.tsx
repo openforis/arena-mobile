@@ -18,12 +18,12 @@ import { SettingsModel, SettingsObject } from "model";
 import { SettingsFormItem } from "./SettingsFormItem";
 import styles from "./styles";
 
-const numberToString = (value: any) =>
+const numberToString = (value: unknown) =>
   Objects.isEmpty(value) ? "" : String(value);
-const stringToNumber = (value: any) =>
+const stringToNumber = (value: string) =>
   Objects.isEmpty(value) ? Number.NaN : Number(value);
 
-const determineTextKey = (...possibleKeys: any[]) =>
+const determineTextKey = (...possibleKeys: (string | undefined)[]) =>
   possibleKeys.find((possibleKey) => possibleKey && i18n.exists(possibleKey));
 
 type SettingsDropdownOption = {
@@ -32,13 +32,20 @@ type SettingsDropdownOption = {
   labelIsI18nKey?: boolean;
 };
 
+type SettingsItemProperty = NonNullable<
+  (typeof SettingsModel.properties)[keyof typeof SettingsModel.properties]
+> & {
+  labelKey?: string;
+  descriptionKey?: string;
+};
+
 type SettingsItemProps = {
-  settings: any;
+  settings: SettingsObject;
   settingKey: keyof SettingsObject;
-  prop: any;
+  prop: SettingsItemProperty;
   onPropValueChange: (params: {
     key: keyof SettingsObject;
-  }) => (value: any) => Promise<void> | void;
+  }) => (value: unknown) => Promise<void> | void;
   translateItemLabels?: boolean;
 };
 
@@ -65,7 +72,7 @@ export const SettingsItem = (props: SettingsItemProps) => {
   const [error, setError] = useState(false);
 
   const onValueChange = useCallback(
-    (val: any) => {
+    (val: unknown) => {
       void onPropValueChange({ key: settingKey })(val);
     },
     [onPropValueChange, settingKey],
@@ -91,19 +98,19 @@ export const SettingsItem = (props: SettingsItemProps) => {
           descriptionKey={descriptionKey}
           direction="horizontal"
         >
-          <Switch value={value} onChange={onValueChange} />
+          <Switch value={value as boolean} onChange={onValueChange} />
         </SettingsFormItem>
       );
     case SettingsModel.PropertyType.dropdown:
       return (
         <VView>
           <Dropdown
-            items={options}
+            items={options!}
             itemKeyExtractor={(item: SettingsDropdownOption) => item.key}
             label={labelKey}
             onChange={onPropValueChange({ key: settingKey })}
             translateItemLabels={translateItemLabels}
-            value={value}
+            value={value as string | number}
           />
           {descriptionKey && (
             <Text
@@ -121,12 +128,15 @@ export const SettingsItem = (props: SettingsItemProps) => {
           labelKey={labelKey}
           descriptionKey={descriptionKey}
         >
-          <RadioButtonGroup onValueChange={onValueChange} value={value}>
-            {options.map((option: any) => (
+          <RadioButtonGroup
+            onValueChange={onValueChange}
+            value={value as string}
+          >
+            {options!.map((option: SettingsDropdownOption) => (
               <RadioButton
                 key={option.key}
                 label={translateItemLabels ? t(option.label) : option.label}
-                value={option.key}
+                value={option.key as string}
               />
             ))}
           </RadioButtonGroup>
@@ -142,7 +152,7 @@ export const SettingsItem = (props: SettingsItemProps) => {
           <TextInput
             error={error}
             keyboardType="numeric"
-            onChange={(val: any) => {
+            onChange={(val: string) => {
               const valueNext = stringToNumber(val);
               setError(numberToString(valueNext) !== val);
               onValueChange(valueNext);
@@ -159,9 +169,9 @@ export const SettingsItem = (props: SettingsItemProps) => {
           descriptionKey={descriptionKey}
         >
           <SegmentedButtons
-            buttons={options}
+            buttons={options!}
             onChange={onValueChange}
-            value={value}
+            value={value as string}
           />
         </SettingsFormItem>
       );
@@ -178,8 +188,8 @@ export const SettingsItem = (props: SettingsItemProps) => {
             minValue={minValue}
             maxValue={maxValue}
             step={step}
-            value={value}
-            onValueChange={(value: any) =>
+            value={value as number}
+            onValueChange={(value: number) =>
               onValueChange(Numbers.roundToPrecision(value, 2))
             }
           />

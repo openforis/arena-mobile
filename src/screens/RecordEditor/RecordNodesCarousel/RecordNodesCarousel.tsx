@@ -1,5 +1,8 @@
 import { memo, useCallback, useEffect, useMemo, useRef } from "react";
-import PagerView from "react-native-pager-view";
+import PagerView, {
+  type PagerViewOnPageSelectedEvent,
+  type PageScrollStateChangedNativeEvent,
+} from "react-native-pager-view";
 import Dots from "react-native-dots-pagination";
 
 import { NodeDefs } from "@openforis/arena-core";
@@ -21,8 +24,10 @@ export const RecordNodesCarousel = memo(() => {
 
   log.debug(`rendering RecordNodesCarousel of ${NodeDefs.getName(entityDef)}`);
 
-  const pagerViewRef = useRef(null);
-  const pagerViewScrollStateRef = useRef(null);
+  const pagerViewRef = useRef<PagerView>(null);
+  const pagerViewScrollStateRef = useRef<
+    PageScrollStateChangedNativeEvent["nativeEvent"]["pageScrollState"] | null
+  >(null);
 
   const childrenDefs =
     DataEntrySelectors.useCurrentPageEntityRelevantChildDefs();
@@ -30,7 +35,7 @@ export const RecordNodesCarousel = memo(() => {
     DataEntrySelectors.useCurrentPageEntityActiveChildIndex();
 
   const onPageSelected = useCallback(
-    (e: any) => {
+    (e: PagerViewOnPageSelectedEvent) => {
       const position = e.nativeEvent.position;
       dispatch(
         DataEntryActions.selectCurrentPageEntityActiveChildIndex(position),
@@ -39,9 +44,12 @@ export const RecordNodesCarousel = memo(() => {
     [dispatch],
   );
 
-  const onPageScrollStateChanged = useCallback((e: any) => {
-    pagerViewScrollStateRef.current = e.nativeEvent.pageScrollState;
-  }, []);
+  const onPageScrollStateChanged = useCallback(
+    (e: PageScrollStateChangedNativeEvent) => {
+      pagerViewScrollStateRef.current = e.nativeEvent.pageScrollState;
+    },
+    [],
+  );
 
   useEffect(() => {
     requestAnimationFrame(() => {
@@ -50,7 +58,7 @@ export const RecordNodesCarousel = memo(() => {
         pagerViewScrollStateRef.current === "idle"
       ) {
         // set page only when not scrolling to avoid polling between pages
-        const pagerView: any = pagerViewRef.current;
+        const pagerView = pagerViewRef.current;
         pagerView?.setPage(activeChildIndex);
       }
     });

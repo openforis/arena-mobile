@@ -1,5 +1,11 @@
 import React from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import {
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from "react-native";
 import { Dialog as RNPDialog, Surface, useTheme } from "react-native-paper";
 
 import { useTranslation } from "localization";
@@ -23,7 +29,7 @@ type DialogProps = {
   showActions?: boolean;
   // renders a close (x) icon button in the header, next to the title
   showCloseButton?: boolean;
-  style?: any;
+  style?: StyleProp<ViewStyle>;
   title?: string;
   titleTestID?: string;
   visible?: boolean;

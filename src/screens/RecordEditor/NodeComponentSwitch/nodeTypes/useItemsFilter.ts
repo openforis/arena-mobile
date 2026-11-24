@@ -1,6 +1,6 @@
 import {
   ArenaCategoryItem,
-  ArenaNodeDef,
+  ArenaAnyNodeDef,
   NodeDefs,
   Objects,
   RecordExpressionEvaluator,
@@ -24,7 +24,7 @@ export const useItemsFilter = <T extends ArenaCategoryItem | ArenaTaxon>({
   items,
   alwaysIncludeItemFunction = undefined,
 }: {
-  nodeDef: ArenaNodeDef<any>;
+  nodeDef: ArenaAnyNodeDef;
   parentNodeUuid?: string;
   items: T[];
   alwaysIncludeItemFunction?: (item: T) => boolean;

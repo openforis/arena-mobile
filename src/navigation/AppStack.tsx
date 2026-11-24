@@ -1,16 +1,20 @@
 import React, { useMemo } from "react";
 import { DefaultTheme, createStaticNavigation } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import {
+  createNativeStackNavigator,
+  NativeStackHeaderProps,
+  NativeStackNavigationOptions,
+} from "@react-navigation/native-stack";
 
 import { useAppTheme } from "theme";
 import { log, PreviewMode } from "utils";
 import { screens } from "screens/screens";
 import { CurrentSurveyCoordinator } from "./CurrentSurveyCoordinator";
-import { AppBar } from "./AppBar";
+import { AppBar, AppBarScreenOptions } from "./AppBar";
 import { screenKeys } from "screens/screenKeys";
 
 const screenOptions = {
-  header: (props: any) => React.createElement(AppBar, props),
+  header: (props: NativeStackHeaderProps) => React.createElement(AppBar, props),
 };
 
 const RootStack = createNativeStackNavigator({
@@ -28,7 +32,13 @@ const RootStack = createNativeStackNavigator({
       };
       return acc;
     },
-    {} as Record<string, any>,
+    {} as Record<
+      string,
+      {
+        screen: React.ComponentType;
+        options: NativeStackNavigationOptions & AppBarScreenOptions;
+      }
+    >,
   ),
 });
 

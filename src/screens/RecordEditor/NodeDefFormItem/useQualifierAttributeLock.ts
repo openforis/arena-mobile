@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import { ArenaNodeDef, NodeDefs } from "@openforis/arena-core";
+import { ArenaAnyNodeDef, NodeDefs } from "@openforis/arena-core";
 
 import { UserGroupQualifiers } from "model";
 import { SurveySelectors } from "state";
@@ -8,7 +8,7 @@ import { SurveySelectors } from "state";
 export const useQualifierAttributeLocked = ({
   nodeDef,
 }: {
-  nodeDef: ArenaNodeDef<any>;
+  nodeDef: ArenaAnyNodeDef;
 }): boolean => {
   const survey = SurveySelectors.useCurrentSurvey();
   const userGroup = SurveySelectors.useCurrentSurveyUserGroup();

@@ -90,7 +90,7 @@ export const AppConfirmDialog = () => {
         ))}
       {(multipleChoiceOptions?.length ?? 0) > 0 && (
         <VView>
-          {multipleChoiceOptions!.map((option: any) => (
+          {multipleChoiceOptions!.map((option) => (
             <Checkbox
               key={option.value}
               checked={
@@ -108,13 +108,19 @@ export const AppConfirmDialog = () => {
           value={selectedSingleChoiceValue}
         >
           <VView>
-            {singleChoiceOptions!.map((option: any) => (
-              <RadioButton
-                key={option.value}
-                label={t(option.label, option.labelParams)}
-                value={option.value}
-              />
-            ))}
+            {singleChoiceOptions!.map(
+              (option: {
+                label: string;
+                value: string;
+                labelParams?: Record<string, unknown>;
+              }) => (
+                <RadioButton
+                  key={option.value}
+                  label={t(option.label, option.labelParams)}
+                  value={option.value}
+                />
+              ),
+            )}
           </VView>
         </RadioButtonGroup>
       )}

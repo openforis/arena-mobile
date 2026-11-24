@@ -8,12 +8,13 @@ import { Button, ButtonMode, ButtonProps } from "../Button";
 import { FlexWrapView } from "../FlexWrapView";
 
 import styles from "./styles";
+import type { TranslateFunction, TranslateParams } from "localization";
 
 export type SelectedItemsAction = {
   key: string;
   icon?: string;
   labelKey: string;
-  labelParams?: Record<string, any>;
+  labelParams?: TranslateParams;
   mode?: ButtonMode;
   onPress: () => void;
   textColor?: string;
@@ -23,7 +24,7 @@ const customActionToButtonProps = ({
   t,
   customAction,
 }: {
-  t: (key?: string | null, params?: any) => string;
+  t: TranslateFunction;
   customAction: SelectedItemsAction;
 }): ButtonProps & { key: string } => {
   const {

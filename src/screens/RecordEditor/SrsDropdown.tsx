@@ -5,8 +5,8 @@ import { SurveySelectors } from "state";
 
 type SrsDropdownProps = {
   editable?: boolean;
-  onChange: (value: any) => Promise<void> | void;
-  value?: any;
+  onChange: (value: string) => Promise<void> | void;
+  value?: string;
 };
 
 export const SrsDropdown = (props: SrsDropdownProps) => {
@@ -18,7 +18,7 @@ export const SrsDropdown = (props: SrsDropdownProps) => {
 
   const items = useMemo(
     () =>
-      srss.map((srs: any) => ({
+      srss.map((srs) => ({
         value: srs.code,
         label: srs.name,
       })),

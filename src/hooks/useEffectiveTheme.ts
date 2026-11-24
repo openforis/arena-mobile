@@ -24,13 +24,17 @@ const themeByThemeSetting = {
 };
 
 const scaleFonts = (fontScale: number) => (fonts: AppThemeFonts) =>
-  Object.entries(fonts).reduce((acc, [fontKey, font]) => {
-    const fontSizePrev = (font as any).fontSize ?? defaultFontSize;
-    const fontSize = Math.floor(fontSizePrev * fontScale);
-    const fontResized = { ...font, fontSize };
-    acc[fontKey] = fontResized;
-    return acc;
-  }, {} as any);
+  Object.entries(fonts).reduce(
+    (acc, [fontKey, font]) => {
+      const fontSizePrev =
+        (font as { fontSize?: number }).fontSize ?? defaultFontSize;
+      const fontSize = Math.floor(fontSizePrev * fontScale);
+      const fontResized = { ...font, fontSize };
+      acc[fontKey] = fontResized;
+      return acc;
+    },
+    {} as Record<string, object>,
+  );
 
 export const useEffectiveTheme = (): AppTheme => {
   const colorScheme = useColorScheme();

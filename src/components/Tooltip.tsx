@@ -2,13 +2,14 @@ import { useMemo } from "react";
 import { Tooltip as RNPTooltip } from "react-native-paper";
 
 import { useTranslation } from "localization";
+import type { TranslateParams } from "localization";
 
 type Props = {
   backgroundColor?: string;
   children: React.ReactElement;
   textColor?: string;
   titleKey: string;
-  titleParams?: any;
+  titleParams?: TranslateParams;
 };
 
 export const Tooltip = (props: Props) => {

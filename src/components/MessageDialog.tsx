@@ -6,12 +6,13 @@ import { CollapsiblePanel } from "./CollapsiblePanel";
 import { Dialog } from "./Dialog";
 import { ScrollView } from "./ScrollView";
 import { Text } from "./Text";
+import type { TranslateParams } from "localization";
 
 type MessageDialogProps = {
   content: string;
-  contentParams?: any;
+  contentParams?: TranslateParams;
   details?: string;
-  detailsParams?: any;
+  detailsParams?: TranslateParams;
   doneButtonLabel?: string;
   onDismiss?: () => void;
   onDone?: () => void;

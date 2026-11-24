@@ -206,7 +206,7 @@ type RadarViewProps = {
   relativeAngle: number;
   distance: number;
   heading: number;
-  accuracy: number | null;
+  accuracy: number | null | undefined;
 };
 
 export const RadarView = ({

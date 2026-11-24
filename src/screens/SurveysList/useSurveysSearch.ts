@@ -2,17 +2,23 @@ import { useMemo, useState } from "react";
 
 import { Objects } from "@openforis/arena-core";
 
-const prepareForSearch = (v: any) =>
-  Objects.isEmpty(v) ? "" : v.toLocaleLowerCase().trim().replaceAll("_", " ");
+import type { SurveySearchable } from "./surveySummaryTypes";
 
-export const useSurveysSearch = ({ surveys }: any) => {
+const prepareForSearch = (v: string | null | undefined): string =>
+  Objects.isEmpty(v) ? "" : v!.toLocaleLowerCase().trim().replaceAll("_", " ");
+
+export const useSurveysSearch = <T extends SurveySearchable>({
+  surveys,
+}: {
+  surveys: T[];
+}) => {
   const [searchValue, setSearchValue] = useState("");
 
   // derived from surveys: the search value is kept when the surveys are refreshed
   const surveysFiltered = useMemo(() => {
     const preparedVal = prepareForSearch(searchValue);
     if (!preparedVal) return surveys;
-    return surveys.filter(({ name, label, defaultLabel }: any) =>
+    return surveys.filter(({ name, label, defaultLabel }) =>
       [name, label, defaultLabel].some((v) =>
         prepareForSearch(v).includes(preparedVal),
       ),

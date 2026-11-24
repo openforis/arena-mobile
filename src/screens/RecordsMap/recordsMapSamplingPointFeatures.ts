@@ -1,7 +1,7 @@
 import {
   ArenaCategoryItem,
   CategoryItems,
-  ArenaNodeDef,
+  ArenaAnyNodeDef,
   ArenaNodeDefCode,
   NodeDefs,
   Objects,
@@ -45,7 +45,7 @@ const getSamplingPointRootKeyDefs = ({
   survey: ArenaSurvey;
   cycle: string;
 }): ArenaNodeDefCode[] =>
-  (SurveyDefs.getRootKeyDefs({ survey, cycle }) as ArenaNodeDef<any>[])
+  (SurveyDefs.getRootKeyDefs({ survey, cycle }) as ArenaAnyNodeDef[])
     .filter((nodeDef) =>
       SurveyDefs.isCodeAttributeFromSamplingPointData({
         survey,
@@ -68,18 +68,23 @@ const resolveKeyItem = ({
 }: {
   survey: ArenaSurvey;
   categoryUuid: string;
-  value: any;
+  value: unknown;
   codePath: string[];
 }): ArenaCategoryItem | undefined => {
   if (Objects.isEmpty(value)) return undefined;
-  const itemUuid = typeof value === "object" ? value.itemUuid : undefined;
+  // not null: empty values excluded above
+  const valueObj =
+    typeof value === "object"
+      ? (value as { itemUuid?: string; code?: string })
+      : undefined;
+  const itemUuid = valueObj ? valueObj.itemUuid : undefined;
   if (itemUuid) return Surveys.getCategoryItemByUuid({ survey, itemUuid });
-  const code = typeof value === "object" ? value.code : String(value);
+  const code = valueObj ? valueObj.code : String(value);
   if (Objects.isEmpty(code)) return undefined;
   return Surveys.getCategoryItemByCodePaths({
     survey,
     categoryUuid,
-    codePaths: [...codePath, code],
+    codePaths: [...codePath, code!],
   });
 };
 

@@ -107,7 +107,7 @@ const visitDirFilesRecursively = async ({
 };
 
 const getInfo = async (
-  fileUri: any,
+  fileUri: string,
   ignoreErrors = true,
 ): Promise<FileSystem.FileInfo | null> => {
   try {
@@ -131,17 +131,20 @@ const getWebFileSize = async (fileUri: string): Promise<number> => {
   }
 };
 
-const getSize = async (fileUri: any, ignoreErrors = true): Promise<number> => {
+const getSize = async (
+  fileUri: string,
+  ignoreErrors = true,
+): Promise<number> => {
   if (Environment.isWeb) return getWebFileSize(fileUri);
   const info = await getInfo(fileUri, ignoreErrors);
   return info?.exists ? info.size : 0;
 };
 
-const getDirSize = async (dirUri: any): Promise<number> => {
+const getDirSize = async (dirUri: string): Promise<number> => {
   let total = 0;
   await visitDirFilesRecursively({
     dirUri,
-    visitor: async (fileUri: any) => {
+    visitor: async (fileUri: string) => {
       const size = await getSize(fileUri);
       total += size;
     },
@@ -149,7 +152,7 @@ const getDirSize = async (dirUri: any): Promise<number> => {
   return total;
 };
 
-const exists = async (fileUri: any): Promise<boolean> => {
+const exists = async (fileUri: string): Promise<boolean> => {
   if (Environment.isWeb) return (await getWebFileSize(fileUri)) > 0;
   const info = await getInfo(fileUri, true);
   return info?.exists ?? false;
@@ -158,7 +161,7 @@ const exists = async (fileUri: any): Promise<boolean> => {
 const getFreeDiskStorage = (): Promise<number> =>
   FileSystem.getFreeDiskStorageAsync();
 
-const jsonToString = (obj: any): string => JSON.stringify(obj);
+const jsonToString = (obj: unknown): string => JSON.stringify(obj);
 
 const getNameFromUri = (uri: string): string =>
   uri.substring(uri.lastIndexOf("/") + 1);
@@ -194,7 +197,11 @@ const readAsBytes = async (
   return bytes.length ? bytes : null;
 };
 
-const readJsonFromFile = async ({ fileUri }: any): Promise<object | null> => {
+const readJsonFromFile = async ({
+  fileUri,
+}: {
+  fileUri: string;
+}): Promise<object | null> => {
   if (await exists(fileUri)) {
     const content = await readAsString(fileUri);
     return JSON.parse(content);
@@ -239,7 +246,7 @@ const writeJsonToFile = async ({
   content,
   fileUri,
 }: {
-  content: any;
+  content: unknown;
   fileUri: string;
 }): Promise<void> =>
   writeStringToFile({ content: jsonToString(content), fileUri });

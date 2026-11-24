@@ -1,6 +1,6 @@
 import {
   LanguageCode,
-  ArenaNodeDef,
+  ArenaAnyNodeDef,
   ArenaNodeDefCode,
   NodeDefs,
   NodeDefType,
@@ -50,7 +50,7 @@ const getCoordinateAttributeDefs = ({
 }: {
   survey: ArenaSurvey;
   cycle: string;
-}): ArenaNodeDef<any>[] =>
+}): ArenaAnyNodeDef[] =>
   Surveys.getNodeDefsArray(survey).filter(
     (nodeDef) =>
       nodeDef.type === NodeDefType.coordinate &&
@@ -64,7 +64,7 @@ const getPositionTrackAttributeDefs = ({
 }: {
   survey: ArenaSurvey;
   cycle: string;
-}): ArenaNodeDef<any>[] =>
+}): ArenaAnyNodeDef[] =>
   Surveys.getNodeDefsArray(survey).filter(
     (nodeDef) =>
       PositionTracks.isPositionTrackingNodeDef(nodeDef) &&
@@ -254,7 +254,7 @@ export const getLayerLabel = ({
   survey: ArenaSurvey;
   layer: RecordsMapLayer;
   lang: LanguageCode;
-  t: (key: string, params?: any) => string;
+  t: (key: string, params?: Record<string, unknown>) => string;
   inGroup?: boolean;
 }): string => {
   if (layer.type === RecordsMapLayerType.samplingPoints) {

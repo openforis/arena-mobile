@@ -1,11 +1,12 @@
 import { RadioButton as RNPRadioButton } from "react-native-paper";
+import { StyleProp, ViewStyle } from "react-native";
 
 type Props = {
   checked?: boolean;
   disabled?: boolean;
   label?: string;
   onPress?: () => void;
-  style?: any;
+  style?: StyleProp<ViewStyle>;
   value?: string;
 };
 

@@ -69,7 +69,7 @@ const rotateLogFilesOnStartup = async (filePath: string): Promise<void> => {
   }
 };
 
-const argToString = (arg: any): string => {
+const argToString = (arg: unknown): string => {
   if (typeof arg === "string") {
     return arg;
   } else if (arg instanceof Error) {
@@ -83,7 +83,7 @@ const argToString = (arg: any): string => {
   }
 };
 
-const write = (level: LogLevel, ...args: any[]) => {
+const write = (level: LogLevel, ...args: unknown[]) => {
   // skip the stringification of debug messages that would be discarded
   if (level === LogLevel.Debug && !__DEV__) return;
   const msg = args.map(argToString).join(" ");
@@ -100,16 +100,16 @@ const write = (level: LogLevel, ...args: any[]) => {
 };
 
 export const log = {
-  debug: (...args: any[]) => {
+  debug: (...args: unknown[]) => {
     write(LogLevel.Debug, ...args);
   },
-  info: (...args: any[]) => {
+  info: (...args: unknown[]) => {
     write(LogLevel.Info, ...args);
   },
-  warn: (...args: any[]) => {
+  warn: (...args: unknown[]) => {
     write(LogLevel.Warning, ...args);
   },
-  error: (...args: any[]) => {
+  error: (...args: unknown[]) => {
     write(LogLevel.Error, ...args);
   },
 };

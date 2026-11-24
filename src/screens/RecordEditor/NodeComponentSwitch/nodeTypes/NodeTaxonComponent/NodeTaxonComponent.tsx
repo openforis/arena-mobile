@@ -1,6 +1,10 @@
 import { memo, useState } from "react";
 
-import { NodeDefs, ArenaNodeDefTaxon } from "@openforis/arena-core";
+import {
+  ArenaNodeDefTaxon,
+  ArenaRecordNodeValueTaxon,
+  NodeDefs,
+} from "@openforis/arena-core";
 
 import { Button, CloseIconButton, HView, Text, VView, View } from "components";
 import { RecordEditViewMode } from "model";
@@ -29,9 +33,10 @@ export const NodeTaxonComponent = memo((props: Props) => {
   const openEditDialog = () => setEditDialogOpen(true);
   const closeEditDialog = () => setEditDialogOpen(false);
 
-  const { value, updateNodeValue, onClearPress } = useNodeComponentLocalState({
-    nodeUuid,
-  });
+  const { value, updateNodeValue, onClearPress } =
+    useNodeComponentLocalState<ArenaRecordNodeValueTaxon>({
+      nodeUuid,
+    });
 
   const selectedTaxon = useTaxonByNodeValue({ value });
   const selectedTaxonVernacularName = selectedTaxon?.vernacularName;

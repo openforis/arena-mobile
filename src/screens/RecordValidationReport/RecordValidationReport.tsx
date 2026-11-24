@@ -2,7 +2,11 @@ import { useCallback, useMemo, useState } from "react";
 import { useNavigator } from "navigation/navigator";
 
 import {
-  ArenaNodeDef,
+  ArenaAnyNodeDef,
+  ArenaRecord,
+  ArenaSurvey,
+  ArenaValidation,
+  LanguageCode,
   NodeDefs,
   Objects,
   Records,
@@ -40,9 +44,28 @@ const fields: DataVisualizerField[] = [
   },
 ];
 
-const getNodePath = ({ survey, record, nodeUuid, lang }: any) => {
-  const parts: any = [];
-  const node = Records.getNodeByUuid(nodeUuid)(record);
+type ValidationItem = {
+  key: string;
+  nodeDef: ArenaAnyNodeDef;
+  parentNodeUuid?: string;
+  path: string;
+  error: string;
+};
+
+// empty array (filtered out as empty path part) when the node is not found
+const getNodePath = ({
+  survey,
+  record,
+  nodeUuid,
+  lang,
+}: {
+  survey: ArenaSurvey;
+  record: ArenaRecord;
+  nodeUuid: string | undefined;
+  lang: LanguageCode;
+}): string | string[] => {
+  const parts: string[] = [];
+  const node = Records.getNodeByUuid(nodeUuid!)(record);
   if (!node) {
     return parts;
   }
@@ -78,13 +101,14 @@ const extractValidationItem = ({
   validationResult,
   lang,
   t,
-}: any): {
-  key: string;
-  nodeDef: ArenaNodeDef<any>;
-  parentNodeUuid?: string;
-  path: string;
-  error: string;
-} | null => {
+}: {
+  survey: ArenaSurvey;
+  record: ArenaRecord;
+  validationFieldKey: string;
+  validationResult: ArenaValidation;
+  lang: LanguageCode;
+  t: ReturnType<typeof useTranslation>["t"];
+}): ValidationItem | null => {
   let invalidNodeDefUuid, invalidParentNodeUuid, invalidNodeUuid;
   if (RecordValidations.isValidationChildrenCountKey(validationFieldKey)) {
     invalidNodeDefUuid =
@@ -109,12 +133,12 @@ const extractValidationItem = ({
   });
 
   const path = invalidNodeUuid
-    ? getNodePath({
+    ? (getNodePath({
         survey,
         record,
         nodeUuid: invalidNodeUuid,
         lang,
-      })
+      }) as string)
     : [
         getNodePath({
           survey,
@@ -143,7 +167,7 @@ const extractValidationItem = ({
 
 type RecordValidationReportState = {
   editDialogOpen: boolean;
-  dialogNodeDef?: ArenaNodeDef<any>;
+  dialogNodeDef?: ArenaAnyNodeDef;
   dialogNodeUuid?: string;
   dialogParentNodeUuid?: string;
 };
@@ -170,12 +194,12 @@ export const RecordValidationReport = () => {
     [validation],
   );
 
-  const items: any[] = useMemo(
+  const items: ValidationItem[] = useMemo(
     () =>
       Object.entries(validationFields).reduce(
         (acc, [validationFieldKey, validationResult]) => {
           const validationItem = extractValidationItem({
-            survey,
+            survey: survey!,
             record,
             validationFieldKey,
             validationResult,
@@ -187,13 +211,13 @@ export const RecordValidationReport = () => {
           }
           return acc;
         },
-        [] as any[],
+        [] as ValidationItem[],
       ),
     [lang, record, survey, t, validationFields],
   );
 
   const onRowPress = useCallback(
-    (item: any) => {
+    (item: ValidationItem) => {
       const {
         key: dialogNodeUuid,
         nodeDef: dialogNodeDef,

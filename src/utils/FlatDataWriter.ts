@@ -2,13 +2,13 @@ import { Strings } from "@openforis/arena-core";
 import { Files } from "./Files";
 
 const toString = (
-  val: any,
+  val: unknown,
   options?: FormatOptions,
 ): string | null | undefined => {
   const opts = { ...defaultOptions, ...options };
   const { nullsToEmpty } = opts;
   if (val === null || val === undefined || Number.isNaN(val)) {
-    return nullsToEmpty ? "" : val;
+    return nullsToEmpty ? "" : (val as null | undefined);
   }
   return String(val);
 };
@@ -28,7 +28,7 @@ const defaultOptions: FormatOptions = {
  * Wraps in quotes if the value contains commas, newlines, or quotes.
  */
 const formatCSVValue = (
-  val: any,
+  val: unknown,
   options?: FormatOptions,
 ): string | null | undefined => {
   const opts = { ...defaultOptions, ...options };
@@ -79,7 +79,7 @@ const appendCsvRows = async ({
   options,
 }: {
   fileUri: string;
-  rows: any[][];
+  rows: unknown[][];
   options?: FormatOptions;
 }) => {
   const csvRows =

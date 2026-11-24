@@ -5,9 +5,10 @@ import { EntityStatusIndicators, HView, Icon, Text } from "components";
 import { DataEntryActions, useAppDispatch } from "state";
 
 import styles from "./EntityButtonStyles";
+import type { TreeItem } from "./useTreeData";
 
 type EntityButtonProps = {
-  treeNode: any;
+  treeNode: TreeItem;
   isCurrentEntity?: boolean;
 };
 

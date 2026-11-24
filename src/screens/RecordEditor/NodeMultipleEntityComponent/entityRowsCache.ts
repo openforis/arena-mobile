@@ -2,12 +2,13 @@ import {
   ArenaRecord,
   ArenaRecordNode,
   ArenaDictionary,
-  ArenaNodeDef,
+  ArenaAnyNodeDef,
   Records,
   ArenaSurvey,
 } from "@openforis/arena-core";
 
 import { RecordUtils } from "model/utils/RecordUtils";
+import type { SimpleTranslateFunction } from "model/utils/RecordValueFormatters";
 
 export type EntityRow = ArenaDictionary<string> & { key: string; uuid: string };
 
@@ -15,21 +16,21 @@ type CacheEntry = {
   survey: ArenaSurvey | undefined;
   cycle: string | undefined;
   lang: string;
-  t: any;
-  summaryDefs: ArenaNodeDef<any>[];
+  t: SimpleTranslateFunction;
+  summaryDefs: ArenaAnyNodeDef[];
   summaryNodes: (ArenaRecordNode | undefined)[];
-  summaryValues: any[];
+  summaryValues: unknown[];
   row: EntityRow;
 };
 
 // weak keys: entries are released together with the entity nodes
 const cache = new WeakMap<ArenaRecordNode, CacheEntry>();
 
-const sameDefs = (defsA: ArenaNodeDef<any>[], defsB: ArenaNodeDef<any>[]) =>
+const sameDefs = (defsA: ArenaAnyNodeDef[], defsB: ArenaAnyNodeDef[]) =>
   defsA.length === defsB.length &&
   defsA.every((def, index) => def.uuid === defsB[index]!.uuid);
 
-const sameItems = (itemsA: any[], itemsB: any[]) =>
+const sameItems = (itemsA: unknown[], itemsB: unknown[]) =>
   itemsA.every((item, index) => item === itemsB[index]);
 
 // the summary values of an entity are formatted again only when its summary nodes or the formatting context change
@@ -45,8 +46,8 @@ const getEntityRow = ({
   record: ArenaRecord;
   entity: ArenaRecordNode;
   lang: string;
-  summaryDefs: ArenaNodeDef<any>[];
-  t: any;
+  summaryDefs: ArenaAnyNodeDef[];
+  t: SimpleTranslateFunction;
 }): EntityRow => {
   const { cycle } = record;
   const summaryNodes = summaryDefs.map(

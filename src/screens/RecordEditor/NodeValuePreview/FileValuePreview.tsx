@@ -1,4 +1,9 @@
-import { NodeDefFileType, NodeDefs } from "@openforis/arena-core";
+import {
+  ArenaNodeDefFile,
+  ArenaRecordNodeValueFile,
+  NodeDefFileType,
+  NodeDefs,
+} from "@openforis/arena-core";
 
 import { AudioPlayback } from "components/audio";
 import { RecordFileService } from "service/recordFileService";
@@ -8,7 +13,8 @@ import { NodeValuePreviewProps } from "./NodeValuePreviewPropTypes";
 import { ImageOrVideoValuePreview } from "./ImageOrVideoValuePreview";
 
 export const FileValuePreview = (props: NodeValuePreviewProps) => {
-  const { nodeDef, value } = props;
+  const nodeDef = props.nodeDef as ArenaNodeDefFile;
+  const value = props.value as ArenaRecordNodeValueFile | undefined;
 
   const surveyId = SurveySelectors.useCurrentSurveyId();
 

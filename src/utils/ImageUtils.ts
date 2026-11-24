@@ -14,14 +14,18 @@ export type ImageScaleResult = {
 };
 
 export type ImageScaleError = {
-  error: any;
+  error: unknown;
 };
 
 const _scaleImage = async ({
   sourceFileUri,
   sourceWidth,
   scale,
-}: any): Promise<ImageScaleResult> => {
+}: {
+  sourceFileUri: string;
+  sourceWidth: number;
+  scale: number;
+}): Promise<ImageScaleResult> => {
   const scaledWidth = Math.floor(sourceWidth * scale);
   const imageContext = ImageManipulator.manipulate(sourceFileUri);
   imageContext.resize({ width: scaledWidth });
@@ -44,7 +48,16 @@ const _resizeToFitMaxSize = async ({
 
   // = max size
   maxSuccessfullSizeRatio = 1.0,
-}: any): Promise<ImageScaleResult | ImageScaleError> => {
+}: {
+  fileUri: string;
+  width: number;
+  height: number;
+  size: number;
+  maxSize: number;
+  maxTryings?: number;
+  minSuccessfullSizeRatio?: number;
+  maxSuccessfullSizeRatio?: number;
+}): Promise<ImageScaleResult | ImageScaleError> => {
   let tryings = 1;
 
   let lastResizeResult: ImageScaleResult = {
@@ -67,7 +80,7 @@ const _resizeToFitMaxSize = async ({
   }
 
   const initialScale = 1 / Math.sqrt(sizeRatio);
-  let scale: any;
+  let scale: number;
   let bestScaleSizeRatio;
   let bestScaleResizeResult;
 
@@ -78,7 +91,7 @@ const _resizeToFitMaxSize = async ({
   const stack = [initialScale];
 
   while (stack.length > 0) {
-    scale = stack.pop();
+    scale = stack.pop() as number;
 
     const currentMaxWidth = Math.floor(sourceWidth * scale);
 
@@ -130,7 +143,10 @@ const _resizeToFitMaxSize = async ({
 const resizeToFitMaxSize = async ({
   fileUri,
   maxSize,
-}: any): Promise<ImageScaleResult | ImageScaleError | null> => {
+}: {
+  fileUri: string;
+  maxSize: number;
+}): Promise<ImageScaleResult | ImageScaleError | null> => {
   const size = await Files.getSize(fileUri);
   if (size <= maxSize) return null;
 
@@ -188,7 +204,7 @@ const rotate = async (
 };
 
 const getSize = async (
-  fileUri: any,
+  fileUri: string,
 ): Promise<{ width: number; height: number }> =>
   new Promise((resolve, reject) => {
     Image.getSize(
@@ -198,7 +214,7 @@ const getSize = async (
     );
   });
 
-const getGPSLocation = async (fileUri: any) => {
+const getGPSLocation = async (fileUri: string) => {
   const exifInfo = await ExifUtils.readData({ fileUri });
   if (!exifInfo) {
     return null;
@@ -207,7 +223,7 @@ const getGPSLocation = async (fileUri: any) => {
   return { latitude, longitude };
 };
 
-const isValid = async (fileUri: any) => {
+const isValid = async (fileUri: string) => {
   try {
     const size = await getSize(fileUri);
     return !!size;

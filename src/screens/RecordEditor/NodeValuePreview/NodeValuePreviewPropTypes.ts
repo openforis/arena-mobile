@@ -1,7 +1,7 @@
-import { ArenaNodeDef } from "@openforis/arena-core";
+import { ArenaAnyNodeDef } from "@openforis/arena-core";
 
 export type NodeValuePreviewProps = {
-  nodeDef: ArenaNodeDef<any>;
-  value?: any;
+  nodeDef: ArenaAnyNodeDef;
+  value?: unknown;
   valueFormatted?: string;
 };

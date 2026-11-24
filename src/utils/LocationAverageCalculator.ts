@@ -103,7 +103,11 @@ export class LocationAverager {
     }
 
     // --- 6. Average the remaining (filtered) coordinates ---
-    const finalTotal = {
+    const finalTotal: {
+      latitude: number;
+      longitude: number;
+      accuracy: number;
+    } & OptionalSummableProps = {
       latitude: 0,
       longitude: 0,
       accuracy: 0,
@@ -127,27 +131,40 @@ export class LocationAverager {
       longitude: finalTotal.longitude / count,
       accuracy: finalTotal.accuracy / count,
       altitude:
-        finalTotal.altitude === null ? null : finalTotal.altitude / count,
+        finalTotal.altitude === null
+          ? null
+          : (finalTotal.altitude as number) / count,
       altitudeAccuracy:
         finalTotal.altitudeAccuracy === null
           ? null
-          : finalTotal.altitudeAccuracy / count,
+          : (finalTotal.altitudeAccuracy as number) / count,
       heading: calculateCircularMean(
         filteredReadings.map((reading) => reading.heading),
       ),
-      speed: finalTotal.speed === null ? null : finalTotal.speed / count,
+      speed:
+        finalTotal.speed === null ? null : (finalTotal.speed as number) / count,
       count,
     };
   }
 }
 
-const addPropertyFromSource = (target: any, source: any, property: string) => {
+type OptionalSummableProps = {
+  altitude?: number | null;
+  altitudeAccuracy?: number | null;
+  speed?: number | null;
+};
+
+const addPropertyFromSource = (
+  target: OptionalSummableProps,
+  source: OptionalSummableProps,
+  property: keyof OptionalSummableProps,
+) => {
   const targetValue = target[property];
   const sourceValue = source[property];
   if (targetValue === undefined || targetValue === null) {
     target[property] = sourceValue;
   } else if (sourceValue !== undefined && sourceValue !== null) {
-    target[property] += sourceValue;
+    target[property] = targetValue + sourceValue;
   }
 };
 
