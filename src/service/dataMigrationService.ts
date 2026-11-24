@@ -3,6 +3,7 @@ import { Promises } from "@openforis/arena-core";
 import { log } from "utils";
 
 import { RecordService } from "./recordService";
+import { SurveyRepository } from "./repository/surveyRepository";
 import { SurveyService } from "./surveyService";
 
 const fixRecordCycle = async () => {
@@ -32,6 +33,19 @@ const fixRecordCycle = async () => {
   });
 };
 
+// description column added by DB migration 9: filled from the survey files
+const backfillSurveyDescriptions = async () => {
+  const surveySummaries = await SurveyService.fetchSurveySummariesLocal();
+  await Promises.each(surveySummaries, async ({ id }) => {
+    try {
+      const survey = await SurveyService.fetchSurveyById(id);
+      await SurveyRepository.updateSurveyDescription({ id, survey });
+    } catch (error) {
+      log.warn(`error setting description of survey ${id}: ${error}`);
+    }
+  });
+};
+
 const migrateData = async ({
   prevDbVersion,
 }: {
@@ -40,9 +54,13 @@ const migrateData = async ({
   if (prevDbVersion !== undefined && prevDbVersion <= 2) {
     await fixRecordCycle();
   }
+  if (prevDbVersion !== undefined && prevDbVersion < 9) {
+    await backfillSurveyDescriptions();
+  }
 };
 
 export const DataMigrationService = {
+  backfillSurveyDescriptions,
   fixRecordCycle,
   migrateData,
 };

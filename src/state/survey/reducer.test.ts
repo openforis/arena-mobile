@@ -100,6 +100,7 @@ describe("SurveyReducer", () => {
       uuid: survey.uuid,
       name: "survey",
       label: null,
+      description: null,
       dateModified: "2024-01-01",
     };
     state = SurveyReducer(
