@@ -4,7 +4,7 @@ import { JobMobile } from "model";
 import { ArrayUtils, Files } from "utils";
 import { isValidFileUuid } from "utils/isValidFileUuid";
 
-import { RecordService } from "../recordService";
+import { RecordService } from "../../recordService";
 import { RecordsAndFilesImportJobContext } from "./RecordsAndFilesImportJobContext";
 
 export type RecordsImportJobResult = {

@@ -1,9 +1,9 @@
 import { JobMobile } from "model";
 import { Files } from "utils";
 
-import { FilesImportJob } from "./filesImportJob";
+import { FilesImportJob } from "./FilesImportJob";
 import { RecordsAndFilesImportJobContext } from "./RecordsAndFilesImportJobContext";
-import { RecordsImportJob, RecordsImportJobResult } from "./recordsImportJob";
+import { RecordsImportJob, RecordsImportJobResult } from "./RecordsImportJob";
 
 export type RecordsAndFilesImportJobResult = RecordsImportJobResult & {
   processedRecords: number;

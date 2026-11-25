@@ -120,7 +120,7 @@ Each domain exports: `Actions`, `Reducer`, `Selectors`, and sometimes `State` ut
 - `recordRemoteService.ts`: Server sync for records
 - `authService.ts`: Authentication tokens, secure storage
 - `preferencesService.ts`: User preferences persistence
-- Job services (`*Job.ts`): Background operations (imports, exports, backups)
+- Jobs (`src/service/jobs/`, one `*Job.ts` per class, multi-file jobs in a subfolder): Background operations (records upload, imports, exports, backups); feature-specific jobs stay in their feature folder (e.g. `importedMaps/ImportedMapImportJob.ts`, `offlineMaps/OfflineMapAreaDownloadJob.ts`)
 
 ### Navigation (src/navigation/)
 Single `AppStack` component using React Navigation Native Stack. Screen definitions in `src/screens/screens.ts` with keys in `src/screens/screenKeys.ts`.

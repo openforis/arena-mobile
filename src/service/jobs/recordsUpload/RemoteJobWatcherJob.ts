@@ -4,7 +4,7 @@ import { JobMobile } from "model";
 import { RemoteJobService, WebSocketService } from "service";
 
 import { RecordsUploadAndProcessJobContext } from "./RecordsUploadAndProcessJobContext";
-import type { RecordsUploadResult } from "./recordsUploadAndProcessJob";
+import type { RecordsUploadResult } from "./RecordsUploadAndProcessJob";
 
 type RemoteJobSummary = Partial<ArenaJobSerialized<RecordsUploadResult>>;
 
