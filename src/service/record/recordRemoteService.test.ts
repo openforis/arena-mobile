@@ -3,14 +3,14 @@ import { CanceledError } from "axios";
 import type { SurveyMobile } from "model/SurveyMobile";
 
 import { RecordRemoteService } from "./recordRemoteService";
-import { RemoteService } from "./remoteService";
+import { RemoteService } from "../remote/remoteService";
 import { Files } from "utils";
 
 let mockFileDeletionsBeforeRetry = 0;
 let mockTotalChunks = 2;
 const mockClose = jest.fn();
 
-jest.mock("./remoteService", () => ({
+jest.mock("../remote/remoteService", () => ({
   RemoteService: { postCancelableMultipartData: jest.fn() },
 }));
 

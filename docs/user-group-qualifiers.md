@@ -86,7 +86,7 @@ there's no server data to build or test it against yet.
 
 ## Mobile-side implementation (this repo)
 
-- `SurveyService.fetchCurrentUserGroupRemote({ survey })` (`src/service/surveyService.ts`) calls
+- `SurveyService.fetchCurrentUserGroupRemote({ survey })` (`src/service/survey/surveyService.ts`) calls
   `GET api/survey/{remoteId}/current-user-group` and returns `data.userGroup`. Best-effort: no `remoteId`, a
   remote error (e.g. offline / server error / endpoint not deployed yet) is handled by the caller
   (`SurveyActions.fetchCurrentSurveyUserGroup`), which falls back to the last successfully cached value in `PreferencesService` (or `null` if none was cached), so this never blocks survey selection.
@@ -114,7 +114,7 @@ not edit (`props.readableGroupUuids`). The server includes those records in the 
 
 - The flag is stored in the `read_only` column of the `record` table (migration `004`) and
   refreshed at every sync with the server summaries (`updateLocalRecordsReadOnly` in
-  `src/service/recordService.ts`), so changes to the group settings take effect on the next sync.
+  `src/service/record/recordService.ts`), so changes to the group settings take effect on the next sync.
 - `DataEntrySelectors.selectCanEditRecord` returns false for those records, and the edit lock can't
   be removed; the record editor shows a banner, and the records list a lock icon.
 - They are left out of "Send data" and auto-sync. They can be cloned: the clone gets the

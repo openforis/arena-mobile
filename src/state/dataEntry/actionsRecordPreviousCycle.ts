@@ -28,7 +28,7 @@ import { RemoteConnectionSelectors } from "state/remoteConnection";
 import { DataEntrySliceActions } from "./reducer";
 import { fetchRecordsFromServer } from "./actionsRecordsImport";
 import { DataEntrySelectors } from "./selectors";
-import { AreaOfInterestProviderDefault } from "service/areaOfInterestProvider";
+import { AreaOfInterestProviderDefault } from "service/survey/areaOfInterestProvider";
 import type { AppDispatch, AppGetState } from "../store";
 
 const updateCurrentRecordWithPrevCycleValues = async ({

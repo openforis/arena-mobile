@@ -3,7 +3,7 @@ import { useNavigator } from "navigation/navigator";
 
 import { useIsNetworkConnected } from "hooks";
 import { SettingsService } from "service";
-import { ExternalLoginProvider } from "service/externalLoginUtils";
+import { ExternalLoginProvider } from "service/auth/externalLoginUtils";
 import {
   RemoteConnectionActions,
   RemoteConnectionSelectors,

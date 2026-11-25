@@ -1,10 +1,10 @@
 export {
   AppCompatibilityOperation,
   AppCompatibilityService,
-} from "./appCompatibilityService";
-export { AppService } from "./appService";
-export { AuthService } from "./authService";
-export { DataMigrationService } from "./dataMigrationService";
+} from "./remote/appCompatibilityService";
+export { AppService } from "./app/appService";
+export { AuthService } from "./auth/authService";
+export { DataMigrationService } from "./app/dataMigrationService";
 export { ExternalGpsService } from "./externalGps/ExternalGpsService";
 export { MapAppsService } from "./mapApps";
 export type { MapApp } from "./mapApps";
@@ -21,12 +21,12 @@ export type {
   ImportedMapPreview,
 } from "./importedMaps/importedMapsService";
 export type { ImportedMapImportJobResult } from "./importedMaps/ImportedMapImportJob";
-export { PreferencesService } from "./preferencesService";
-export { RecordFileService } from "./recordFileService";
-export { RecordService } from "./recordService";
-export { RemoteJobService } from "./remoteJobService";
-export { SecureStoreService } from "./SecureStoreService";
-export { SettingsService } from "./settingsService";
-export { SurveyService } from "./surveyService";
-export { UserService } from "./userService";
-export { WebSocketService } from "./webSocketService";
+export { PreferencesService } from "./settings/preferencesService";
+export { RecordFileService } from "./record/recordFileService";
+export { RecordService } from "./record/recordService";
+export { RemoteJobService } from "./remote/remoteJobService";
+export { SecureStoreService } from "./auth/SecureStoreService";
+export { SettingsService } from "./settings/settingsService";
+export { SurveyService } from "./survey/surveyService";
+export { UserService } from "./auth/userService";
+export { WebSocketService } from "./remote/webSocketService";

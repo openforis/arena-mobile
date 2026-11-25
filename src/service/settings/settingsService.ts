@@ -1,6 +1,6 @@
-import { asyncStorageKeys } from "./asyncStorage/asyncStorageKeys";
-import { StoredObject } from "./asyncStorage/StoredItem";
-import { API } from "./api";
+import { asyncStorageKeys } from "../asyncStorage/asyncStorageKeys";
+import { StoredObject } from "../asyncStorage/StoredItem";
+import { API } from "../api";
 import { GpsSourceSetting } from "model/GpsSourceSettings";
 import { ThemesSettings } from "model/Themes";
 import { LanguageConstants } from "model/LanguageSettings";

@@ -9,8 +9,8 @@ import { MapTileUtils } from "utils/MapTileUtils";
 import { mapTilesUserAgent } from "../offlineMaps/mapTilesUserAgent";
 import { OfflineMapAreaRepository } from "../offlineMaps/offlineMapAreaRepository";
 import { OfflineMapTilesStorage } from "../offlineMaps/offlineMapTilesStorage";
-import { SecureStoreService } from "../SecureStoreService";
-import { SettingsService } from "../settingsService";
+import { SecureStoreService } from "../auth/SecureStoreService";
+import { SettingsService } from "../settings/settingsService";
 import {
   CustomMapLayerValidation,
   CustomMapLayerValidator,

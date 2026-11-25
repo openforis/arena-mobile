@@ -1,18 +1,18 @@
-import { RecordFileService } from "./recordFileService";
-import { SurveyFSRepository } from "./repository/surveyFSRepository";
-import { SurveyRepository } from "./repository/surveyRepository";
+import { RecordFileService } from "../record/recordFileService";
+import { SurveyFSRepository } from "../repository/surveyFSRepository";
+import { SurveyRepository } from "../repository/surveyRepository";
 import { SurveyService } from "./surveyService";
 
-jest.mock("./repository/surveyRepository", () => ({
+jest.mock("../repository/surveyRepository", () => ({
   SurveyRepository: { deleteSurveys: jest.fn() },
 }));
-jest.mock("./repository/surveyFSRepository", () => ({
+jest.mock("../repository/surveyFSRepository", () => ({
   SurveyFSRepository: { deleteSurveyFile: jest.fn() },
 }));
-jest.mock("./recordFileService", () => ({
+jest.mock("../record/recordFileService", () => ({
   RecordFileService: { deleteSurveyRecordFiles: jest.fn() },
 }));
-jest.mock("./remoteService", () => ({ RemoteService: {} }));
+jest.mock("../remote/remoteService", () => ({ RemoteService: {} }));
 jest.mock("utils", () => ({ Files: {}, log: { warn: jest.fn() } }));
 
 const deleteSurveyFileMock = SurveyFSRepository.deleteSurveyFile as jest.Mock;

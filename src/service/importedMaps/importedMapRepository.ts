@@ -1,7 +1,7 @@
 import { ImportedMap } from "model/ImportedMap";
 import { SettingsObject } from "model/SettingsModel";
 
-import { SettingsService } from "../settingsService";
+import { SettingsService } from "../settings/settingsService";
 
 // PDF maps are stored in the settings: the maps read them from there to show the visible ones
 

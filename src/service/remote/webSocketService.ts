@@ -1,6 +1,6 @@
 import type { io as socketIo, Socket } from "socket.io-client";
 
-import { AuthService } from "./authService";
+import { AuthService } from "../auth/authService";
 import { RemoteService } from "./remoteService";
 import { Environment } from "utils";
 

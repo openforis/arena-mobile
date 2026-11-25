@@ -6,7 +6,7 @@ import { APIUtils } from "service/api/apiUtils";
 import {
   ExternalLoginProvider,
   getExternalLoginProviderIconUri,
-} from "service/externalLoginUtils";
+} from "service/auth/externalLoginUtils";
 
 import {
   BrandedSignInButton,

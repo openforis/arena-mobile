@@ -1,8 +1,8 @@
-import { API } from "./api";
-import { AuthService } from "./authService";
+import { API } from "../api";
+import { AuthService } from "../auth/authService";
 import { RemoteService } from "./remoteService";
 
-jest.mock("./api", () => ({
+jest.mock("../api", () => ({
   API: {
     del: jest.fn(),
     get: jest.fn(),
@@ -12,14 +12,14 @@ jest.mock("./api", () => ({
   },
 }));
 
-jest.mock("./authService", () => ({
+jest.mock("../auth/authService", () => ({
   AuthService: {
     generateAuthorizationHeaders: () => ({}),
     refreshAuthTokens: jest.fn(),
   },
 }));
 
-jest.mock("./settingsService", () => ({
+jest.mock("../settings/settingsService", () => ({
   SettingsService: {
     fetchSettings: async () => ({ serverUrl: "https://arena.test" }),
   },

@@ -1,8 +1,8 @@
 import { RecordFileService } from "./recordFileService";
 import { RecordService } from "./recordService";
-import { RecordRepository } from "./repository/recordRepository";
+import { RecordRepository } from "../repository/recordRepository";
 
-jest.mock("./repository/recordRepository", () => ({
+jest.mock("../repository/recordRepository", () => ({
   RecordRepository: {
     deleteRecords: jest.fn(),
     fetchRecordsFileUuids: jest.fn(),
@@ -12,7 +12,7 @@ jest.mock("./recordRemoteService", () => ({ RecordRemoteService: {} }));
 jest.mock("./recordFileService", () => ({
   RecordFileService: { deleteRecordFile: jest.fn() },
 }));
-jest.mock("./areaOfInterestProvider", () => ({}));
+jest.mock("../survey/areaOfInterestProvider", () => ({}));
 jest.mock("utils", () => ({
   ArrayUtils: {},
   log: { warn: jest.fn() },

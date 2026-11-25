@@ -5,7 +5,7 @@ import { SettingsService } from "./settingsService";
 const mockStorage: Record<string, string> = {};
 
 // async gaps between read and write expose lost updates
-jest.mock("./asyncStorage/AsyncStorageUtils", () => {
+jest.mock("../asyncStorage/AsyncStorageUtils", () => {
   const tick = () => new Promise((resolve) => setTimeout(resolve, 1));
   return {
     AsyncStorageUtils: {
@@ -20,7 +20,7 @@ jest.mock("./asyncStorage/AsyncStorageUtils", () => {
     },
   };
 });
-jest.mock("./api", () => ({ API: {} }));
+jest.mock("../api", () => ({ API: {} }));
 jest.mock("utils/SystemUtils", () => ({ SystemUtils: {} }));
 
 describe("SettingsService.updateSetting", () => {

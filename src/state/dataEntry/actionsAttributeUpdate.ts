@@ -17,8 +17,8 @@ import {
 } from "@openforis/arena-core";
 
 import { RecordUtils, SurveyDefs } from "model";
-import { RecordFileService } from "service/recordFileService";
-import { RecordService } from "service/recordService";
+import { RecordFileService } from "service/record/recordFileService";
+import { RecordService } from "service/record/recordService";
 
 import { log } from "utils";
 import { PreviewMode } from "utils/PreviewMode";

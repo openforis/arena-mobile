@@ -3,11 +3,11 @@ import { Dates, JobStatus, ArenaUser } from "@openforis/arena-core";
 import { dbClient } from "db";
 import { Files, logsPath } from "utils";
 
-import { BackupJob } from "./jobs/BackupJob";
-import { RecordFileRepository } from "./repository/recordFileRepository";
-import { SurveyFSRepository } from "./repository/surveyFSRepository";
-import { SettingsService } from "./settingsService";
-import { UserService } from "./userService";
+import { BackupJob } from "../jobs/BackupJob";
+import { RecordFileRepository } from "../repository/recordFileRepository";
+import { SurveyFSRepository } from "../repository/surveyFSRepository";
+import { SettingsService } from "../settings/settingsService";
+import { UserService } from "../auth/userService";
 
 const getDbUri = () =>
   Files.path(Files.documentDirectory, "SQLite", dbClient?.name);

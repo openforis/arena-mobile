@@ -2,9 +2,9 @@ import { ArenaUser } from "@openforis/arena-core";
 
 import { ImageUtils } from "utils/ImageUtils";
 import { log } from "utils/Logger";
-import { asyncStorageKeys } from "./asyncStorage/asyncStorageKeys";
-import { StoredItem } from "./asyncStorage/StoredItem";
-import { RemoteService } from "./remoteService";
+import { asyncStorageKeys } from "../asyncStorage/asyncStorageKeys";
+import { StoredItem } from "../asyncStorage/StoredItem";
+import { RemoteService } from "../remote/remoteService";
 
 // last user logged in on this device, used while offline or until the server answers
 const lastLoggedInUserStore = new StoredItem<ArenaUser | null>(

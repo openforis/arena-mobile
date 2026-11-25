@@ -14,7 +14,7 @@ import {
 } from "@openforis/arena-core";
 
 import { ConfirmUtils } from "../confirm";
-import { RecordService } from "service/recordService";
+import { RecordService } from "service/record/recordService";
 import { DataEntrySelectors } from "./selectors";
 import { DataEntryActions } from "./actions";
 import { DataEntrySliceActions } from "./reducer";
@@ -39,14 +39,16 @@ jest.mock("model", () => ({
     }) => nodeDefUuids.map((uuid) => survey.nodeDefs![uuid]!.props.name),
   },
 }));
-jest.mock("service/preferencesService", () => ({
+jest.mock("service/settings/preferencesService", () => ({
   PreferencesService: { setSurveyRecordLastEditedPage: jest.fn() },
 }));
-jest.mock("service/areaOfInterestProvider", () => ({
+jest.mock("service/survey/areaOfInterestProvider", () => ({
   AreaOfInterestProviderDefault: {},
 }));
-jest.mock("service/recordFileService", () => ({ RecordFileService: {} }));
-jest.mock("service/recordService", () => ({
+jest.mock("service/record/recordFileService", () => ({
+  RecordFileService: {},
+}));
+jest.mock("service/record/recordService", () => ({
   RecordService: { updateRecord: jest.fn(async ({ record }) => record) },
 }));
 jest.mock("screens/screenKeys", () => ({ screenKeys: {} }));

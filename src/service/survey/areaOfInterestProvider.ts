@@ -5,7 +5,7 @@ import {
 } from "@openforis/arena-core";
 
 import { Files } from "utils/Files";
-import { SurveyFSRepository } from "./repository/surveyFSRepository";
+import { SurveyFSRepository } from "../repository/surveyFSRepository";
 
 // survey files are never modified (a new upload gets a new uuid): only the areas of the survey in use are cached
 let cachedSurveyId: number | null = null;

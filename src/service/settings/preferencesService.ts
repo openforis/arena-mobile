@@ -1,6 +1,6 @@
 import { Objects, Promises, ArenaUserGroup } from "@openforis/arena-core";
-import { asyncStorageKeys } from "./asyncStorage/asyncStorageKeys";
-import { StoredObject } from "./asyncStorage/StoredItem";
+import { asyncStorageKeys } from "../asyncStorage/asyncStorageKeys";
+import { StoredObject } from "../asyncStorage/StoredItem";
 
 // record editor page stored to resume editing a record
 export type RecordLastEditedPage = {
