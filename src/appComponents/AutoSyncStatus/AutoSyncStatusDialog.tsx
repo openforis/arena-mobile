@@ -23,14 +23,14 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-  // open/close state is owned by whichever trigger (RecordsList icon, RecordEditor app bar
+  // open/close state is owned by whichever trigger (RecordsListScreen icon, RecordEditorScreen app bar
   // action, ...) renders this dialog, since each one keeps its own - everything else about
   // what's inside is fetched here directly from useAutoSyncStatus
   onClose: () => void;
   visible: boolean;
 };
 
-// shared by every auto-sync status trigger (RecordsList icon, RecordEditor app bar action, ...)
+// shared by every auto-sync status trigger (RecordsListScreen icon, RecordEditorScreen app bar action, ...)
 // - see useAutoSyncStatus for the state/logic feeding this
 export const AutoSyncStatusDialog = (props: Props) => {
   const { onClose, visible } = props;

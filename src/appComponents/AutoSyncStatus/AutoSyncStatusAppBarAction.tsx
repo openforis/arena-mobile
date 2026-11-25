@@ -6,7 +6,7 @@ import { useAutoSyncStatus } from "./useAutoSyncStatus";
 
 /**
  * Same auto-sync status control as AutoSyncStatusIcon, styled as an Appbar.Action for use in
- * a screen's top app bar (e.g. the RecordEditor header) rather than a plain icon button.
+ * a screen's top app bar (e.g. the RecordEditorScreen header) rather than a plain icon button.
  */
 export const AutoSyncStatusAppBarAction = () => {
   const { closeDialog, color, dialogVisible, icon, openDialog, syncing } =

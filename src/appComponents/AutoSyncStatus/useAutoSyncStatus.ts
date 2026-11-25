@@ -85,7 +85,7 @@ const computeIconAndColor = ({
 };
 
 /**
- * Shared logic behind every auto-sync status trigger (RecordsList icon, RecordEditor app bar
+ * Shared logic behind every auto-sync status trigger (RecordsListScreen icon, RecordEditorScreen app bar
  * action, ...): the icon/color to show, whether a check/upload is in flight (and its progress,
  * if any), and the dialog open/close state + the auto-sync on/off toggle. Each caller renders
  * its own trigger element (IconButton, Appbar.Action, ...) plus the shared AutoSyncStatusDialog.

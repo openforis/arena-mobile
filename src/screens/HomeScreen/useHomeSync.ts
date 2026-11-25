@@ -10,9 +10,9 @@ import {
   useAppDispatch,
 } from "state";
 
-import { fetchRecordsWithSyncStatus } from "../RecordsList/fetchRecordsWithSyncStatus";
-import { useRecordsExport } from "../RecordsList/useRecordsExport";
-import { RecordsListState } from "../RecordsList/useRecordsList";
+import { fetchRecordsWithSyncStatus } from "../RecordsListScreen/fetchRecordsWithSyncStatus";
+import { useRecordsExport } from "../RecordsListScreen/useRecordsExport";
+import { RecordsListState } from "../RecordsListScreen/useRecordsList";
 import type { RecordSummaryWithSyncStatus } from "model";
 
 type Props = {

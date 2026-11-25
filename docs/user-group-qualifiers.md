@@ -102,7 +102,7 @@ there's no server data to build or test it against yet.
   value otherwise).
 - `DataEntryActions.createNewRecord` (`src/state/dataEntry/actions.ts`) prefills matching qualifier
   attributes right after the record's root entity is created.
-- `useQualifierAttributeLocked` (`src/screens/RecordEditor/NodeDefFormItem/`) locks a qualifier
+- `useQualifierAttributeLocked` (`src/screens/RecordEditorScreen/NodeDefFormItem/`) locks a qualifier
   attribute as read-only in the record editor whenever the current survey's user group supplies a
   value for it.
 

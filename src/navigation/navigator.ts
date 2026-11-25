@@ -7,13 +7,13 @@ import {
 } from "@react-navigation/native";
 
 import { screenKeys } from "screens/screenKeys";
-import type { CustomMapLayerEditorParams } from "screens/CustomMapLayerEditor/CustomMapLayerEditorScreen";
-import type { LocationMapViewerParams } from "screens/LocationMapViewer/LocationMapViewerScreen";
-import type { OfflineMapAreaViewerParams } from "screens/OfflineMapAreaViewer/OfflineMapAreaViewerScreen";
-import type { OfflineMapsTab } from "screens/OfflineMaps/OfflineMapsScreen";
-import type { MapImportParams } from "screens/MapImport/MapImportScreen";
-import type { ImportedMapViewerParams } from "screens/ImportedMapViewer/ImportedMapViewerScreen";
-import type { RecordsMapParams } from "screens/RecordsMap/RecordsMapScreen";
+import type { CustomMapLayerEditorParams } from "screens/CustomMapLayerEditorScreen/CustomMapLayerEditorScreen";
+import type { LocationMapViewerParams } from "screens/LocationMapViewerScreen/LocationMapViewerScreen";
+import type { OfflineMapAreaViewerParams } from "screens/OfflineMapAreaViewerScreen/OfflineMapAreaViewerScreen";
+import type { OfflineMapsTab } from "screens/OfflineMapsScreen/OfflineMapsScreen";
+import type { MapImportParams } from "screens/MapImportScreen/MapImportScreen";
+import type { ImportedMapViewerParams } from "screens/ImportedMapViewerScreen/ImportedMapViewerScreen";
+import type { RecordsMapParams } from "screens/RecordsMapScreen/RecordsMapScreen";
 
 export type AppStackParamList = {
   [screenKeys.about]: undefined;

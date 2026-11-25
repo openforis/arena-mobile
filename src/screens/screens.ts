@@ -1,22 +1,22 @@
 import HomeScreen from "./HomeScreen";
 
 import AboutScreen from "./AboutScreen";
-import CustomMapLayerEditor from "./CustomMapLayerEditor";
-import CustomMapLayers from "./CustomMapLayers";
-import LocationMapViewer from "./LocationMapViewer";
-import OfflineMapAreaEditor from "./OfflineMapAreaEditor";
-import OfflineMapAreaViewer from "./OfflineMapAreaViewer";
-import OfflineMaps from "./OfflineMaps";
-import MapImport from "./MapImport";
-import ImportedMapViewer from "./ImportedMapViewer";
-import RecordEditor from "./RecordEditor";
-import RecordsList from "./RecordsList";
-import RecordsMap from "./RecordsMap";
-import RecordValidationReport from "./RecordValidationReport";
+import CustomMapLayerEditorScreen from "./CustomMapLayerEditorScreen";
+import CustomMapLayersScreen from "./CustomMapLayersScreen";
+import LocationMapViewerScreen from "./LocationMapViewerScreen";
+import OfflineMapAreaEditorScreen from "./OfflineMapAreaEditorScreen";
+import OfflineMapAreaViewerScreen from "./OfflineMapAreaViewerScreen";
+import OfflineMapsScreen from "./OfflineMapsScreen";
+import MapImportScreen from "./MapImportScreen";
+import ImportedMapViewerScreen from "./ImportedMapViewerScreen";
+import RecordEditorScreen from "./RecordEditorScreen";
+import RecordsListScreen from "./RecordsListScreen";
+import RecordsMapScreen from "./RecordsMapScreen";
+import RecordValidationReportScreen from "./RecordValidationReportScreen";
 import SettingsScreen from "./SettingsScreen";
 import SettingsRemoteConnectionScreen from "./SettingsRemoteConnectionScreen";
-import SurveysListLocal from "./SurveysListLocal";
-import SurveysListRemote from "./SurveysListRemote";
+import SurveysListLocalScreen from "./SurveysListLocalScreen";
+import SurveysListRemoteScreen from "./SurveysListRemoteScreen";
 
 import { screenKeys } from "./screenKeys";
 import { ScreenViewMode } from "model";
@@ -38,13 +38,13 @@ export const screens = {
     ...screenDefaults,
     hasOptionsMenuVisible: false,
     title: "offlineMaps:customLayers.title",
-    component: CustomMapLayers,
+    component: CustomMapLayersScreen,
   },
   [screenKeys.customMapLayerEditor]: {
     ...screenDefaults,
     hasOptionsMenuVisible: false,
     title: "offlineMaps:customLayers.editor.title",
-    component: CustomMapLayerEditor,
+    component: CustomMapLayerEditorScreen,
   },
   [screenKeys.home]: {
     ...screenDefaults,
@@ -55,37 +55,37 @@ export const screens = {
     ...screenDefaults,
     hasOptionsMenuVisible: false,
     title: "dataEntry:coordinate.map.viewerTitle",
-    component: LocationMapViewer,
+    component: LocationMapViewerScreen,
   },
   [screenKeys.offlineMaps]: {
     ...screenDefaults,
     hasOptionsMenuVisible: false,
     title: "offlineMaps:title",
-    component: OfflineMaps,
+    component: OfflineMapsScreen,
   },
   [screenKeys.offlineMapAreaEditor]: {
     ...screenDefaults,
     hasOptionsMenuVisible: false,
     title: "offlineMaps:areaEditor.title",
-    component: OfflineMapAreaEditor,
+    component: OfflineMapAreaEditorScreen,
   },
   [screenKeys.offlineMapAreaViewer]: {
     ...screenDefaults,
     hasOptionsMenuVisible: false,
     title: "offlineMaps:areaViewer.title",
-    component: OfflineMapAreaViewer,
+    component: OfflineMapAreaViewerScreen,
   },
   [screenKeys.mapImport]: {
     ...screenDefaults,
     hasOptionsMenuVisible: false,
     title: "importedMaps:import.title",
-    component: MapImport,
+    component: MapImportScreen,
   },
   [screenKeys.importedMapViewer]: {
     ...screenDefaults,
     hasOptionsMenuVisible: false,
     title: "importedMaps:map.viewerTitle",
-    component: ImportedMapViewer,
+    component: ImportedMapViewerScreen,
   },
   [screenKeys.recordsList]: {
     ...screenDefaults,
@@ -93,27 +93,27 @@ export const screens = {
     hasToggleScreenView: true,
     viewModes: [ScreenViewMode.table, ScreenViewMode.cards],
     title: "dataEntry:listOfRecords",
-    component: RecordsList,
+    component: RecordsListScreen,
   },
   [screenKeys.recordsMap]: {
     ...screenDefaults,
     hasOptionsMenuVisible: false,
     title: "recordsMap:title",
-    component: RecordsMap,
+    component: RecordsMapScreen,
   },
   [screenKeys.recordEditor]: {
     ...screenDefaults,
     hasBack: false,
     hasDrawer: true,
     surveyLabelAsTitle: true,
-    component: RecordEditor,
+    component: RecordEditorScreen,
   },
 
   [screenKeys.recordValidationReport]: {
     ...screenDefaults,
     hasToggleScreenView: true,
     title: "dataEntry:validationReport.title",
-    component: RecordValidationReport,
+    component: RecordValidationReportScreen,
   },
   [screenKeys.settings]: {
     ...screenDefaults,
@@ -132,13 +132,13 @@ export const screens = {
     hasToggleScreenView: true,
     viewModes: [ScreenViewMode.table, ScreenViewMode.cards],
     title: "surveys:surveysInTheDevice",
-    component: SurveysListLocal,
+    component: SurveysListLocalScreen,
   },
   [screenKeys.surveysListRemote]: {
     ...screenDefaults,
     hasToggleScreenView: true,
     viewModes: [ScreenViewMode.table, ScreenViewMode.cards],
     title: "surveys:surveysInTheCloud",
-    component: SurveysListRemote,
+    component: SurveysListRemoteScreen,
   },
 };

@@ -17,7 +17,7 @@ downloaded offline map areas).
    Android `<queries>`), fed by the supported apps list. Requires a prebuild.
 3. `src/service/mapApps/`: `mapAppsAdapter.ts` (library wrapper, own `MapApp` type),
    `mapAppsService.ts` (targets, last-used ordering), `index.ts`, Jest tests.
-4. In-app viewer screen `LocationMapViewer` (marker + "my location" button, uses `MapView`
+4. In-app viewer screen `LocationMapViewerScreen` (marker + "my location" button, uses `MapView`
    so layer settings and offline tiles apply).
 5. Chooser dialog and `OpenMapButton` rework (covers coordinate attribute and ImagePreviewDialog).
 6. English localization.
