@@ -5,7 +5,7 @@ import { useTheme } from "react-native-paper";
 import { HView, Text, View } from "components";
 
 import { formatRecordingDuration } from "./AudioUtils";
-import styles from "./AudioEqualizerStyles";
+import styles from "./styles";
 
 type AudioEqualizerProps = {
   audioRecorder: ReturnType<typeof useAudioRecorder>;

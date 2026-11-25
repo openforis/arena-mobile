@@ -9,8 +9,8 @@ import { RecordService, UserService } from "service";
 import {
   RecordsExportFileGenerationJob,
   RecordsExportFileGenerationJobResult,
-} from "service/recordsExportFileGenerationJob";
-import type { RecordsUploadResult } from "service/recordsUploadAndProcessJob";
+} from "service/jobs/RecordsExportFileGenerationJob";
+import type { RecordsUploadResult } from "service/jobs/recordsUpload";
 
 import { i18n } from "localization";
 import { JobCancelError, ValidationUtils } from "model";

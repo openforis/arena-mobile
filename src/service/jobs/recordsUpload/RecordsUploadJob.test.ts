@@ -4,15 +4,15 @@ import type {
   RecordsUploadAndProcessJobContext,
   RecordsUploadState,
 } from "./RecordsUploadAndProcessJobContext";
-import { RecordService } from "./recordService";
-import { RecordsUploadJob } from "./recordsUploadJob";
+import { RecordService } from "../../recordService";
+import { RecordsUploadJob } from "./RecordsUploadJob";
 
 jest.mock("model", () => jest.requireActual("model/JobMobile"));
 
 jest.mock("utils/Logger");
 jest.mock("utils/Files", () => ({ Files: {} }));
 
-jest.mock("./recordService", () => ({
+jest.mock("../../recordService", () => ({
   RecordService: { uploadRecordsToRemoteServer: jest.fn() },
 }));
 

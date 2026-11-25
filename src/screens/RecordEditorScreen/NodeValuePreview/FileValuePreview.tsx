@@ -5,7 +5,7 @@ import {
   NodeDefs,
 } from "@openforis/arena-core";
 
-import { AudioPlayback } from "components/audio";
+import { AudioPlayback } from "components/Audio";
 import { RecordFileService } from "service/recordFileService";
 import { SurveySelectors } from "state/survey";
 
