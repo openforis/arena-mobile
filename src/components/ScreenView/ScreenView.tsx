@@ -2,7 +2,7 @@ import { StyleProp, ViewStyle } from "react-native";
 
 import { ScrollView } from "../ScrollView";
 
-import appStyles from "appStyles";
+import appStyles from "theme/appStyles";
 
 type Props = {
   children?: React.ReactNode;

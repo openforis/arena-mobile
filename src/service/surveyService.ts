@@ -6,7 +6,7 @@ import {
   ArenaUserGroup,
 } from "@openforis/arena-core";
 
-import { SurveyPackage } from "model/SurveyPackage";
+import { SurveyPackage } from "model/utils/SurveyPackage";
 import type { SurveySummaryRemote } from "model/SurveySummary";
 import { Files, log } from "utils";
 import { HttpErrors } from "utils/HttpErrors";
@@ -15,7 +15,10 @@ import { SurveyRepository } from "./repository/surveyRepository";
 import { SurveyFSRepository } from "./repository/surveyFSRepository";
 import { RecordFileService } from "./recordFileService";
 import { RemoteService } from "./remoteService";
-import { demoSurveyDatePublished, demoSurveyUuid } from "./demoSurveyInfo";
+import {
+  demoSurveyDatePublished,
+  demoSurveyUuid,
+} from "./demoSurvey/demoSurveyInfo";
 
 const {
   fetchSurveySummaries: fetchSurveySummariesLocal,
@@ -23,10 +26,11 @@ const {
   updateSurvey,
 } = SurveyRepository;
 
-type DemoSurveyJson = typeof import("./demoSurvey.json");
+type DemoSurveyJson = typeof import("./demoSurvey/demoSurvey.json");
 
 // large: required lazily, only when the demo survey is imported or updated (it then stays in the module cache)
-const getDemoSurvey = (): DemoSurveyJson => require("./demoSurvey.json");
+const getDemoSurvey = (): DemoSurveyJson =>
+  require("./demoSurvey/demoSurvey.json");
 
 const remoteSurveyFetchTimeout = 60000; // 1 min
 

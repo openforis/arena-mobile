@@ -12,7 +12,7 @@ import {
   UserFactory,
 } from "@openforis/arena-core";
 
-import type { RecordCurrentPageEntity } from "./RecordCurrentPageEntity";
+import type { RecordCurrentPageEntity } from "../RecordCurrentPageEntity";
 import {
   RecordPageEntityPointer,
   RecordPageNavigator,

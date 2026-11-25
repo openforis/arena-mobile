@@ -6,7 +6,6 @@ export type {
   RemoteRecordSummary,
 } from "./RecordSummary";
 export { BatteryState } from "./BatteryState";
-export { Cycles } from "./Cycles";
 export { GpsSourceSetting } from "./GpsSourceSettings";
 export { JobCancelError } from "./JobCancelError";
 export { JobMobile } from "./JobMobile";
@@ -28,8 +27,6 @@ export type {
 export { RecordEditViewMode } from "./RecordEditViewMode";
 export { RecordLoadStatus } from "./RecordLoadStatus";
 export { RecordOrigin } from "./RecordOrigin";
-export { RecordPageNavigator } from "./RecordPageNavigator";
-export type { RecordPageEntityPointer } from "./RecordPageNavigator";
 export { RecordSyncStatus } from "./RecordSyncStatus";
 export { RecordUpdateConflictResolutionStrategy } from "./RecordUpdateConflictResolutionStrategy";
 export { ScreenOrientation } from "./ScreenOrientation";
@@ -45,22 +42,25 @@ export type {
   SurveySummaryRemote,
 } from "./SurveySummary";
 export { SurveyStatus } from "./SurveyStatus";
-export { Taxa } from "./Taxa";
 export { Themes, ThemesSettings } from "./Themes";
 export { UpdateStatus } from "./UpdateStatus";
 export { UserLogoutOptions } from "./UserLogoutOptions";
-export { WhatsNew } from "./WhatsNew";
-export type { WhatsNewItem } from "./WhatsNew";
 
+export { Cycles } from "./utils/Cycles";
 export { PositionTracks, TrackPointRejectReason } from "./utils/PositionTracks";
 export type {
   TrackFeature,
   TrackPoint,
   TrackSegment,
 } from "./utils/PositionTracks";
+export { RecordPageNavigator } from "./utils/RecordPageNavigator";
+export type { RecordPageEntityPointer } from "./utils/RecordPageNavigator";
 export { RecordUtils } from "./utils/RecordUtils";
 export { RecordSummaries } from "./utils/RecordSummaries";
 export { SurveyDefs } from "./utils/SurveyDefs";
 export { SurveyUtils } from "./utils/SurveyUtils";
+export { Taxa } from "./utils/Taxa";
 export { UserGroupQualifiers } from "./utils/UserGroupQualifiers";
 export { ValidationUtils } from "./utils/ValidationUtils";
+export { WhatsNew } from "./utils/WhatsNew";
+export type { WhatsNewItem } from "./utils/WhatsNew";

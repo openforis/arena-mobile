@@ -1,6 +1,6 @@
 import type { ImageSourcePropType } from "react-native";
 
-import { whatsNewImagesById } from "./whatsNewImages";
+import { whatsNewImagesById } from "../whatsNewImages";
 
 // Features highlighted in the "What's new" dialog (a visual summary of CHANGELOG.md)
 export type WhatsNewItem = {
