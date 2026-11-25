@@ -1,7 +1,8 @@
 # Auto-sync: automatic merge of records modified by several users
 
-Plan and specification. Status at the time of writing: **phases 1 to 3 implemented** (see
-"Implementation status"), none of them tested on a device yet.
+Plan and specification. **Phases 1 to 3 are implemented**; in arena-mobile they were merged with
+openforis/arena-mobile#385 (see "Implementation status"). When this note was written, none of
+them had been tested on a device yet.
 
 ## Background
 
@@ -171,6 +172,8 @@ it gets every file.
 
 ## Implementation status
 
+Branch names are the ones used during development; file paths are the current ones.
+
 ### Phases 1 and 2 (merged record replaces the local copy, also when open in the editor)
 
 arena, branch `feat/records-merge-keep-node-uuids`:
@@ -184,8 +187,8 @@ arena-mobile, branch `feat/auto-sync-merge` (on top of `fix/merged-record-local-
 - `src/state/autoSync/autoSyncStatusUtils.ts`: `isAutoMergeAllowed`,
   `sameRecordMergeableStatuses`, status computation (S6); `checkEnd` in
   `src/state/autoSync/actions.ts` reads the auto-sync setting.
-- `src/state/dataEntry/actionsAutoSync.ts`: `selectAutoMergeCandidates`, one upload per tick
-  (S2, S3).
+- `src/state/dataEntry/autoSyncCandidates.ts`: `selectAutoMergeCandidates`;
+  `src/state/dataEntry/actionsAutoSync.ts`: one upload per tick (S2, S3).
 - `src/state/dataEntry/actionsDataExport.ts` and `actionsMergedRecords.ts`: baseline not stamped
   for merged records, open record skipped, silent download, "upload follow-up in progress" guard
   (S4, S5).
@@ -209,7 +212,8 @@ arena, branch `feat/records-export-exclude-files` (on top of
 arena-mobile, branch `feat/records-fetch-exclude-files` (on top of
 `feat/auto-sync-merge`):
 
-- `src/service/record/recordService.ts` (`findFileUuidsInDevice`), `recordRemoteService.ts`,
+- `src/service/record/recordLocalService.ts` (`findFileUuidsInDevice`, also exposed by
+  `recordService.ts`), `recordRemoteService.ts`,
   `src/service/repository/recordRepository.ts` (`fetchRecordsFileUuids`),
   `src/state/dataEntry/actionsRecordsImport.ts`: S7.
 

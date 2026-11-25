@@ -133,7 +133,11 @@ would auto-start tracking in every demo flow (005–009). Instead (done):
 - auto-start is not triggered (multiple entity), the existing flows are not
   affected; tracking is started from the attribute ("Start tracking").
 
-### Maestro flow `010.demo-survey-position-tracking.yaml`
+### Maestro flow (not added yet)
+
+This flow was never added, and `010` is now taken by
+`010.offline-maps-import-geotiff.yaml`: use the next free number
+(e.g. `011.demo-survey-position-tracking.yaml`) if it is written.
 
 Location permission is already granted (`adb install -g`); positions are fed
 with `setLocation`.
