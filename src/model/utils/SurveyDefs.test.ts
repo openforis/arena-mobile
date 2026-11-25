@@ -7,7 +7,7 @@ import {
   Surveys,
 } from "@openforis/arena-core";
 
-import demoSurveyJson from "../../service/demoSurvey.json";
+import demoSurveyJson from "../../service/demoSurvey/demoSurvey.json";
 
 import { SurveyDefs } from "./SurveyDefs";
 
