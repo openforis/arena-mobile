@@ -10,7 +10,7 @@ import {
 } from "@openforis/arena-core";
 
 import { ArenaMobileRecord, SurveyDefs } from "model";
-import { RecordService } from "service/recordService";
+import { RecordService } from "service/record/recordService";
 
 import { Errors, log, StringUtils } from "utils";
 import { PreviewMode } from "utils/PreviewMode";

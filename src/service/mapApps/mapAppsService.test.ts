@@ -1,11 +1,11 @@
 import { MapAppsService } from "./mapAppsService";
 import { MapAppsAdapter } from "./mapAppsAdapter";
-import { PreferencesService } from "../preferencesService";
+import { PreferencesService } from "../settings/preferencesService";
 
 jest.mock("./mapAppsAdapter", () => ({
   MapAppsAdapter: { getInstalledMapApps: jest.fn(), openMapApp: jest.fn() },
 }));
-jest.mock("../preferencesService", () => ({
+jest.mock("../settings/preferencesService", () => ({
   PreferencesService: {
     getLastUsedMapAppId: jest.fn(),
     setLastUsedMapAppId: jest.fn(),

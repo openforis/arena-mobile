@@ -11,10 +11,10 @@ import type { SurveySummaryRemote } from "model/SurveySummary";
 import { Files, log } from "utils";
 import { HttpErrors } from "utils/HttpErrors";
 
-import { SurveyRepository } from "./repository/surveyRepository";
-import { SurveyFSRepository } from "./repository/surveyFSRepository";
-import { RecordFileService } from "./recordFileService";
-import { RemoteService } from "./remoteService";
+import { SurveyRepository } from "../repository/surveyRepository";
+import { SurveyFSRepository } from "../repository/surveyFSRepository";
+import { RecordFileService } from "../record/recordFileService";
+import { RemoteService } from "../remote/remoteService";
 import {
   demoSurveyDatePublished,
   demoSurveyUuid,

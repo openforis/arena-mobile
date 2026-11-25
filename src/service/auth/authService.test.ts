@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import * as WebBrowser from "expo-web-browser";
 
-import { API } from "./api";
+import { API } from "../api";
 import {
   AuthService,
   invalidCredentialsError,
@@ -9,7 +9,7 @@ import {
 } from "./authService";
 import { SecureStoreService } from "./SecureStoreService";
 
-jest.mock("./api", () => ({ API: { get: jest.fn(), post: jest.fn() } }));
+jest.mock("../api", () => ({ API: { get: jest.fn(), post: jest.fn() } }));
 
 jest.mock("expo-crypto", () => {
   const nodeCrypto = jest.requireActual("node:crypto");
@@ -35,7 +35,7 @@ jest.mock("./SecureStoreService", () => ({
   },
 }));
 
-jest.mock("./settingsService", () => ({
+jest.mock("../settings/settingsService", () => ({
   SettingsService: {
     fetchSettings: async () => ({ serverUrl: "https://arena.test" }),
   },

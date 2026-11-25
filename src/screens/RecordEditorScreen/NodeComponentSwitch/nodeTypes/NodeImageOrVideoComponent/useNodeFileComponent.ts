@@ -18,7 +18,7 @@ import {
   useToast,
 } from "hooks";
 import { useNodeComponentLocalState } from "screens/RecordEditorScreen/useNodeComponentLocalState";
-import { RecordFileService } from "service/recordFileService";
+import { RecordFileService } from "service/record/recordFileService";
 import { SettingsSelectors } from "state/settings";
 import { SurveySelectors } from "state/survey/selectors";
 import { ExifUtils, Files, ImageUtils, log, Permissions } from "utils";

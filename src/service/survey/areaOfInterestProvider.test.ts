@@ -6,7 +6,7 @@ import { AreaOfInterestProviderDefault } from "./areaOfInterestProvider";
 
 jest.mock("utils/Files", () => ({ Files: { readJsonFromFile: jest.fn() } }));
 
-jest.mock("./repository/surveyFSRepository", () => ({
+jest.mock("../repository/surveyFSRepository", () => ({
   SurveyFSRepository: {
     getSurveyPackageFileUri: ({
       surveyId,

@@ -1,6 +1,6 @@
 import { Dates } from "@openforis/arena-core";
 
-import { AreaOfInterestProviderDefault } from "service/areaOfInterestProvider";
+import { AreaOfInterestProviderDefault } from "service/survey/areaOfInterestProvider";
 
 import { RemoteConnectionSelectors } from "../remoteConnection";
 import { SurveySelectors } from "../survey";

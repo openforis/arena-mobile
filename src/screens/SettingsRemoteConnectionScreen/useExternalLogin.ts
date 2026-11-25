@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigator } from "navigation/navigator";
 
 import { AuthService } from "service";
-import { ExternalLoginProvider } from "service/externalLoginUtils";
+import { ExternalLoginProvider } from "service/auth/externalLoginUtils";
 import { MessageActions, RemoteConnectionActions, useAppDispatch } from "state";
 import { Environment } from "utils/Environment";
 

@@ -2,7 +2,7 @@ import { Keyboard } from "react-native";
 
 import { NodeDefs } from "@openforis/arena-core";
 
-import { PreferencesService } from "service/preferencesService";
+import { PreferencesService } from "service/settings/preferencesService";
 
 import { ConfirmActions } from "../confirm";
 import { DeviceInfoSelectors } from "../deviceInfo";

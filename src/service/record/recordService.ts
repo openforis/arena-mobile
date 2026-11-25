@@ -1,4 +1,4 @@
-import { RecordRepository } from "./repository/recordRepository";
+import { RecordRepository } from "../repository/recordRepository";
 import { RecordLocalService } from "./recordLocalService";
 import { RecordSyncService } from "./recordSyncService";
 

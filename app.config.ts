@@ -82,7 +82,7 @@ const config = (): ExpoConfig => {
   return {
     name: "Arena Mobile",
     slug: "arena-mobile",
-    // redirect URI of the sign-in with external providers (see service/externalLoginUtils.ts)
+    // redirect URI of the sign-in with external providers (see service/auth/externalLoginUtils.ts)
     scheme: "org.openforis.arena-mobile",
     owner: "openforis",
     version: appVersion,

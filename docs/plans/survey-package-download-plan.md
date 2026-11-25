@@ -128,7 +128,7 @@ export const SurveyPackage = {
 
 ### Task 3: download (`SurveyService`)
 
-`src/service/surveyService.ts`:
+`src/service/survey/surveyService.ts`:
 
 - [ ] `Files.isUnzipSupported()` in `src/utils/Files.ts`: `!!unzip` (false in
       Expo Go and on web).

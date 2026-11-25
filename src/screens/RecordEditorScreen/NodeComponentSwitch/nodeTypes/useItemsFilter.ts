@@ -15,7 +15,7 @@ import {
   RemoteConnectionSelectors,
   SurveySelectors,
 } from "state";
-import { AreaOfInterestProviderDefault } from "service/areaOfInterestProvider";
+import { AreaOfInterestProviderDefault } from "service/survey/areaOfInterestProvider";
 import { useAppSelector } from "state/storeHooks";
 
 export const useItemsFilter = <T extends ArenaCategoryItem | ArenaTaxon>({

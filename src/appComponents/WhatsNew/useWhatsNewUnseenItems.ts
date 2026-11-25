@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { WhatsNew, WhatsNewItem } from "model";
-import { PreferencesService } from "service/preferencesService";
+import { PreferencesService } from "service/settings/preferencesService";
 import { log } from "utils";
 
 export const useWhatsNewUnseenItems = () => {

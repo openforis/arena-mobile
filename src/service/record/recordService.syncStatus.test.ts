@@ -4,10 +4,10 @@ import { RecordOrigin, RecordSyncStatus } from "model";
 
 import { RecordService } from "./recordService";
 
-jest.mock("./repository/recordRepository", () => ({ RecordRepository: {} }));
+jest.mock("../repository/recordRepository", () => ({ RecordRepository: {} }));
 jest.mock("./recordRemoteService", () => ({ RecordRemoteService: {} }));
 jest.mock("./recordFileService", () => ({ RecordFileService: {} }));
-jest.mock("./areaOfInterestProvider", () => ({}));
+jest.mock("../survey/areaOfInterestProvider", () => ({}));
 jest.mock("utils", () => ({ ArrayUtils: {}, log: {}, PromiseUtils: {} }));
 jest.mock("model", () => ({
   RecordLoadStatus: { summary: "S", complete: "C" },

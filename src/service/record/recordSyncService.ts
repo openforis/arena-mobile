@@ -4,7 +4,7 @@ import { RecordLoadStatus, RecordOrigin, RecordSummaries } from "model";
 import type { ArenaMobileRecord, RecordSummaryWithSyncStatus } from "model";
 import { ArrayUtils } from "utils";
 
-import { RecordRepository } from "./repository/recordRepository";
+import { RecordRepository } from "../repository/recordRepository";
 import { RecordRemoteService } from "./recordRemoteService";
 import {
   RecordSummaryRemote,

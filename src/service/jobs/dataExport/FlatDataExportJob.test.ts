@@ -3,7 +3,7 @@ import { JobStatus, ArenaSurvey } from "@openforis/arena-core";
 import { RecordService } from "service";
 import { Files } from "utils";
 
-import demoSurveyJson from "../../demoSurvey/demoSurvey.json";
+import demoSurveyJson from "../../survey/demoSurvey/demoSurvey.json";
 import { FlatDataExportJob } from "./FlatDataExportJob";
 
 jest.mock("model", () => jest.requireActual("model/JobMobile"));

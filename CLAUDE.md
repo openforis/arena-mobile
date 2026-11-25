@@ -114,12 +114,14 @@ Each domain exports: `Actions`, `Reducer`, `Selectors`, and sometimes `State` ut
 - Repositories interact directly with SQLite, not abstracted ORMs
 
 **Services (src/service/):**
-- Business logic layer between components and repositories
-- `surveyService.ts`: Survey import, export, demo survey loading
-- `recordService.ts`: Record lifecycle, validation, updates
-- `recordRemoteService.ts`: Server sync for records
-- `authService.ts`: Authentication tokens, secure storage
-- `preferencesService.ts`: User preferences persistence
+- Business logic layer between components and repositories, grouped by domain in subfolders; `src/service/index.ts` re-exports the public services (`import { RecordService } from "service"`)
+- `record/`: `recordService.ts` (record lifecycle, validation, updates; built on `recordLocalService.ts` and `recordSyncService.ts`), `recordRemoteService.ts` (server sync for records), `recordSyncStatus.ts`, `recordFileService.ts`
+- `survey/`: `surveyService.ts` (survey import, export, demo survey loading), `demoSurvey/` (demo survey JSON and info), `areaOfInterestProvider.ts` and `preloadedMapLayerService.ts` (read survey files)
+- `auth/`: `authService.ts` (login, authentication tokens), `externalLoginUtils.ts`, `SecureStoreService.ts` (secure storage of tokens, credentials and map layer API keys), `userService.ts`
+- `remote/`: `remoteService.ts` (server REST calls), `remoteJobService.ts`, `webSocketService.ts`, `appCompatibilityService.ts` (minimum app version required by the server)
+- `settings/`: `settingsService.ts` (app settings), `preferencesService.ts` (user preferences persistence)
+- `app/`: `appService.ts` (full backup, logs export), `dataMigrationService.ts` (data migration after DB migrations)
+- Feature folders: `api/`, `asyncStorage/`, `customMapLayers/`, `externalGps/`, `importedMaps/`, `mapApps/`, `offlineMaps/`, `positionTracking/`, `repository/`
 - Jobs (`src/service/jobs/`, one `*Job.ts` per class, multi-file jobs in a subfolder): Background operations (records upload, imports, exports, backups); feature-specific jobs stay in their feature folder (e.g. `importedMaps/ImportedMapImportJob.ts`, `offlineMaps/OfflineMapAreaDownloadJob.ts`)
 
 ### Navigation (src/navigation/)

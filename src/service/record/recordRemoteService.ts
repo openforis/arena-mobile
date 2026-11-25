@@ -3,7 +3,7 @@ import { AxiosProgressEvent, AxiosResponse, CanceledError } from "axios";
 
 import { Files, Functions, log, RNFileProcessor } from "utils";
 import { HttpErrors } from "utils/HttpErrors";
-import { RemoteService } from "./remoteService";
+import { RemoteService } from "../remote/remoteService";
 import { RemoteRecordSummary } from "model/RecordSummary";
 import { SurveyMobile } from "model/SurveyMobile";
 
