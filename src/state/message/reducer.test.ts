@@ -14,13 +14,13 @@ describe("MessageReducer", () => {
         details: "first details",
         title: "first title",
         onDismiss: () => {},
-      }) as any,
+      }),
     );
     expect(store.getState().message).toMatchObject({
       details: "first details",
     });
 
-    store.dispatch(MessageActions.setInfo("second") as any);
+    store.dispatch(MessageActions.setInfo("second"));
 
     expect(store.getState().message).toEqual({
       content: "second",
@@ -34,7 +34,7 @@ describe("MessageReducer", () => {
 
   it("sets the warning title", () => {
     const store = createStore();
-    store.dispatch(MessageActions.setWarning("warn") as any);
+    store.dispatch(MessageActions.setWarning("warn"));
     expect(store.getState().message).toMatchObject({
       content: "warn",
       title: "common:warning",

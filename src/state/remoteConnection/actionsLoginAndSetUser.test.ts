@@ -1,5 +1,7 @@
 import { ArenaUser } from "@openforis/arena-core";
 
+import type { AppGetState } from "state/store";
+
 import { SecureStoreService, UserService } from "service";
 
 import { loginAndSetUser } from "./actionsLoginAndSetUser";
@@ -14,19 +16,24 @@ jest.mock("../autoSync", () => ({
   AutoSyncActions: { reset: () => ({ type: "autoSyncReset" }) },
 }));
 jest.mock("../deviceInfo/selectors", () => ({
-  DeviceInfoSelectors: { selectDeviceInfo: (state: any) => state.deviceInfo },
+  DeviceInfoSelectors: {
+    selectDeviceInfo: (state: { deviceInfo: unknown }) => state.deviceInfo,
+  },
 }));
 jest.mock("./selectors", () => ({
-  RemoteConnectionSelectors: { selectLoggedUser: (state: any) => state.user },
+  RemoteConnectionSelectors: {
+    selectLoggedUser: (state: { user: unknown }) => state.user,
+  },
 }));
 
 const cachedUser = { uuid: "cached" } as unknown as ArenaUser;
 const remoteUser = { uuid: "remote" } as unknown as ArenaUser;
 
-const getState = () => ({
+// only the state read by the mocked selectors
+const getState = (() => ({
   deviceInfo: { isNetworkConnected: true },
   user: null,
-});
+})) as unknown as AppGetState;
 
 describe("loginAndSetUser", () => {
   beforeEach(() => {
@@ -42,7 +49,7 @@ describe("loginAndSetUser", () => {
   it("keeps the last logged in user while fetching it, then sets the fetched one", async () => {
     const dispatch = jest.fn();
 
-    await loginAndSetUser()(dispatch, getState as any);
+    await loginAndSetUser()(dispatch, getState);
 
     const types = dispatch.mock.calls.map(([action]) => action);
     expect(types[0]).toEqual(
@@ -55,8 +62,8 @@ describe("loginAndSetUser", () => {
     const dispatch = jest.fn();
 
     await Promise.all([
-      loginAndSetUser()(dispatch, getState as any),
-      loginAndSetUser({ onlyIfNotSet: false })(dispatch, getState as any),
+      loginAndSetUser()(dispatch, getState),
+      loginAndSetUser({ onlyIfNotSet: false })(dispatch, getState),
     ]);
 
     expect(UserService.fetchUser).toHaveBeenCalledTimes(1);

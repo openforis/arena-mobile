@@ -67,9 +67,7 @@ let decodersRegistered = false;
 
 const registerDecoders = (): void => {
   if (decodersRegistered) return;
-  addDecoder(COMPRESSION.lzw, () =>
-    Promise.resolve(LzwDecoder as unknown as typeof BaseDecoder),
-  );
+  addDecoder(COMPRESSION.lzw, () => Promise.resolve(LzwDecoder));
   decodersRegistered = true;
 };
 

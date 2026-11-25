@@ -2,7 +2,7 @@ const mockWatchPositionAsync = jest.fn();
 
 jest.mock("expo-location", () => ({
   Accuracy: { BestForNavigation: 6 },
-  watchPositionAsync: (...args: any[]) => mockWatchPositionAsync(...args),
+  watchPositionAsync: (...args: unknown[]) => mockWatchPositionAsync(...args),
 }));
 jest.mock("localization", () => ({ changeLanguage: jest.fn() }));
 jest.mock("model", () => ({
@@ -17,7 +17,9 @@ jest.mock("service", () => ({
   CustomMapLayersService: {},
   ImportedMapsService: {},
   SettingsService: {
-    updateSetting: async ({ key, value }: any) => ({ [key]: value }),
+    updateSetting: async ({ key, value }: { key: string; value: unknown }) => ({
+      [key]: value,
+    }),
   },
 }));
 jest.mock("utils", () => ({
@@ -37,8 +39,12 @@ const deferred = <T>() => {
   return { promise, resolve };
 };
 
-const dispatch: any = (action: any) =>
-  typeof action === "function" ? action(dispatch) : action;
+// runs the thunks (they use only dispatch)
+type TestDispatch = (action: unknown) => unknown;
+const dispatch: TestDispatch = (action) =>
+  typeof action === "function"
+    ? (action as (dispatch: TestDispatch) => unknown)(dispatch)
+    : action;
 
 const setGpsLocked = (value: boolean) =>
   dispatch(

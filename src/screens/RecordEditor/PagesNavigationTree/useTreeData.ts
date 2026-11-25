@@ -350,7 +350,7 @@ const buildTreeData = ({
       if (childEntity) {
         stack.push({
           treeItem,
-          entityDef: childDef as ArenaNodeDefEntity,
+          entityDef: childDef,
           entity: childEntity,
         });
       }

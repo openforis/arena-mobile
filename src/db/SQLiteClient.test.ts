@@ -1,9 +1,9 @@
-import SQLiteClient from "./SQLiteClient";
+import SQLiteClient, { DbMigration } from "./SQLiteClient";
 
 jest.mock("utils", () => ({ log: { debug: jest.fn() } }));
 
 // single connection: statements run while a transaction is open belong to it
-const createClient = (migrations: any[] = []) => {
+const createClient = (migrations: DbMigration[] = []) => {
   let pending: string[] | null = null;
   const committed: string[] = [];
   const write = async (sql: string) => {
@@ -30,7 +30,8 @@ const createClient = (migrations: any[] = []) => {
         pending = null;
       }
     },
-  } as any;
+    // only the methods used by the tested transactions
+  } as unknown as SQLiteClient["privateDb"];
   return { client, committed };
 };
 

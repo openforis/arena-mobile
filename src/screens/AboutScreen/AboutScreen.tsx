@@ -91,7 +91,7 @@ export const AboutScreen = () => {
             <AboutListItem
               icon="email-outline"
               titleKey="about:supportEmail"
-              description={supportEmailAddress!}
+              description={supportEmailAddress}
               onPress={onSupportEmailPress}
               external
             />

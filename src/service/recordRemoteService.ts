@@ -62,10 +62,11 @@ const fetchFileUuidsByRecordUuid = async ({
   recordUuids: string[];
 }): Promise<Record<string, string[]>> => {
   try {
-    const { data } = await RemoteService.post(
-      `api/mobile/survey/${surveyRemoteId}/records/file-uuids`,
-      { recordUuids },
-    );
+    const { data } = await RemoteService.post<{
+      fileUuidsByRecordUuid?: Record<string, string[]>;
+    } | null>(`api/mobile/survey/${surveyRemoteId}/records/file-uuids`, {
+      recordUuids,
+    });
     return data?.fileUuidsByRecordUuid ?? {};
   } catch (error) {
     if (HttpErrors.isEndpointNotSupported(error)) {
@@ -102,10 +103,9 @@ const startExportRecords = async ({
 
   const {
     data: { job },
-  } = await RemoteService.post(
-    `api/survey/${surveyRemoteId}/records/export`,
-    params,
-  );
+  } = await RemoteService.post<{
+    job: ArenaJobSerialized<RecordsExportJobResult>;
+  }>(`api/survey/${surveyRemoteId}/records/export`, params);
   return job;
 };
 

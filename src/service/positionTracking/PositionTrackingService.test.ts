@@ -1,3 +1,5 @@
+import type { LocationPoint } from "model/LocationPoint";
+
 import { PositionTrackingService } from "./PositionTrackingService";
 import { PositionTrackingLocationSource } from "./positionTrackingLocationSource";
 import { PositionTrackRepository } from "../repository/positionTrackRepository";
@@ -14,7 +16,7 @@ jest.mock("../../model", () => ({
 jest.mock("../repository/positionTrackRepository", () => ({
   PositionTrackStatus: { tracking: "tracking", paused: "paused" },
   PositionTrackRepository: {
-    insertTrack: jest.fn(async (params: any) => ({
+    insertTrack: jest.fn(async (params: object) => ({
       ...params,
       id: 1,
       status: "tracking",
@@ -43,7 +45,7 @@ const settings = {
 // ~11 m per step
 const latStep = 0.0001;
 
-let emitLocation: (location: any) => void = () => {};
+let emitLocation: (location: LocationPoint) => void = () => {};
 const subscriptionRemove = jest.fn();
 let now = Date.parse("2026-10-15T08:00:00Z");
 
@@ -53,7 +55,7 @@ const emit = (latitude: number, accuracy = 3) => {
   emitLocation({ latitude, longitude: 0, accuracy, altitude: null });
 };
 
-const startTracking = (baseValue: any = null) =>
+const startTracking = (baseValue: unknown = null) =>
   PositionTrackingService.start({
     surveyId: 1,
     recordUuid: "record-1",
@@ -73,10 +75,16 @@ describe("PositionTrackingService", () => {
 
   beforeEach(async () => {
     await PositionTrackingService.unload();
-    watchPositionMock.mockImplementation(async ({ onLocation }: any) => {
-      emitLocation = onLocation;
-      return { remove: subscriptionRemove };
-    });
+    watchPositionMock.mockImplementation(
+      async ({
+        onLocation,
+      }: {
+        onLocation: (location: LocationPoint) => void;
+      }) => {
+        emitLocation = onLocation;
+        return { remove: subscriptionRemove };
+      },
+    );
   });
 
   test("records accepted points and stores them", async () => {

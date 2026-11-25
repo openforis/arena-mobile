@@ -80,9 +80,7 @@ export const RecordsMapLayerMarkers = memo((props: Props) => {
       onClusterPress({
         layer,
         expansionRegion: getClusterExpansionRegion(cluster),
-        leaves: getClusterLeaves(cluster).map(
-          (leaf) => leaf.properties as RecordsMapPointProperties,
-        ),
+        leaves: getClusterLeaves(cluster).map((leaf) => leaf.properties),
       });
     },
     [getClusterExpansionRegion, getClusterLeaves, layer, onClusterPress],

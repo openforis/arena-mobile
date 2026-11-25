@@ -59,7 +59,7 @@ const fetchImageInfo = async (imageUri: string): Promise<ImageInfoState> => {
 const ImageInfo = (props: ImageInfoProps) => {
   const { imageUri, showGeotagInfo = false } = props;
 
-  const [info, setInfo] = useState(null as ImageInfoState);
+  const [info, setInfo] = useState<ImageInfoState>(null);
 
   useEffect(() => {
     if (imageUri) {

@@ -1,4 +1,5 @@
 import {
+  ArenaSurvey,
   RecordBuilder,
   RecordNodeBuilders,
   SurveyBuilder,
@@ -6,7 +7,7 @@ import {
   UserFactory,
 } from "@openforis/arena-core";
 
-import { dbClient } from "db";
+import { dbClient, SqlParams } from "db";
 
 import { PositionTrackRepository } from "./positionTrackRepository";
 import { RecordRepository } from "./recordRepository";
@@ -34,11 +35,11 @@ const user = UserFactory.createInstance({ email: "t@t.org", name: "t" });
 // a quote in a uuid must not break the IN list
 const uuids = ["r1", "r2", "r'3"];
 
-let survey: any;
+let survey: ArenaSurvey;
 
 const insertRecords = async (surveyId: number) => {
   for (const [index, uuid] of uuids.entries()) {
-    const record: any = new RecordBuilder(
+    const record = new RecordBuilder(
       user,
       survey,
       entity("plot", attribute("plot_id", index + 1)),
@@ -51,13 +52,15 @@ const insertRecords = async (surveyId: number) => {
   }
 };
 
-const countRows = async (table: string, where = "1 = 1", params: any[] = []) =>
-  (
-    (await dbClient.one(
-      `SELECT COUNT(*) AS count FROM ${table} WHERE ${where}`,
-      params,
-    )) as any
-  ).count;
+const countRows = async (
+  table: string,
+  where = "1 = 1",
+  params: SqlParams = [],
+) =>
+  (await dbClient.one<{ count: number }>(
+    `SELECT COUNT(*) AS count FROM ${table} WHERE ${where}`,
+    params,
+  ))!.count;
 
 describe("repositories IN lists", () => {
   beforeAll(async () => {
@@ -65,11 +68,13 @@ describe("repositories IN lists", () => {
     await dbClient.runSql(
       `INSERT INTO survey (uuid, name, content, date_created, date_modified) VALUES ('s1', 's1', '{}', 'd', 'd'), ('s2', 's2', '{}', 'd', 'd')`,
     );
-    survey = await new SurveyBuilder(
-      user,
-      entityDef("plot", integerDef("plot_id").key()),
-    ).build();
-    survey.id = 1;
+    survey = {
+      ...(await new SurveyBuilder(
+        user,
+        entityDef("plot", integerDef("plot_id").key()),
+      ).build()),
+      id: 1,
+    };
     await insertRecords(1);
     await insertRecords(2);
   });
@@ -80,10 +85,10 @@ describe("repositories IN lists", () => {
       recordUuids: ["r2", "r'3"],
       readOnly: true,
     });
-    const rows = await dbClient.many(
+    const rows = await dbClient.many<{ uuid: string }>(
       `SELECT uuid FROM record WHERE survey_id = 1 AND read_only = 1 ORDER BY uuid`,
     );
-    expect(rows.map((row: any) => row.uuid)).toEqual(["r'3", "r2"]);
+    expect(rows.map((row) => row.uuid)).toEqual(["r'3", "r2"]);
     expect(await countRows("record", "survey_id = 2 AND read_only = 1")).toBe(
       0,
     );
@@ -166,17 +171,17 @@ describe("repositories IN lists", () => {
       await PositionTrackRepository.insertPoint({
         trackId: id,
         segmentIndex: 0,
-        point: { time: 1, latitude: 1, longitude: 1 } as any,
+        point: { time: 1, latitude: 1, longitude: 1 },
       });
       trackIds.push(id);
     }
     await PositionTrackRepository.deleteTracksByRecordUuids(["r1", "r'3"]);
-    const rows = await dbClient.many(
+    const rows = await dbClient.many<{ id: number; record_uuid: string }>(
       `SELECT id, record_uuid FROM position_track`,
     );
     // only the track of r2 (the second inserted) is left
     expect(
-      rows.map((row: any) => ({ id: row.id, recordUuid: row.record_uuid })),
+      rows.map((row) => ({ id: row.id, recordUuid: row.record_uuid })),
     ).toEqual([{ id: trackIds[1], recordUuid: "r2" }]);
     expect(await countRows("position_track_point")).toBe(1);
     await PositionTrackRepository.deleteTracksByRecordUuids([]);

@@ -1,5 +1,10 @@
 import {
-  ArenaNodeDef,
+  ArenaAnyNodeDef,
+  ArenaCategoryItem,
+  ArenaNodeDefCode,
+  ArenaNodeDefTaxon,
+  ArenaRecordNode,
+  ArenaRecordNodeValue,
   NodeDefs,
   NodeDefType,
   ArenaRecord,
@@ -48,7 +53,7 @@ const user: ArenaUser = UserFactory.createInstance({
 const cloneSurvey = (): ArenaSurvey =>
   JSON.parse(JSON.stringify(demoSurveyJson)) as ArenaSurvey;
 
-const getDef = (survey: ArenaSurvey, name: string): ArenaNodeDef<any> =>
+const getDef = (survey: ArenaSurvey, name: string): ArenaAnyNodeDef =>
   Surveys.getNodeDefByName({ survey, name });
 
 const getNodesByName = (
@@ -66,7 +71,7 @@ const categoryItemUuid = (
   codePaths: string[],
 ): string => {
   const categoryUuid = NodeDefs.getCategoryUuid(
-    getDef(survey, nodeDefName) as any,
+    getDef(survey, nodeDefName) as ArenaNodeDefCode,
   )!;
   const item = Surveys.getCategoryItemByCodePaths({
     survey,
@@ -100,7 +105,7 @@ const updateValue = async ({
   survey: ArenaSurvey;
   record: ArenaRecord;
   name: string;
-  value: any;
+  value: ArenaRecordNodeValue | null;
   index?: number;
 }): Promise<ArenaRecord> => {
   const node = getNodesByName(survey, record, name)[index];
@@ -167,7 +172,7 @@ describe("Demo survey", () => {
     });
 
     test("has datePublished set (used to detect outdated local copies)", () => {
-      expect(Date.parse(survey.datePublished as any)).not.toBeNaN();
+      expect(Date.parse(survey.datePublished ?? "")).not.toBeNaN();
     });
 
     test("node def names are unique", () => {
@@ -188,36 +193,40 @@ describe("Demo survey", () => {
           }).toEqual({ name, parent: true });
         }
         if (nodeDef.type === NodeDefType.code) {
-          const categoryUuid = NodeDefs.getCategoryUuid(nodeDef as any)!;
+          const categoryUuid = NodeDefs.getCategoryUuid(
+            nodeDef as ArenaNodeDefCode,
+          )!;
           expect({
             name,
             category: !!survey.categories?.[categoryUuid],
           }).toEqual({ name, category: true });
           const parentCodeDefUuid = NodeDefs.getParentCodeDefUuid(
-            nodeDef as any,
+            nodeDef as ArenaNodeDefCode,
           );
           if (parentCodeDefUuid) {
             const parentCodeDef = Surveys.getNodeDefByUuid({
               survey,
               uuid: parentCodeDefUuid,
             });
-            expect(NodeDefs.getCategoryUuid(parentCodeDef as any)).toBe(
-              categoryUuid,
-            );
+            expect(
+              NodeDefs.getCategoryUuid(parentCodeDef as ArenaNodeDefCode),
+            ).toBe(categoryUuid);
           }
         }
         if (nodeDef.type === NodeDefType.taxon) {
-          const taxonomyUuid = NodeDefs.getTaxonomyUuid(nodeDef as any)!;
+          const taxonomyUuid = NodeDefs.getTaxonomyUuid(
+            nodeDef as ArenaNodeDefTaxon,
+          )!;
           expect({
             name,
             taxonomy: !!survey.taxonomies?.[taxonomyUuid],
           }).toEqual({ name, taxonomy: true });
         }
         if (NodeDefs.isEntity(nodeDef)) {
-          const layout = (nodeDef.props as any).layout?.[cycle];
+          const layout = nodeDef.props.layout?.[cycle];
           const layoutUuids = [
             ...(layout?.indexChildren ?? []),
-            ...(layout?.layoutChildren ?? []).map((item: any) =>
+            ...(layout?.layoutChildren ?? []).map((item) =>
               typeof item === "string" ? item : item.i,
             ),
           ];
@@ -245,14 +254,16 @@ describe("Demo survey", () => {
     });
 
     test("category items reference existing categories and levels", () => {
-      const { categoryItemIndex = {} } = (survey.refData ?? {}) as any;
-      for (const item of Object.values<any>(categoryItemIndex)) {
+      // the bundled items also have the category uuid
+      const categoryItemIndex = (survey.refData?.categoryItemIndex ??
+        {}) as Record<string, ArenaCategoryItem & { categoryUuid: string }>;
+      for (const item of Object.values(categoryItemIndex)) {
         const category = survey.categories?.[item.categoryUuid];
         if (!category) {
           throw new Error(`category not found: ${item.categoryUuid}`);
         }
         const levelUuids = Object.values(category.levels ?? {}).map(
-          (level: any) => level.uuid,
+          (level) => level.uuid,
         );
         expect(levelUuids).toContain(item.levelUuid);
         if (item.parentUuid) {
@@ -361,7 +372,7 @@ describe("Demo survey", () => {
       expect(basalArea).toBeCloseTo(Math.PI * 0.01, 6);
 
       const taxonomyUuid = NodeDefs.getTaxonomyUuid(
-        getDef(survey, "tree_species") as any,
+        getDef(survey, "tree_species") as ArenaNodeDefTaxon,
       )!;
       const taxon = Surveys.getTaxonByCode({
         survey,
@@ -440,7 +451,7 @@ describe("Demo survey", () => {
           nodeUuids: [secondStem!.uuid],
           clearNonApplicableValues: true,
         });
-      expect([...clearedDefUuids!]).toEqual([
+      expect([...clearedDefUuids]).toEqual([
         getDef(survey, "regeneration_stems_note").uuid,
       ]);
       const [noteNode] = getNodesByName(
@@ -513,7 +524,7 @@ describe("Demo survey", () => {
     test("nodes of removed node defs are dropped", async () => {
       const recordPrevVersion = await createPreviousVersionRecord();
       const rootNode = Records.getRoot(recordPrevVersion)!;
-      const orphanNode = {
+      const orphanNode: ArenaRecordNode = {
         uuid: "00000000-0000-4000-a000-000000000001",
         recordUuid: recordPrevVersion.uuid,
         nodeDefUuid: "00000000-0000-4000-a000-000000000002",
@@ -521,9 +532,7 @@ describe("Demo survey", () => {
         meta: { h: [rootNode.uuid] },
         value: "value of a removed attribute",
       };
-      const recordWithOrphan = Records.addNode(orphanNode as any)(
-        recordPrevVersion,
-      );
+      const recordWithOrphan = Records.addNode(orphanNode)(recordPrevVersion);
       const { record } = RecordFixer.fixRecord({
         survey,
         record: recordWithOrphan,

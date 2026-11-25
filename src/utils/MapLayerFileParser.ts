@@ -64,7 +64,7 @@ type GeoJsonObject = {
 };
 
 const asGeoJsonObject = (value: unknown): GeoJsonObject | undefined =>
-  value && typeof value === "object" ? (value as GeoJsonObject) : undefined;
+  value && typeof value === "object" ? value : undefined;
 
 const addGeoJsonGeometry = (
   result: MapLayerFileGeometries,

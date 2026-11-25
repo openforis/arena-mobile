@@ -100,20 +100,21 @@ const postCancelable = (
   return { promise, cancel };
 };
 
-const _withData = async (
-  promise: Promise<AxiosResponse>,
-): Promise<{ data: any; response: AxiosResponse }> => {
+// T: expected type of the response data (not validated)
+const _withData = async <T>(
+  promise: Promise<AxiosResponse<T>>,
+): Promise<{ data: T; response: AxiosResponse<T> }> => {
   const response = await promise;
   return { data: response.data, response };
 };
 
-const post = (options: RequestOptions) =>
-  _withData(postCancelable(options).promise);
+const post = <T = unknown>(options: RequestOptions) =>
+  _withData<T>(postCancelable(options).promise);
 
-const del = (options: RequestOptions) => {
+const del = <T = unknown>(options: RequestOptions) => {
   const { serverUrl, uri, config } = options;
   const url = APIUtils.getUrl({ serverUrl, uri });
-  return _withData(
+  return _withData<T>(
     _prepareRequest(url, { ...config, method: "delete" }).promise,
   );
 };

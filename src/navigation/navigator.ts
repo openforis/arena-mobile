@@ -42,7 +42,7 @@ type AppNavigation = NavigationProp<AppStackParamList>;
 export const createNavigator = (
   navigation: NavigationProp<ParamListBase> | ReturnType<typeof useNavigation>,
 ) => {
-  const nav = navigation as unknown as AppNavigation;
+  const nav = navigation as AppNavigation;
   return {
     addListener: (type: "focus" | "blur", handler: () => void) =>
       nav.addListener(type, handler),
@@ -92,4 +92,4 @@ export const useNavigator = (): Navigator => {
 // Partial: a screen can be opened without (some of) its params
 export const useScreenParams = <K extends keyof AppStackParamList>(): Partial<
   NonNullable<AppStackParamList[K]>
-> => (useRoute().params ?? {}) as Partial<NonNullable<AppStackParamList[K]>>;
+> => useRoute().params ?? {};

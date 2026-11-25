@@ -75,6 +75,7 @@ export { Surface } from "./Surface";
 export { Switch } from "./Switch";
 export { Text } from "./Text";
 export { TextInput } from "./TextInput";
+export type { TextInputHandle } from "./TextInput";
 export { TextInputPassword } from "./TextInputPassword";
 export { Tooltip } from "./Tooltip";
 export { UpdateStatusIcon } from "./UpdateStatusIcon";

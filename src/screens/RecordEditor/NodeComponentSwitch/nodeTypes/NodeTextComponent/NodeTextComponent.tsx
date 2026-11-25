@@ -10,7 +10,7 @@ import {
   Objects,
 } from "@openforis/arena-core";
 
-import { ScrollView, TextInput } from "components";
+import { ScrollView, TextInput, TextInputHandle } from "components";
 import { RecordEditViewMode } from "model";
 import { DataEntrySelectors, SurveyOptionsSelectors } from "state";
 import { log } from "utils";
@@ -39,7 +39,7 @@ export const NodeTextComponent = memo((props: Props) => {
   const viewMode = SurveyOptionsSelectors.useRecordEditViewMode();
   const isActiveChild =
     DataEntrySelectors.useIsNodeDefCurrentActiveChild(nodeDef);
-  const inputRef = useRef<{ focus: () => void }>(null);
+  const inputRef = useRef<TextInputHandle>(null);
 
   const styles = useStyles();
 

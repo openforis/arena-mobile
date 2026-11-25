@@ -129,7 +129,7 @@ export const useLocationNavigator = ({
     const { x, y } = targetPointLatLong;
     return Objects.isEmpty(x) || Objects.isEmpty(y)
       ? null
-      : `${(x as number).toFixed(5)}, ${(y as number).toFixed(5)}`;
+      : `${x.toFixed(5)}, ${y.toFixed(5)}`;
   }, [targetPointLatLong]);
 
   const currentCoordDisplay = useMemo(() => {

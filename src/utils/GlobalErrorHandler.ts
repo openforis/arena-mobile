@@ -19,7 +19,7 @@ type AppGlobal = {
   [initializedFlagKey]?: boolean;
 };
 
-const appGlobal = global as unknown as AppGlobal;
+const appGlobal = global as AppGlobal;
 
 const globalErrorUtils = appGlobal.ErrorUtils;
 

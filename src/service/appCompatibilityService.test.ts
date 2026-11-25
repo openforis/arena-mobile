@@ -14,7 +14,7 @@ jest.mock("utils/SystemUtils", () => ({
 
 jest.mock("utils/Logger");
 
-const mockServerVersionInfo = (data: any) =>
+const mockServerVersionInfo = (data: Record<string, unknown>) =>
   (RemoteService.get as jest.Mock).mockResolvedValue({ data });
 
 const fetchMinAppVersionIfNotSupported = (

@@ -17,7 +17,7 @@ export type WebWindow = {
 
 // feature detection instead of Platform.OS: no react-native/expo imports, usable in tests
 const get = (): WebWindow | null => {
-  const { window } = globalThis as unknown as {
+  const { window } = globalThis as {
     window?: WebWindow & { document?: unknown };
   };
   return window?.document && window.location ? window : null;

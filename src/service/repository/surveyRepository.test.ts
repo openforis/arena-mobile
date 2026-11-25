@@ -1,3 +1,5 @@
+import type { ArenaSurvey } from "@openforis/arena-core";
+
 import { dbClient } from "db";
 
 import { SurveyRepository } from "./surveyRepository";
@@ -22,18 +24,19 @@ const buildSurvey = ({
 }: {
   uuid?: string;
   descriptions?: Record<string, string>;
-}): any => ({
-  id: 10,
-  uuid,
-  dateCreated: "2026-01-01T10:00:00.000Z",
-  datePublished: "2026-01-02T10:00:00.000Z",
-  props: {
-    name: `survey_${uuid}`,
-    languages: ["fr", "en"],
-    labels: { en: "Survey", fr: "Enquête" },
-    descriptions,
-  },
-});
+}) =>
+  ({
+    id: 10,
+    uuid,
+    dateCreated: "2026-01-01T10:00:00.000Z",
+    datePublished: "2026-01-02T10:00:00.000Z",
+    props: {
+      name: `survey_${uuid}`,
+      languages: ["fr", "en"],
+      labels: { en: "Survey", fr: "Enquête" },
+      descriptions,
+    },
+  }) as ArenaSurvey;
 
 const fetchSummary = async (id: number) =>
   (await SurveyRepository.fetchSurveySummaries()).find(
@@ -49,7 +52,7 @@ describe("survey description column", () => {
     const { id } = await SurveyRepository.insertSurvey(
       buildSurvey({ descriptions: { en: "English", fr: "Français" } }),
     );
-    expect(await fetchSummary(id!)).toMatchObject({
+    expect(await fetchSummary(id)).toMatchObject({
       label: "Enquête",
       description: "Français",
     });
@@ -59,12 +62,12 @@ describe("survey description column", () => {
     const { id } = await SurveyRepository.insertSurvey(
       buildSurvey({ uuid: "s2", descriptions: { en: "English only" } }),
     );
-    expect((await fetchSummary(id!)).description).toBeNull();
+    expect((await fetchSummary(id)).description).toBeNull();
 
     const { id: id3 } = await SurveyRepository.insertSurvey(
       buildSurvey({ uuid: "s3" }),
     );
-    expect((await fetchSummary(id3!)).description).toBeNull();
+    expect((await fetchSummary(id3)).description).toBeNull();
   });
 
   test("updateSurvey updates the description", async () => {
@@ -72,28 +75,28 @@ describe("survey description column", () => {
       buildSurvey({ uuid: "s4", descriptions: { fr: "Avant" } }),
     );
     await SurveyRepository.updateSurvey({
-      id: id!,
+      id: id,
       survey: buildSurvey({ uuid: "s4", descriptions: { fr: "Après" } }),
     });
-    expect((await fetchSummary(id!)).description).toBe("Après");
+    expect((await fetchSummary(id)).description).toBe("Après");
 
     await SurveyRepository.updateSurvey({
-      id: id!,
+      id: id,
       survey: buildSurvey({ uuid: "s4", descriptions: { fr: "" } }),
     });
-    expect((await fetchSummary(id!)).description).toBeNull();
+    expect((await fetchSummary(id)).description).toBeNull();
   });
 
   test("updateSurveyDescription sets only the description", async () => {
     const { id } = await SurveyRepository.insertSurvey(
       buildSurvey({ uuid: "s5" }),
     );
-    const summaryBefore = await fetchSummary(id!);
+    const summaryBefore = await fetchSummary(id);
     await SurveyRepository.updateSurveyDescription({
-      id: id!,
+      id: id,
       survey: buildSurvey({ uuid: "s5", descriptions: { fr: "Nouvelle" } }),
     });
-    expect(await fetchSummary(id!)).toEqual({
+    expect(await fetchSummary(id)).toEqual({
       ...summaryBefore,
       description: "Nouvelle",
     });

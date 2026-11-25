@@ -13,8 +13,11 @@ jest.mock("model", () => ({
   RecordLoadStatus: { summary: "S", complete: "C" },
   RecordOrigin: { local: "L", remote: "R" },
   RecordSummaries: {
-    getKeyValues: ({ recordSummary }: any) =>
-      Object.values(recordSummary.keysObj),
+    getKeyValues: ({
+      recordSummary,
+    }: {
+      recordSummary: { keysObj: Record<string, unknown> };
+    }) => Object.values(recordSummary.keysObj),
   },
   RecordSyncStatus: jest.requireActual("model/RecordSyncStatus")
     .RecordSyncStatus,
@@ -27,19 +30,30 @@ const t0 = "2026-01-01T10:00:00.000Z";
 const t1 = "2026-01-01T11:00:00.000Z";
 const t2 = "2026-01-01T12:00:00.000Z";
 
-const local = (props: any = {}) => ({
+type SyncStatusParams = Parameters<
+  typeof RecordService.determineRecordSyncStatus
+>[0];
+// partial summaries: only the properties used to determine the sync status
+type SummaryProps = Record<string, unknown>;
+
+const local = (props: SummaryProps = {}) => ({
   uuid,
   origin: RecordOrigin.local,
   keysObj: { plot: 1 },
   ...props,
 });
-const remote = (props: any = {}) => ({ uuid, step: 1, ...props });
+const remote = (props: SummaryProps = {}) => ({ uuid, step: 1, ...props });
 
-const determine = (recordSummaryLocal: any, recordSummaryRemote?: any) =>
+const determine = (
+  recordSummaryLocal: SummaryProps,
+  recordSummaryRemote?: SummaryProps | null,
+) =>
   RecordService.determineRecordSyncStatus({
     survey: {} as ArenaSurvey,
-    recordSummaryLocal,
-    recordSummaryRemote,
+    recordSummaryLocal:
+      recordSummaryLocal as unknown as SyncStatusParams["recordSummaryLocal"],
+    recordSummaryRemote:
+      recordSummaryRemote as SyncStatusParams["recordSummaryRemote"],
   });
 
 describe("RecordService.determineRecordSyncStatus", () => {

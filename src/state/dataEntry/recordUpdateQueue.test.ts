@@ -2,13 +2,15 @@ import type { RootState } from "../store";
 import { serializeRecordUpdate } from "./recordUpdateQueue";
 
 jest.mock("./selectors", () => ({
-  DataEntrySelectors: { selectRecord: (state: any) => state.record },
+  DataEntrySelectors: {
+    selectRecord: (state: { record: unknown }) => state.record,
+  },
 }));
 
 const getState = () =>
   ({ record: { uuid: "record-1" } }) as unknown as RootState;
 
-const run = (update: () => Promise<any>) =>
+const run = <T>(update: () => Promise<T>) =>
   serializeRecordUpdate(update)(jest.fn(), getState);
 
 describe("serializeRecordUpdate", () => {
@@ -28,11 +30,11 @@ describe("serializeRecordUpdate", () => {
   });
 
   it("skips an update when the record is not the open one anymore", async () => {
-    let state: any = getState();
+    let state = getState();
     const update = jest.fn();
 
     const result = serializeRecordUpdate(update)(jest.fn(), () => state);
-    state = { record: { uuid: "record-2" } };
+    state = { record: { uuid: "record-2" } } as unknown as RootState;
 
     await expect(result).resolves.toBeUndefined();
     expect(update).not.toHaveBeenCalled();

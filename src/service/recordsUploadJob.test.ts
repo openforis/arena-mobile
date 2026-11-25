@@ -1,5 +1,9 @@
 import { JobStatus } from "@openforis/arena-core";
 
+import type {
+  RecordsUploadAndProcessJobContext,
+  RecordsUploadState,
+} from "./RecordsUploadAndProcessJobContext";
 import { RecordService } from "./recordService";
 import { RecordsUploadJob } from "./recordsUploadJob";
 
@@ -14,8 +18,12 @@ jest.mock("./recordService", () => ({
 
 const uploadMock = RecordService.uploadRecordsToRemoteServer as jest.Mock;
 
-const createJob = (uploadState: any) =>
-  new RecordsUploadJob({ user: {}, survey: {}, uploadState } as any);
+const createJob = (uploadState: RecordsUploadState) =>
+  new RecordsUploadJob({
+    user: {},
+    survey: {},
+    uploadState,
+  } as RecordsUploadAndProcessJobContext);
 
 describe("RecordsUploadJob", () => {
   it("continues from the first chunk not confirmed by the server", async () => {
@@ -45,7 +53,7 @@ describe("RecordsUploadJob", () => {
 
   it("ends as canceled when the upload is canceled", async () => {
     const { CanceledError } = jest.requireActual("axios");
-    let rejectUpload: (error: any) => void = () => {};
+    let rejectUpload: (error: unknown) => void = () => {};
     uploadMock.mockReturnValueOnce({
       promise: new Promise((_resolve, reject) => {
         rejectUpload = reject;

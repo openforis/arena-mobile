@@ -131,10 +131,7 @@ export const SurveysListRemote = () => {
   const surveysLocalByUuid = useMemo(
     () =>
       new Map<string, SurveySummaryLocal>(
-        (surveysLocal as SurveySummaryLocal[]).map((surveyLocal) => [
-          surveyLocal.uuid,
-          surveyLocal,
-        ]),
+        surveysLocal.map((surveyLocal) => [surveyLocal.uuid, surveyLocal]),
       ),
     [surveysLocal],
   );

@@ -1,5 +1,7 @@
 import { CanceledError } from "axios";
 
+import type { SurveyMobile } from "model/SurveyMobile";
+
 import { RecordRemoteService } from "./recordRemoteService";
 import { RemoteService } from "./remoteService";
 import { Files } from "utils";
@@ -12,19 +14,36 @@ jest.mock("./remoteService", () => ({
   RemoteService: { postCancelableMultipartData: jest.fn() },
 }));
 
+type MockChunkProcessor = (chunk: {
+  chunk: number;
+  content: { uri: string };
+  totalChunks: number;
+  totalFileSize: number;
+}) => Promise<unknown>;
+type MockErrorHandler = (error: unknown) => void;
+type MockCompleteHandler = (result?: unknown) => void;
+
 jest.mock("utils", () => {
   const Files = { del: jest.fn() };
   return {
     Files,
-    Functions: { throttle: (fn: any) => fn },
+    Functions: { throttle: <F>(fn: F) => fn },
     log: { debug: jest.fn() },
     RNFileProcessor: class {
-      chunkProcessor: any;
-      onError: any;
-      onComplete: any;
+      chunkProcessor: MockChunkProcessor;
+      onError: MockErrorHandler;
+      onComplete: MockCompleteHandler;
       close = mockClose;
       stop = jest.fn();
-      constructor({ chunkProcessor, onError, onComplete }: any) {
+      constructor({
+        chunkProcessor,
+        onError,
+        onComplete,
+      }: {
+        chunkProcessor: MockChunkProcessor;
+        onError: MockErrorHandler;
+        onComplete: MockCompleteHandler;
+      }) {
         this.chunkProcessor = chunkProcessor;
         this.onError = onError;
         this.onComplete = onComplete;
@@ -44,7 +63,7 @@ jest.mock("utils", () => {
             mockFileDeletionsBeforeRetry = Files.del.mock.calls.length;
             return processChunk();
           })
-          .then((result: any) => {
+          .then((result) => {
             if (startFromChunk >= totalChunks) this.onComplete(result);
           }, this.onError);
       }
@@ -57,7 +76,7 @@ const postMock = RemoteService.postCancelableMultipartData as jest.Mock;
 const upload = (onChunkUploaded: jest.Mock = jest.fn(), startFromChunk = 1) =>
   RecordRemoteService.uploadRecords({
     startFromChunk,
-    survey: { remoteId: 1 } as any,
+    survey: { remoteId: 1 } as SurveyMobile,
     cycle: "0",
     fileUri: "file://records.zip",
     fileId: "file-1",
@@ -72,7 +91,7 @@ describe("RecordRemoteService.uploadRecords", () => {
   });
 
   it("does not count a chunk the server has not confirmed", async () => {
-    let sendProgress: (event: any) => void = () => {};
+    let sendProgress: (event: { progress: number }) => void = () => {};
     postMock.mockImplementation(async (_uri, _params, onProgress) => {
       sendProgress = onProgress;
       return { promise: Promise.reject(new Error("network")), cancel() {} };

@@ -14,20 +14,25 @@ import {
   selectAutoSyncCandidates,
 } from "./autoSyncCandidates";
 
+type MockSurvey = {
+  props?: { security?: Record<string, boolean | undefined> };
+} | null;
+
 // the real modules pull in the whole arena-core/model graph, which Jest can't load as-is
 jest.mock("model", () => ({
   RecordSyncStatus: jest.requireActual("../../model/RecordSyncStatus")
     .RecordSyncStatus,
   RecordSummaries: {
-    hasErrors: (record: any) => (record.validation?.counts?.errors ?? 0) > 0,
+    hasErrors: (record: { validation?: { counts?: { errors?: number } } }) =>
+      (record.validation?.counts?.errors ?? 0) > 0,
   },
 }));
 jest.mock("@openforis/arena-core", () => ({
   Surveys: {
-    isRecordsWithErrorsUploadFromMobileAllowed: (survey: any) =>
+    isRecordsWithErrorsUploadFromMobileAllowed: (survey: MockSurvey) =>
       survey?.props?.security?.allowRecordsWithErrorsUpload ?? false,
     isVisibleInMobile: () => true,
-    isRecordsDownloadInMobileAllowed: (survey: any) =>
+    isRecordsDownloadInMobileAllowed: (survey: MockSurvey) =>
       survey?.props?.security?.allowRecordsDownloadInMobile ?? true,
   },
 }));

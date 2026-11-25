@@ -1,4 +1,6 @@
 import {
+  ArenaRecord,
+  ArenaSurvey,
   Records,
   RecordBuilder,
   RecordNodeBuilders,
@@ -30,19 +32,22 @@ const buildSurvey = () =>
     ),
   ).build();
 
-const buildUserGroup = (teamValue: string): ArenaUserGroup =>
-  ({
-    uuid: "group-uuid",
-    props: {
-      name: "control",
-      qualifiers: [{ name: "team", value: teamValue }],
-    },
-  }) as ArenaUserGroup;
+const buildUserGroup = (teamValue: string): ArenaUserGroup => ({
+  uuid: "group-uuid",
+  props: {
+    name: "control",
+    qualifiers: [{ name: "team", value: teamValue }],
+  },
+});
 
-const getAttributeValue = (record: any, name: string, survey: any) => {
-  const nodeDef = Object.values(survey.nodeDefs).find(
-    (def: any) => def.props.name === name,
-  ) as any;
+const getAttributeValue = (
+  record: ArenaRecord,
+  name: string,
+  survey: ArenaSurvey,
+) => {
+  const nodeDef = Object.values(survey.nodeDefs ?? {}).find(
+    (def) => def.props.name === name,
+  )!;
   return Records.getNodesByDefUuid(nodeDef.uuid)(record)[0]?.value;
 };
 

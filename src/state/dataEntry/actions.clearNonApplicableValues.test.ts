@@ -30,8 +30,13 @@ jest.mock("utils", () => ({
 jest.mock("localization", () => ({ i18n: { t: (key: string) => key } }));
 jest.mock("model", () => ({
   SurveyDefs: {
-    getNodeDefsLabelsOrNames: ({ survey, nodeDefUuids }: any) =>
-      nodeDefUuids.map((uuid: string) => survey.nodeDefs[uuid].props.name),
+    getNodeDefsLabelsOrNames: ({
+      survey,
+      nodeDefUuids,
+    }: {
+      survey: ArenaSurvey;
+      nodeDefUuids: string[];
+    }) => nodeDefUuids.map((uuid) => survey.nodeDefs![uuid]!.props.name),
   },
 }));
 jest.mock("service/preferencesService", () => ({
@@ -64,15 +69,15 @@ jest.mock("../positionTracking/actions", () => ({
 jest.mock("../survey", () => ({
   SurveyActions: {},
   SurveySelectors: {
-    selectCurrentSurvey: (state: any) => state.survey,
-    selectCurrentSurveyId: (state: any) => state.survey.id,
+    selectCurrentSurvey: (state: TestState) => state.survey,
+    selectCurrentSurveyId: (state: TestState) => state.survey.id,
     selectCurrentSurveyPreferredLang: () => "en",
   },
 }));
 jest.mock("../remoteConnection", () => ({
   RemoteConnectionActions: {},
   RemoteConnectionSelectors: {
-    selectLoggedUserSafe: (state: any) => state.user,
+    selectLoggedUserSafe: (state: TestState) => state.user,
   },
 }));
 jest.mock("./actionsCsvDataExport", () => ({}));
@@ -87,8 +92,8 @@ jest.mock("./actionsRecordsRevalidate", () => ({}));
 jest.mock("./actionsRecordSync", () => ({ DataEntryActionsRecordSync: {} }));
 jest.mock("./selectors", () => ({
   DataEntrySelectors: {
-    selectRecord: (state: any) => state.record,
-    selectRecordUnsafe: (state: any) => state.record,
+    selectRecord: (state: TestState) => state.record,
+    selectRecordUnsafe: (state: TestState) => state.record,
     selectPreviousCycleRecord: () => null,
     selectRecordSyncInProgress: () => false,
     selectIsMaxCountReached: () => () => false,
@@ -98,6 +103,12 @@ jest.mock("./selectors", () => ({
     selectCurrentPageEntity: jest.fn(),
   },
 }));
+
+type TestState = {
+  survey: ArenaSurvey;
+  record: ArenaRecord | null;
+  user: ArenaUser;
+};
 
 const { entityDef, integerDef, decimalDef } = SurveyObjectBuilders;
 const { entity, attribute } = RecordNodeBuilders;
@@ -176,24 +187,31 @@ const getNodesByName = (
 const getDistanceValue = (survey: ArenaSurvey, record: ArenaRecord) =>
   getNodesByName(survey, record, "distance")[0]!.value;
 
+type TestThunk = (
+  dispatch: (action: unknown) => Promise<unknown>,
+  getState: () => TestState,
+) => unknown;
+
 // runs thunks too; "dispatched" lets tests wait for thunks dispatched without being awaited
-const createDispatch = (state: any) => {
-  const dispatched: Promise<any>[] = [];
-  const dispatch: any = jest.fn((action: any) => {
+const createDispatch = (state: TestState) => {
+  const dispatched: Promise<unknown>[] = [];
+  const dispatch = jest.fn((action: unknown): Promise<unknown> => {
     const result = Promise.resolve(
-      typeof action === "function" ? action(dispatch, () => state) : action,
+      typeof action === "function"
+        ? (action as TestThunk)(dispatch, () => state)
+        : action,
     );
     dispatched.push(result);
     return result;
   });
-  dispatch.waitForAll = async () => {
+  const waitForAll = async () => {
     let count = -1;
     while (count !== dispatched.length) {
       count = dispatched.length;
       await Promise.all(dispatched);
     }
   };
-  return dispatch;
+  return Object.assign(dispatch, { waitForAll });
 };
 
 const getStoredRecord = (): ArenaRecord =>
@@ -251,7 +269,7 @@ describe("DataEntryActions: clear values of attributes becoming non-applicable",
         record,
         "individual",
       ).pop()!;
-      const state: any = { survey, record, user };
+      const state: TestState = { survey, record, user };
       const dispatch = createDispatch(state);
       // the editor is closed while the confirm dialog is open
       confirmMock.mockImplementation(async () => {
@@ -262,7 +280,7 @@ describe("DataEntryActions: clear values of attributes becoming non-applicable",
       await dispatch(DataEntryActions.deleteNodes([individualToDelete.uuid]));
 
       expect(updateRecordMock).toHaveBeenCalledTimes(1);
-      const recordSetDispatched = dispatch.mock.calls.some(([action]: any[]) =>
+      const recordSetDispatched = dispatch.mock.calls.some(([action]) =>
         DataEntrySliceActions.recordSet.match(action),
       );
       expect(recordSetDispatched).toBe(false);

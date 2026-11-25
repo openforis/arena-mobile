@@ -285,7 +285,7 @@ const getNextEntityPointer = ({
   } else {
     // multiple entity list view
     const { cycle } = record;
-    if (!NodeDefs.isDisplayInOwnPage(cycle!)(entityDef)) {
+    if (!NodeDefs.isDisplayInOwnPage(cycle)(entityDef)) {
       // entity shown inside parent page: do not allow go to "next" entity;
       // user should go to the parent page and continue filling it
       return null;

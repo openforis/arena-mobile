@@ -1,4 +1,5 @@
 import {
+  ArenaRecord,
   RecordBuilder,
   RecordNodeBuilders,
   ArenaSurvey,
@@ -40,7 +41,11 @@ const createState = ({
   survey,
   record,
   activeChildDefIndex = 0,
-}: any): RootState =>
+}: {
+  survey: ArenaSurvey;
+  record: ArenaRecord;
+  activeChildDefIndex?: number;
+}): RootState =>
   ({
     survey: { currentSurvey: survey },
     dataEntry: { record, recordCurrentPageEntity: null, activeChildDefIndex },
@@ -48,7 +53,7 @@ const createState = ({
 
 describe("current page entity selectors", () => {
   let survey: ArenaSurvey;
-  let record: any;
+  let record: ArenaRecord;
 
   beforeAll(async () => {
     survey = await new SurveyBuilder(
@@ -70,7 +75,7 @@ describe("current page entity selectors", () => {
     const childDefs2 =
       DataEntrySelectors.selectCurrentPageEntityRelevantChildDefs({
         ...state,
-      } as RootState);
+      });
 
     expect(childDefs1.map((def) => def.props.name)).toEqual([
       "cluster_id",

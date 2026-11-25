@@ -24,7 +24,8 @@ const fetchSurveyByIdMock = SurveyService.fetchSurveyById as jest.Mock;
 const updateSurveyDescriptionMock =
   SurveyRepository.updateSurveyDescription as jest.Mock;
 
-const surveysById: Record<number, any> = {
+// only the properties read by the data migration
+const surveysById: Record<number, object> = {
   1: { id: 1, props: { descriptions: { en: "First" } } },
   2: { id: 2, props: {} },
 };

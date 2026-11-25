@@ -1,6 +1,6 @@
 import { Files } from "./Files";
 
-const mockWrites: { uri: string; content: any }[] = [];
+const mockWrites: { uri: string; content: unknown }[] = [];
 let mockFileBytes = new Uint8Array();
 
 jest.mock("mime", () => ({}));
@@ -18,7 +18,7 @@ jest.mock("expo-file-system", () => ({
       this.uri = uri;
     }
     bytes = async () => mockFileBytes;
-    write = async (content: any) => {
+    write = async (content: unknown) => {
       mockWrites.push({ uri: this.uri, content });
     };
   },
