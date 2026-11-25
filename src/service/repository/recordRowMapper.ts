@@ -417,7 +417,10 @@ export const rowToRecord =
     fixRowSummaryAttributesColumns({ survey, cycle, result, row });
 
     if (!result.info?.createdWith) {
-      result.info = { createdWith: SystemUtils.getRecordAppInfo() };
+      result.info = {
+        ...result.info,
+        createdWith: SystemUtils.getRecordAppInfo(),
+      };
     }
     fixRowValidation({ result, row, hasContent });
 

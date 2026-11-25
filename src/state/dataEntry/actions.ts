@@ -44,6 +44,7 @@ import { revalidateRecords } from "./actionsRecordsRevalidate";
 import { ensureUserGroupReady } from "./actionsUserGroup";
 import { DataEntryActionsRecordSync } from "./actionsRecordSync";
 import { DataEntryActionsPreview } from "./actionsPreview";
+import { updateRecordAppInfoDependents } from "./actionsRecordAppInfo";
 import { DataEntrySliceActions } from "./reducer";
 import { DataEntrySelectors } from "./selectors";
 import { serializeRecordUpdate } from "./recordUpdateQueue";
@@ -342,6 +343,8 @@ const editRecord =
       await dispatch(selectCurrentPageEntity(lastEditedPage));
     }
     await dispatch(PositionTrackingActions.recoverTrackForOpenRecord());
+    // only if the record is editable (not locked)
+    await dispatch(updateRecordAppInfoDependents);
   };
 
 const _fetchAndEditRecordInternal = async ({

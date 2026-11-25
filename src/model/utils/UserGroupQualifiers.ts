@@ -1,4 +1,5 @@
 import {
+  ArenaAppInfo,
   ArenaAreaOfInterestProvider,
   ArenaRecord,
   ArenaAnyNodeDef,
@@ -82,6 +83,7 @@ const assignQualifierValues = async ({
   nodes = {},
   areaOfInterestProvider,
   timezoneOffset,
+  appInfo,
 }: {
   user: ArenaUser;
   survey: ArenaSurvey;
@@ -90,6 +92,7 @@ const assignQualifierValues = async ({
   nodes?: ArenaRecordNodesMap;
   areaOfInterestProvider?: ArenaAreaOfInterestProvider;
   timezoneOffset?: number;
+  appInfo?: ArenaAppInfo;
 }): Promise<{ record: ArenaRecord; nodes: ArenaRecordNodesMap }> => {
   const qualifierDefs = Surveys.getQualifierDefs({ survey });
   if (qualifierDefs.length === 0) {
@@ -120,6 +123,7 @@ const assignQualifierValues = async ({
         survey,
         areaOfInterestProvider,
         timezoneOffset,
+        appInfo,
         record,
         attributeUuid: qualifierNode.uuid,
         value,

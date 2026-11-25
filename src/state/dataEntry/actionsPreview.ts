@@ -7,6 +7,7 @@ import {
   Surveys,
 } from "@openforis/arena-core";
 
+import { SurveyDependencyGraphs } from "model/utils/SurveyDependencyGraphs";
 import { SystemUtils } from "utils";
 
 import { RemoteConnectionSelectors } from "../remoteConnection";
@@ -23,8 +24,10 @@ type StartPreviewParams = {
 
 // sets the previewed survey and a new record kept in memory only (web preview, no local DB)
 const startPreview =
-  ({ survey, lang = null, cycle = null }: StartPreviewParams) =>
+  ({ survey: surveyParam, lang = null, cycle = null }: StartPreviewParams) =>
   async (dispatch: AppDispatch, getState: AppGetState) => {
+    // e.g. the bundled demo survey, stored with a previous arena-core version
+    const survey = await SurveyDependencyGraphs.rebuildIfOutdated(surveyParam);
     dispatch(
       SurveySliceActions.currentSurveySet({
         survey,

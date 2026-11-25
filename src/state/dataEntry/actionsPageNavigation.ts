@@ -10,6 +10,7 @@ import { PositionTrackingActions } from "../positionTracking/actions";
 import { SurveySelectors } from "../survey";
 
 import { DataEntryActionsRecordPreviousCycle } from "./actionsRecordPreviousCycle";
+import { updateRecordAppInfoDependents } from "./actionsRecordAppInfo";
 import { DataEntrySliceActions } from "./reducer";
 import { DataEntrySelectors } from "./selectors";
 import type { Navigator } from "navigation/navigator";
@@ -110,6 +111,9 @@ export const toggleRecordEditLock = (
   const state = getState();
   const locked = DataEntrySelectors.selectRecordEditLocked(state);
   dispatch(DataEntrySliceActions.recordEditLockedSet(!locked));
+  if (locked) {
+    void dispatch(updateRecordAppInfoDependents);
+  }
 };
 
 export const navigateToRecordsList =
