@@ -3,8 +3,8 @@ import { ArenaJobEvent, JobStatus } from "@openforis/arena-core";
 import { JobMobile } from "model";
 
 import { RecordsUploadAndProcessJobContext } from "./RecordsUploadAndProcessJobContext";
-import { RecordsUploadJob } from "./recordsUploadJob";
-import { RemoteJobWatcherJob } from "./remoteJobWatcherJob";
+import { RecordsUploadJob } from "./RecordsUploadJob";
+import { RemoteJobWatcherJob } from "./RemoteJobWatcherJob";
 
 // result of the server-side records import job
 export type RecordsUploadResult = {

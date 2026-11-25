@@ -2,7 +2,7 @@ import { ArenaExportFile, Promises } from "@openforis/arena-core";
 
 import { JobMobile } from "model";
 import { Files } from "utils";
-import { RecordFileService } from "../recordFileService";
+import { RecordFileService } from "../../recordFileService";
 import { RecordsAndFilesImportJobContext } from "./RecordsAndFilesImportJobContext";
 
 export class FilesImportJob extends JobMobile<RecordsAndFilesImportJobContext> {

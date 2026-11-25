@@ -11,7 +11,7 @@ import { HView, IconButton, ProgressBar, Text } from "components";
 import { Files } from "utils";
 
 import * as AudioUtils from "./AudioUtils";
-import styles from "./AudioPlaybackStyles";
+import styles from "./styles";
 
 type AudioPlaybackProps = {
   fileUri: string | null;

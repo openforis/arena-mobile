@@ -18,9 +18,9 @@ import { ArenaMobileRecord, JobMobile, RecordSummary } from "model";
 import { RecordUtils } from "model/utils/RecordUtils";
 import { Files, SystemUtils } from "utils";
 
-import { RecordService } from "./recordService";
-import { RecordFileService } from "./recordFileService";
-import { RecordRemoteService } from "./recordRemoteService";
+import { RecordService } from "../recordService";
+import { RecordFileService } from "../recordFileService";
+import { RecordRemoteService } from "../recordRemoteService";
 import { JobMobileContext } from "model/JobMobile";
 
 const recordsExportFileNamePrefix = "arena_mobile_data_";

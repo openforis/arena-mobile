@@ -3,7 +3,7 @@ import { JobStatus } from "@openforis/arena-core";
 import { RemoteJobService, WebSocketService } from "service";
 
 import type { RecordsUploadAndProcessJobContext } from "./RecordsUploadAndProcessJobContext";
-import { RemoteJobWatcherJob } from "./remoteJobWatcherJob";
+import { RemoteJobWatcherJob } from "./RemoteJobWatcherJob";
 
 type TestJobSummary = { uuid: string; status: JobStatus; result?: unknown };
 

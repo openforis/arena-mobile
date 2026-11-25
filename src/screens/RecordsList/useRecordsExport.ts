@@ -9,7 +9,7 @@ import {
 import { useToast } from "hooks";
 import { useTranslation } from "localization";
 import { RecordUpdateConflictResolutionStrategy as ConflictResolutionStrategy } from "model";
-import type { RecordsUploadResult } from "service/recordsUploadAndProcessJob";
+import type { RecordsUploadResult } from "service/jobs/recordsUpload";
 import {
   AutoSyncSelectors,
   DataEntryActions,
