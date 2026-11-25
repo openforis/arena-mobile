@@ -13,8 +13,10 @@ const requiredDependencyTypes = [
 const isOutdated = (survey: ArenaSurvey): boolean =>
   requiredDependencyTypes.some((type) => !survey.dependencyGraph?.[type]);
 
-const rebuildIfOutdated = async (survey: ArenaSurvey): Promise<ArenaSurvey> =>
-  isOutdated(survey) ? Surveys.buildAndAssocDependencyGraph(survey) : survey;
+const rebuildIfOutdated = (survey: ArenaSurvey): Promise<ArenaSurvey> =>
+  isOutdated(survey)
+    ? Surveys.buildAndAssocDependencyGraph(survey)
+    : Promise.resolve(survey);
 
 export const SurveyDependencyGraphs = {
   isOutdated,
