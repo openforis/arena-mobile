@@ -44,10 +44,13 @@ export class RecordsAndFilesImportJob extends JobMobile<
   override async onStart() {
     await super.onStart();
     const { fileUri } = this.context;
+    if (!fileUri) {
+      throw new Error("RecordsAndFilesImportJob: missing fileUri in context");
+    }
 
     const unzippedFolderUri = await this.createTempFolder();
 
-    await Files.unzip(fileUri!, unzippedFolderUri, "UTF-8");
+    await Files.unzip(fileUri, unzippedFolderUri, "UTF-8");
 
     this.context.unzippedFolderUri = unzippedFolderUri;
   }

@@ -251,13 +251,17 @@ export class FlatDataExportJob extends JobMobile<
 
   private async generateOutputFile() {
     this.logger.debug("Generating output file...");
+    const { tempFolderUri } = this;
+    if (!tempFolderUri) {
+      throw new Error("FlatDataExportJob: temp folder not created");
+    }
     const { survey } = this.context;
     const surveyName = Surveys.getName(survey);
     const timestamp = Dates.nowFormattedForExpression();
     const outputFileName = `arena-mobile-data-export-${surveyName}-${timestamp}.zip`;
     const outputFileUri = Files.path(Files.cacheDirectory, outputFileName);
     this.context.outputFileUri = outputFileUri;
-    await Files.zip(this.tempFolderUri!, outputFileUri);
+    await Files.zip(tempFolderUri, outputFileUri);
     this.logger.debug(`Output file generated: ${outputFileUri}`);
   }
 

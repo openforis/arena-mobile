@@ -135,8 +135,7 @@ export const SurveysListLocal = () => {
       ...statePrev,
       surveys: _surveys.map((survey) => ({
         ...survey,
-        // survey id (number) used as item key: it's passed to deleteSurveys as is
-        key: survey.id as unknown as string,
+        key: String(survey.id),
         labelOrName: survey.label || survey.name,
         datePublished: survey.dateModified,
       })),
@@ -152,7 +151,7 @@ export const SurveysListLocal = () => {
     useSurveysSearch({ surveys });
 
   const onDeleteSelectedItemIds = useCallback(
-    async (surveyIds: string[]) => {
+    async (surveyKeys: string[]) => {
       if (
         await confirm({
           titleKey: "surveys:confirmDeleteSurvey.title",
@@ -160,16 +159,16 @@ export const SurveysListLocal = () => {
           swipeToConfirm: true,
         })
       ) {
-        // item keys are the survey ids (numbers, see loadSurveys)
-        await dispatch(
-          SurveyActions.deleteSurveys(surveyIds as unknown as number[]),
-        );
+        const surveyIds = surveys
+          .filter((survey) => surveyKeys.includes(survey.key))
+          .map((survey) => survey.id);
+        await dispatch(SurveyActions.deleteSurveys(surveyIds));
         await loadSurveys();
         return true;
       }
       return false;
     },
-    [confirm, dispatch, loadSurveys],
+    [confirm, dispatch, loadSurveys, surveys],
   );
 
   const onItemPress = useCallback(
