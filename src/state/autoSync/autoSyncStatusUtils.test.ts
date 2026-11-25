@@ -7,8 +7,14 @@ import {
   hasConflictingKeysWithMergeNotAllowed,
   hasOnlyRemoteChanges,
   isAutoMergeAllowed,
+  RecordWithSyncStatus,
 } from "./autoSyncStatusUtils";
 import { AutoSyncStatus } from "./types";
+
+// only the props read by the mocked Surveys functions
+type MockSurvey = {
+  props?: { security?: Record<string, boolean | undefined> };
+} | null;
 
 // the real modules pull in the whole arena-core/model graph, which Jest can't load as-is
 jest.mock("model", () => ({
@@ -17,11 +23,11 @@ jest.mock("model", () => ({
 }));
 jest.mock("@openforis/arena-core", () => ({
   Surveys: {
-    isRecordsMergeWithSameKeysAllowed: (survey: any) =>
+    isRecordsMergeWithSameKeysAllowed: (survey: MockSurvey) =>
       survey?.props?.security?.allowRecordsMergeWithSameKeys ?? true,
-    isVisibleInMobile: (survey: any) =>
+    isVisibleInMobile: (survey: MockSurvey) =>
       survey?.props?.security?.visibleInMobile ?? true,
-    isRecordsDownloadInMobileAllowed: (survey: any) =>
+    isRecordsDownloadInMobileAllowed: (survey: MockSurvey) =>
       survey?.props?.security?.allowRecordsDownloadInMobile ?? true,
   },
 }));
@@ -39,8 +45,9 @@ const surveyDownloadNotAllowed = surveyWithSecurity({
   allowRecordsDownloadInMobile: false,
 });
 
-const recordsWithStatuses = (...statuses: string[]) =>
-  statuses.map((syncStatus) => ({ syncStatus })) as any[];
+const recordsWithStatuses = (
+  ...statuses: RecordWithSyncStatus["syncStatus"][]
+): RecordWithSyncStatus[] => statuses.map((syncStatus) => ({ syncStatus }));
 
 describe("computeAutoSyncStatus", () => {
   test("synced when nothing to do", () => {

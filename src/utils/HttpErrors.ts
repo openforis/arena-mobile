@@ -11,7 +11,7 @@ type ErrorWithStatus =
   | undefined;
 
 const asErrorWithStatus = (error: unknown): ErrorWithStatus =>
-  typeof error === "object" ? (error as ErrorWithStatus) : undefined;
+  typeof error === "object" ? error : undefined;
 
 const toStatus = (value: unknown): number | undefined => {
   if (value === undefined || value === null || value === "") return undefined;

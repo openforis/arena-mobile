@@ -1,4 +1,8 @@
 import {
+  ArenaNodeDefEntity,
+  ArenaNodeDefEntityLayout,
+  ArenaRecord,
+  ArenaRecordNode,
   RecordBuilder,
   RecordNodeBuilders,
   Records,
@@ -9,7 +13,11 @@ import {
   UserFactory,
 } from "@openforis/arena-core";
 
-import { RecordPageNavigator } from "./RecordPageNavigator";
+import type { RecordCurrentPageEntity } from "./RecordCurrentPageEntity";
+import {
+  RecordPageEntityPointer,
+  RecordPageNavigator,
+} from "./RecordPageNavigator";
 
 const { entityDef, integerDef, textDef } = SurveyObjectBuilders;
 const { entity, attribute } = RecordNodeBuilders;
@@ -21,16 +29,29 @@ const user = UserFactory.createInstance({
 
 const { getNextEntityPointer, getPrevEntityPointer } = RecordPageNavigator;
 
+const defNames = ["cluster", "general", "plot", "tree", "notes"] as const;
+type DefName = (typeof defNames)[number];
+type NodeName = "root" | "general" | "plot1" | "plot2" | "tree1" | "tree2";
+
 describe("RecordPageNavigator", () => {
   let survey: ArenaSurvey;
-  let record: any;
-  let defs: Record<string, any>;
-  let nodes: Record<string, any>;
+  let record: ArenaRecord;
+  let defs: Record<DefName, ArenaNodeDefEntity>;
+  let nodes: Record<NodeName, ArenaRecordNode>;
 
-  const next = (currentEntityPointer: any) =>
-    getNextEntityPointer({ survey, record, currentEntityPointer });
-  const prev = (currentEntityPointer: any) =>
-    getPrevEntityPointer({ survey, record, currentEntityPointer });
+  // the pointers in the tests have the shape of the returned ones
+  const next = (pointer: RecordPageEntityPointer) =>
+    getNextEntityPointer({
+      survey,
+      record,
+      currentEntityPointer: pointer as RecordCurrentPageEntity,
+    });
+  const prev = (pointer: RecordPageEntityPointer) =>
+    getPrevEntityPointer({
+      survey,
+      record,
+      currentEntityPointer: pointer as RecordCurrentPageEntity,
+    });
 
   beforeAll(async () => {
     survey = await new SurveyBuilder(
@@ -49,14 +70,16 @@ describe("RecordPageNavigator", () => {
     ).build();
 
     defs = Object.fromEntries(
-      ["cluster", "general", "plot", "tree", "notes"].map((name) => [
+      defNames.map((name) => [
         name,
         Surveys.getNodeDefByName({ survey, name }),
       ]),
-    );
+    ) as Record<DefName, ArenaNodeDefEntity>;
     // "notes" is rendered inside the parent page
-    for (const name of ["cluster", "general", "plot", "tree"]) {
-      defs[name].props.layout = { "0": { pageUuid: `page_${name}` } };
+    for (const name of ["cluster", "general", "plot", "tree"] as const) {
+      defs[name].props.layout = {
+        "0": { pageUuid: `page_${name}` } as ArenaNodeDefEntityLayout,
+      };
     }
 
     record = new RecordBuilder(
@@ -84,11 +107,11 @@ describe("RecordPageNavigator", () => {
     const [tree1, tree2] = Records.getChildren(plot1!, defs.tree.uuid)(record);
     nodes = {
       root,
-      general: Records.getChild(root, defs.general.uuid)(record),
-      plot1,
-      plot2,
-      tree1,
-      tree2,
+      general: Records.getChild(root, defs.general.uuid)(record)!,
+      plot1: plot1!,
+      plot2: plot2!,
+      tree1: tree1!,
+      tree2: tree2!,
     };
   });
 

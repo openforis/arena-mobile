@@ -14,13 +14,19 @@ import {
   selectRecordsToExport,
 } from "./recordsExportUtils";
 
+// only the props read by the mocked Surveys functions
+type MockSurvey = {
+  props: { security: Record<string, boolean | undefined> };
+};
+
 // the real modules pull in the whole arena-core/model graph, which Jest can't load as-is
 jest.mock("model", () => ({
   RecordOrigin: { local: "local", remote: "remote" },
   RecordSyncStatus: jest.requireActual("../../model/RecordSyncStatus")
     .RecordSyncStatus,
   RecordSummaries: {
-    hasErrors: (record: any) => (record.validation?.counts?.errors ?? 0) > 0,
+    hasErrors: (record: { validation?: { counts?: { errors?: number } } }) =>
+      (record.validation?.counts?.errors ?? 0) > 0,
   },
   RecordUpdateConflictResolutionStrategy: {
     merge: "merge",
@@ -29,11 +35,11 @@ jest.mock("model", () => ({
 }));
 jest.mock("@openforis/arena-core", () => ({
   Surveys: {
-    isVisibleInMobile: (survey: any) =>
+    isVisibleInMobile: (survey: MockSurvey) =>
       survey.props.security.visibleInMobile ?? true,
-    isRecordsUploadFromMobileAllowed: (survey: any) =>
+    isRecordsUploadFromMobileAllowed: (survey: MockSurvey) =>
       survey.props.security.allowRecordsUploadFromMobile ?? true,
-    isRecordsWithErrorsUploadFromMobileAllowed: (survey: any) =>
+    isRecordsWithErrorsUploadFromMobileAllowed: (survey: MockSurvey) =>
       survey.props.security.allowRecordsWithErrorsUploadFromMobile ?? false,
   },
 }));

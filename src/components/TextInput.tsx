@@ -1,7 +1,8 @@
-import React, { forwardRef, Ref, useMemo } from "react";
+import React, { ComponentRef, forwardRef, Ref, useMemo } from "react";
 import { TextInput as RNPTextInput, useTheme } from "react-native-paper";
 import {
   KeyboardTypeOptions,
+  TextInput as NativeTextInput,
   StyleProp,
   TextInputProps,
   TextStyle,
@@ -11,6 +12,9 @@ import {
 import { useTranslation } from "localization";
 
 const multilineStyle = { lineHeight: 24 };
+
+// required by the paper ref prop typing: the actual handle exposes only focus, blur, clear and a few more
+export type TextInputHandle = ComponentRef<typeof NativeTextInput>;
 
 type Props = {
   autoFocus?: boolean;
@@ -43,7 +47,7 @@ type Props = {
 
 export const TextInput = forwardRef(function TextInput(
   props: Props,
-  ref: Ref<any>,
+  ref: Ref<TextInputHandle>,
 ) {
   const {
     autoCapitalize = "none",

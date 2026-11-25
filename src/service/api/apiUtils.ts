@@ -16,7 +16,7 @@ const objectToFormData = (obj: ArenaDictionary<unknown> = {}) =>
       "name" in value
     ) {
       // React Native FormData accepts file descriptors
-      acc.append(key, value as unknown as Blob);
+      acc.append(key, value);
       return acc;
     }
 

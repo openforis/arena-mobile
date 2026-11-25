@@ -119,7 +119,6 @@ export const RecordEditor = () => {
 
   if (isPhone) {
     return (
-      // @ts-expect-error "children" is missing from the library prop types
       <MenuDrawer
         animationTime={250}
         drawerContent={<RecordEditorDrawer />}

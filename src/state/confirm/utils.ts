@@ -22,7 +22,7 @@ const confirm = async (
         }),
       );
     } catch (error) {
-      reject(error as Error);
+      reject(error);
     }
   });
 

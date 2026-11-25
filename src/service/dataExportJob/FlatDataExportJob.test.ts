@@ -39,7 +39,7 @@ const createJob = () =>
     survey,
     cycle: "0",
     options: {},
-  } as any);
+  } as ConstructorParameters<typeof FlatDataExportJob>[0]);
 
 const fetchRecordsMock = RecordService.fetchRecords as jest.Mock;
 const fetchRecordMock = RecordService.fetchRecord as jest.Mock;

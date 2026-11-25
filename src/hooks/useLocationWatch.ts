@@ -68,15 +68,15 @@ export const useLocationWatch = ({
   stopOnTimeout?: boolean;
 }) => {
   const isMountedRef = useIsMountedRef();
-  const lastLocationRef = useRef(null as LocationPoint | null);
-  const locationSubscriptionRef = useRef(null as LocationSubscription | null);
-  const locationAccuracyWatchTimeoutRef = useRef(
-    null as ReturnType<typeof setTimeout> | null,
-  );
-  const locationWatchIntervalRef = useRef(
-    null as ReturnType<typeof setInterval> | null,
-  );
-  const locationAveragerRef = useRef(null as LocationAverager | null);
+  const lastLocationRef = useRef<LocationPoint | null>(null);
+  const locationSubscriptionRef = useRef<LocationSubscription | null>(null);
+  const locationAccuracyWatchTimeoutRef = useRef<ReturnType<
+    typeof setTimeout
+  > | null>(null);
+  const locationWatchIntervalRef = useRef<ReturnType<
+    typeof setInterval
+  > | null>(null);
+  const locationAveragerRef = useRef<LocationAverager | null>(null);
   const locationReadingsCountRef = useRef(0);
   const startAttemptIdRef = useRef(0);
   const cancelledAttemptIdRef = useRef(0);

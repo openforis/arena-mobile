@@ -49,7 +49,7 @@ export const JobMonitorDialog = () => {
   const progressUnknown =
     typeof combinedProgressPercent !== "number" || combinedProgressPercent < 0;
   const progress = progressUnknown ? 0 : combinedProgressPercent / 100;
-  const progressColor = progressColorByStatus[status as JobStatus];
+  const progressColor = progressColorByStatus[status];
 
   const canCancelJob = [JobStatus.pending, JobStatus.running].includes(status);
   const jobEnded = [

@@ -72,8 +72,8 @@ const getApplicationInfo = async (): Promise<ArenaMobileAppInfo> => {
 const getRecordAppInfo = (): ArenaMobileAppInfo => ({
   appId,
   version,
-  // @ts-expect-error Platform.OS is wider than the platforms supported by the app
-  platform,
+  // Platform.OS is wider than the platforms supported by the app
+  platform: platform as ArenaMobileAppInfo["platform"],
 });
 
 const setFullScreen = async (fullScreen: boolean | undefined) => {

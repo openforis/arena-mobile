@@ -137,8 +137,8 @@ export const AutoSyncStatusDialog = (props: Props) => {
         {showMessage && (
           <Text
             style={styles.note}
-            textKey={message!.textKey}
-            textParams={message!.textParams}
+            textKey={message.textKey}
+            textParams={message.textParams}
             variant="bodySmall"
           />
         )}

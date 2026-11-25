@@ -7,7 +7,7 @@ const day = 24 * hour;
 const year = 365 * day;
 
 // echoes key and params so assertions can check which message was chosen
-const t = (key: string, params?: any) =>
+const t = (key: string, params?: Record<string, unknown> | null) =>
   params ? `${key}${JSON.stringify(params)}` : key;
 
 describe("TimeUtils.extractParts", () => {

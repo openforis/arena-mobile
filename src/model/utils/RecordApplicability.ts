@@ -30,8 +30,7 @@ const getApplicableChildrenEntityDefs = ({
       NodeDefs.isEntity(childDef) &&
       RecordNodes.isChildApplicable(parentEntity, childDef.uuid) &&
       RecordNodes.isChildVisible(parentEntity, childDef.uuid) &&
-      (!onlyInOwnPage ||
-        NodeDefs.isDisplayInOwnPage(cycle!)(childDef as ArenaNodeDefEntity)),
+      (!onlyInOwnPage || NodeDefs.isDisplayInOwnPage(cycle)(childDef)),
   ) as ArenaNodeDefEntity[];
 
 const hasDescendantApplicableNodes = ({

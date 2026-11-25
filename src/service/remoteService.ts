@@ -97,10 +97,10 @@ const get = (uri: string, data?: ArenaDictionary<unknown>, config = {}) =>
 const getFileOrThrow = (uri: string, data?: ArenaDictionary<unknown>) =>
   sendRequest(API.getFileOrThrow, { uri, data });
 
-const post = (uri: string, data?: ArenaDictionary<unknown>) =>
-  sendRequest(API.post, { uri, data });
+const post = <T = unknown>(uri: string, data?: ArenaDictionary<unknown>) =>
+  sendRequest(API.post<T>, { uri, data });
 
-const del = (uri: string) => sendRequest(API.del, { uri });
+const del = <T = unknown>(uri: string) => sendRequest(API.del<T>, { uri });
 
 const postCancelableMultipartData = async (
   uri: string,

@@ -1,3 +1,5 @@
+import type { DatabaseSync } from "node:sqlite";
+
 import { createNodeSQLiteClient } from "../testing/createNodeSQLiteClient";
 import { migration_001_base } from "./001";
 import { migration_002 } from "./002";
@@ -26,7 +28,7 @@ const fieldValidation = (errors: number, warnings: number) => ({
   warnings: Array.from({ length: warnings }, () => ({ key: "custom" })),
 });
 
-const contentByUuid: Record<string, any> = {
+const contentByUuid: Record<string, object> = {
   withCounts: {
     validation: { valid: false, counts: { errors: 3, warnings: 1 } },
   },
@@ -47,18 +49,24 @@ const contentByUuid: Record<string, any> = {
   summary: {},
 };
 
-const fetchCounts = (db: any) =>
+type CountsRow = {
+  uuid: string;
+  errors_count: number | null;
+  warnings_count: number | null;
+};
+
+const fetchCounts = (db: DatabaseSync) =>
   Object.fromEntries(
     db
       .prepare(`SELECT uuid, errors_count, warnings_count FROM record`)
       .all()
-      .map(({ uuid, errors_count, warnings_count }: any) => [
-        uuid,
-        [errors_count, warnings_count],
-      ]),
+      .map((row) => {
+        const { uuid, errors_count, warnings_count } = row as CountsRow;
+        return [uuid, [errors_count, warnings_count]];
+      }),
   );
 
-const createDbWithRecords = async (contents: [string, any][]) => {
+const createDbWithRecords = async (contents: [string, object][]) => {
   const { client, db } = createNodeSQLiteClient(migrationsBefore);
   await client.runMigrationsIfNecessary();
   db.prepare(
@@ -92,12 +100,12 @@ describe("migration 008: record validation counts", () => {
     // the content is not changed
     const { content } = db
       .prepare(`SELECT content FROM record WHERE uuid = 'withoutCounts'`)
-      .get() as any;
+      .get() as { content: string };
     expect(JSON.parse(content)).toEqual(contentByUuid.withoutCounts);
   });
 
   it("counts validations without counts in batches", async () => {
-    const contents: [string, any][] = Array.from({ length: 250 }, (_, i) => [
+    const contents: [string, object][] = Array.from({ length: 250 }, (_, i) => [
       `r${i}`,
       {
         validation: { valid: false, fields: { n: fieldValidation(1, i % 2) } },

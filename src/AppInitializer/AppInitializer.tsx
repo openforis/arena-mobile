@@ -63,11 +63,11 @@ export const AppInitializer = (props: Props) => {
 
   const dispatch = useAppDispatch();
 
-  const [state, setState] = useState({
+  const [state, setState] = useState<AppInitializerState>({
     loading: true,
     errorMessage: null,
     step: steps.starting,
-  } as AppInitializerState);
+  });
   const { loading, errorMessage, step } = state;
 
   const setStep = (stepNew: string) => {

@@ -1,5 +1,7 @@
 import {
   ArenaNodeDefEntity,
+  ArenaNodeDefLayout,
+  ArenaNodeDefPropsWithLayout,
   NodeDefs,
   ArenaSurvey,
   Surveys,
@@ -17,8 +19,8 @@ describe("SurveyDefs.getEntitySummaryDefs", () => {
     const keyDef = Surveys.getNodeDefByName({
       survey,
       name: "regeneration_no",
-    }) as any;
-    keyDef.props.layout = {
+    });
+    (keyDef.props as ArenaNodeDefPropsWithLayout<ArenaNodeDefLayout>).layout = {
       [cycle]: { includedInMultipleEntitySummary: true },
     };
     const entityDef = Surveys.getNodeDefByName({

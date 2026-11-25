@@ -47,7 +47,7 @@ export class BackupJob extends JobMobile<BackupJobContext, BackupJobResult> {
     );
     try {
       await dbClient.withConsistentDbFile(() =>
-        Files.zip(Files.documentDirectory, outputFileUri),
+        Files.zip(Files.documentDirectory!, outputFileUri),
       );
     } finally {
       await Promise.all(

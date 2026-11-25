@@ -63,7 +63,7 @@ const userWithGroup = (name: string, groupSurveyUuid = surveyUuid) => ({
   ],
 });
 
-const createState = (user: any) =>
+const createState = (user: object | null) =>
   ({
     survey: { currentSurvey: survey },
     remoteConnection: { user },

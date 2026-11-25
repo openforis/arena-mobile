@@ -1,4 +1,10 @@
-import { NodeDefType, ArenaSurvey, Surveys } from "@openforis/arena-core";
+import {
+  ArenaNodeDefGeo,
+  ArenaRecord,
+  NodeDefType,
+  ArenaSurvey,
+  Surveys,
+} from "@openforis/arena-core";
 
 import demoSurveyJson from "../../service/demoSurvey.json";
 
@@ -240,7 +246,10 @@ describe("PositionTracks node defs", () => {
     JSON.parse(JSON.stringify(demoSurveyJson)) as ArenaSurvey;
 
   const makeTrackable = (survey: ArenaSurvey, name: string) => {
-    const nodeDef = Surveys.getNodeDefByName({ survey, name }) as any;
+    const nodeDef = Surveys.getNodeDefByName({
+      survey,
+      name,
+    }) as ArenaNodeDefGeo;
     nodeDef.type = NodeDefType.geo;
     nodeDef.props.positionTracking = true;
     return nodeDef;
@@ -250,18 +259,16 @@ describe("PositionTracks node defs", () => {
     const survey = createSurvey();
     const nodeDef = makeTrackable(survey, "site_location");
     expect(PositionTracks.isTrackableNodeDef(nodeDef)).toBe(true);
-    expect(
-      PositionTracks.isTrackableNodeDef({
-        ...nodeDef,
-        props: { ...nodeDef.props, positionTracking: false },
-      }),
-    ).toBe(false);
-    expect(
-      PositionTracks.isTrackableNodeDef({
-        ...nodeDef,
-        props: { ...nodeDef.props, multiple: true },
-      }),
-    ).toBe(false);
+    const notTrackingDef: ArenaNodeDefGeo = {
+      ...nodeDef,
+      props: { ...nodeDef.props, positionTracking: false },
+    };
+    expect(PositionTracks.isTrackableNodeDef(notTrackingDef)).toBe(false);
+    const multipleDef: ArenaNodeDefGeo = {
+      ...nodeDef,
+      props: { ...nodeDef.props, multiple: true },
+    };
+    expect(PositionTracks.isTrackableNodeDef(multipleDef)).toBe(false);
   });
 
   test("findAutoStartNode picks the first trackable attribute in the root entity or its single entities", () => {
@@ -269,12 +276,12 @@ describe("PositionTracks node defs", () => {
     const inSingleEntityDef = makeTrackable(survey, "site_location");
     const inMultipleEntityDef = makeTrackable(survey, "second_unit_location");
 
-    const record: any = {
+    const record = {
       nodes: {
         n1: { uuid: "n1", nodeDefUuid: inMultipleEntityDef.uuid },
         n2: { uuid: "n2", nodeDefUuid: inSingleEntityDef.uuid },
       },
-    };
+    } as unknown as ArenaRecord;
     expect(PositionTracks.findAutoStartNode({ survey, record })?.uuid).toBe(
       "n2",
     );
@@ -283,9 +290,9 @@ describe("PositionTracks node defs", () => {
   test("findAutoStartNode ignores attributes in multiple entities", () => {
     const survey = createSurvey();
     const inMultipleEntityDef = makeTrackable(survey, "second_unit_location");
-    const record: any = {
+    const record = {
       nodes: { n1: { uuid: "n1", nodeDefUuid: inMultipleEntityDef.uuid } },
-    };
+    } as unknown as ArenaRecord;
     expect(PositionTracks.findAutoStartNode({ survey, record })).toBeNull();
   });
 });

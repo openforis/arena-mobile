@@ -57,7 +57,7 @@ export const selectCurrentPageEntity = createSelector(
     const entityDef = Surveys.getNodeDefByUuid({
       survey: survey!,
       uuid: entityDefUuid,
-    })! as ArenaNodeDefEntity;
+    }) as ArenaNodeDefEntity;
 
     return {
       parentEntityUuid,

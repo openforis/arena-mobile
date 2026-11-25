@@ -1,4 +1,11 @@
-import { PDFDocument, PDFName, PDFNumber, PDFString } from "pdf-lib";
+import {
+  PDFDict,
+  PDFDocument,
+  PDFName,
+  PDFNumber,
+  PDFObject,
+  PDFString,
+} from "pdf-lib";
 
 // Builds geospatial PDFs (ISO 32000 encoding) for the tests
 
@@ -21,6 +28,9 @@ export type GeoPdfFixturePage = {
   lgiDict?: boolean;
 };
 
+// values accepted by PDFContext.obj
+type PdfLiteralDict = Record<string, string | number | number[] | PDFObject>;
+
 const DEFAULT_LPTS = [0, 0, 0, 1, 1, 1, 1, 0];
 
 export const buildGeoPdf = async (
@@ -42,11 +52,11 @@ export const buildGeoPdf = async (
     }
     if (pageDef.viewports) {
       const vps = pageDef.viewports.map((viewport) => {
-        const gcs: Record<string, any> = {
+        const gcs: PdfLiteralDict = {
           Type: viewport.epsg ? "PROJCS" : "GEOGCS",
         };
         if (viewport.epsg) gcs["EPSG"] = viewport.epsg;
-        const measure: Record<string, any> = {
+        const measure: PdfLiteralDict = {
           Type: "Measure",
           Subtype: "GEO",
           GPTS: viewport.gpts,
@@ -56,10 +66,10 @@ export const buildGeoPdf = async (
         if (viewport.bounds) measure["Bounds"] = viewport.bounds;
         const measureDict = context.obj(measure);
         if (viewport.wkt) {
-          const gcsDict = measureDict.get(PDFName.of("GCS")) as any;
+          const gcsDict = measureDict.get(PDFName.of("GCS")) as PDFDict;
           gcsDict.set(PDFName.of("WKT"), PDFString.of(viewport.wkt));
         }
-        const vp: Record<string, any> = {
+        const vp: PdfLiteralDict = {
           Type: "Viewport",
           BBox: viewport.bbox,
           Measure: context.register(measureDict),

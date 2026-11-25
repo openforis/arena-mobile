@@ -109,8 +109,7 @@ const sortByProps =
     });
   };
 
-// loosely typed values: some callers rely on them (e.g. RecordSummary.dateModified)
-const indexByUuid = <T extends ItemWithUuid>(array: T[]): Record<string, any> =>
+const indexByUuid = <T extends ItemWithUuid>(array: T[]): Record<string, T> =>
   array.reduce(
     (acc, item) => {
       acc[item.uuid] = item;

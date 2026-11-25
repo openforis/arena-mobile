@@ -47,7 +47,7 @@ export class RecordsAndFilesImportJob extends JobMobile<
 
     const unzippedFolderUri = await this.createTempFolder();
 
-    await Files.unzip(fileUri, unzippedFolderUri, "UTF-8");
+    await Files.unzip(fileUri!, unzippedFolderUri, "UTF-8");
 
     this.context.unzippedFolderUri = unzippedFolderUri;
   }

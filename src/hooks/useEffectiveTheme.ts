@@ -53,7 +53,7 @@ export const useEffectiveTheme = (): AppTheme => {
         : ThemesSettings.light;
   }
   return useMemo(() => {
-    const theme = themeByThemeSetting[themeSetting]!;
+    const theme = themeByThemeSetting[themeSetting];
     if (fontScale === 1) {
       return theme;
     }

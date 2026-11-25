@@ -149,7 +149,7 @@ export class FlatDataExportJob extends JobMobile<
     if (includeFiles) {
       // create attached files subfolder
       const attachedFilesFolderUri = Files.path(
-        this.tempFolderUri!,
+        this.tempFolderUri,
         FlatDataFiles.attachedFilesSubfolderName,
       );
       await Files.mkDir(attachedFilesFolderUri);
@@ -257,7 +257,7 @@ export class FlatDataExportJob extends JobMobile<
     const outputFileName = `arena-mobile-data-export-${surveyName}-${timestamp}.zip`;
     const outputFileUri = Files.path(Files.cacheDirectory, outputFileName);
     this.context.outputFileUri = outputFileUri;
-    await Files.zip(this.tempFolderUri, outputFileUri);
+    await Files.zip(this.tempFolderUri!, outputFileUri);
     this.logger.debug(`Output file generated: ${outputFileUri}`);
   }
 

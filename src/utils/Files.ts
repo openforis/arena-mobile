@@ -8,9 +8,15 @@ import { Objects, Promises, Strings, UUIDs } from "@openforis/arena-core";
 import { Environment } from "./Environment";
 import { FileSizes } from "./FileSizes";
 
-const { unzip, zip }: any = Environment.isExpoGo
-  ? {}
-  : (require("react-native-zip-archive") ?? {});
+type ZipArchiveModule = Pick<
+  typeof import("react-native-zip-archive"),
+  "unzip" | "zip"
+>;
+
+// undefined in Expo Go (native module not available): see isUnzipSupported
+const { unzip, zip } = (
+  Environment.isExpoGo ? {} : (require("react-native-zip-archive") ?? {})
+) as ZipArchiveModule;
 
 const PATH_SEPARATOR = "/";
 const TEMP_FOLDER_NAME = "am_temp";

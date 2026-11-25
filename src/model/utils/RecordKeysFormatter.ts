@@ -119,9 +119,8 @@ const getEntitySummaryValuesByNameFormatted = ({
       )(record)[0];
       if (summaryNode) {
         const formatter: (params: SummaryValueFormatterParams) => unknown =
-          RecordValueFormatters.formatterByNodeDefType[
-            NodeDefs.getType(summaryDef)
-          ] ?? RecordNodeValueFormatter.format;
+          RecordValueFormatters.getFormatter(NodeDefs.getType(summaryDef)) ??
+          RecordNodeValueFormatter.format;
         formattedValue = formatter({
           survey: survey!,
           cycle,

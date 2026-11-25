@@ -1,4 +1,5 @@
 import {
+  ArenaNodeDefGeo,
   ExtraPropDataType,
   LanguageCode,
   NodeDefType,
@@ -241,7 +242,7 @@ describe("recordsMapLayers", () => {
       const trackDef = Surveys.getNodeDefByName({
         survey: surveyWithTrack,
         name: "cluster_location",
-      }) as any;
+      }) as ArenaNodeDefGeo;
       trackDef.type = NodeDefType.geo;
       trackDef.props.positionTracking = true;
     });
@@ -342,7 +343,8 @@ describe("recordsMapLayers", () => {
       expect(
         getDefaultVisibleLayerKeys({ survey: surveyWithAreas, cycle, layers }),
       ).not.toContain(areaLayer.key);
-      const t = (key: string, params?: any) => `${key} ${params?.name}`;
+      const t = (key: string, params?: Record<string, unknown> | null) =>
+        `${key} ${params?.name}`;
       expect(
         getLayerLabel({
           survey: surveyWithAreas,
@@ -417,7 +419,13 @@ describe("recordsMapLayers", () => {
           coordinates: [
             [ring(0, 0)],
             // invalid positions are skipped: too few left for a polygon
-            [[[10, 10], [Number.NaN, 10], [11, 11] as any]],
+            [
+              [
+                [10, 10],
+                [Number.NaN, 10],
+                [11, 11],
+              ],
+            ],
             [ring(20, 20)],
           ],
         },
@@ -468,7 +476,8 @@ describe("recordsMapLayers", () => {
           layers: getAvailableLayers({ survey: surveyWithLayers, cycle }),
         }),
       ).not.toContain(layers[0]!.key);
-      const t = (key: string, params?: any) => `${key} ${params?.name}`;
+      const t = (key: string, params?: Record<string, unknown> | null) =>
+        `${key} ${params?.name}`;
       expect(
         getLayerLabel({
           survey: surveyWithLayers,
