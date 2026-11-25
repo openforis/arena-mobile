@@ -15,8 +15,8 @@ The feature is no longer PDF-only. The code was renamed from "PDF map" to
 | `model/PdfMap.ts` (`PdfMap`) | `model/ImportedMap.ts` (`ImportedMap`) |
 | `service/pdfMaps/*` (`PdfMapsService`, `PdfMapImportJob`, …) | `service/importedMaps/*` (`ImportedMapsService`, `ImportedMapImportJob`, …) |
 | `modules/pdf-map-renderer` (native module `PdfMapRenderer`) | `modules/imported-map-renderer` (`ImportedMapRenderer`) |
-| `screens/PdfMapImport` (`screenKeys.pdfMapImport`) | `screens/MapImport` (`screenKeys.mapImport`) |
-| `screens/PdfMapViewer`, `OfflineMaps/PdfMapsTab`, `MapView/PdfMapsPanel` | `ImportedMapViewer`, `ImportedMapsTab`, `ImportedMapsPanel` |
+| `screens/PdfMapImport` (`screenKeys.pdfMapImport`) | `screens/MapImportScreen` (`screenKeys.mapImport`) |
+| `screens/PdfMapViewer`, `OfflineMaps/PdfMapsTab`, `MapView/PdfMapsPanel` | `ImportedMapViewerScreen`, `ImportedMapsTab`, `ImportedMapsPanel` |
 | i18n namespace `pdfMaps`, key `offlineMaps:tabs.pdfMaps` | `importedMaps`, `offlineMaps:tabs.importedMaps` |
 | settings key `pdfMaps` | `importedMaps` |
 

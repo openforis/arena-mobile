@@ -128,17 +128,17 @@ Single `AppStack` component using React Navigation Native Stack. Screen definiti
 ### Screens (src/screens/)
 Major screens:
 - **HomeScreen**: Survey selection, remote connection
-- **SurveysList**: Local and remote survey management
-- **RecordsList**: Record browsing, filtering, sync status
-- **RecordEditor**: Complex multi-page form editor (see below)
-- **RecordValidationReport**: Validation errors display
+- **SurveysListLocalScreen** / **SurveysListRemoteScreen**: Local and remote survey management (shared pieces in `SurveysList/`)
+- **RecordsListScreen**: Record browsing, filtering, sync status
+- **RecordEditorScreen**: Complex multi-page form editor (see below)
+- **RecordValidationReportScreen**: Validation errors display
 - **SettingsScreen**: App configuration
 - **AboutScreen**: Version info, licenses
 
 ### Record Editor Architecture
-`src/screens/RecordEditor/` is the most complex screen:
+`src/screens/RecordEditorScreen/` is the most complex screen:
 
-- **RecordEditor.tsx**: Main container coordinating all subcomponents
+- **RecordEditorScreen.tsx**: Main container coordinating all subcomponents
 - **RecordPageForm**: Renders a single page of form fields
 - **NodeComponentSwitch**: Maps node types to specific input components
   - `nodeTypes/`: Individual input components (NodeTextComponent, NodeCodeComponent, NodeCoordinateComponent, NodeImageOrVideoComponent, NodeTaxonComponent, NodeDateComponent, NodeFileComponent, etc.)

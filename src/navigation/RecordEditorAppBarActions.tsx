@@ -4,7 +4,7 @@ import { AutoSyncStatusAppBarAction } from "appComponents/AutoSyncStatus";
 import { AppBarAction, Spacer } from "components";
 import { RecordEditViewMode } from "model";
 import { PreviewMode } from "utils";
-import { Breadcrumbs } from "screens/RecordEditor/Breadcrumbs";
+import { Breadcrumbs } from "screens/RecordEditorScreen/Breadcrumbs";
 import {
   DataEntryActions,
   DataEntrySelectors,

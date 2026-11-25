@@ -196,7 +196,7 @@ arena-mobile, branch `feat/auto-sync-merge` (on top of `fix/merged-record-local-
 - `src/state/dataEntry/actions.ts` and `actionsAttributeUpdate.ts`: edits rejected while locked;
   a record being replaced can't be opened. `selectors.ts`/`reducer.ts`/`types.ts`:
   `recordSyncInProgress` state.
-- `src/screens/RecordEditor/RecordEditor.tsx`: "being synchronized" line.
+- `src/screens/RecordEditorScreen/RecordEditorScreen.tsx`: "being synchronized" line.
 
 ### Phase 3 (files already in the device)
 

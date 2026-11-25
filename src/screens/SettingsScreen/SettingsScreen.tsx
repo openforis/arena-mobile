@@ -6,7 +6,7 @@ import { FullBackupButton } from "appComponents/FullBackupButton";
 
 import { Button, FieldSet, HView, ScreenView, Text, VView } from "components";
 import { MapProvider, SettingsModel, SettingsObject } from "model";
-import { OfflineMapsTab } from "screens/OfflineMaps/OfflineMapsScreen";
+import { OfflineMapsTab } from "screens/OfflineMapsScreen/OfflineMapsScreen";
 import { AppService } from "service/appService";
 import {
   SettingsActions,

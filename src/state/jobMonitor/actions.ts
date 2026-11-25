@@ -125,7 +125,7 @@ const createOnJobUpdateCallback = <R>({
         // too - an unattended job has no dialog for the user to dismiss themselves (see
         // JobMonitorDialog's `visible={isOpen && !silent}`), so isOpen must reset on its own
         // or it gets stuck forever - and with it, anything derived from it (e.g. the
-        // auto-sync icon's spinner, or RecordsList's post-tick refresh)
+        // auto-sync icon's spinner, or RecordsListScreen's post-tick refresh)
         if (autoDismiss || silent) {
           dispatch(close());
         }

@@ -16,9 +16,9 @@ import { MapProvider, ScreenViewMode } from "model";
 import { useIsTextDirectionRtl, useTranslation } from "localization";
 import { log, PreviewMode } from "utils";
 import { screenKeys } from "screens";
-import { hasMapLayers } from "screens/RecordsMap/recordsMapLayers";
-import { Breadcrumbs } from "screens/RecordEditor/Breadcrumbs";
-import { RecordCompletionProgressBar } from "screens/RecordEditor/RecordCompletionProgressBar";
+import { hasMapLayers } from "screens/RecordsMapScreen/recordsMapLayers";
+import { Breadcrumbs } from "screens/RecordEditorScreen/Breadcrumbs";
+import { RecordCompletionProgressBar } from "screens/RecordEditorScreen/RecordCompletionProgressBar";
 import {
   DataEntryActions,
   DataEntrySelectors,
