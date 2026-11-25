@@ -4,7 +4,7 @@ Local Expo module (autolinked from `modules/`) that renders imported maps
 (georeferenced PDF pages, GeoTIFF images) into XYZ map tiles. Used by
 `src/service/importedMaps` (JS interface:
 `src/service/importedMaps/ImportedMapRenderer.ts`); see
-`docs/geospatial-pdf-maps-plan.md` and `docs/geotiff-maps-plan.md`.
+`docs/plans/geospatial-pdf-maps-plan.md` and `docs/plans/geotiff-maps-plan.md`.
 
 - `renderTiles` (PDF): Android `android.graphics.pdf.PdfRenderer`, iOS
   CoreGraphics (`CGPDFDocument`). The matrix maps the page *display space*
