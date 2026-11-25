@@ -1,6 +1,6 @@
 import { ArenaNodeDefFile, NodeDefs } from "@openforis/arena-core";
 
-import { AudioEqualizer, AudioPlayback } from "components/audio";
+import { AudioEqualizer, AudioPlayback } from "components/Audio";
 import { Button, DeleteIconButton, HView, IconButton, VView } from "components";
 import { log } from "utils";
 
