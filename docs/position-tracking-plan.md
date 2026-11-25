@@ -173,13 +173,13 @@ in the whole app.
 
 ## UI
 
-### Tracking status bar (`src/screens/RecordEditor/PositionTrackingBar/`)
+### Tracking status bar (`src/screens/RecordEditorScreen/PositionTrackingBar/`)
 
 Placement: **top of the record editor content, right below the AppBar /
 breadcrumbs** (above the auto-sync banner). The bottom area already holds the
 collapsible `StatusBar` and the `BottomNavigationBar`, and is covered by the
 keyboard while typing; the top stays visible. (Easy to move: it is a single
-component rendered in `RecordEditor.tsx`.)
+component rendered in `RecordEditorScreen.tsx`.)
 
 - **Collapsed** (one line, ~28 dp, coloured background): pulsing red dot when
   tracking / pause icon when paused / warning icon on error, then
@@ -219,7 +219,7 @@ rendered and `useNodeGeoComponent` refuses to save a manual value):
 `GeoUtils` gets helpers for line strings: extract coordinates, compute length,
 compute region (reuse `computeRegionFromCoordinates`).
 
-### Records map (`src/screens/RecordsMap/`)
+### Records map (`src/screens/RecordsMapScreen/`)
 
 Today the map has point layers only (`samplingPoints`, `coordinateAttribute`).
 Add a layer type `positionTrack`, one layer per tracking-enabled geo
@@ -327,7 +327,7 @@ Still to do:
 3. DB migration `003` + `positionTrackRepository`.
 4. `PositionTrackingService` (internal GPS first, then external GPS source).
 5. Redux slice + thunks (start/pause/resume/stop/flush/recover).
-6. `PositionTrackingBar` in `RecordEditor`.
+6. `PositionTrackingBar` in `RecordEditorScreen`.
 7. `NodeGeoComponent` read-only track view + `NodeGeoValuePreview`.
 8. Record lifecycle hooks (auto-start in `createNewRecord`, leave record,
    open other record, delete node, app background, `AppInitializer` recovery).

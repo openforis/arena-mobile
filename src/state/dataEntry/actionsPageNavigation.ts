@@ -122,7 +122,7 @@ export const navigateToRecordsList =
         onConfirm: async () => {
           // the recorded track is written into the record before closing it
           await dispatch(PositionTrackingActions.closeTrack());
-          // pop=true pops the current screen from the stack and avoids going back to it (unmounts the RecordEditor component)
+          // pop=true pops the current screen from the stack and avoids going back to it (unmounts the RecordEditorScreen component)
           navigator.navigateToRecordsList({ pop: true });
           dispatch(DataEntrySliceActions.reset());
         },
