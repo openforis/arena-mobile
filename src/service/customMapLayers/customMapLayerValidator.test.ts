@@ -1,4 +1,4 @@
-import { CustomMapLayer } from "model/MapLayers";
+import { CustomMapLayer } from "model/MapLayer";
 
 import { CustomMapLayerValidator } from "./customMapLayerValidator";
 

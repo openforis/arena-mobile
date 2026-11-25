@@ -1,4 +1,5 @@
-import { CustomMapLayer, MapLayers } from "model/MapLayers";
+import { CustomMapLayer } from "model/MapLayer";
+import { MapLayers } from "model/utils/MapLayers";
 
 const errorKeys = {
   nameRequired: "offlineMaps:customLayers.validation.nameRequired",
