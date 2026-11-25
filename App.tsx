@@ -29,7 +29,7 @@ import { PreviewMode } from "utils/PreviewMode";
 
 import { AppInitializer } from "./src/AppInitializer";
 import { PreviewInitializer } from "./src/preview";
-import styles from "./src/appStyles";
+import styles from "./src/theme/appStyles";
 
 // registered as early as possible, before any rendering, to catch errors
 // outside React's render phase (event handlers, timers, unhandled promise

@@ -45,7 +45,7 @@ export const PreviewInitializer = ({ children }: Props) => {
   const [pendingPreview, setPendingPreview] = useState<PreviewParams | null>(
     () =>
       PreviewMode.isDemo
-        ? { survey: require("../service/demoSurvey.json") }
+        ? { survey: require("../service/demoSurvey/demoSurvey.json") }
         : null,
   );
 

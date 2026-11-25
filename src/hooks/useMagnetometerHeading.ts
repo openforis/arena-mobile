@@ -7,13 +7,12 @@ import { Functions } from "utils/Functions";
 import { log } from "utils/Logger";
 import { ScreenOrientation } from "model";
 import { DeviceInfoSelectors } from "state/deviceInfo/selectors";
-
 import {
   circularEma,
   EMA_ALPHA,
   HEADING_UPDATE_INTERVAL_MS,
   nextDisplayedHeading,
-} from "./headingUtils";
+} from "utils/headingUtils";
 
 type Vector3 = { x: number; y: number; z: number };
 

@@ -2,13 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import * as Location from "expo-location";
 
 import { Functions } from "utils/Functions";
-
 import {
   circularEma,
   EMA_ALPHA,
   HEADING_UPDATE_INTERVAL_MS,
   nextDisplayedHeading,
-} from "./headingUtils";
+} from "utils/headingUtils";
 
 export const useLocationHeading = ({
   enabled = true,

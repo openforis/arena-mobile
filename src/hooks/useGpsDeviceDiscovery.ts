@@ -7,7 +7,7 @@ import {
 } from "service/externalGps/types";
 import type { DiscoveredGpsDevice } from "service/externalGps/types";
 import { log } from "utils";
-import { mergeDiscoveredDevice } from "./gpsDeviceDiscoveryUtils";
+import { mergeDiscoveredDevice } from "utils/gpsDeviceDiscoveryUtils";
 import { useIsMountedRef } from "./useIsMountedRef";
 
 export type GpsDeviceDiscoveryError =

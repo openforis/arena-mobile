@@ -3,7 +3,7 @@ import React from "react";
 import { ArenaRecordNodeValueTaxon } from "@openforis/arena-core";
 
 import { Text, VView } from "components";
-import { Taxa } from "model/Taxa";
+import { Taxa } from "model/utils/Taxa";
 import { NodeValuePreviewProps } from "./NodeValuePreviewPropTypes";
 import { useTaxonByNodeValue } from "./useTaxonByNodeValue";
 

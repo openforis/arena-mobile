@@ -7,7 +7,7 @@ import {
   useLocationWatch,
   useMagnetometerHeading,
 } from "hooks";
-import { HeadingSource } from "hooks/headingUtils";
+import { HeadingSource } from "utils/headingUtils";
 import { LocationPoint } from "model";
 import { SurveySelectors } from "state";
 
