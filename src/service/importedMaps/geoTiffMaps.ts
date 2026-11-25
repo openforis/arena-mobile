@@ -28,7 +28,7 @@ import {
 } from "./importedMapTilesRenderer";
 
 // GeoTIFF maps: georeference read from the file, blocks of tiles decoded with geotiff.js (JS thread)
-// and drawn by the native module (see docs/geotiff-maps-plan.md)
+// and drawn by the native module (see docs/plans/geotiff-maps-plan.md)
 
 // the display space of a GeoTIFF is its pixel space: 1 display unit = 1 rendered pixel
 // (72 DPI in the zoom computation, which counts display units as PDF points)
