@@ -3,7 +3,7 @@ import { ArenaSurvey, JobStatus, Surveys } from "@openforis/arena-core";
 import { AppCompatibilityOperation } from "service/appCompatibilityService";
 import { RecordService } from "service/recordService";
 import type { RecordsExportJobResult } from "service/recordRemoteService";
-import { RecordsAndFilesImportJob } from "service/recordsAndFilesImportJob";
+import { RecordsAndFilesImportJob } from "service/jobs/recordsAndFilesImport";
 import { JobMonitorActions } from "../jobMonitor/actions";
 import { MessageActions } from "../message";
 import { AppCompatibilityActions } from "../remoteConnection/actionsAppCompatibility";

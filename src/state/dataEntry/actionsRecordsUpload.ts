@@ -3,13 +3,15 @@ import { ArenaJobSerialized, Surveys, UUIDs } from "@openforis/arena-core";
 import { AppCompatibilityOperation, SettingsService } from "service";
 
 import { JobCancelError } from "model";
-import type { RecordsUploadState } from "service/RecordsUploadAndProcessJobContext";
 import {
+  RECORDS_UPLOAD_JOB_TYPE,
   RecordsUploadAndProcessJob,
+  REMOTE_JOB_WATCHER_JOB_TYPE,
+} from "service/jobs/recordsUpload";
+import type {
   RecordsUploadResult,
-} from "service/recordsUploadAndProcessJob";
-import { RECORDS_UPLOAD_JOB_TYPE } from "service/recordsUploadJob";
-import { REMOTE_JOB_WATCHER_JOB_TYPE } from "service/remoteJobWatcherJob";
+  RecordsUploadState,
+} from "service/jobs/recordsUpload";
 import {
   AppCompatibilityActions,
   RemoteConnectionSelectors,

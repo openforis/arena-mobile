@@ -2,7 +2,7 @@ import { ArenaSurvey, JobStatus } from "@openforis/arena-core";
 
 import { Files } from "utils";
 
-import { RecordsAndFilesImportJob } from "./recordsAndFilesImportJob";
+import { RecordsAndFilesImportJob } from "./RecordsAndFilesImportJob";
 
 jest.mock("model", () => jest.requireActual("model/JobMobile"));
 
@@ -19,11 +19,11 @@ jest.mock("utils", () => ({
 }));
 
 // inner jobs doing nothing
-jest.mock("./recordsImportJob", () => {
+jest.mock("./RecordsImportJob", () => {
   const { JobMobile } = jest.requireActual("model/JobMobile");
   return { RecordsImportJob: class extends JobMobile {} };
 });
-jest.mock("./filesImportJob", () => {
+jest.mock("./FilesImportJob", () => {
   const { JobMobile } = jest.requireActual("model/JobMobile");
   return { FilesImportJob: class extends JobMobile {} };
 });

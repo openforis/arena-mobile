@@ -4,9 +4,9 @@ import { isCancel } from "axios";
 import { JobMobile, SurveyMobile } from "model";
 
 import { RecordsUploadAndProcessJobContext } from "./RecordsUploadAndProcessJobContext";
-import { RecordService } from "./recordService";
-import type { UploadProgress } from "./recordRemoteService";
-import type { RecordsUploadResult } from "./recordsUploadAndProcessJob";
+import { RecordService } from "../../recordService";
+import type { UploadProgress } from "../../recordRemoteService";
+import type { RecordsUploadResult } from "./RecordsUploadAndProcessJob";
 
 // a stable identifier for this job class, independent of `this.constructor.name` (which a
 // minified production build isn't guaranteed to preserve) - read by RecordsUploadAndProcessJob's

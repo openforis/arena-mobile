@@ -10,7 +10,7 @@ import { i18n } from "localization";
 import {
   FlatDataExportJob,
   FlatDataExportJobResult,
-} from "service/dataExportJob";
+} from "service/jobs/dataExport";
 import { RemoteConnectionSelectors } from "state/remoteConnection";
 import type { AppDispatch, AppGetState, RootState } from "state/store";
 import { Files, log } from "utils";
