@@ -19,7 +19,7 @@ import {
   SurveyDefs,
 } from "model";
 import { RecordService } from "service";
-import { log } from "utils";
+import { log, SystemUtils } from "utils";
 import { ConfirmUtils } from "../confirm";
 import { SurveySelectors } from "../survey";
 import { ToastActions } from "../toast";
@@ -62,6 +62,7 @@ const updateCurrentRecordWithPrevCycleValues = async ({
       user,
       prevCycleRecord,
       timezoneOffset: Dates.getTimezoneOffset(),
+      appInfo: SystemUtils.getRecordAppInfo(),
       sideEffect: false,
     });
   await dispatch(

@@ -25,7 +25,13 @@ jest.mock("utils", () => ({
   Errors: { getErrorMessage: jest.fn() },
   log: { debug: jest.fn(), error: jest.fn() },
   StringUtils: { truncateWithEllipsis: (s: string) => s },
-  SystemUtils: {},
+  SystemUtils: {
+    getRecordAppInfo: () => ({
+      appId: "am",
+      version: "3.0.0",
+      platform: "android",
+    }),
+  },
 }));
 jest.mock("localization", () => ({ i18n: { t: (key: string) => key } }));
 jest.mock("model", () => ({

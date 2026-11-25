@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Expressions: new functions `appId()`, `appIdLabel()` ("Arena" or "Arena Mobile"), `appVersion()`, `appPlatform()` (evaluated again when a record is edited with another app, platform or app version), `nodeDateCreated(node)` and `nodeDateModified(node)` (e.g. `nodeDateModified(parent(this))`);
+
+### Changed
+
+- Web preview: app platform reported as "web" instead of "ios";
+
 ## [3.0.0] - 2026-11-19
 
 ### Added

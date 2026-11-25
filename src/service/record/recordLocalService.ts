@@ -13,7 +13,7 @@ import {
 
 import { RecordUtils, UserGroupQualifiers } from "model";
 import type { ArenaMobileRecord } from "model";
-import { ArrayUtils, log, PromiseUtils } from "utils";
+import { ArrayUtils, log, PromiseUtils, SystemUtils } from "utils";
 
 import {
   RecordKeyValue,
@@ -193,6 +193,7 @@ const prepareClonedRecord = async ({
       user,
       survey,
       areaOfInterestProvider: AreaOfInterestProviderDefault,
+      appInfo: SystemUtils.getRecordAppInfo(),
       userGroup,
       record,
     });

@@ -6,6 +6,8 @@ import {
   ArenaUserGroup,
 } from "@openforis/arena-core";
 
+import { SurveyDependencyGraphs } from "model/utils/SurveyDependencyGraphs";
+
 import { SurveyPackage } from "model/utils/SurveyPackage";
 import type { SurveySummaryRemote } from "model/SurveySummary";
 import { Files, log } from "utils";
@@ -63,10 +65,14 @@ const _updateSurvey = async ({
 
 const fetchSurveyById = async (surveyId: number): Promise<ArenaSurvey> => {
   const surveyDb = await SurveyRepository.fetchSurveyById(surveyId);
-  const surveyLoaded = surveyDb.props
-    ? surveyDb
-    : await SurveyFSRepository.readSurveyFile({ surveyId: surveyDb.id });
-  return surveyLoaded;
+  if (surveyDb.props) return surveyDb;
+  const surveyLoaded = await SurveyFSRepository.readSurveyFile({
+    surveyId: surveyDb.id,
+  });
+  // stored with a previous arena-core version: rebuild the dependency graph and store it again
+  return SurveyDependencyGraphs.isOutdated(surveyLoaded)
+    ? storeSurveyInFileSystem(surveyLoaded)
+    : surveyLoaded;
 };
 
 const fetchCategoryItems = ({
