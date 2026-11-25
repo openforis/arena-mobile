@@ -1,6 +1,5 @@
 import {
   ArenaNodeDefEntity,
-  ArenaNodeDefEntityLayout,
   ArenaRecord,
   ArenaRecordNode,
   RecordBuilder,
@@ -69,7 +68,7 @@ describe("RecordPageNavigator", () => {
     // "notes" is rendered inside the parent page
     for (const name of ["cluster", "general", "plot", "tree"] as const) {
       defs[name].props.layout = {
-        "0": { pageUuid: `page_${name}` } as ArenaNodeDefEntityLayout,
+        "0": { pageUuid: `page_${name}` },
       };
     }
 
