@@ -6,7 +6,7 @@ import {
   ArenaVernacularName,
 } from "@openforis/arena-core";
 
-import { Taxa } from "model/Taxa";
+import { Taxa } from "model/utils/Taxa";
 import { LanguageUtils } from "utils/LanguageUtils";
 
 import { buildTaxonSearchKeys, TaxonSearchItem } from "./taxaSearch";

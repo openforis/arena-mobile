@@ -6,7 +6,7 @@ import {
   ArenaUserGroup,
 } from "@openforis/arena-core";
 
-import { SurveyPackage } from "model/SurveyPackage";
+import { SurveyPackage } from "model/utils/SurveyPackage";
 import type { SurveySummaryRemote } from "model/SurveySummary";
 import { Files, log } from "utils";
 import { HttpErrors } from "utils/HttpErrors";
