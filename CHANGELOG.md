@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Expressions: new functions `appId()`, `appVersion()`, `appPlatform()` (evaluated again when a record is edited with another app, platform or app version), `nodeDateCreated(node)` and `nodeDateModified(node)` (e.g. `nodeDateModified(parent(this))`);
+- Expressions: new functions `appId()`, `appIdLabel()` ("Arena" or "Arena Mobile"), `appVersion()`, `appPlatform()` (evaluated again when a record is edited with another app, platform or app version), `nodeDateCreated(node)` and `nodeDateModified(node)` (e.g. `nodeDateModified(parent(this))`);
 
 ### Changed
 
