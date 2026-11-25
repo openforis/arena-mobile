@@ -1,6 +1,6 @@
 const mockFetchSettings = jest.fn();
 
-jest.mock("service/settingsService", () => ({
+jest.mock("service/settings/settingsService", () => ({
   SettingsService: { fetchSettings: () => mockFetchSettings() },
 }));
 jest.mock("utils/SystemUtils", () => ({

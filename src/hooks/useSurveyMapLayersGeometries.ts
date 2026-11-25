@@ -7,8 +7,8 @@ import {
 } from "@openforis/arena-core";
 
 import { SurveyDefs } from "model/utils/SurveyDefs";
-import { AreaOfInterestProviderDefault } from "service/areaOfInterestProvider";
-import { PreloadedMapLayerService } from "service/preloadedMapLayerService";
+import { AreaOfInterestProviderDefault } from "service/survey/areaOfInterestProvider";
+import { PreloadedMapLayerService } from "service/survey/preloadedMapLayerService";
 import type { MapLayerFileGeometries } from "utils/MapLayerFileParser";
 
 import { useLazyLoadedByKey } from "./useLazyLoadedByKey";

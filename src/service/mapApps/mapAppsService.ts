@@ -1,4 +1,4 @@
-import { PreferencesService } from "../preferencesService";
+import { PreferencesService } from "../settings/preferencesService";
 import { MapApp, MapAppsAdapter } from "./mapAppsAdapter";
 
 export type { MapApp };

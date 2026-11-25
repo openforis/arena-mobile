@@ -9,7 +9,7 @@ import {
 
 import type { RecordCurrentPageEntityPointer } from "model";
 
-import { RecordService } from "service/recordService";
+import { RecordService } from "service/record/recordService";
 import { log } from "utils";
 
 import { SurveySelectors } from "../survey/selectors";

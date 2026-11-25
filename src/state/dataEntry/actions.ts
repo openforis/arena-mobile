@@ -18,9 +18,9 @@ import {
   UserGroupQualifiers,
 } from "model";
 import type { Navigator } from "navigation/navigator";
-import type { RecordLastEditedPage } from "service/preferencesService";
-import { PreferencesService } from "service/preferencesService";
-import { RecordService } from "service/recordService";
+import type { RecordLastEditedPage } from "service/settings/preferencesService";
+import { PreferencesService } from "service/settings/preferencesService";
+import { RecordService } from "service/record/recordService";
 
 import { log, SystemUtils } from "utils";
 

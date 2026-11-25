@@ -1,6 +1,9 @@
 import { useCallback, useState } from "react";
 
-import { invalidTwoFactorCodeError, LoginResponse } from "service/authService";
+import {
+  invalidTwoFactorCodeError,
+  LoginResponse,
+} from "service/auth/authService";
 
 import {
   toTwoFactorToken,

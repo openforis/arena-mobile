@@ -4,9 +4,9 @@ import { AxiosProgressEvent, CanceledError } from "axios";
 import { HttpErrors } from "utils/HttpErrors";
 import { SystemUtils } from "utils/SystemUtils";
 
-import { API } from "./api";
-import { SettingsService } from "./settingsService";
-import { AuthService } from "./authService";
+import { API } from "../api";
+import { SettingsService } from "../settings/settingsService";
+import { AuthService } from "../auth/authService";
 
 // checked by the server to reject requests from app versions it doesn't support anymore
 const appVersionHeader = "X-Arena-Mobile-App-Version";

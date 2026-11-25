@@ -2,7 +2,7 @@ import i18n, { InitOptions, LanguageDetectorAsyncModule } from "i18next";
 import { initReactI18next } from "react-i18next";
 
 import { LanguageConstants } from "model/LanguageSettings";
-import { SettingsService } from "service/settingsService";
+import { SettingsService } from "service/settings/settingsService";
 import { SystemUtils } from "utils/SystemUtils";
 
 import en from "./en";

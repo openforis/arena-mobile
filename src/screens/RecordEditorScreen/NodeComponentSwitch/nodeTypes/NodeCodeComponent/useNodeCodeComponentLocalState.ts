@@ -9,7 +9,7 @@ import {
   Surveys,
 } from "@openforis/arena-core";
 
-import { SurveyService } from "service/surveyService";
+import { SurveyService } from "service/survey/surveyService";
 
 import {
   DataEntryActions,

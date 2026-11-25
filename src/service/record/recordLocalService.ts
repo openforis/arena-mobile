@@ -18,9 +18,9 @@ import { ArrayUtils, log, PromiseUtils } from "utils";
 import {
   RecordKeyValue,
   RecordRepository,
-} from "./repository/recordRepository";
+} from "../repository/recordRepository";
 import { RecordFileService } from "./recordFileService";
-import { AreaOfInterestProviderDefault } from "./areaOfInterestProvider";
+import { AreaOfInterestProviderDefault } from "../survey/areaOfInterestProvider";
 
 type RecordsDeleteParams = {
   surveyId: number | undefined;

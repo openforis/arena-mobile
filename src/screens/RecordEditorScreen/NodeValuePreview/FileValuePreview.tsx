@@ -6,7 +6,7 @@ import {
 } from "@openforis/arena-core";
 
 import { AudioPlayback } from "components/Audio";
-import { RecordFileService } from "service/recordFileService";
+import { RecordFileService } from "service/record/recordFileService";
 import { SurveySelectors } from "state/survey";
 
 import { NodeValuePreviewProps } from "./NodeValuePreviewPropTypes";

@@ -1,21 +1,21 @@
 import { DataMigrationService } from "./dataMigrationService";
-import { RecordService } from "./recordService";
-import { SurveyRepository } from "./repository/surveyRepository";
-import { SurveyService } from "./surveyService";
+import { RecordService } from "../record/recordService";
+import { SurveyRepository } from "../repository/surveyRepository";
+import { SurveyService } from "../survey/surveyService";
 
-jest.mock("./surveyService", () => ({
+jest.mock("../survey/surveyService", () => ({
   SurveyService: {
     fetchSurveySummariesLocal: jest.fn(),
     fetchSurveyById: jest.fn(),
   },
 }));
-jest.mock("./recordService", () => ({
+jest.mock("../record/recordService", () => ({
   RecordService: {
     fetchRecordsWithEmptyCycle: jest.fn(async () => []),
     fixRecordCycle: jest.fn(),
   },
 }));
-jest.mock("./repository/surveyRepository", () => ({
+jest.mock("../repository/surveyRepository", () => ({
   SurveyRepository: { updateSurveyDescription: jest.fn() },
 }));
 jest.mock("utils", () => ({ log: { warn: jest.fn() } }));

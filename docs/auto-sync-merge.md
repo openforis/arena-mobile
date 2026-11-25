@@ -209,7 +209,7 @@ arena, branch `feat/records-export-exclude-files` (on top of
 arena-mobile, branch `feat/records-fetch-exclude-files` (on top of
 `feat/auto-sync-merge`):
 
-- `src/service/recordService.ts` (`findFileUuidsInDevice`), `recordRemoteService.ts`,
+- `src/service/record/recordService.ts` (`findFileUuidsInDevice`), `recordRemoteService.ts`,
   `src/service/repository/recordRepository.ts` (`fetchRecordsFileUuids`),
   `src/state/dataEntry/actionsRecordsImport.ts`: S7.
 

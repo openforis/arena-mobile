@@ -21,7 +21,10 @@ import { SurveyActions } from "../survey";
 import { loginAndSetUser } from "./actionsLoginAndSetUser";
 import { RemoteConnectionSliceActions } from "./reducer";
 import { RemoteConnectionSelectors } from "./selectors";
-import { invalidTwoFactorCodeError, LoginResponse } from "service/authService";
+import {
+  invalidTwoFactorCodeError,
+  LoginResponse,
+} from "service/auth/authService";
 import type { AppDispatch, AppGetState } from "../store";
 
 const confirmGoToConnectionToRemoteServer =

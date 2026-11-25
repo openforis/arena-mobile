@@ -11,7 +11,7 @@ import { ArenaRecordNodeValueFile, UUIDs } from "@openforis/arena-core";
 import { useToast } from "hooks";
 import { useTranslation } from "localization";
 import { useNodeComponentLocalState } from "screens/RecordEditorScreen/useNodeComponentLocalState";
-import { RecordFileService } from "service/recordFileService";
+import { RecordFileService } from "service/record/recordFileService";
 import { SurveySelectors } from "state/survey/selectors";
 import { Files, Permissions } from "utils";
 

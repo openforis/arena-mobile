@@ -6,7 +6,7 @@ import {
   MapLayerFileParser,
 } from "utils/MapLayerFileParser";
 import { log } from "utils/Logger";
-import { SurveyFSRepository } from "./repository/surveyFSRepository";
+import { SurveyFSRepository } from "../repository/surveyFSRepository";
 
 const readKmz = async (fileUri: string): Promise<MapLayerFileGeometries> => {
   const unzippedDirUri = await Files.createTempFolder();

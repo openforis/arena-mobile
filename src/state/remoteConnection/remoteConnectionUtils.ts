@@ -1,4 +1,4 @@
-import { AppService } from "service/appService";
+import { AppService } from "service/app/appService";
 import type { Navigator } from "navigation/navigator";
 import { RemoteConnectionActions } from "./actions";
 import type { AppDispatch } from "../store";

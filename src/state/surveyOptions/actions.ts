@@ -1,4 +1,4 @@
-import { PreferencesService } from "service/preferencesService";
+import { PreferencesService } from "service/settings/preferencesService";
 
 import { SurveySelectors } from "../survey/selectors";
 import type { AppDispatch, AppGetState } from "../store";

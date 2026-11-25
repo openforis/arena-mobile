@@ -1,7 +1,7 @@
 import { PreviewMode } from "utils/PreviewMode";
 
-import { RecordFileMemoryRepository } from "./repository/recordFileMemoryRepository";
-import { RecordFileRepository } from "./repository/recordFileRepository";
+import { RecordFileMemoryRepository } from "../repository/recordFileMemoryRepository";
+import { RecordFileRepository } from "../repository/recordFileRepository";
 
 const {
   getRecordFilesParentDirectoryUri,

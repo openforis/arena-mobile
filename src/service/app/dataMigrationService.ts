@@ -2,9 +2,9 @@ import { Promises } from "@openforis/arena-core";
 
 import { log } from "utils";
 
-import { RecordService } from "./recordService";
-import { SurveyRepository } from "./repository/surveyRepository";
-import { SurveyService } from "./surveyService";
+import { RecordService } from "../record/recordService";
+import { SurveyRepository } from "../repository/surveyRepository";
+import { SurveyService } from "../survey/surveyService";
 
 const fixRecordCycle = async () => {
   const surveySummaries = await SurveyService.fetchSurveySummariesLocal();

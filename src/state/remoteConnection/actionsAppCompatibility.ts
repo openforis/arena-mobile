@@ -4,7 +4,7 @@ import { checkVersion } from "react-native-check-version";
 import {
   AppCompatibilityOperation,
   AppCompatibilityService,
-} from "service/appCompatibilityService";
+} from "service/remote/appCompatibilityService";
 import { log } from "utils";
 
 import { ConfirmActions } from "../confirm";

@@ -4,8 +4,8 @@ import { AxiosResponse } from "axios";
 
 import { ArenaDictionary, ArenaUser } from "@openforis/arena-core";
 
-import { API } from "./api";
-import { APIUtils } from "./api/apiUtils";
+import { API } from "../api";
+import { APIUtils } from "../api/apiUtils";
 import {
   base64ToBase64Url,
   bytesToBase64Url,
@@ -16,7 +16,7 @@ import {
   getExternalLoginStartUri,
 } from "./externalLoginUtils";
 import { SecureStoreService } from "./SecureStoreService";
-import { SettingsService } from "./settingsService";
+import { SettingsService } from "../settings/settingsService";
 import { HttpErrors } from "utils/HttpErrors";
 import { log } from "utils/Logger";
 import { SystemUtils } from "utils/SystemUtils";
