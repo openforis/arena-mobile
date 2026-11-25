@@ -2,8 +2,7 @@ import { useCallback, useState } from "react";
 
 import type { ConfirmShowParams } from "state/confirm";
 import { useConfirm } from "state/confirm/hooks";
-
-import { runConfirmedAction } from "./confirmedActionUtils";
+import { runConfirmedAction } from "utils/confirmedActionUtils";
 
 // asks for confirmation, then runs the action tracking its running state; resolves to true if confirmed
 export const useConfirmedAction = () => {
