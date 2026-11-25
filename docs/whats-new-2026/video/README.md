@@ -5,7 +5,11 @@ A motion-graphics video of the Arena Mobile "What's new in 2026" deck, narrated 
 It uses the same engine as the Arena video (`docs/whats-new-2026/video` in openforis/arena), with the Mobile colours and
 phone frames.
 
-- `arena-mobile-whats-new-2026.mp4`: the video (4K, 3840×2160, about 2.5 minutes).
+- [`arena-mobile-whats-new-2026.mp4`](https://github.com/openforis/arena-mobile/releases/download/v3.0.0/arena-mobile-whats-new-2026.mp4):
+  the video (4K, 3840×2160, about 2.5 minutes), attached to the [v3.0.0 release](https://github.com/openforis/arena-mobile/releases/tag/v3.0.0)
+  instead of being committed (`*.mp4` is git-ignored here). After rebuilding it, upload it to the release
+  (`gh release upload v3.0.0 arena-mobile-whats-new-2026.mp4 --clobber`) or run the "What's new video release asset"
+  workflow, which takes it from a commit that contains it.
 - `scenes.json`: the script: for each scene, the narration (`say`, one entry per sentence) and the animated items
   (`phone` and `shot` screenshots, chips, cards, ...). An item with `"at": n` appears when sentence `n` starts (plus
   `delay` seconds). Acronyms are spelled with hyphens (e.g. "i-O-S") so that the voice pronounces them letter by letter.
