@@ -1,7 +1,7 @@
 # Position tracking – test and completion plan
 
 Branch: `claude/feat-position-tracking-boma8t` (PR #256). Feature design:
-`docs/position-tracking-plan.md`.
+`docs/plans/position-tracking-plan.md`.
 
 What is left before the feature can be released:
 
