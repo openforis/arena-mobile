@@ -1,6 +1,7 @@
 import { Dates } from "@openforis/arena-core";
 
 import { AreaOfInterestProviderDefault } from "service/survey/areaOfInterestProvider";
+import { SystemUtils } from "utils";
 
 import { RemoteConnectionSelectors } from "../remoteConnection";
 import { SurveySelectors } from "../survey";
@@ -15,4 +16,6 @@ export const selectRecordUpdaterParams = (state: RootState) => ({
   areaOfInterestProvider: AreaOfInterestProviderDefault,
   // otherwise date/time default values (e.g. now()) are converted in UTC
   timezoneOffset: Dates.getTimezoneOffset(),
+  // app info functions (appId(), appVersion(), appPlatform()) and their re-evaluation when the app changes
+  appInfo: SystemUtils.getRecordAppInfo(),
 });
