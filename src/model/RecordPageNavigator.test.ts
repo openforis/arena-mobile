@@ -39,19 +39,10 @@ describe("RecordPageNavigator", () => {
   let defs: Record<DefName, ArenaNodeDefEntity>;
   let nodes: Record<NodeName, ArenaRecordNode>;
 
-  // the pointers in the tests have the shape of the returned ones
-  const next = (pointer: RecordPageEntityPointer) =>
-    getNextEntityPointer({
-      survey,
-      record,
-      currentEntityPointer: pointer as RecordCurrentPageEntity,
-    });
-  const prev = (pointer: RecordPageEntityPointer) =>
-    getPrevEntityPointer({
-      survey,
-      record,
-      currentEntityPointer: pointer as RecordCurrentPageEntity,
-    });
+  const next = (currentEntityPointer: RecordPageEntityPointer) =>
+    getNextEntityPointer({ survey, record, currentEntityPointer });
+  const prev = (currentEntityPointer: RecordPageEntityPointer) =>
+    getPrevEntityPointer({ survey, record, currentEntityPointer });
 
   beforeAll(async () => {
     survey = await new SurveyBuilder(
@@ -124,6 +115,20 @@ describe("RecordPageNavigator", () => {
           entityUuid: nodes.root.uuid,
         }),
       ).toEqual({
+        parentEntityUuid: nodes.root.uuid,
+        entityDef: defs.general,
+        entityUuid: nodes.general.uuid,
+      });
+    });
+
+    test("accepts the current page entity (undefined uuids, entityDefUuid)", () => {
+      const currentPageEntity: RecordCurrentPageEntity = {
+        entityDefUuid: defs.plot.uuid,
+        entityDef: defs.plot,
+        parentEntityUuid: nodes.root.uuid,
+      };
+      expect(next(currentPageEntity)).toBeNull();
+      expect(prev(currentPageEntity)).toEqual({
         parentEntityUuid: nodes.root.uuid,
         entityDef: defs.general,
         entityUuid: nodes.general.uuid,

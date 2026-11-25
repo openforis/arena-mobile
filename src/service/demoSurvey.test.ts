@@ -1,6 +1,5 @@
 import {
   ArenaAnyNodeDef,
-  ArenaCategoryItem,
   ArenaNodeDefCode,
   ArenaNodeDefTaxon,
   ArenaRecordNode,
@@ -160,6 +159,11 @@ describe("Demo survey", () => {
       );
     });
 
+    // stored as remote_id (INTEGER column): existing installs already have the number 1
+    test("has a numeric id", () => {
+      expect(demoSurveyJson.id).toBe(1);
+    });
+
     test("keeps the same UUID and root keys", () => {
       expect(survey.uuid).toBe(demoSurveyUuid);
       const rootDef = Surveys.getNodeDefRoot({ survey });
@@ -253,18 +257,13 @@ describe("Demo survey", () => {
       ).toBe(true);
     });
 
-    test("category items reference existing categories and levels", () => {
-      // the bundled items also have the category uuid
-      const categoryItemIndex = (survey.refData?.categoryItemIndex ??
-        {}) as Record<string, ArenaCategoryItem & { categoryUuid: string }>;
+    test("category items reference existing levels and parent items", () => {
+      const categoryItemIndex = survey.refData?.categoryItemIndex ?? {};
+      const levelUuids = Object.values(survey.categories ?? {}).flatMap(
+        (category) =>
+          Object.values(category.levels ?? {}).map((level) => level.uuid),
+      );
       for (const item of Object.values(categoryItemIndex)) {
-        const category = survey.categories?.[item.categoryUuid];
-        if (!category) {
-          throw new Error(`category not found: ${item.categoryUuid}`);
-        }
-        const levelUuids = Object.values(category.levels ?? {}).map(
-          (level) => level.uuid,
-        );
         expect(levelUuids).toContain(item.levelUuid);
         if (item.parentUuid) {
           expect(categoryItemIndex[item.parentUuid]).toBeDefined();

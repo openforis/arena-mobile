@@ -14,6 +14,7 @@ import {
 } from "@openforis/arena-core";
 
 import { ScreenOrientation } from "model/ScreenOrientation";
+import { AppPlatforms } from "./AppPlatforms";
 import { Environment } from "./Environment";
 import { Files } from "./Files";
 
@@ -29,7 +30,8 @@ const { nativeBuildVersion: buildNumber, nativeApplicationVersion } =
 const version = nativeApplicationVersion ?? defaultVersion;
 
 const appId = "am";
-const { isAndroid, isExpoGo, platform } = Environment;
+const { isAndroid, isExpoGo, platform: platformOS } = Environment;
+const platform = AppPlatforms.fromPlatformOS(platformOS);
 
 let SystemNavigationBar:
   (typeof import("react-native-system-navigation-bar"))["default"] | undefined;
@@ -62,7 +64,7 @@ const getApplicationInfo = async (): Promise<ArenaMobileAppInfo> => {
     appId,
     buildNumber,
     version,
-    platform: isAndroid ? "android" : "ios",
+    platform,
     lastUpdateTime: lastUpdateTime
       ? Dates.formatForStorage(lastUpdateTime)
       : null,
@@ -72,8 +74,7 @@ const getApplicationInfo = async (): Promise<ArenaMobileAppInfo> => {
 const getRecordAppInfo = (): ArenaMobileAppInfo => ({
   appId,
   version,
-  // Platform.OS is wider than the platforms supported by the app
-  platform: platform as ArenaMobileAppInfo["platform"],
+  platform,
 });
 
 const setFullScreen = async (fullScreen: boolean | undefined) => {
