@@ -5,15 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [3.0.1] - 2026-11-27
 
 ### Added
 
 - Expressions: new functions `appId()`, `appIdLabel()` ("Arena" or "Arena Mobile"), `appVersion()`, `appPlatform()` (evaluated again when a record is edited with another app, platform or app version), `nodeDateCreated(node)` and `nodeDateModified(node)` (e.g. `nodeDateModified(parent(this))`);
+- Local surveys list: survey description shown, like in the remote surveys list;
+- Remote surveys list: "updated" status shown when a newer version of a local survey is published;
+- Coordinate attribute: warning shown when the GPS location cannot be converted to the selected SRS;
 
 ### Changed
 
 - Web preview: app platform reported as "web" instead of "ios";
+
+### Fixed
+
+- Coordinate attribute: crash when the GPS location cannot be converted to the selected SRS;
+- Location averaging: invalid values when altitude, altitude accuracy or speed are missing;
+- Slider: value not set correctly on Android 8.1 and earlier;
+- General improvements and bug fixing;
 
 ## [3.0.0] - 2026-11-19
 
