@@ -1,4 +1,5 @@
-import { CustomMapLayer, MapLayerId, MapLayers } from "./MapLayers";
+import { CustomMapLayer, MapLayerId } from "../MapLayer";
+import { MapLayers } from "./MapLayers";
 
 const customLayer: CustomMapLayer = {
   id: "custom_1",

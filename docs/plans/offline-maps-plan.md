@@ -54,7 +54,7 @@ the same layer share tiles (overlapping areas are not downloaded twice).
 
 ## Map layers (free providers)
 
-Defined in `src/model/MapLayers.ts`:
+Defined in `src/model/MapLayer.ts` (types) and `src/model/utils/MapLayers.ts` (built-in layers and helpers):
 
 | id | type | url | max zoom | prefetch |
 |---|---|---|---|---|

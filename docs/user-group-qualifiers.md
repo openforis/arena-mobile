@@ -114,8 +114,8 @@ not edit (`props.readableGroupUuids`). The server includes those records in the 
 
 - The flag is stored in the `read_only` column of the `record` table (migration `004`) and
   refreshed at every sync with the server summaries (`updateLocalRecordsReadOnly` in
-  `src/service/record/recordService.ts`), so changes to the group settings take effect on the next sync.
+  `src/service/record/recordSyncService.ts`), so changes to the group settings take effect on the next sync.
 - `DataEntrySelectors.selectCanEditRecord` returns false for those records, and the edit lock can't
   be removed; the record editor shows a banner, and the records list a lock icon.
 - They are left out of "Send data" and auto-sync. They can be cloned: the clone gets the
-  qualifier values of the user's own group (see `prepareClonedRecord`).
+  qualifier values of the user's own group (see `prepareClonedRecord` in `src/service/record/recordLocalService.ts`).

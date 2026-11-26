@@ -16,8 +16,8 @@ export {
   LanguagesSettings,
 } from "./LanguageSettings";
 export type { LocationPoint, AveragedLocation, LatLng } from "./LocationPoint";
-export { MapLayerId, MapLayerType, MapLayers, MapProvider } from "./MapLayers";
-export type { CustomMapLayer, MapLayer } from "./MapLayers";
+export { MapLayerId, MapLayerType, MapProvider } from "./MapLayer";
+export type { CustomMapLayer, MapLayer } from "./MapLayer";
 export type { OfflineMapArea } from "./OfflineMapArea";
 export type { ImportedMap, ImportedMapSourceType } from "./ImportedMap";
 export type {
@@ -47,6 +47,7 @@ export { UpdateStatus } from "./UpdateStatus";
 export { UserLogoutOptions } from "./UserLogoutOptions";
 
 export { Cycles } from "./utils/Cycles";
+export { MapLayers } from "./utils/MapLayers";
 export { PositionTracks, TrackPointRejectReason } from "./utils/PositionTracks";
 export type {
   TrackFeature,
