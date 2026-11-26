@@ -1,5 +1,5 @@
 import { JobMobile, JobMobileContext } from "model/JobMobile";
-import { MapLayers } from "model/MapLayers";
+import { MapLayers } from "model/utils/MapLayers";
 import { OfflineMapArea } from "model/OfflineMapArea";
 import { Files } from "utils/Files";
 import { log } from "utils/Logger";

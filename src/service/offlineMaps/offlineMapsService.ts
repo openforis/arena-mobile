@@ -1,7 +1,7 @@
 import { UUIDs, ArenaUser } from "@openforis/arena-core";
 
 import { LatLng } from "model/LocationPoint";
-import { MapLayers } from "model/MapLayers";
+import { MapLayers } from "model/utils/MapLayers";
 import { OfflineMapArea } from "model/OfflineMapArea";
 import { Files } from "utils/Files";
 import { GeoUtils } from "utils/GeoUtils";

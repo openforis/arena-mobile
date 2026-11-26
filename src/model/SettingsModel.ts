@@ -2,7 +2,7 @@ import { Environment } from "utils/Environment";
 import { GpsSourceSetting } from "./GpsSourceSettings";
 import { ThemesSettings } from "./Themes";
 import { LanguageConstants, LanguagesSettings } from "./LanguageSettings";
-import { CustomMapLayer, MapProvider } from "./MapLayers";
+import { CustomMapLayer, MapProvider } from "./MapLayer";
 import { ImportedMap } from "./ImportedMap";
 
 enum PropertyType {
