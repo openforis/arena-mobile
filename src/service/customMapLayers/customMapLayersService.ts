@@ -1,6 +1,7 @@
 import { UUIDs } from "@openforis/arena-core";
 
-import { CustomMapLayer, MapLayers } from "model/MapLayers";
+import { CustomMapLayer } from "model/MapLayer";
+import { MapLayers } from "model/utils/MapLayers";
 import { SettingsObject } from "model/SettingsModel";
 import { Files } from "utils/Files";
 import { log } from "utils/Logger";
