@@ -3,7 +3,7 @@
 ## For users
 
 - [`user-manual/`](user-manual/): the user manual (`.docx` source; the `.pdf` is built by the User manual workflow), its screenshots and the scripts that build and translate it (see its [README](user-manual/README.md)).
-- [`whats-new-2026/`](whats-new-2026/): the "What's new in 2026" presentation (`.pptx`, `.pdf`), its images and the narrated [video](whats-new-2026/video/README.md). Not used by the app (the in-app "What's new" dialog uses `assets/whatsNew/`).
+- [`whats-new-2026/`](whats-new-2026/): the "What's new in 2026" presentation (`.pptx`, `.pdf`), its images and the sources of the narrated [video](whats-new-2026/video/README.md) (the video itself is a [v3.0.0 release asset](https://github.com/openforis/arena-mobile/releases/download/v3.0.0/arena-mobile-whats-new-2026.mp4)). Not used by the app (the in-app "What's new" dialog uses `assets/whatsNew/`).
 
 ## Reference notes
 
