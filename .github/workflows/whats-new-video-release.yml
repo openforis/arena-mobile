@@ -1,0 +1,38 @@
+name: What's new video release asset
+
+# Attaches the "What's new in 2026" video (docs/whats-new-2026/video) to a GitHub release.
+# The video is no longer in the tree: it is taken from the commit that last contained it (source_ref).
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Tag of an existing release (e.g. v3.0.0)
+        required: true
+        default: v3.0.0
+      source_ref:
+        description: Commit containing docs/whats-new-2026/video/arena-mobile-whats-new-2026.mp4
+        required: true
+        default: d6258c7a81595d57eb74d1f7a8597d6cb89a87a1
+
+jobs:
+  whats-new-video:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.source_ref }}
+          sparse-checkout: docs/whats-new-2026/video
+          persist-credentials: false
+
+      - name: Upload release asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          gh release upload "$TAG" \
+            docs/whats-new-2026/video/arena-mobile-whats-new-2026.mp4 \
+            --clobber --repo "$GITHUB_REPOSITORY"
