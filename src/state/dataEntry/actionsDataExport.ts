@@ -179,6 +179,34 @@ const confirmRecordsWithMissingFiles = async ({
   return !!confirmResult;
 };
 
+// when silent (auto-sync), never block on the missing-files confirmation:
+// proceed straight to uploading what's available, same outcome as the user confirming it
+const confirmMissingFilesIfNeeded = async ({
+  recordsWithMissingFiles,
+  dispatch,
+  silent,
+  batchesState,
+}: {
+  recordsWithMissingFiles: RecordsExportFileGenerationJobResult["recordsWithMissingFiles"];
+  dispatch: AppDispatch;
+  silent: boolean;
+  batchesState?: BatchesState;
+}): Promise<boolean> => {
+  if (
+    recordsWithMissingFiles.length === 0 ||
+    silent ||
+    batchesState?.missingFilesConfirmed
+  ) {
+    return true;
+  }
+  const confirmed = await confirmRecordsWithMissingFiles({
+    recordsWithMissingFiles,
+    dispatch,
+  });
+  if (confirmed && batchesState) batchesState.missingFilesConfirmed = true;
+  return confirmed;
+};
+
 // resolves with the upload job summary when awaitUpload is true and the upload completes, null otherwise
 const _onExportFileGenerationSucceeded = async ({
   result,
@@ -209,22 +237,16 @@ const _onExportFileGenerationSucceeded = async ({
     return null;
   }
 
-  // when silent (auto-sync), never block on the missing-files confirmation:
-  // proceed straight to uploading what's available, same outcome as the user confirming it
   if (
-    recordsWithMissingFiles.length > 0 &&
-    !silent &&
-    !batchesState?.missingFilesConfirmed
-  ) {
-    const confirmed = await confirmRecordsWithMissingFiles({
+    !(await confirmMissingFilesIfNeeded({
       recordsWithMissingFiles,
       dispatch,
-    });
-    if (!confirmed) {
-      if (onlyRemote) await deleteExportFile(outputFileUri);
-      return null;
-    }
-    if (batchesState) batchesState.missingFilesConfirmed = true;
+      silent,
+      batchesState,
+    }))
+  ) {
+    if (onlyRemote) await deleteExportFile(outputFileUri);
+    return null;
   }
 
   const skipMissingFiles = recordsWithMissingFiles.length > 0;
@@ -433,19 +455,21 @@ const exportRecordsBatch =
       await onJobCompleteParam?.(jobComplete);
     };
 
-    let postUploadProcessing: Promise<void> | null = null;
+    // set by onJobComplete, called by the job monitor
+    const postUploadProcessing: { promise?: Promise<void> } = {};
     const onJobComplete = (jobComplete: UploadJobSummary) => {
-      postUploadProcessing =
+      postUploadProcessing.promise =
         DataEntryActionsRecordSync.runAsPostUploadProcessing(() =>
           onUploadComplete(jobComplete),
         );
-      return postUploadProcessing;
+      return postUploadProcessing.promise;
     };
 
     const monitorOptions = getBatchMonitorOptions(batch);
+    const batchText = batch ? `${batch.index + 1}/${batch.count}` : "-";
 
     log.debug(
-      `exportRecords: starting (recordUuids=${recordUuids?.length ?? 0}, onlyLocally=${onlyLocally}, onlyRemote=${onlyRemote}, silent=${silent}, batch=${batch ? `${batch.index + 1}/${batch.count}` : "-"})`,
+      `exportRecords: starting (recordUuids=${recordUuids?.length ?? 0}, onlyLocally=${onlyLocally}, onlyRemote=${onlyRemote}, silent=${silent}, batch=${batchText})`,
     );
     try {
       const user = onlyLocally ? {} : await UserService.fetchUser();
@@ -500,7 +524,7 @@ const exportRecordsBatch =
         batchesState,
       });
       // the next batch starts only once this one's records have been updated
-      await postUploadProcessing;
+      await postUploadProcessing.promise;
       return uploadJobComplete;
     } catch (error) {
       // a failed job is rejected with its summary (see JobMonitorActions.startAsync)
