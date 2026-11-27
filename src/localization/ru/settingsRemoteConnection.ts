@@ -1,6 +1,9 @@
 export default {
   clearCredentials: "Очистить учетные данные",
   clearCredentialsConfirmMessage: "Очистить учетные данные пользователя?",
+  createAccount: "Создать учётную запись",
+  createAccountBeforeLoggingIn:
+    "Сначала создайте учётную запись: войти могут только зарегистрированные пользователи.",
   email: "Электронная почта",
   errorConnectingWithServer: "Ошибка подключения к серверу",
   forgotPassword: "Забыли пароль?",
@@ -17,10 +20,7 @@ export default {
 2. нажмите кнопку в правом верхнем углу и откройте меню пользователя
 3. выберите **Вход из Arena Mobile с помощью QR-кода**
 4. отсканируйте отображаемый QR-код`,
-  registerBeforeLoggingIn:
-    "Сначала запросите доступ: войти могут только зарегистрированные пользователи.",
   registeredUsersOnly: "Только для зарегистрированных пользователей",
-  requestAccess: "Запросить доступ",
   scanQrCode: "Сканировать QR-код",
   serverUrl: "URL сервера",
   serverUrlNotValid: "Неверный URL сервера",

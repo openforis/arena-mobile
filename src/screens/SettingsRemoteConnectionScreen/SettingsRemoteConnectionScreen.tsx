@@ -27,7 +27,7 @@ import { AMConstants } from "utils";
 
 import { ExternalLoginButtons } from "./ExternalLoginButtons";
 import { LoggedInUserSummary } from "./LoggedInUserSummary";
-import { RequestAccessBanner } from "./RequestAccessBanner";
+import { CreateAccountBanner } from "./CreateAccountBanner";
 import { ServerUrlType } from "./remoteConnectionUtils";
 import { TwoFactorVerification } from "./TwoFactorVerification";
 import { useSettingsRemoteConnection } from "./useSettingsRemoteConnection";
@@ -140,7 +140,7 @@ export const SettingsRemoteConnectionScreen = () => {
     <ScreenView>
       <VView style={styles.container}>
         {offlineBanner}
-        <RequestAccessBanner />
+        <CreateAccountBanner />
         <Card contentStyle={styles.cardContent}>
           <AppLogo style={styles.logo} />
           <TextInput

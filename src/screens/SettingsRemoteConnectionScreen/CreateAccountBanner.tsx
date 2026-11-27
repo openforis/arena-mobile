@@ -11,12 +11,12 @@ const styles = StyleSheet.create({
   title: { fontWeight: "bold" },
 });
 
-const openRequestAccessPage = async () => {
-  await WebBrowser.openBrowserAsync(AMConstants.requestAccessUrl);
+const openCreateAccountPage = async () => {
+  await WebBrowser.openBrowserAsync(AMConstants.createAccountUrl);
 };
 
-// shown first, so that new users request access before trying to log in (e.g. with Google)
-export const RequestAccessBanner = () => {
+// shown first, so that new users create an account before trying to log in (e.g. with Google)
+export const CreateAccountBanner = () => {
   const theme = useEffectiveTheme();
   const textStyle = { color: theme.colors.onSecondaryContainer };
   return (
@@ -25,7 +25,7 @@ export const RequestAccessBanner = () => {
         styles.container,
         { backgroundColor: theme.colors.secondaryContainer },
       ]}
-      testID="remote-connection-request-access-banner"
+      testID="remote-connection-create-account-banner"
     >
       <VView style={styles.textContainer}>
         <Text
@@ -34,13 +34,13 @@ export const RequestAccessBanner = () => {
         />
         <Text
           style={textStyle}
-          textKey="settingsRemoteConnection:registerBeforeLoggingIn"
+          textKey="settingsRemoteConnection:createAccountBeforeLoggingIn"
           variant="bodySmall"
         />
       </VView>
       <Button
-        onPress={openRequestAccessPage}
-        textKey="settingsRemoteConnection:requestAccess"
+        onPress={openCreateAccountPage}
+        textKey="settingsRemoteConnection:createAccount"
       />
     </HView>
   );
