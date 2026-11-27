@@ -379,6 +379,7 @@ Kontrollera inställningarna eller be undersökningsadministratören att ändra 
     exportedSuccessfullyButFilesMissing:
       "Data exporterades framgångsrikt, men {{missingFiles}} filer/bilder saknas eller är skadade. Vänligen kontrollera dina register och även registren på servern.",
     exportingData: "Exporterar data...",
+    uploadBatch: "Del {{batch}} av {{batchCount}}",
     exportToCsv: "Exportera till CSV",
     mergeConflictingRecords: "Slå samman konflikterande poster",
     mergeWithSameKeysNotAllowed:

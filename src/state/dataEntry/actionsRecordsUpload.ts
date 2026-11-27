@@ -26,11 +26,13 @@ import { SurveySelectors } from "../survey";
 import {
   errorOrJobToString,
   isAuthErrorOrFailedJobAuthError,
-  REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES,
+  ProgressRange,
 } from "./dataExportUtils";
 import { i18n } from "localization";
 
 const { t } = i18n;
+
+type UploadJobSummary = ArenaJobSerialized<RecordsUploadResult | undefined>;
 
 // a failed job rejects with its summary (see JobMonitorActions.startAsync)
 type FailedJobSummary = Partial<
@@ -139,10 +141,12 @@ export const startUploadDataToRemoteServer =
     skipMissingFiles = false,
     onJobComplete = null,
     silent = false,
-    // true when the whole zip-generation -> upload+processing chain was known upfront (see
-    // REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES) - so this phase can keep filling the same overall
+    // set when the whole zip-generation -> upload+processing chain was known upfront (see
+    // getRemoteUploadChainProgressRanges) - so this phase can keep filling the same overall
     // progress bar the zip-generation phase already started, instead of resetting it back to 0%
-    chained = false,
+    progressRange = undefined,
+    messageKey = undefined,
+    messageParams = undefined,
   }: {
     outputFileUri: string;
     conflictResolutionStrategy?: string;
@@ -153,9 +157,14 @@ export const startUploadDataToRemoteServer =
         ) => void | Promise<void>)
       | null;
     silent?: boolean;
-    chained?: boolean;
+    progressRange?: ProgressRange;
+    messageKey?: string;
+    messageParams?: Record<string, unknown>;
   }) =>
-  async (dispatch: AppDispatch, getState: AppGetState) => {
+  async (
+    dispatch: AppDispatch,
+    getState: AppGetState,
+  ): Promise<UploadJobSummary | null> => {
     const state = getState();
     const user = RemoteConnectionSelectors.selectLoggedUser(state);
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
@@ -172,7 +181,7 @@ export const startUploadDataToRemoteServer =
         // shown through the sync status icon, as the other unattended upload failures
         dispatch(AutoSyncActions.checkError());
       }
-      return;
+      return null;
     }
 
     log.debug(
@@ -197,17 +206,11 @@ export const startUploadDataToRemoteServer =
         skipMissingFiles,
         uploadState,
       });
-    const progressRange = chained
-      ? REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES.uploadAndProcess
-      : {};
-
     // runs the job, starting it again while the user chooses to retry it
     const runUploadAndProcessJob = async (): Promise<
-      ArenaJobSerialized<RecordsUploadResult | undefined> | null | undefined
+      UploadJobSummary | null | undefined
     > => {
-      let jobComplete:
-        ArenaJobSerialized<RecordsUploadResult | undefined> | null | undefined =
-        null;
+      let jobComplete: UploadJobSummary | null | undefined = null;
       let shouldRetry: boolean;
       try {
         jobComplete = await JobMonitorActions.startAsync({
@@ -224,6 +227,8 @@ export const startUploadDataToRemoteServer =
           innerJobUiConfigByType: UPLOAD_AND_PROCESS_INNER_JOB_UI_CONFIG,
           onJobComplete: onJobComplete ?? undefined,
           silent,
+          messageKey,
+          messageParams,
           ...progressRange,
         });
         shouldRetry = !jobComplete;
@@ -243,4 +248,5 @@ export const startUploadDataToRemoteServer =
         "startUploadDataToRemoteServer: upload/processing canceled or failed",
       );
     }
+    return jobComplete ?? null;
   };

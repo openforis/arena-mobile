@@ -380,6 +380,7 @@ Tarkista asetukset tai pyydä kyselyn järjestelmänvalvojaa muuttamaan tätä r
     exportedSuccessfullyButFilesMissing:
       "Tiedot vietiin onnistuneesti, mutta {{missingFiles}} tiedostoa/kuvaa puuttuu tai on vioittunut. Tarkista tietueesi ja myös palvelimen tietueet.",
     exportingData: "Viedään tietoja...",
+    uploadBatch: "Osa {{batch}}/{{batchCount}}",
     exportToCsv: "Vie CSV-muotoon",
     mergeConflictingRecords: "Yhdistä ristiriitaiset tietueet",
     mergeWithSameKeysNotAllowed:

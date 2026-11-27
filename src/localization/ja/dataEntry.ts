@@ -99,6 +99,7 @@ export default {
     exportedSuccessfullyButFilesMissing: `データは正常にエクスポートされましたが、{{missingFiles}}件のファイル/画像が見つからないか壊れています。
 記録とサーバー上の記録を確認してください`,
     exportingData: "データをエクスポート中...",
+    uploadBatch: "{{batchCount}}件中{{batch}}件目",
     exportToCsv: "CSVにエクスポート",
     mergeConflictingRecords: "競合する記録を統合",
     mergeWithSameKeysNotAllowed:

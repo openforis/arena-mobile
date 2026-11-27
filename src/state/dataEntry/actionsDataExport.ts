@@ -1,6 +1,8 @@
 import {
   ArenaJobSerialized,
   JobStatus,
+  NodeDefs,
+  NodeDefType,
   Objects,
   ArenaValidation,
 } from "@openforis/arena-core";
@@ -11,6 +13,7 @@ import {
   RecordsExportFileGenerationJobResult,
 } from "service/jobs/RecordsExportFileGenerationJob";
 import type { RecordsUploadResult } from "service/jobs/recordsUpload";
+import { RecordRemoteService } from "service/record/recordRemoteService";
 
 import { i18n } from "localization";
 import { JobCancelError, ValidationUtils } from "model";
@@ -22,11 +25,13 @@ import { ConfirmActions, ConfirmUtils, OnConfirmParams } from "../confirm";
 import { JobMonitorActions } from "../jobMonitor";
 import { MessageActions } from "../message";
 import { SurveySelectors } from "../survey";
+import type { CurrentSurvey } from "../survey/state";
 import { DataEntryActionsRecordSync } from "./actionsRecordSync";
 import {
   errorTextLooksLikeAuthError,
+  getRemoteUploadChainProgressRanges,
   handleDataExportError,
-  REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES,
+  ProgressRange,
 } from "./dataExportUtils";
 import { startUploadDataToRemoteServer } from "./actionsRecordsUpload";
 import {
@@ -34,6 +39,7 @@ import {
   fetchMergedSameRecordsSilently,
   getMergedSameRecordUuidsToFetch,
 } from "./actionsMergedRecords";
+import { splitRecordUuidsInBatches } from "./recordsUploadBatches";
 
 const { t } = i18n;
 
@@ -51,6 +57,14 @@ type OnUploadJobComplete = (
 // errors of the export file generation job, by record
 type ExportFileGenerationErrors = Record<string, { error: ArenaValidation }>;
 
+// see startUploadDataToRemoteServer: where the upload phase fits in the overall progress, and the message to show
+type UploadMonitorOptions = {
+  progressRange?: ProgressRange;
+  messageKey?: string;
+  messageParams?: Record<string, unknown>;
+};
+
+// resolves with the upload job summary once the upload ends (null if not uploaded)
 const onExportConfirmed =
   ({
     selectedSingleChoiceValue,
@@ -59,8 +73,7 @@ const onExportConfirmed =
     skipMissingFiles = false,
     onJobComplete,
     silent = false,
-    // see startUploadDataToRemoteServer's `chained` param
-    chained = false,
+    uploadMonitorOptions = {},
   }: {
     selectedSingleChoiceValue?: string | null;
     conflictResolutionStrategy?: string;
@@ -68,31 +81,31 @@ const onExportConfirmed =
     skipMissingFiles?: boolean;
     onJobComplete?: OnUploadJobComplete;
     silent?: boolean;
-    chained?: boolean;
+    uploadMonitorOptions?: UploadMonitorOptions;
   }) =>
-  async (dispatch: AppDispatch) => {
+  async (dispatch: AppDispatch): Promise<UploadJobSummary | null> => {
     try {
       if (selectedSingleChoiceValue === exportType.remote) {
-        dispatch(
+        return await dispatch(
           startUploadDataToRemoteServer({
             outputFileUri,
             conflictResolutionStrategy,
             skipMissingFiles,
             onJobComplete,
             silent,
-            chained,
+            ...uploadMonitorOptions,
           }),
         );
-      } else {
-        await Files.shareFile({
-          url: outputFileUri,
-          mimeType: Files.MIME_TYPES.zip,
-          dialogTitle: t("dataEntry:dataExport.shareExportedFile"),
-        });
       }
+      await Files.shareFile({
+        url: outputFileUri,
+        mimeType: Files.MIME_TYPES.zip,
+        dialogTitle: t("dataEntry:dataExport.shareExportedFile"),
+      });
     } catch (error) {
       dispatch(handleDataExportError(error));
     }
+    return null;
   };
 
 const _onExportFileGenerationError = ({
@@ -132,6 +145,41 @@ const _onExportFileGenerationError = ({
   );
 };
 
+const deleteExportFile = async (fileUri: string) => {
+  try {
+    await Files.del(fileUri, true);
+  } catch (error) {
+    log.warn(`exportRecords: error deleting ${fileUri}: ${error}`);
+  }
+};
+
+// shared by the batches of an upload split in batches
+type BatchesState = { missingFilesConfirmed: boolean };
+
+const confirmRecordsWithMissingFiles = async ({
+  recordsWithMissingFiles,
+  dispatch,
+}: {
+  recordsWithMissingFiles: RecordsExportFileGenerationJobResult["recordsWithMissingFiles"];
+  dispatch: AppDispatch;
+}): Promise<boolean> => {
+  const recordsList = recordsWithMissingFiles
+    .map(({ keysText }) => `- ${keysText}`)
+    .join("\n");
+
+  const confirmResult = await ConfirmUtils.confirm({
+    dispatch,
+    titleKey: "dataEntry:dataExport.recordsWithMissingFilesConfirm.title",
+    messageKey: "dataEntry:dataExport.recordsWithMissingFilesConfirm.message",
+    messageParams: { recordsList },
+    messageIsMarkdown: true,
+    confirmButtonTextKey:
+      "dataEntry:dataExport.recordsWithMissingFilesConfirm.confirmButton",
+  });
+  return !!confirmResult;
+};
+
+// resolves with the upload job summary when awaitUpload is true and the upload completes, null otherwise
 const _onExportFileGenerationSucceeded = async ({
   result,
   onlyLocally,
@@ -140,6 +188,9 @@ const _onExportFileGenerationSucceeded = async ({
   onJobComplete,
   dispatch,
   silent = false,
+  uploadMonitorOptions = {},
+  awaitUpload = false,
+  batchesState,
 }: {
   result: RecordsExportFileGenerationJobResult | undefined;
   onlyLocally: boolean;
@@ -148,32 +199,33 @@ const _onExportFileGenerationSucceeded = async ({
   onJobComplete: OnUploadJobComplete;
   dispatch: AppDispatch;
   silent?: boolean;
-}) => {
+  uploadMonitorOptions?: UploadMonitorOptions;
+  awaitUpload?: boolean;
+  batchesState?: BatchesState;
+}): Promise<UploadJobSummary | null> => {
   const { outputFileUri, recordsWithMissingFiles = [] } = result ?? {};
   if (!outputFileUri) {
     log.warn("exportRecords: export file generated without output file");
-    return;
+    return null;
   }
 
-  if (recordsWithMissingFiles.length > 0 && !silent) {
-    const recordsList = recordsWithMissingFiles
-      .map(({ keysText }) => `- ${keysText}`)
-      .join("\n");
-
-    const confirmed = await ConfirmUtils.confirm({
-      dispatch,
-      titleKey: "dataEntry:dataExport.recordsWithMissingFilesConfirm.title",
-      messageKey: "dataEntry:dataExport.recordsWithMissingFilesConfirm.message",
-      messageParams: { recordsList },
-      messageIsMarkdown: true,
-      confirmButtonTextKey:
-        "dataEntry:dataExport.recordsWithMissingFilesConfirm.confirmButton",
-    });
-
-    if (!confirmed) return;
-  }
-  // when silent (auto-sync), never block on the missing-files confirmation above:
+  // when silent (auto-sync), never block on the missing-files confirmation:
   // proceed straight to uploading what's available, same outcome as the user confirming it
+  if (
+    recordsWithMissingFiles.length > 0 &&
+    !silent &&
+    !batchesState?.missingFilesConfirmed
+  ) {
+    const confirmed = await confirmRecordsWithMissingFiles({
+      recordsWithMissingFiles,
+      dispatch,
+    });
+    if (!confirmed) {
+      if (onlyRemote) await deleteExportFile(outputFileUri);
+      return null;
+    }
+    if (batchesState) batchesState.missingFilesConfirmed = true;
+  }
 
   const skipMissingFiles = recordsWithMissingFiles.length > 0;
 
@@ -184,7 +236,7 @@ const _onExportFileGenerationSucceeded = async ({
   if (!onlyRemote && (await Files.isSharingAvailable())) {
     availableExportTypes.push(exportType.share);
   }
-  const onConfirm = ({ selectedSingleChoiceValue }: OnConfirmParams) => {
+  const onConfirm = ({ selectedSingleChoiceValue }: OnConfirmParams) =>
     dispatch(
       onExportConfirmed({
         selectedSingleChoiceValue,
@@ -195,28 +247,35 @@ const _onExportFileGenerationSucceeded = async ({
         silent,
         // onlyRemote means "remote" was the only option offered above, so the zip-generation
         // phase already reserved this chain a slice of the overall progress - see
-        // REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES
-        chained: onlyRemote,
+        // getRemoteUploadChainProgressRanges
+        uploadMonitorOptions: onlyRemote ? uploadMonitorOptions : {},
       }),
     );
-  };
   if (availableExportTypes.length === 1) {
-    onConfirm({ selectedSingleChoiceValue: availableExportTypes[0] });
-  } else {
-    dispatch(
-      ConfirmActions.show({
-        titleKey: "dataEntry:dataExport.selectTarget",
-        messageKey: "dataEntry:dataExport.selectTargetMessage",
-        onConfirm,
-        singleChoiceOptions: availableExportTypes.map((type) => ({
-          value: type,
-          label: `dataEntry:dataExport.target.${type}`,
-        })),
-        defaultSingleChoiceValue: availableExportTypes[0],
-        confirmButtonTextKey: "common:export",
-      }),
-    );
+    const uploadPromise = onConfirm({
+      selectedSingleChoiceValue: availableExportTypes[0],
+    }).finally(async () => {
+      // never shared: not needed anymore once the upload has ended
+      if (onlyRemote) await deleteExportFile(outputFileUri);
+    });
+    return awaitUpload ? uploadPromise : null;
   }
+  dispatch(
+    ConfirmActions.show({
+      titleKey: "dataEntry:dataExport.selectTarget",
+      messageKey: "dataEntry:dataExport.selectTargetMessage",
+      onConfirm: async (params: OnConfirmParams) => {
+        await onConfirm(params);
+      },
+      singleChoiceOptions: availableExportTypes.map((type) => ({
+        value: type,
+        label: `dataEntry:dataExport.target.${type}`,
+      })),
+      defaultSingleChoiceValue: availableExportTypes[0],
+      confirmButtonTextKey: "common:export",
+    }),
+  );
+  return null;
 };
 
 type ExportRecordsParams = {
@@ -230,7 +289,33 @@ type ExportRecordsParams = {
   silent?: boolean;
 };
 
-export const exportRecords =
+type ExportRecordsBatchParams = Omit<ExportRecordsParams, "onEnd"> & {
+  filesAlreadyOnServerByRecordUuid?: Record<string, string[]>;
+  // set when the upload is split in batches
+  batch?: { index: number; count: number };
+  batchesState?: BatchesState;
+};
+
+const getBatchMonitorOptions = (batch: ExportRecordsBatchParams["batch"]) => {
+  const ranges = getRemoteUploadChainProgressRanges({
+    batchIndex: batch?.index,
+    batchCount: batch?.count,
+  });
+  const message = batch
+    ? {
+        messageKey: "dataEntry:dataExport.uploadBatch",
+        messageParams: { batch: batch.index + 1, batchCount: batch.count },
+      }
+    : {};
+  return {
+    zipGeneration: { ...ranges.zipGeneration, ...message },
+    uploadAndProcess: { progressRange: ranges.uploadAndProcess, ...message },
+  };
+};
+
+// generates the zip of the given records, then sends or shares it;
+// when part of a batch upload, resolves with the upload job summary once the upload completes (null otherwise)
+const exportRecordsBatch =
   ({
     cycle,
     recordUuids,
@@ -238,10 +323,15 @@ export const exportRecords =
     onlyLocally = false,
     onlyRemote = false,
     onJobComplete: onJobCompleteParam = null,
-    onEnd = null,
     silent = false,
-  }: ExportRecordsParams) =>
-  async (dispatch: AppDispatch, getState: AppGetState) => {
+    filesAlreadyOnServerByRecordUuid,
+    batch,
+    batchesState,
+  }: ExportRecordsBatchParams) =>
+  async (
+    dispatch: AppDispatch,
+    getState: AppGetState,
+  ): Promise<UploadJobSummary | null> => {
     const state = getState();
     const survey = SurveySelectors.selectCurrentSurvey(state)!;
     const lang = SurveySelectors.selectCurrentSurveyPreferredLang(state);
@@ -343,13 +433,19 @@ export const exportRecords =
       await onJobCompleteParam?.(jobComplete);
     };
 
-    const onJobComplete = (jobComplete: UploadJobSummary) =>
-      DataEntryActionsRecordSync.runAsPostUploadProcessing(() =>
-        onUploadComplete(jobComplete),
-      );
+    let postUploadProcessing: Promise<void> | null = null;
+    const onJobComplete = (jobComplete: UploadJobSummary) => {
+      postUploadProcessing =
+        DataEntryActionsRecordSync.runAsPostUploadProcessing(() =>
+          onUploadComplete(jobComplete),
+        );
+      return postUploadProcessing;
+    };
+
+    const monitorOptions = getBatchMonitorOptions(batch);
 
     log.debug(
-      `exportRecords: starting (recordUuids=${recordUuids?.length ?? 0}, onlyLocally=${onlyLocally}, onlyRemote=${onlyRemote}, silent=${silent})`,
+      `exportRecords: starting (recordUuids=${recordUuids?.length ?? 0}, onlyLocally=${onlyLocally}, onlyRemote=${onlyRemote}, silent=${silent}, batch=${batch ? `${batch.index + 1}/${batch.count}` : "-"})`,
     );
     try {
       const user = onlyLocally ? {} : await UserService.fetchUser();
@@ -369,6 +465,7 @@ export const exportRecords =
         recordUuids,
         user,
         onlyRemote,
+        filesAlreadyOnServerByRecordUuid,
       });
 
       // wired through the job monitor (rather than a plain job.start()) so the zip
@@ -382,9 +479,7 @@ export const exportRecords =
             titleKey: "dataEntry:dataExport.exportingData",
             autoDismiss: true,
             silent,
-            ...(onlyRemote
-              ? REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES.zipGeneration
-              : {}),
+            ...(onlyRemote ? monitorOptions.zipGeneration : {}),
           },
         ))!;
 
@@ -392,7 +487,7 @@ export const exportRecords =
         `exportRecords: zip preparation succeeded, outputFileUri=${jobComplete.result?.outputFileUri}`,
       );
 
-      await _onExportFileGenerationSucceeded({
+      const uploadJobComplete = await _onExportFileGenerationSucceeded({
         result: jobComplete.result,
         onlyLocally,
         onlyRemote,
@@ -400,7 +495,13 @@ export const exportRecords =
         onJobComplete,
         dispatch,
         silent,
+        uploadMonitorOptions: monitorOptions.uploadAndProcess,
+        awaitUpload: !!batch,
+        batchesState,
       });
+      // the next batch starts only once this one's records have been updated
+      await postUploadProcessing;
+      return uploadJobComplete;
     } catch (error) {
       // a failed job is rejected with its summary (see JobMonitorActions.startAsync)
       const failedJob = error as
@@ -421,6 +522,118 @@ export const exportRecords =
         log.warn(`exportRecords: unexpected error: ${error}`);
         dispatch(handleDataExportError(error, silent));
       }
+      return null;
+    }
+  };
+
+// files already on the server are not sent again: they don't count in the batches size
+const splitRecordsInUploadBatches = async ({
+  survey,
+  recordUuids,
+}: {
+  survey: CurrentSurvey;
+  recordUuids: string[];
+}): Promise<{
+  batches: string[][];
+  filesAlreadyOnServerByRecordUuid?: Record<string, string[]>;
+}> => {
+  const hasFileNodeDefs = Object.values(survey.nodeDefs ?? {}).some(
+    (nodeDef) => NodeDefs.getType(nodeDef) === NodeDefType.file,
+  );
+  if (!hasFileNodeDefs) return { batches: [recordUuids] };
+  try {
+    const filesAlreadyOnServerByRecordUuid = survey.remoteId
+      ? await RecordRemoteService.fetchFileUuidsByRecordUuid({
+          surveyRemoteId: survey.remoteId,
+          recordUuids,
+        })
+      : {};
+    const filesSizeByRecordUuid = await RecordService.fetchRecordsFilesSize({
+      surveyId: survey.id!,
+      recordUuids,
+      excludedFileUuidsByRecordUuid: filesAlreadyOnServerByRecordUuid,
+    });
+    const batches = splitRecordUuidsInBatches({
+      recordUuids,
+      filesSizeByRecordUuid,
+    });
+    return { batches, filesAlreadyOnServerByRecordUuid };
+  } catch (error) {
+    log.warn(`exportRecords: error splitting records in batches: ${error}`);
+    return { batches: [recordUuids] };
+  }
+};
+
+// sends the batches one after the other, stopping at the first one not completed
+const uploadRecordsInBatches =
+  ({
+    batches,
+    onJobComplete,
+    ...otherParams
+  }: Omit<ExportRecordsBatchParams, "recordUuids" | "batch"> & {
+    batches: string[][];
+  }) =>
+  async (dispatch: AppDispatch) => {
+    const batchesState: BatchesState = { missingFilesConfirmed: false };
+    const jobsComplete: UploadJobSummary[] = [];
+    for (const [index, recordUuids] of batches.entries()) {
+      const jobComplete = await dispatch(
+        exportRecordsBatch({
+          ...otherParams,
+          recordUuids,
+          batch: { index, count: batches.length },
+          batchesState,
+        }),
+      );
+      if (!jobComplete) {
+        log.debug(
+          `exportRecords: batch ${index + 1}/${batches.length} not completed, remaining batches skipped`,
+        );
+        break;
+      }
+      jobsComplete.push(jobComplete);
+    }
+    const lastJobComplete = jobsComplete.at(-1);
+    if (!lastJobComplete || !onJobComplete) return;
+    const missingFiles = jobsComplete.reduce(
+      (acc, job) => acc + (job.result?.missingFiles ?? 0),
+      0,
+    );
+    await DataEntryActionsRecordSync.runAsPostUploadProcessing(async () => {
+      await onJobComplete({
+        ...lastJobComplete,
+        result: { ...lastJobComplete.result, missingFiles },
+      });
+    });
+  };
+
+export const exportRecords =
+  ({ onEnd = null, ...params }: ExportRecordsParams) =>
+  async (dispatch: AppDispatch, getState: AppGetState) => {
+    const { onlyRemote = false, recordUuids } = params;
+    if (onlyRemote) {
+      const survey = SurveySelectors.selectCurrentSurvey(getState())!;
+      const { batches, filesAlreadyOnServerByRecordUuid } =
+        await splitRecordsInUploadBatches({ survey, recordUuids });
+      if (batches.length > 1) {
+        log.debug(
+          `exportRecords: ${recordUuids.length} record(s) split in ${batches.length} upload batches`,
+        );
+        await dispatch(
+          uploadRecordsInBatches({
+            ...params,
+            batches,
+            filesAlreadyOnServerByRecordUuid,
+          }),
+        );
+        await onEnd?.();
+        return;
+      }
+      await dispatch(
+        exportRecordsBatch({ ...params, filesAlreadyOnServerByRecordUuid }),
+      );
+    } else {
+      await dispatch(exportRecordsBatch(params));
     }
     await onEnd?.();
   };

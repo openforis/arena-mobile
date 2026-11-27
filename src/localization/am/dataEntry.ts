@@ -351,6 +351,7 @@ export default {
     exportedSuccessfullyButFilesMissing:
       "ውሂብ በተሳካ ሁኔታ ወደ ውጭ ተልኳል ግን {{missingFiles}} ፋይሎች/ምስሎች ጠፍተዋል ወይም ተሰብረዋል። እባክዎ መዝገቦችዎን እና በአገልጋዩ ላይ ያሉትን መዝገቦች ያረጋግጡ።",
     exportingData: "ውሂብ በማልክ ላይ...",
+    uploadBatch: "ክፍል {{batch}} ከ {{batchCount}}",
     exportToCsv: "ወደ CSV ላክ",
     mergeConflictingRecords: "የሚጋጩ መዝገቦችን አዋህድ",
     mergeWithSameKeysNotAllowed:

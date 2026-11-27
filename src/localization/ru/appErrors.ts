@@ -1,6 +1,8 @@
 export default {
   generic: "Непредвиденная ошибка: {{text}}",
   fileSharingNotAvailable: "Общий доступ к файлам недоступен",
+  notEnoughDiskSpace:
+    "Недостаточно свободного места на диске (требуется еще {{requiredSpace}})",
   dataImport: {
     importFromMobileNotAllawed: "Импорт данных из Arena Mobile не разрешён",
     invalidNodeInRecord:

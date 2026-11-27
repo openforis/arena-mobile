@@ -1,6 +1,8 @@
 export default {
   generic: "Odottamaton virhe: {{text}}",
   fileSharingNotAvailable: "Tiedoston jakaminen ei ole käytettävissä",
+  notEnoughDiskSpace:
+    "Ei tarpeeksi vapaata levytilaa (tarvitaan vielä {{requiredSpace}})",
   dataImport: {
     importFromMobileNotAllawed:
       "Tietojen tuonti Arena Mobilesta ei ole sallittu",

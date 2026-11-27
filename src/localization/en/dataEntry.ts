@@ -98,6 +98,7 @@ Do you want to fetch it again from the server?`,
     exportedSuccessfullyButFilesMissing: `Data exported successfully but {{missingFiles}} files/images are missing or broken.
 Please check your records and check also records on the server`,
     exportingData: "Exporting data...",
+    uploadBatch: "Part {{batch}} of {{batchCount}}",
     exportToCsv: "Export to CSV",
     mergeConflictingRecords: "Merge conflicting records",
     mergeWithSameKeysNotAllowed:

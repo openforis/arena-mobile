@@ -1,6 +1,7 @@
 export default {
   generic: "ያልተጠበቀ ስህተት: {{text}}",
   fileSharingNotAvailable: "የፋይል ማጋራት አይገኝም",
+  notEnoughDiskSpace: "በቂ ነፃ የዲስክ ቦታ የለም (ተጨማሪ {{requiredSpace}} ያስፈልጋል)",
   dataImport: {
     importFromMobileNotAllawed: "ከArena Mobile የውሂብ ማስመጣት አይፈቀድም",
     invalidNodeInRecord:

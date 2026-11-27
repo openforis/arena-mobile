@@ -1,6 +1,8 @@
 export default {
   generic: "Unexpected error: {{text}}",
   fileSharingNotAvailable: "File sharing is not available",
+  notEnoughDiskSpace:
+    "Not enough free disk space ({{requiredSpace}} more is required)",
   dataImport: {
     importFromMobileNotAllawed: "Data import from Arena Mobile not allowed",
     invalidNodeInRecord:

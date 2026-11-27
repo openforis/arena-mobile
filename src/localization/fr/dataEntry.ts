@@ -386,6 +386,7 @@ Vérifiez les paramètres ou demandez à l'administrateur de l'enquête de modif
     exportedSuccessfullyButFilesMissing:
       "Données exportées avec succès, mais {{missingFiles}} fichiers/images sont manquants ou corrompus. Veuillez vérifier vos enregistrements et également les enregistrements sur le serveur.",
     exportingData: "Exportation des données...",
+    uploadBatch: "Partie {{batch}} sur {{batchCount}}",
     exportToCsv: "Exporter en CSV",
     mergeConflictingRecords: "Fusionner les enregistrements conflictuels",
     mergeWithSameKeysNotAllowed:
