@@ -21,7 +21,7 @@ export default {
   },
   loginRequired: "Wajib untuk Login",
   loginSuccessful: "Login berhasil!",
-  logout: "Logout",
+  logout: "Keluar",
   logoutConfirmMessage: "Apakah Anda yakin ingin keluar?",
   logoutOptions: {
     keepEmailAddress: "Simpan alamat email",

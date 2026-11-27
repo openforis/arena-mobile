@@ -2,7 +2,7 @@ import { FlatDataExportOption } from "@openforis/arena-core";
 
 export default {
   recordReadOnlyOfAnotherUserGroup:
-    "Rekaman ini milik grup pengguna lain: hanya dapat dilihat. Kloning untuk mengeditnya",
+    "Catatan ini milik grup pengguna lain: hanya dapat dilihat. Kloning untuk mengeditnya",
   autoSync: {
     checkbox: "Sinkronisasi otomatis",
     synced: "{{count}} catatan disinkronkan otomatis",
@@ -88,8 +88,8 @@ Apakah Anda ingin mengambilnya lagi dari server?`,
   cycle: "Siklus",
   cycleForNewRecords: "Siklus untuk data isian baru:",
   options: "Opsi",
-  editNodeDef: "Edit {{nodeDef}}",
-  viewNodeDef: "View {{nodeDef}}",
+  editNodeDef: "Sunting {{nodeDef}}",
+  viewNodeDef: "Lihat {{nodeDef}}",
   errorFetchingRecordsSyncStatus: `Kesalahan saat mengambil data isian dari server.
   
   Periksa pengaturan koneksi.
