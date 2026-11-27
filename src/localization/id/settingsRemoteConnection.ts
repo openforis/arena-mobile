@@ -25,7 +25,7 @@ export default {
   serverUrl: "URL Server",
   serverUrlNotValid: "URL Server tidak valid",
   serverUrlType: {
-    default: "Default",
+    default: "Bawaan",
     custom: "Kustom",
   },
   signInWith: "Masuk dengan {{provider}}",

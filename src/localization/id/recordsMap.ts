@@ -2,7 +2,7 @@ export default {
   title: "Peta",
   layers: "Lapisan",
   mapProviderChooser: {
-    title: "Tampilkan rekaman di",
+    title: "Tampilkan catatan di",
     show: "Tampilkan peta",
   },
   samplingPointsLayer: "Titik sampel (level {{level}})",

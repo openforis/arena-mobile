@@ -62,9 +62,9 @@ export default {
   owner: "Pemilik",
   readOnly: "Hanya baca",
   readOnlyOfAnotherUserGroup:
-    "Rekaman grup pengguna lain: dapat dilihat atau dikloning, tetapi tidak dapat diedit",
+    "Catatan grup pengguna lain: dapat dilihat atau dikloning, tetapi tidak dapat diedit",
   readOnlyRole:
-    "Peran Anda dalam survei ini memungkinkan melihat rekaman, tetapi tidak mengeditnya",
+    "Peran Anda dalam survei ini memungkinkan melihat catatan, tetapi tidak mengeditnya",
   recordHasErrorsOrWarningsTooltip:
     "Data isian memiliki {{count}} {{itemsTypeText}}",
   recordType: {
@@ -85,9 +85,9 @@ export default {
       generic: "Tidak dapat mengirim data ke server: {{details}}",
       surveyNotVisibleInMobile:
         "Survei saat ini seharusnya tidak terlihat di Arena Mobile",
-      recordsUploadNotAllowed: "Mengunggah rekaman ke server tidak diizinkan",
+      recordsUploadNotAllowed: "Mengunggah catatan ke server tidak diizinkan",
       recordsWithErrorsUploadNotAllowed:
-        "Mengunggah rekaman dengan kesalahan validasi ke server tidak diizinkan",
+        "Mengunggah catatan dengan kesalahan validasi ke server tidak diizinkan",
     },
   },
 };

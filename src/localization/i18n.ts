@@ -1,4 +1,4 @@
-import i18n, { InitOptions, LanguageDetectorAsyncModule } from "i18next";
+import i18n, { LanguageDetectorAsyncModule } from "i18next";
 import { initReactI18next } from "react-i18next";
 
 import { LanguageConstants } from "model/LanguageSettings";
@@ -36,7 +36,7 @@ const toSupportedLanguage = (lang: string | null | undefined): string =>
 
 const systemLanguageOrDefault = toSupportedLanguage(sysLng);
 
-const toFinalSuppotedLang = (lang: string | null | undefined): string =>
+const toFinalSupportedLang = (lang: string | null | undefined): string =>
   lang === LanguageConstants.system
     ? systemLanguageOrDefault
     : toSupportedLanguage(lang);
@@ -64,7 +64,7 @@ const languageDetector: LanguageDetectorAsyncModule = {
     SettingsService.fetchSettings()
       .then((settings) => {
         const { language: langInSettings } = settings;
-        onDetected(toFinalSuppotedLang(langInSettings));
+        onDetected(toFinalSupportedLang(langInSettings));
       })
       .catch(() => {
         onDetected(systemLanguageOrDefault);
@@ -76,7 +76,6 @@ i18n
   .use(languageDetector)
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
-    compatibilityJSON: "v3", // to make it work for Android devices
     resources: { en },
     fallbackLng,
     interpolation: {
@@ -86,13 +85,12 @@ i18n
       useSuspense: false,
     },
     supportedLngs,
-    // compatibilityJSON not in the InitOptions type anymore
-  } as InitOptions);
+  });
 
 const changeLanguage = (lang: string | null | undefined) => {
-  const supportedLang = toFinalSuppotedLang(lang);
+  const supportedLang = toFinalSupportedLang(lang);
   ensureLanguageLoaded(supportedLang);
   i18n.changeLanguage(supportedLang);
 };
 
-export { changeLanguage, i18n };
+export { changeLanguage, i18n, supportedLngs };
