@@ -1,6 +1,9 @@
 export default {
   clearCredentials: "Hapus kredensial",
   clearCredentialsConfirmMessage: "Hapus kredensial pengguna?",
+  createAccount: "Buat akun",
+  createAccountBeforeLoggingIn:
+    "Buat akun terlebih dahulu: hanya pengguna terdaftar yang dapat masuk.",
   email: "Email",
   errorConnectingWithServer: "Kesalahan saat terhubung dengan server",
   forgotPassword: "Lupa kata sandi?",
@@ -17,10 +20,7 @@ export default {
 2. tekan tombol di sudut kanan atas dan buka menu pengguna
 3. pilih **Masuk dari Arena Mobile menggunakan kode QR**
 4. pindai kode QR yang ditampilkan`,
-  registerBeforeLoggingIn:
-    "Minta akses terlebih dahulu: hanya pengguna terdaftar yang dapat masuk.",
   registeredUsersOnly: "Khusus pengguna terdaftar",
-  requestAccess: "Minta akses",
   scanQrCode: "Pindai kode QR",
   serverUrl: "URL Server",
   serverUrlNotValid: "URL Server tidak valid",

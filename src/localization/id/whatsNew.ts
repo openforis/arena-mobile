@@ -6,7 +6,7 @@ export default {
     googleSignIn: {
       title: "Masuk dengan Google",
       description:
-        "Di **Koneksi ke server** (tekan **Hubungkan** di halaman beranda), Anda kini dapat masuk dengan **Masuk dengan Google**, **Masuk dengan Microsoft** atau metode masuk organisasi Anda, jika server Arena mendukungnya: proses masuk diselesaikan di browser web.\n\nHanya pengguna dengan akun Arena yang dapat masuk dengan cara ini: jika Anda baru di Arena, tekan **Minta akses** terlebih dahulu.",
+        "Di **Koneksi ke server** (tekan **Hubungkan** di halaman beranda), Anda kini dapat masuk dengan **Masuk dengan Google**, **Masuk dengan Microsoft** atau metode masuk organisasi Anda, jika server Arena mendukungnya: proses masuk diselesaikan di browser web.\n\nHanya pengguna dengan akun Arena yang dapat masuk dengan cara ini: jika Anda baru di Arena, tekan **Buat akun** terlebih dahulu.",
     },
     geoTiffMaps: {
       title: "Peta GeoTIFF",

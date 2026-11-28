@@ -1,6 +1,9 @@
 export default {
   clearCredentials: "Obriši pristupne podatke",
   clearCredentialsConfirmMessage: "Obrisati korisničke pristupne podatke?",
+  createAccount: "Napravite nalog",
+  createAccountBeforeLoggingIn:
+    "Prvo napravite nalog: samo registrovani korisnici mogu da se prijave.",
   email: "E-mail",
   errorConnectingWithServer: "Greška pri povezivanju sa serverom",
   forgotPassword: "Zaboravili ste lozinku?",
@@ -17,10 +20,7 @@ export default {
 2. pritisnite dugme u gornjem desnom uglu i otvorite korisnički meni
 3. izaberite **Prijava u Arena Mobile pomoću QR koda**
 4. skenirajte prikazani QR kod`,
-  registerBeforeLoggingIn:
-    "Prvo zatražite pristup: samo registrovani korisnici mogu da se prijave.",
   registeredUsersOnly: "Samo za registrovane korisnike",
-  requestAccess: "Zatražite pristup",
   scanQrCode: "Skeniraj QR kod",
   serverUrl: "URL servera",
   serverUrlNotValid: "URL servera nije ispravan",

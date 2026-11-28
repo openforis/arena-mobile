@@ -1,6 +1,9 @@
 export default {
   clearCredentials: "Effacer les identifiants",
   clearCredentialsConfirmMessage: "Effacer les identifiants de l'utilisateur?",
+  createAccount: "Créer un compte",
+  createAccountBeforeLoggingIn:
+    "Créez d'abord un compte : seuls les utilisateurs enregistrés peuvent se connecter.",
   email: "Adresse e-mail",
   errorConnectingWithServer: "Erreur de connexion au serveur",
   forgotPassword: "Mot de passe oublié?",
@@ -18,10 +21,7 @@ export default {
 2. appuyez sur le bouton dans le coin supérieur droit et ouvrez le menu utilisateur
 3. sélectionnez **Se connecter depuis Arena Mobile avec un code QR**
 4. scannez le code QR affiché`,
-  registerBeforeLoggingIn:
-    "Demandez d'abord l'accès : seuls les utilisateurs enregistrés peuvent se connecter.",
   registeredUsersOnly: "Utilisateurs enregistrés uniquement",
-  requestAccess: "Demander l'accès",
   scanQrCode: "Scanner le code QR",
   serverUrl: "URL du serveur",
   serverUrlNotValid: "URL du serveur non valide",

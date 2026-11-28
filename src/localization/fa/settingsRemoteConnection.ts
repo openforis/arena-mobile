@@ -2,6 +2,9 @@ export default {
   clearCredentials: "پاک کردن اعتبارنامه ها",
   clearCredentialsConfirmMessage:
     "آیا از پاک کردن اعتبارنامه های کاربر مطمئن هستید؟",
+  createAccount: "ایجاد حساب کاربری",
+  createAccountBeforeLoggingIn:
+    "ابتدا یک حساب کاربری ایجاد کنید: فقط کاربران ثبت‌نام‌شده می‌توانند وارد شوند.",
   email: "ایمیل",
   errorConnectingWithServer: "خطا در اتصال به سرور",
   forgotPassword: "رمز عبور را فراموش کرده اید؟",
@@ -18,10 +21,7 @@ export default {
 2. دکمه گوشه بالا سمت راست را فشار دهید و منوی کاربر را باز کنید
 3. **ورود از Arena Mobile با استفاده از کد QR** را انتخاب کنید
 4. کد QR نمایش داده شده را اسکن کنید`,
-  registerBeforeLoggingIn:
-    "ابتدا درخواست دسترسی دهید: فقط کاربران ثبت‌نام‌شده می‌توانند وارد شوند.",
   registeredUsersOnly: "فقط کاربران ثبت‌نام‌شده",
-  requestAccess: "درخواست دسترسی",
   scanQrCode: "اسکن کد QR",
   serverUrl: "آدرس سرور",
   serverUrlNotValid: "آدرس سرور معتبر نیست",

@@ -1,6 +1,9 @@
 export default {
   clearCredentials: "Clear credentials",
   clearCredentialsConfirmMessage: "Clear user credentials?",
+  createAccount: "Create an account",
+  createAccountBeforeLoggingIn:
+    "Create an account first: only registered users can log in.",
   email: "Email",
   errorConnectingWithServer: "Error connecting with server",
   forgotPassword: "Forgot password?",
@@ -17,10 +20,7 @@ export default {
 2. press the button in the top right corner and open the user menu
 3. select **Login from Arena Mobile using QR code**
 4. scan the QR code displayed`,
-  registerBeforeLoggingIn:
-    "Request access first: only registered users can log in.",
   registeredUsersOnly: "Registered users only",
-  requestAccess: "Request access",
   scanQrCode: "Scan QR code",
   serverUrl: "Server URL",
   serverUrlNotValid: "Server URL not valid",

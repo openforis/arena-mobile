@@ -6,7 +6,7 @@ export default {
     googleSignIn: {
       title: "Kirjaudu Googlella",
       description:
-        "**Yhteys palvelimeen** -näkymässä (paina aloitussivulla **Yhdistä**) voit nyt kirjautua valinnoilla **Kirjaudu palvelulla Google**, **Kirjaudu palvelulla Microsoft** tai organisaatiosi kirjautumisella, jos Arena-palvelin tukee sitä: kirjautuminen viimeistellään verkkoselaimessa.\n\nVain käyttäjät, joilla on Arena-tili, voivat kirjautua näin: jos olet uusi Arena-käyttäjä, paina ensin **Pyydä pääsyä**.",
+        "**Yhteys palvelimeen** -näkymässä (paina aloitussivulla **Yhdistä**) voit nyt kirjautua valinnoilla **Kirjaudu palvelulla Google**, **Kirjaudu palvelulla Microsoft** tai organisaatiosi kirjautumisella, jos Arena-palvelin tukee sitä: kirjautuminen viimeistellään verkkoselaimessa.\n\nVain käyttäjät, joilla on Arena-tili, voivat kirjautua näin: jos olet uusi Arena-käyttäjä, paina ensin **Luo tili**.",
     },
     geoTiffMaps: {
       title: "GeoTIFF-kartat",

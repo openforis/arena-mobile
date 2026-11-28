@@ -1,6 +1,9 @@
 export default {
   clearCredentials: "Rensa inloggningsuppgifter",
   clearCredentialsConfirmMessage: "Rensa användarens inloggningsuppgifter?",
+  createAccount: "Skapa ett konto",
+  createAccountBeforeLoggingIn:
+    "Skapa ett konto först: endast registrerade användare kan logga in.",
   email: "E-post",
   errorConnectingWithServer: "Fel vid anslutning till servern",
   forgotPassword: "Glömt lösenordet?",
@@ -17,10 +20,7 @@ export default {
 2. tryck på knappen i övre högra hörnet och öppna användarmenyn
 3. välj **Logga in från Arena Mobile med QR-kod**
 4. skanna den visade QR-koden`,
-  registerBeforeLoggingIn:
-    "Begär åtkomst först: endast registrerade användare kan logga in.",
   registeredUsersOnly: "Endast registrerade användare",
-  requestAccess: "Begär åtkomst",
   scanQrCode: "Skanna QR-kod",
   serverUrl: "Server-URL",
   serverUrlNotValid: "Server-URL:en är inte giltig",

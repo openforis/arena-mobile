@@ -6,7 +6,7 @@ export default {
     googleSignIn: {
       title: "Iniciar sesión con Google",
       description:
-        "En **Conexión al servidor** (pulsa **Conectar** en la página de inicio), ahora puedes iniciar sesión con **Iniciar sesión con Google**, **Iniciar sesión con Microsoft** o el inicio de sesión de tu organización, si el servidor de Arena lo admite: el inicio de sesión se completa en el navegador web.\n\nSolo los usuarios con una cuenta de Arena pueden iniciar sesión así: si eres nuevo en Arena, pulsa primero **Solicitar acceso**.",
+        "En **Conexión al servidor** (pulsa **Conectar** en la página de inicio), ahora puedes iniciar sesión con **Iniciar sesión con Google**, **Iniciar sesión con Microsoft** o el inicio de sesión de tu organización, si el servidor de Arena lo admite: el inicio de sesión se completa en el navegador web.\n\nSolo los usuarios con una cuenta de Arena pueden iniciar sesión así: si eres nuevo en Arena, pulsa primero **Crear una cuenta**.",
     },
     geoTiffMaps: {
       title: "Mapas GeoTIFF",

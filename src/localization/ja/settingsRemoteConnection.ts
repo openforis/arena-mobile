@@ -1,6 +1,9 @@
 export default {
   clearCredentials: "認証情報を削除",
   clearCredentialsConfirmMessage: "ユーザー認証情報を削除しますか？",
+  createAccount: "アカウントを作成",
+  createAccountBeforeLoggingIn:
+    "まずアカウントを作成してください。登録済みのユーザーのみがログインできます。",
   email: "メール",
   errorConnectingWithServer: "サーバーへの接続エラー",
   forgotPassword: "パスワードをお忘れですか？",
@@ -17,10 +20,7 @@ export default {
 2. 右上のボタンを押してユーザーメニューを開く
 3. **QRコードを使用してArena Mobileからログイン**を選択
 4. 表示されたQRコードをスキャン`,
-  registerBeforeLoggingIn:
-    "まずアクセスを申請してください。登録済みのユーザーのみがログインできます。",
   registeredUsersOnly: "登録済みユーザーのみ",
-  requestAccess: "アクセスを要求",
   scanQrCode: "QRコードをスキャン",
   serverUrl: "サーバーURL",
   serverUrlNotValid: "サーバーURLが有効ではありません",

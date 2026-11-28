@@ -28,7 +28,7 @@ appId: ${APP_ID}
       notVisible: "Custom"
     commands:
       - tapOn: "Server URL"
-# the request access banner at the top pushes the panel below the screen on small devices
+# the create account banner at the top pushes the panel below the screen on small devices
 - runFlow:
     when:
       notVisible: "Custom"
@@ -40,7 +40,7 @@ appId: ${APP_ID}
 - scrollUntilVisible:
     element: "Custom"
 - tapOn: "Custom"
-# the request access banner at the top pushes the field below the screen on small devices
+# the create account banner at the top pushes the field below the screen on small devices
 - runFlow:
     when:
       notVisible:
@@ -81,7 +81,7 @@ appId: ${APP_ID}
 - tapOn: "Password"
 - inputText: ${ARENA_SERVER_PASSWORD}
 
-# the keyboard can cover the login button (pushed down by the request access banner)
+# the keyboard can cover the login button (pushed down by the create account banner)
 - hideKeyboard
 - runFlow:
     when:

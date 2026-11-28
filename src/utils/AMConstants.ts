@@ -7,5 +7,5 @@ export const AMConstants = {
   openForisInitiativeUrl: "https://www.openforis.org",
   supportForumUrl: "https://openforis.support/tags/arena-mobile",
   forgotPasswordUrl: "https://www.openforis-arena.org/guest/forgotPassword",
-  requestAccessUrl: "https://www.openforis-arena.org/guest/accessRequest",
+  createAccountUrl: "https://www.openforis-arena.org/guest/accessRequest",
 };
