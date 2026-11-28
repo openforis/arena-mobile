@@ -19,8 +19,8 @@ concurrency:
 
 jobs:
   screenshots:
-    # pull requests from forks cannot push to their branch
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    # pull requests from forks cannot push to their branch; runs started by this workflow's own commits would only retake the same screenshots
+    if: github.actor != 'github-actions[bot]' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -102,6 +102,29 @@ jobs:
           for png in Path("docs/user-manual/screenshots").rglob("*.png"):
               Image.open(png).convert("RGB").save(png.with_suffix(".jpg"), "JPEG", quality=85, optimize=True)
               png.unlink()
+          PYTHON
+
+      # the status bar clock and rendering noise change every screenshot slightly: keep the committed ones unless they really differ
+      - name: Discard unchanged screenshots
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        run: |
+          python3 - <<'PYTHON'
+          import subprocess
+          from io import BytesIO
+          from PIL import Image, ImageChops
+          modified = subprocess.run(
+              ["git", "diff", "--name-only", "--", "docs/user-manual/screenshots"],
+              capture_output=True, text=True, check=True,
+          ).stdout.split()
+          for path in modified:
+              old = Image.open(BytesIO(subprocess.run(["git", "show", f"HEAD:{path}"], capture_output=True, check=True).stdout)).convert("L")
+              new = Image.open(path).convert("L")
+              if old.size != new.size:
+                  continue
+              diff = ImageChops.difference(old, new).point(lambda v: 255 if v > 32 else 0)
+              if diff.histogram()[255] / (old.width * old.height) < 0.005:
+                  subprocess.run(["git", "checkout", "--", path], check=True)
           PYTHON
 
       # also when taking the screenshots failed: the screens at the failures are in screenshots/_debug
