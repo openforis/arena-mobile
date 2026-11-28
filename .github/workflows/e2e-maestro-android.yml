@@ -109,7 +109,7 @@ jobs:
         if: github.event_name == 'pull_request'
         env:
           # pinned version, installed by the official install script
-          MAESTRO_VERSION: 2.11.0
+          MAESTRO_VERSION: 2.13.0
         run: |
           curl --proto '=https' --tlsv1.2 -fsSL -o "$RUNNER_TEMP/install-maestro.sh" "https://get.maestro.mobile.dev"
           bash "$RUNNER_TEMP/install-maestro.sh"
