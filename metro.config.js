@@ -39,9 +39,21 @@ const isUnusedGeoTiffModule = (context, moduleName) =>
   (moduleName === "./worker/create.js" &&
     context.originModulePath.includes(`${path.sep}geotiff${path.sep}`));
 
+// react-native-tree-multi-select optionally requires the deprecated react-native-vector-icons
+// (FontAwesome only in its default rows, replaced by CustomNodeRowComponent)
 config.resolver.resolveRequest = (context, moduleName, platform) => {
-  if (isUnusedGeoTiffModule(context, moduleName)) {
+  if (
+    isUnusedGeoTiffModule(context, moduleName) ||
+    moduleName === "react-native-vector-icons/FontAwesome"
+  ) {
     return { type: "empty" };
+  }
+  if (moduleName === "react-native-vector-icons/MaterialCommunityIcons") {
+    return context.resolveRequest(
+      context,
+      "@react-native-vector-icons/material-design-icons",
+      platform,
+    );
   }
   if (platform === "web") {
     const shim = webShims[moduleName];
