@@ -373,6 +373,7 @@ Verifique as configurações ou peça ao administrador da pesquisa para alterar 
     exportedSuccessfullyButFilesMissing:
       "Dados exportados com sucesso, mas {{missingFiles}} arquivos/imagens estão faltando ou corrompidos. Verifique seus registros e também os registros no servidor.",
     exportingData: "Exportando dados...",
+    uploadBatch: "Parte {{batch}} de {{batchCount}}",
     exportToCsv: "Exportar para CSV",
     mergeConflictingRecords: "Unir registos com conflitos",
     mergeWithSameKeysNotAllowed:

@@ -383,6 +383,7 @@ Maximal zulässige Größe: {{maxSizeMB}}MB.
     exportedSuccessfullyButFilesMissing:
       "Daten wurden erfolgreich exportiert, aber {{missingFiles}} Dateien/Bilder fehlen oder sind defekt. Bitte überprüfen Sie Ihre Aufzeichnungen und die Aufzeichnungen auf dem Server.",
     exportingData: "Exportiere Daten...",
+    uploadBatch: "Teil {{batch}} von {{batchCount}}",
     exportToCsv: "Nach CSV exportieren",
     mergeConflictingRecords: "Widersprüchliche Datensätze zusammenführen",
     mergeWithSameKeysNotAllowed:

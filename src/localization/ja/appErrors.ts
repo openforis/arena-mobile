@@ -1,6 +1,8 @@
 export default {
   generic: "予期しないエラー：{{text}}",
   fileSharingNotAvailable: "ファイル共有は利用できません",
+  notEnoughDiskSpace:
+    "ディスクの空き容量が不足しています（さらに{{requiredSpace}}必要です）",
   dataImport: {
     importFromMobileNotAllawed:
       "Arena Mobileからのデータインポートは許可されていません",

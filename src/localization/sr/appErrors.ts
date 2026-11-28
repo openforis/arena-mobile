@@ -1,6 +1,8 @@
 export default {
   generic: "Neočekivana greška: {{text}}",
   fileSharingNotAvailable: "Dijeljenje fajlova nije dostupno",
+  notEnoughDiskSpace:
+    "Nema dovoljno slobodnog prostora na disku (potrebno je još {{requiredSpace}})",
   dataImport: {
     importFromMobileNotAllawed:
       "Uvoz podataka iz aplikacije Arena Mobile nije dozvoljen",

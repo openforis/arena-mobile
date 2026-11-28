@@ -30,6 +30,7 @@ export const RecordService = {
     RecordSyncService.confirmRecordsSyncedWithRemote,
   updateRecordsMergedInto: RecordRepository.updateRecordsMergedInto,
   findFileUuidsInDevice: RecordLocalService.findFileUuidsInDevice,
+  fetchRecordsFilesSize: RecordLocalService.fetchRecordsFilesSize,
   deleteRecords: RecordLocalService.deleteRecordsAndFiles,
   fixRecordCycle: RecordRepository.fixRecordCycle,
   cloneRecordsIntoDefaultCycle: RecordLocalService.cloneRecordsIntoDefaultCycle,

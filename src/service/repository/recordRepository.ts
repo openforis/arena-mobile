@@ -661,6 +661,39 @@ const fetchRecordsFileUuids = async ({
   return rows.map((row) => row.file_uuid);
 };
 
+// files referenced by the content of the given records, with their size when stored in the node value
+const fetchRecordsFiles = async ({
+  surveyId,
+  recordUuids,
+}: {
+  surveyId: SurveyId;
+  recordUuids: string[];
+}): Promise<
+  { recordUuid: string; fileUuid: string; fileSize: number | null }[]
+> => {
+  if (recordUuids.length === 0) return [];
+  const rows = await dbClient.many<{
+    record_uuid: string;
+    file_uuid: string;
+    file_size: number | null;
+  }>(
+    `SELECT DISTINCT record.uuid AS record_uuid,
+       json_extract(node.value, '$.value.fileUuid') AS file_uuid,
+       json_extract(node.value, '$.value.fileSize') AS file_size
+     FROM record, json_each(record.content, '$.nodes') AS node
+     WHERE record.survey_id = ?
+       AND record.uuid IN (${DbUtils.placeholders(recordUuids)})
+       AND json_valid(record.content)
+       AND json_extract(node.value, '$.value.fileUuid') IS NOT NULL`,
+    [surveyId, ...recordUuids],
+  );
+  return rows.map((row) => ({
+    recordUuid: row.record_uuid,
+    fileUuid: row.file_uuid,
+    fileSize: row.file_size,
+  }));
+};
+
 // values of the nodes of the given defs stored in the device, without parsing the whole records
 const fetchNodeValuesByDefUuids = async ({
   surveyId,
@@ -763,6 +796,7 @@ export const RecordRepository = {
   updateRecordsReadOnly,
   updateRecordsMergedInto,
   fetchRecordsFileUuids,
+  fetchRecordsFiles,
   fetchNodeValuesByDefUuids,
   fixRecordCycle,
   deleteRecords,

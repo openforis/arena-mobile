@@ -51,7 +51,12 @@ type RecordsExportFileGenerationJobContext = JobMobileContext & {
   // A locally exported/shared zip must always be self-contained, so it must always include
   // every file, regardless of what the server already has.
   onlyRemote?: boolean;
+  // already fetched by the caller (see filesAlreadyOnServerByRecordUuid in execute)
+  filesAlreadyOnServerByRecordUuid?: Record<string, string[]>;
 };
+
+// room for the records json files and the zip overhead
+const DISK_SPACE_MARGIN = 50 * 1024 * 1024;
 
 type RecordWithMissingFiles = { uuid: string; keysText: string };
 
@@ -72,7 +77,14 @@ export class RecordsExportFileGenerationJob extends JobMobile<
   }
 
   override async execute() {
-    const { survey, cycle, recordUuids, user, onlyRemote } = this.context;
+    const {
+      survey,
+      cycle,
+      recordUuids,
+      user,
+      onlyRemote,
+      filesAlreadyOnServerByRecordUuid: filesAlreadyOnServerByRecordUuidParam,
+    } = this.context;
     const recordUuidsSet = new Set(recordUuids);
 
     this.logger.debug(
@@ -137,15 +149,23 @@ export class RecordsExportFileGenerationJob extends JobMobile<
       // shared or kept as a local backup must always be self-contained.
       const filesAlreadyOnServerByRecordUuid: Record<string, string[]> =
         onlyRemote && !Objects.isEmpty(nodeDefsFile) && survey.remoteId
-          ? await RecordRemoteService.fetchFileUuidsByRecordUuid({
+          ? (filesAlreadyOnServerByRecordUuidParam ??
+            (await RecordRemoteService.fetchFileUuidsByRecordUuid({
               surveyRemoteId: survey.remoteId,
               recordUuids: recordsToExport.map((r) => r.uuid),
-            })
+            })))
           : {};
 
       this.logger.debug(
         `RecordsExportFileGenerationJob: ${nodeDefsFile.length} file node def(s), already-on-server lookup done for ${Object.keys(filesAlreadyOnServerByRecordUuid).length} record(s)`,
       );
+
+      if (!Objects.isEmpty(nodeDefsFile)) {
+        await this.checkEnoughFreeDiskSpace({
+          recordUuids: recordsToExport.map((r) => r.uuid),
+          filesAlreadyOnServerByRecordUuid,
+        });
+      }
 
       const files: ExportedRecordFile[] = [];
 
@@ -276,6 +296,35 @@ export class RecordsExportFileGenerationJob extends JobMobile<
     }
 
     return recordFiles;
+  }
+
+  // the files are copied into the temp folder and then zipped: they need twice their size
+  private async checkEnoughFreeDiskSpace({
+    recordUuids,
+    filesAlreadyOnServerByRecordUuid,
+  }: {
+    recordUuids: string[];
+    filesAlreadyOnServerByRecordUuid: Record<string, string[]>;
+  }) {
+    const filesSizeByRecordUuid = await RecordService.fetchRecordsFilesSize({
+      surveyId: this.context.survey.id!,
+      recordUuids,
+      excludedFileUuidsByRecordUuid: filesAlreadyOnServerByRecordUuid,
+    });
+    const filesSize = Object.values(filesSizeByRecordUuid).reduce(
+      (acc, size) => acc + size,
+      0,
+    );
+    const requiredSpace = filesSize * 2 + DISK_SPACE_MARGIN;
+    const freeSpace = await Files.getFreeDiskStorage();
+    this.logger.debug(
+      `RecordsExportFileGenerationJob: files size ${filesSize}, required space ${requiredSpace}, free space ${freeSpace}`,
+    );
+    if (requiredSpace > freeSpace) {
+      this.throwError("notEnoughDiskSpace", {
+        requiredSpace: Files.toHumanReadableFileSize(requiredSpace - freeSpace),
+      });
+    }
   }
 
   private async writeInfoFile({ tempFolderUri }: { tempFolderUri: string }) {

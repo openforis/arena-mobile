@@ -17,10 +17,40 @@ import { MessageActions } from "../message";
 // Upload and server-side processing don't need their own synthetic split the way zip-generation
 // does here: they're composed into one job (RecordsUploadAndProcessJob), so JobBase's own
 // inner-job progress weighting already makes that half continuous natively.
-export const REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES = {
-  zipGeneration: { progressRangeStart: 0, progressRangeEnd: 33 },
-  uploadAndProcess: { progressRangeStart: 33, progressRangeEnd: 100 },
+export type ProgressRange = {
+  progressRangeStart: number;
+  progressRangeEnd: number;
 };
+
+export type RemoteUploadChainProgressRanges = {
+  zipGeneration: ProgressRange;
+  uploadAndProcess: ProgressRange;
+};
+
+/**
+ * Progress ranges of the phases of the upload of a batch of records: the batches share the overall progress equally.
+ */
+export const getRemoteUploadChainProgressRanges = ({
+  batchIndex = 0,
+  batchCount = 1,
+}: {
+  batchIndex?: number;
+  batchCount?: number;
+} = {}): RemoteUploadChainProgressRanges => {
+  const batchSize = 100 / batchCount;
+  const start = batchIndex * batchSize;
+  const zipEnd = start + batchSize * 0.33;
+  return {
+    zipGeneration: { progressRangeStart: start, progressRangeEnd: zipEnd },
+    uploadAndProcess: {
+      progressRangeStart: zipEnd,
+      progressRangeEnd: start + batchSize,
+    },
+  };
+};
+
+export const REMOTE_UPLOAD_CHAIN_PROGRESS_RANGES =
+  getRemoteUploadChainProgressRanges();
 
 export const errorOrJobToString = (errorOrJob: unknown) => {
   if (!errorOrJob) {
