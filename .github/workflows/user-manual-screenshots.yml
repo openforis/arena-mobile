@@ -44,7 +44,7 @@ jobs:
 
       - name: Install Maestro CLI
         env:
-          MAESTRO_VERSION: 2.11.0
+          MAESTRO_VERSION: 2.13.0
         run: |
           curl --proto '=https' --tlsv1.2 -fsSL -o "$RUNNER_TEMP/install-maestro.sh" "https://get.maestro.mobile.dev"
           bash "$RUNNER_TEMP/install-maestro.sh"
@@ -76,7 +76,7 @@ jobs:
           sudo udevadm trigger --name-match=kvm
 
       - name: Take screenshots
-        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2
+        uses: reactivecircus/android-emulator-runner@a421e43855164a8197daf9d8d40fe71c6996bb0d # v2.38.0
         with:
           api-level: 35
           # not google_atd: its screenshots of the app are black
