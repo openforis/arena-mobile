@@ -382,6 +382,7 @@ Periksa pengaturan atau minta administrator survei untuk mengubah batas ini.`,
     exportedSuccessfullyButFilesMissing:
       "Data berhasil diekspor tetapi {{missingFiles}} file/gambar hilang atau rusak. Silakan periksa catatan Anda dan juga catatan di server.",
     exportingData: "Mengekspor data...",
+    uploadBatch: "Bagian {{batch}} dari {{batchCount}}",
     exportToCsv: "Ekspor ke CSV",
     mergeConflictingRecords: "Gabungkan data isian yang berkonflik",
     mergeWithSameKeysNotAllowed:

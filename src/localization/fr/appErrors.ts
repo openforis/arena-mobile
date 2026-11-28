@@ -1,6 +1,8 @@
 export default {
   generic: "Erreur inattendue : {{text}}",
   fileSharingNotAvailable: "Le partage de fichiers n'est pas disponible",
+  notEnoughDiskSpace:
+    "Espace disque insuffisant ({{requiredSpace}} supplémentaires sont nécessaires)",
   dataImport: {
     importFromMobileNotAllawed:
       "Importation de données depuis Arena Mobile non autorisée",

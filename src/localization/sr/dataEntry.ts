@@ -103,6 +103,7 @@ Da li želite da ih ponovo preuzmete sa servera?`,
     exportedSuccessfullyButFilesMissing: `Podaci su uspješno izvezeni, ali {{missingFiles}} fajlova/slika nedostaje ili je oštećeno.
 Provjerite svoje zapise, a provjerite i zapise na serveru`,
     exportingData: "Izvoz podataka...",
+    uploadBatch: "Deo {{batch}} od {{batchCount}}",
     exportToCsv: "Izvezi u CSV",
     mergeConflictingRecords: "Spoji zapise u konfliktu",
     mergeWithSameKeysNotAllowed:

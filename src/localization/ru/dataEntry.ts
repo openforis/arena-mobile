@@ -384,6 +384,7 @@ export default {
     exportedSuccessfullyButFilesMissing:
       "Данные успешно экспортированы, но {{missingFiles}} файлов/изображений отсутствуют или повреждены. Пожалуйста, проверьте свои записи, а также записи на сервере.",
     exportingData: "Экспорт данных...",
+    uploadBatch: "Часть {{batch}} из {{batchCount}}",
     exportToCsv: "Экспортировать в CSV",
     mergeConflictingRecords: "Объединить конфликтующие записи",
     mergeWithSameKeysNotAllowed:

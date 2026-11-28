@@ -1,6 +1,8 @@
 export default {
   generic: "Oväntat fel: {{text}}",
   fileSharingNotAvailable: "Fildelning är inte tillgänglig",
+  notEnoughDiskSpace:
+    "Inte tillräckligt med ledigt diskutrymme ({{requiredSpace}} mer krävs)",
   dataImport: {
     importFromMobileNotAllawed: "Dataimport från Arena Mobile är inte tillåten",
     invalidNodeInRecord:

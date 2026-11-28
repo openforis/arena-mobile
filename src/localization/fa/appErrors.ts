@@ -1,6 +1,8 @@
 export default {
   generic: "خطای غیرمنتظره: {{text}}",
   fileSharingNotAvailable: "اشتراک‌گذاری فایل در دسترس نیست",
+  notEnoughDiskSpace:
+    "فضای خالی دیسک کافی نیست (به {{requiredSpace}} فضای بیشتر نیاز است)",
   dataImport: {
     importFromMobileNotAllawed: "درون‌ریزی داده از Arena Mobile مجاز نیست",
     invalidNodeInRecord:
