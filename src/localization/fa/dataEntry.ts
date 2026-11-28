@@ -375,6 +375,7 @@ export default {
     exportedSuccessfullyButFilesMissing:
       "داده‌ها با موفقیت صادر شدند اما {{missingFiles}} فایل/تصویر گم شده یا خراب است. لطفاً سوابق خود و همچنین سوابق روی سرور را بررسی کنید.",
     exportingData: "در حال اکسپورت داده ها...",
+    uploadBatch: "بخش {{batch}} از {{batchCount}}",
     exportToCsv: "اکسپورت به CSV",
     mergeConflictingRecords: "ادغام رکوردهای متناقض",
     mergeWithSameKeysNotAllowed:

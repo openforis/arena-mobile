@@ -374,6 +374,7 @@ Verifique la configuración o pida al administrador de la encuesta que cambie es
     exportedSuccessfullyButFilesMissing:
       "Los datos se exportaron correctamente, pero faltan o están rotos {{missingFiles}} archivos/imágenes. Por favor, revise sus registros y también los registros en el servidor.",
     exportingData: "Exportando datos...",
+    uploadBatch: "Parte {{batch}} de {{batchCount}}",
     exportToCsv: "Exportar a CSV",
     mergeConflictingRecords: "Fusionar registros conflictivos",
     mergeWithSameKeysNotAllowed:

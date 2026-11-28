@@ -13,7 +13,7 @@ import {
 
 import { RecordUtils, UserGroupQualifiers } from "model";
 import type { ArenaMobileRecord } from "model";
-import { ArrayUtils, log, PromiseUtils, SystemUtils } from "utils";
+import { ArrayUtils, Files, log, PromiseUtils, SystemUtils } from "utils";
 
 import {
   RecordKeyValue,
@@ -101,6 +101,37 @@ const findFileUuidsInDevice = async ({
     log.warn(`error finding the record files already in the device: ${error}`);
     return [];
   }
+};
+
+// size of the files of each record to send, without the excluded ones (e.g. already on the server)
+const fetchRecordsFilesSize = async ({
+  surveyId,
+  recordUuids,
+  excludedFileUuidsByRecordUuid = {},
+}: {
+  surveyId: number;
+  recordUuids: string[];
+  excludedFileUuidsByRecordUuid?: Record<string, string[]>;
+}): Promise<Record<string, number>> => {
+  const files = await RecordRepository.fetchRecordsFiles({
+    surveyId,
+    recordUuids,
+  });
+  const sizeByRecordUuid: Record<string, number> = {};
+  await PromiseUtils.runWithConcurrency({
+    items: files,
+    concurrency: FILES_EXISTENCE_CHECK_CONCURRENCY,
+    task: async ({ recordUuid, fileUuid, fileSize }) => {
+      if (excludedFileUuidsByRecordUuid[recordUuid]?.includes(fileUuid)) return;
+      const size =
+        fileSize ??
+        (await Files.getSize(
+          RecordFileService.getRecordFileUri({ surveyId, fileUuid }),
+        ));
+      sizeByRecordUuid[recordUuid] = (sizeByRecordUuid[recordUuid] ?? 0) + size;
+    },
+  });
+  return sizeByRecordUuid;
 };
 
 const findRecordSummariesByKeys = async ({
@@ -289,6 +320,7 @@ const revalidateRecords = async ({
 export const RecordLocalService = {
   deleteRecordsAndFiles,
   findFileUuidsInDevice,
+  fetchRecordsFilesSize,
   findRecordSummariesByKeys,
   findRecordSummariesWithSameKeys,
   cloneRecordsIntoDefaultCycle,

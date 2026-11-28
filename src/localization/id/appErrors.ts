@@ -1,6 +1,8 @@
 export default {
   generic: "Kesalahan tak terduga: {{text}}",
   fileSharingNotAvailable: "Berbagi file tidak tersedia",
+  notEnoughDiskSpace:
+    "Tidak cukup ruang disk (diperlukan {{requiredSpace}} lagi)",
   dataImport: {
     importFromMobileNotAllawed: "Impor data dari Arena Mobile tidak diizinkan",
     invalidNodeInRecord:
